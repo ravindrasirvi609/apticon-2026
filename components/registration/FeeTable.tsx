@@ -1,0 +1,67 @@
+const FEES = [
+  { category: "APTI Life Member",          early: "₹3,000", regular: "₹3,500", spot: "₹4,000" },
+  { category: "APTI Annual Member",        early: "₹3,500", regular: "₹4,000", spot: "₹4,500" },
+  { category: "Non-Member",               early: "₹5,000", regular: "₹5,500", spot: "₹6,000" },
+  { category: "PG Student / Research Scholar", early: "₹1,500", regular: "₹2,000", spot: "₹2,500" },
+  { category: "UG Student",               early: "₹500",   regular: "₹750",   spot: "₹1,000" },
+  { category: "Accompanying Person",      early: "₹1,000", regular: "₹1,500", spot: "₹2,000" },
+];
+
+const DATES = [
+  { label: "Early Bird Deadline",  date: "31 August 2026",     color: "text-emerald-600" },
+  { label: "Regular Registration", date: "1 Sep – 10 Oct 2026", color: "text-[var(--navy-800)]" },
+  { label: "On-Spot Registration", date: "24–25 October 2026", color: "text-[var(--crimson-800)]" },
+];
+
+export default function FeeTable() {
+  return (
+    <div className="space-y-8">
+      {/* Important dates */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {DATES.map((d) => (
+          <div key={d.label} className="rounded-xl bg-white border border-[var(--gold-500)]/20 p-4">
+            <p className="text-xs font-bold tracking-widest uppercase text-[var(--muted-text)] mb-1">{d.label}</p>
+            <p className={`font-display font-bold text-lg ${d.color}`}>{d.date}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Fee table */}
+      <div className="overflow-x-auto rounded-2xl border border-[var(--gold-500)]/20 shadow-sm">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-[var(--crimson-800)] text-white">
+              <th className="text-left px-5 py-4 font-semibold text-xs uppercase tracking-wide">Category</th>
+              <th className="text-center px-4 py-4 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
+                Early Bird<br/>
+                <span className="text-[var(--gold-400)] normal-case text-[10px]">Till 31 Aug</span>
+              </th>
+              <th className="text-center px-4 py-4 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
+                Regular<br/>
+                <span className="text-[var(--gold-400)] normal-case text-[10px]">Sep – Oct 10</span>
+              </th>
+              <th className="text-center px-4 py-4 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
+                On-Spot<br/>
+                <span className="text-[var(--gold-400)] normal-case text-[10px]">At Venue</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {FEES.map((row, i) => (
+              <tr
+                key={row.category}
+                className={`border-t border-[var(--gold-500)]/10 transition-colors hover:bg-[var(--cream-100)] ${i % 2 === 0 ? "bg-white" : "bg-[var(--cream-50)]"}`}
+              >
+                <td className="px-5 py-3.5 font-medium text-[var(--dark-text)]">{row.category}</td>
+                <td className="px-4 py-3.5 text-center font-bold text-emerald-700">{row.early}</td>
+                <td className="px-4 py-3.5 text-center font-bold text-[var(--navy-800)]">{row.regular}</td>
+                <td className="px-4 py-3.5 text-center font-bold text-[var(--crimson-800)]">{row.spot}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-xs text-[var(--muted-text)]">* All amounts are in Indian Rupees (INR) and inclusive of GST. Registration fee includes: conference kit, lunch & tea (both days), and souvenir.</p>
+    </div>
+  );
+}

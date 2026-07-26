@@ -1,26 +1,309 @@
 @import "tailwindcss";
 
+/* ─── Brand Color Palette ─────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Crimson scale */
+  --crimson-900: #6B0F0F;
+  --crimson-800: #8B1A1A;
+  --crimson-700: #A52020;
+  --crimson-600: #C0392B;
+
+  /* Gold scale */
+  --gold-500: #D4AF37;
+  --gold-400: #F5C842;
+  --gold-300: #FFD95A;
+  --gold-200: #FFF0A0;
+
+  /* Navy scale */
+  --navy-900: #0D1B6E;
+  --navy-800: #1A237E;
+  --navy-700: #283593;
+
+  /* Backgrounds */
+  --cream-50: #FFFDE7;
+  --cream-100: #FFF8E1;
+  --cream-200: #FFECB3;
+
+  /* Text */
+  --dark-text: #1A1A2E;
+  --muted-text: #5D4037;
+  --light-text: #FFFDE7;
+
+  /* Semantic */
+  --background: var(--cream-50);
+  --foreground: var(--dark-text);
 }
 
+/* ─── Tailwind v4 Theme Tokens ────────────────────────────── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-crimson-900: var(--crimson-900);
+  --color-crimson-800: var(--crimson-800);
+  --color-crimson-700: var(--crimson-700);
+  --color-crimson-600: var(--crimson-600);
+
+  --color-gold-500: var(--gold-500);
+  --color-gold-400: var(--gold-400);
+  --color-gold-300: var(--gold-300);
+  --color-gold-200: var(--gold-200);
+
+  --color-navy-900: var(--navy-900);
+  --color-navy-800: var(--navy-800);
+  --color-navy-700: var(--navy-700);
+
+  --color-cream-50: var(--cream-50);
+  --color-cream-100: var(--cream-100);
+  --color-cream-200: var(--cream-200);
+
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-devanagari: var(--font-tiro), serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base Reset ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html[data-scroll-behavior="smooth"] {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--cream-50);
+  color: var(--dark-text);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* ─── Custom Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cream-100);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--crimson-800);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--crimson-700);
+}
+
+/* ─── Typography Utilities ────────────────────────────────── */
+.font-display {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+.font-devanagari {
+  font-family: var(--font-tiro), serif;
+}
+
+/* ─── Gold Shimmer Animation ──────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shimmer-gold {
+  background: linear-gradient(
+    105deg,
+    var(--gold-500) 0%,
+    var(--gold-300) 40%,
+    var(--gold-500) 60%,
+    var(--gold-400) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ─── Lotus Float Animation ───────────────────────────────── */
+@keyframes lotusFloat {
+  0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+.lotus-particle {
+  position: absolute;
+  animation: lotusFloat linear infinite;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ─── Folk Dancer Sway ────────────────────────────────────── */
+@keyframes dancerSway {
+  0%, 100% { transform: rotate(-3deg) translateX(-4px); }
+  50%       { transform: rotate(3deg)  translateX(4px); }
+}
+
+.dancer-sway {
+  animation: dancerSway 4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+/* ─── Pulse Ring (CTA button) ─────────────────────────────── */
+@keyframes pulseRing {
+  0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(212,175,55,0.7); }
+  70%  { transform: scale(1.02); box-shadow: 0 0 0 14px rgba(212,175,55,0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+}
+
+.pulse-gold {
+  animation: pulseRing 2s ease-out infinite;
+}
+
+/* ─── Marquee (highlights bar) ────────────────────────────── */
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ─── Flip Card ───────────────────────────────────────────── */
+.flip-card {
+  perspective: 1000px;
+}
+.flip-card-inner {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+  position: relative;
+}
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+.flip-card-front,
+.flip-card-back {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.flip-card-back {
+  transform: rotateY(180deg);
+  position: absolute;
+  inset: 0;
+}
+
+/* ─── Countdown Flip ──────────────────────────────────────── */
+@keyframes flipDown {
+  0%   { transform: rotateX(0deg); }
+  100% { transform: rotateX(-90deg); }
+}
+@keyframes flipUp {
+  0%   { transform: rotateX(90deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+/* ─── Glass Morphism ──────────────────────────────────────── */
+.glass {
+  background: rgba(255, 253, 231, 0.8);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.glass-dark {
+  background: rgba(26, 26, 46, 0.85);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+/* ─── Gold Border Glow ────────────────────────────────────── */
+.glow-gold {
+  box-shadow: 0 0 20px rgba(212,175,55,0.3), 0 0 40px rgba(212,175,55,0.1);
+}
+
+.glow-crimson {
+  box-shadow: 0 0 20px rgba(139,26,26,0.3), 0 0 40px rgba(139,26,26,0.1);
+}
+
+/* ─── Cultural Pattern Background ────────────────────────── */
+.tribal-pattern-bg {
+  background-image: url('/cultural/tribal-pattern.svg');
+  background-repeat: repeat;
+  background-size: 60px 60px;
+}
+
+/* ─── Section Transitions ─────────────────────────────────── */
+.wave-divider {
+  overflow: hidden;
+  line-height: 0;
+}
+.wave-divider svg {
+  display: block;
+  width: 100%;
+}
+
+/* ─── Gradient Text Utilities ─────────────────────────────── */
+.text-gradient-crimson {
+  background: linear-gradient(135deg, var(--crimson-800), var(--crimson-600));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--gold-500), var(--gold-300));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-navy {
+  background: linear-gradient(135deg, var(--navy-900), var(--navy-700));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── Crimson-Gold gradient border ───────────────────────── */
+.border-gradient-gold {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--cream-50), var(--cream-50)) padding-box,
+    linear-gradient(135deg, var(--gold-500), var(--crimson-800)) border-box;
+}
+
+/* ─── Focus ring ──────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--gold-400);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ─── Selection ───────────────────────────────────────────── */
+::selection {
+  background: rgba(212, 175, 55, 0.35);
+  color: var(--dark-text);
+}
+
+/* ─── Responsive helpers ──────────────────────────────────── */
+.container-site {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 5vw, 4rem);
 }
