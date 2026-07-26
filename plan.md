@@ -73,6 +73,33 @@ npm install framer-motion lucide-react react-hook-form
 
 ---
 
+## Web Design Improvement Recommendations
+
+As a web designer, I would improve this website by focusing on clarity, hierarchy, and user experience so the event feels polished, modern, and easy to navigate.
+
+### Key Improvements
+- Strengthen the hero section so visitors understand the event purpose within the first few seconds.
+- Improve visual hierarchy with clearer section titles, stronger CTA buttons, and better spacing between blocks.
+- Make the site more mobile-first with larger tap targets, simpler navigation, and cleaner content stacking on smaller screens.
+- Reduce visual clutter by balancing the cultural illustrations with more whitespace and cleaner layouts.
+- Create a more consistent design system using one clear typography style, consistent card sizes, and uniform button behavior.
+- Improve readability with shorter paragraphs, clearer headings, and better contrast between text and background.
+- Make the calls-to-action more prominent: Register Now, View Program, Contact Us, and Download Brochure should stand out clearly.
+- Add more trust-building elements such as logos, venue details, testimonials, sponsor credibility, and clear contact information.
+- Improve the overall brand feel by using a more refined color balance, polished iconography, and smoother animation timing.
+- Increase accessibility with keyboard-friendly navigation, readable contrast ratios, descriptive alt text, and better focus states.
+- Optimize performance by compressing images, reducing heavy animations, and ensuring fast page loading.
+- Add subtle micro-interactions so the site feels premium without becoming distracting.
+
+### Priority Order
+1. Hero section clarity and CTA strength
+2. Mobile responsiveness and usability
+3. Typography, spacing, and content hierarchy
+4. Accessibility and performance polish
+5. Brand consistency and visual refinement
+
+---
+
 ## Cultural Design Language (Raipur / Chhattisgarh)
 
 Every section incorporates authentic Chhattisgarh visual identity:
@@ -622,6 +649,7 @@ Each page exports a `metadata` object:
 - [ ] Lighthouse score: Performance ≥ 85, Accessibility ≥ 90
 - [ ] Cultural SVG elements render correctly on all screen sizes
 - [ ] Fonts load without FOUT (next/font used correctly)
+
 
 ---
 
