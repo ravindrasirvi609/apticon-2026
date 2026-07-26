@@ -1,28 +1,36 @@
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Upload, Loader2, FileText, Search } from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import { Button } from "@/components/ui/shadcn/button";
+import { Input } from "@/components/ui/shadcn/input";
+import { Textarea } from "@/components/ui/shadcn/textarea";
+import { Label } from "@/components/ui/shadcn/label";
+import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { ABSTRACT_THEMES } from "@/lib/constants";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 
 interface AbstractForm {
   title: string;
   authors: string;
+  presentingAuthor: string;
   institution: string;
-  presenting: string;
   email: string;
   phone: string;
   theme: string;
-  type: string;
+  type: "oral" | "poster";
   abstract: string;
 }
 
 const IMPORTANT_DATES = [
-  { event: "Abstract Submission Opens",   date: "1 August 2026",     done: false },
+  { event: "Abstract Submission Opens",   date: "1 August 2026",     done: true },
   { event: "Last Date for Submission",    date: "30 September 2026", done: false },
   { event: "Acceptance Notification",    date: "10 October 2026",   done: false },
   { event: "Revised Abstract Deadline",  date: "18 October 2026",   done: false },
@@ -34,207 +42,317 @@ const GUIDELINES = [
   "Word limit: 250–300 words (excluding title and authors).",
   "Structure: Background, Objectives, Methods, Results, Conclusions.",
   "Do not include figures, tables, or references in the abstract.",
-  "Only registered delegates may submit abstracts.",
-  "Each delegate may submit a maximum of 2 abstracts.",
   "Presenting author must be listed first in the author list.",
+  "Each delegate may submit a maximum of 2 abstracts.",
+  "Attach the full-text PDF (max 10 MB, PDF/DOC/DOCX only).",
 ];
 
+const ALLOWED_MIME: Record<string, "application/pdf" | "application/msword" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"> = {
+  pdf: "application/pdf",
+  doc: "application/msword",
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+};
+
 export default function AbstractsClient() {
-  const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<AbstractForm>();
   const abstractText = watch("abstract", "");
+  const wordCount = abstractText.trim().split(/\s+/).filter(Boolean).length;
 
-  const onSubmit = async (_data: AbstractForm) => {
-    await new Promise((r) => setTimeout(r, 1200));
-    setSubmitted(true);
+  async function uploadFile(f: File): Promise<{ key: string } | null> {
+    const ext = f.name.split(".").pop()?.toLowerCase() ?? "";
+    const contentType = ALLOWED_MIME[ext];
+    if (!contentType) {
+      toast.error("Only PDF, DOC or DOCX files are allowed.");
+      return null;
+    }
+    if (f.size > 10 * 1024 * 1024) {
+      toast.error("File must be under 10 MB.");
+      return null;
+    }
+    const presignRes = await fetch("/api/upload/presign", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ fileName: f.name, contentType, size: f.size }),
+    });
+    if (!presignRes.ok) {
+      toast.error("Could not prepare upload.");
+      return null;
+    }
+    const { uploadUrl, key } = (await presignRes.json()) as { uploadUrl: string; key: string };
+    const putRes = await fetch(uploadUrl, {
+      method: "PUT",
+      headers: { "content-type": contentType },
+      body: f,
+    });
+    if (!putRes.ok) {
+      toast.error("File upload failed.");
+      return null;
+    }
+    return { key };
+  }
+
+  const onSubmit = async (data: AbstractForm) => {
+    let fileKey: string | undefined;
+    let fileName: string | undefined;
+
+    if (file) {
+      setUploading(true);
+      const result = await uploadFile(file);
+      setUploading(false);
+      if (!result) return;
+      fileKey = result.key;
+      fileName = file.name;
+    }
+
+    const res = await fetch("/api/abstracts", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ ...data, fileKey, fileName }),
+    });
+    const body = await res.json();
+    if (!res.ok) {
+      toast.error(body.error ?? "Submission failed. Please try again.");
+      return;
+    }
+    toast.success("Abstract received. Check your email.");
+    router.push(`/abstracts/success/${body.submissionCode}`);
   };
 
-  const inputCls = (err?: boolean) => `
-    w-full px-4 py-3 rounded-xl border text-sm bg-white
-    placeholder:text-[var(--muted-text)]/60 text-[var(--dark-text)]
-    focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)] focus:border-transparent
-    transition-all duration-200
-    ${err ? "border-red-400 bg-red-50" : "border-[var(--gold-500)]/25 hover:border-[var(--gold-500)]/60"}
-  `;
+  const errCls = "text-xs text-red-600 mt-1";
 
   return (
-    <div className="bg-[var(--cream-50)] min-h-screen">
-
+    <div className="pt-8 pb-24">
       {/* Hero */}
-      <section className="relative py-24 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 tribal-pattern-bg opacity-30" aria-hidden />
-        <div className="container-site relative z-10 text-center">
+      <section className="pt-8 pb-12 px-4 text-center">
+        <ScrollReveal>
           <GoldenBadge>Call for Abstracts</GoldenBadge>
-          <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            Share Your <span className="text-gradient-crimson">Research</span>
+          <h1 className="mt-6 font-display text-4xl md:text-6xl font-black text-[var(--crimson-800)]">
+            Submit Your Research
           </h1>
-          <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
-            Submit your abstract for oral or poster presentation at APTICON 2026. We welcome original research from all pharmacy disciplines.
+          <p className="mt-4 max-w-2xl mx-auto text-base md:text-lg text-[var(--muted-text)]">
+            Share your work with 500+ pharmacy educators and researchers at APTICON 2026, Raipur.
           </p>
-        </div>
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <Link href="/abstracts/status">
+              <Button variant="outline">
+                <Search className="w-4 h-4" />
+                Check Submission Status
+              </Button>
+            </Link>
+          </div>
+        </ScrollReveal>
       </section>
 
-      <CulturalDivider variant="bastar" className="opacity-40" />
+      <CulturalDivider />
 
-      {/* Themes + Dates */}
-      <section className="py-16 md:py-20">
-        <div className="container-site grid grid-cols-1 lg:grid-cols-3 gap-10">
-
-          {/* Themes */}
-          <div className="lg:col-span-2">
-            <ScrollReveal>
-              <h2 className="font-display font-bold text-2xl sm:text-3xl text-[var(--dark-text)] mb-6">
-                Themes for <span className="text-gradient-gold">Submission</span>
-              </h2>
-            </ScrollReveal>
-            <motion.div
-              initial="hidden" whileInView="visible" viewport={{ once: true }}
-              variants={staggerContainer}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+      {/* Important Dates */}
+      <section className="py-12 px-4 max-w-4xl mx-auto">
+        <ScrollReveal>
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-[var(--dark-text)] mb-6 text-center">
+            Important Dates
+          </h2>
+        </ScrollReveal>
+        <motion.ol
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="space-y-3"
+        >
+          {IMPORTANT_DATES.map((d) => (
+            <motion.li
+              key={d.event}
+              variants={fadeUp}
+              className={`flex items-center justify-between p-4 rounded-xl border ${
+                d.done
+                  ? "bg-[var(--cream-100)] border-[var(--gold-500)]/30"
+                  : "bg-white border-[var(--gold-500)]/20"
+              }`}
             >
-              {ABSTRACT_THEMES.map((theme, i) => (
-                <motion.div key={theme} variants={fadeUp}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-white border border-[var(--gold-500)]/15 hover:border-[var(--gold-500)]/50 hover:shadow-sm transition-all duration-200"
-                >
-                  <span className="font-display font-black text-[var(--crimson-800)] text-lg leading-none flex-shrink-0">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <p className="text-sm font-medium text-[var(--dark-text)] leading-snug">{theme}</p>
-                </motion.div>
+              <span className="text-sm md:text-base text-[var(--dark-text)]">{d.event}</span>
+              <span className="text-sm md:text-base font-semibold text-[var(--crimson-800)]">{d.date}</span>
+            </motion.li>
+          ))}
+        </motion.ol>
+      </section>
+
+      {/* Guidelines */}
+      <section className="py-8 px-4 max-w-4xl mx-auto">
+        <Card>
+          <CardContent className="pt-6">
+            <h3 className="font-display text-xl font-bold text-[var(--dark-text)] mb-4">Submission Guidelines</h3>
+            <ul className="space-y-2 text-sm text-[var(--muted-text)]">
+              {GUIDELINES.map((g) => (
+                <li key={g} className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-[var(--crimson-800)] mt-0.5 flex-shrink-0" />
+                  <span>{g}</span>
+                </li>
               ))}
-            </motion.div>
+            </ul>
+          </CardContent>
+        </Card>
+      </section>
 
-            {/* Guidelines */}
-            <ScrollReveal className="mt-10">
-              <h3 className="font-display font-bold text-xl text-[var(--dark-text)] mb-4">Abstract Guidelines</h3>
-              <ul className="space-y-2.5">
-                {GUIDELINES.map((g, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-[var(--muted-text)]">
-                    <span className="w-5 h-5 rounded-full bg-[var(--crimson-800)] text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
-                      {i + 1}
-                    </span>
-                    {g}
-                  </li>
-                ))}
-              </ul>
-            </ScrollReveal>
+      {/* Themes */}
+      <section className="py-8 px-4 max-w-4xl mx-auto">
+        <ScrollReveal>
+          <h3 className="font-display text-xl font-bold text-[var(--dark-text)] mb-4">Themes</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {ABSTRACT_THEMES.map((t) => (
+              <div key={t} className="px-4 py-3 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/25 text-sm text-[var(--dark-text)]">
+                {t}
+              </div>
+            ))}
           </div>
+        </ScrollReveal>
+      </section>
 
-          {/* Important Dates */}
-          <div>
-            <ScrollReveal>
-              <div className="rounded-2xl bg-[var(--crimson-800)] p-6 sticky top-28">
-                <p className="text-xs font-bold tracking-widest uppercase text-[var(--gold-400)] mb-5">Important Dates</p>
-                <div className="space-y-4">
-                  {IMPORTANT_DATES.map((d, i) => (
-                    <div key={i} className="flex gap-3 items-start">
-                      <div className="w-2 h-2 rounded-full bg-[var(--gold-500)] mt-1.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-xs text-white/60 leading-snug">{d.event}</p>
-                        <p className="text-sm font-bold text-[var(--gold-400)]">{d.date}</p>
-                      </div>
-                    </div>
-                  ))}
+      {/* ── Submission Form ─────────────────────────────────── */}
+      <section className="py-12 px-4 max-w-3xl mx-auto">
+        <Card>
+          <CardContent className="pt-8">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[var(--crimson-800)] mb-6 text-center">
+              Submission Form
+            </h2>
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div>
+                <Label htmlFor="title">Title *</Label>
+                <Input
+                  id="title"
+                  className="mt-2"
+                  {...register("title", { required: true, minLength: 5, maxLength: 300 })}
+                  aria-invalid={!!errors.title}
+                />
+                {errors.title && <p className={errCls}>Title is required (5–300 chars).</p>}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <Label htmlFor="presentingAuthor">Presenting Author *</Label>
+                  <Input id="presentingAuthor" className="mt-2" {...register("presentingAuthor", { required: true })} />
+                  {errors.presentingAuthor && <p className={errCls}>Required.</p>}
+                </div>
+                <div>
+                  <Label htmlFor="institution">Institution *</Label>
+                  <Input id="institution" className="mt-2" {...register("institution", { required: true })} />
+                  {errors.institution && <p className={errCls}>Required.</p>}
                 </div>
               </div>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
 
-      <CulturalDivider variant="lotus-row" className="container-site" />
+              <div>
+                <Label htmlFor="authors">All Authors * <span className="text-xs font-normal text-[var(--muted-text)]">(comma-separated)</span></Label>
+                <Input id="authors" className="mt-2" placeholder="Jane Doe*, John Smith, Priya Sharma" {...register("authors", { required: true })} />
+                {errors.authors && <p className={errCls}>List all authors.</p>}
+              </div>
 
-      {/* Submission Form */}
-      <section className="py-16 md:py-20">
-        <div className="container-site max-w-3xl mx-auto">
-          <ScrollReveal className="mb-8">
-            <h2 className="font-display font-bold text-2xl sm:text-3xl text-[var(--dark-text)]">Submit Your Abstract</h2>
-          </ScrollReveal>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <Label htmlFor="email">Email *</Label>
+                  <Input id="email" type="email" className="mt-2" {...register("email", { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })} />
+                  {errors.email && <p className={errCls}>Valid email required.</p>}
+                </div>
+                <div>
+                  <Label htmlFor="phone">Phone *</Label>
+                  <Input id="phone" className="mt-2" {...register("phone", { required: true, minLength: 6 })} />
+                  {errors.phone && <p className={errCls}>Required.</p>}
+                </div>
+              </div>
 
-          {submitted ? (
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="py-16 text-center rounded-2xl bg-white border border-[var(--gold-500)]/20 shadow-sm">
-              <CheckCircle size={56} className="mx-auto text-emerald-500 mb-4" />
-              <h3 className="font-display font-bold text-2xl text-[var(--dark-text)] mb-2">Abstract Submitted!</h3>
-              <p className="text-[var(--muted-text)] max-w-md mx-auto">Your abstract has been received. Acceptance notifications will be sent by 10 October 2026.</p>
-            </motion.div>
-          ) : (
-            <ScrollReveal>
-              <form onSubmit={handleSubmit(onSubmit)} noValidate className="rounded-2xl bg-white border border-[var(--gold-500)]/20 shadow-sm p-6 md:p-8 space-y-6">
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold text-[var(--muted-text)] uppercase tracking-wide mb-1.5">Abstract Title <span className="text-red-500">*</span></label>
-                    <input {...register("title", { required: "Title required" })} placeholder="Full title of your abstract" className={inputCls(!!errors.title)} />
-                    {errors.title && <p className="mt-1 text-xs text-red-500">{errors.title.message}</p>}
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold text-[var(--muted-text)] uppercase tracking-wide mb-1.5">Authors <span className="text-red-500">*</span></label>
-                    <input {...register("authors", { required: "Authors required" })} placeholder="Author1, Author2*, Author3 — Presenting author marked with *" className={inputCls(!!errors.authors)} />
-                    {errors.authors && <p className="mt-1 text-xs text-red-500">{errors.authors.message}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[var(--muted-text)] uppercase tracking-wide mb-1.5">Institution <span className="text-red-500">*</span></label>
-                    <input {...register("institution", { required: "Institution required" })} placeholder="Institution name, City" className={inputCls(!!errors.institution)} />
-                    {errors.institution && <p className="mt-1 text-xs text-red-500">{errors.institution.message}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[var(--muted-text)] uppercase tracking-wide mb-1.5">Presenting Author <span className="text-red-500">*</span></label>
-                    <input {...register("presenting", { required: "Presenting author required" })} placeholder="Name of presenting author" className={inputCls(!!errors.presenting)} />
-                    {errors.presenting && <p className="mt-1 text-xs text-red-500">{errors.presenting.message}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[var(--muted-text)] uppercase tracking-wide mb-1.5">Email <span className="text-red-500">*</span></label>
-                    <input type="email" {...register("email", { required: "Email required", pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email" } })} placeholder="Contact email" className={inputCls(!!errors.email)} />
-                    {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[var(--muted-text)] uppercase tracking-wide mb-1.5">Mobile</label>
-                    <input type="tel" {...register("phone")} placeholder="10-digit mobile" className={inputCls()} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[var(--muted-text)] uppercase tracking-wide mb-1.5">Theme <span className="text-red-500">*</span></label>
-                    <select {...register("theme", { required: "Select a theme" })} className={inputCls(!!errors.theme)}>
-                      <option value="">Select Theme</option>
-                      {ABSTRACT_THEMES.map((t) => <option key={t} value={t}>{t}</option>)}
-                    </select>
-                    {errors.theme && <p className="mt-1 text-xs text-red-500">{errors.theme.message}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[var(--muted-text)] uppercase tracking-wide mb-1.5">Presentation Type <span className="text-red-500">*</span></label>
-                    <select {...register("type", { required: "Select type" })} className={inputCls(!!errors.type)}>
-                      <option value="">Select Type</option>
-                      <option value="oral">Oral Presentation</option>
-                      <option value="poster">Poster Presentation</option>
-                    </select>
-                    {errors.type && <p className="mt-1 text-xs text-red-500">{errors.type.message}</p>}
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-semibold text-[var(--muted-text)] uppercase tracking-wide mb-1.5">
-                      Abstract Body <span className="text-red-500">*</span>
-                      <span className="ml-2 normal-case font-normal text-[var(--muted-text)]">({abstractText.split(/\s+/).filter(Boolean).length}/300 words)</span>
-                    </label>
-                    <textarea
-                      {...register("abstract", {
-                        required: "Abstract body required",
-                        validate: (v) => v.split(/\s+/).filter(Boolean).length >= 100 || "Minimum 100 words required",
-                      })}
-                      rows={8}
-                      placeholder="Background: ... Objectives: ... Methods: ... Results: ... Conclusions: ..."
-                      className={`${inputCls(!!errors.abstract)} resize-none`}
-                    />
-                    {errors.abstract && <p className="mt-1 text-xs text-red-500">{errors.abstract.message}</p>}
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <Label htmlFor="theme">Theme *</Label>
+                  <select
+                    id="theme"
+                    className="mt-2 flex h-10 w-full rounded-lg border border-[var(--gold-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)]"
+                    {...register("theme", { required: true })}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>Select a theme</option>
+                    {ABSTRACT_THEMES.map((t) => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                  {errors.theme && <p className={errCls}>Choose a theme.</p>}
                 </div>
 
-                <button type="submit" disabled={isSubmitting}
-                  className="w-full py-4 rounded-xl font-bold text-base bg-[var(--crimson-800)] text-white hover:bg-[var(--crimson-700)] disabled:opacity-60 transition-all duration-200 shadow-md"
-                >
-                  {isSubmitting ? "Submitting…" : "Submit Abstract"}
-                </button>
-              </form>
-            </ScrollReveal>
-          )}
-        </div>
+                <div>
+                  <Label>Presentation Type *</Label>
+                  <div className="mt-2 flex gap-3">
+                    <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--gold-500)]/30 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40">
+                      <input type="radio" value="oral" {...register("type", { required: true })} defaultChecked />
+                      <span className="text-sm">Oral</span>
+                    </label>
+                    <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--gold-500)]/30 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40">
+                      <input type="radio" value="poster" {...register("type", { required: true })} />
+                      <span className="text-sm">Poster</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="abstract">Abstract Body *</Label>
+                  <span className={`text-xs ${wordCount > 300 ? "text-red-600" : "text-[var(--muted-text)]"}`}>
+                    {wordCount} / 300 words
+                  </span>
+                </div>
+                <Textarea
+                  id="abstract"
+                  className="mt-2 min-h-[200px]"
+                  {...register("abstract", { required: true, minLength: 100 })}
+                  placeholder="Background — Objectives — Methods — Results — Conclusions"
+                />
+                {errors.abstract && <p className={errCls}>At least 100 characters.</p>}
+              </div>
+
+              <div>
+                <Label htmlFor="file">Full paper (optional — PDF, DOC, DOCX, max 10 MB)</Label>
+                <div className="mt-2 flex items-center gap-3">
+                  <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--gold-500)]/40 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40 transition-colors">
+                    <Upload className="w-4 h-4 text-[var(--muted-text)]" />
+                    <span className="text-sm text-[var(--dark-text)] truncate">
+                      {file ? file.name : "Choose file..."}
+                    </span>
+                    <input
+                      id="file"
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      className="hidden"
+                      onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                  {file && (
+                    <Button type="button" variant="outline" size="sm" onClick={() => setFile(null)}>
+                      Remove
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <Button type="submit" size="lg" className="w-full" disabled={isSubmitting || uploading}>
+                  {uploading || isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {uploading ? "Uploading file…" : "Submitting…"}
+                    </>
+                  ) : (
+                    <>
+                      <FileText className="w-4 h-4" />
+                      Submit Abstract
+                    </>
+                  )}
+                </Button>
+                <p className="mt-3 text-center text-xs text-[var(--muted-text)]">
+                  You'll receive a confirmation email with your submission code.
+                </p>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </section>
     </div>
   );

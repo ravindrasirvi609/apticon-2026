@@ -1,7 +1,10 @@
 "use client";
+import Link from "next/link";
+import { Search } from "lucide-react";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import { Button } from "@/components/ui/shadcn/button";
 import FeeTable from "@/components/registration/FeeTable";
 import RegistrationForm from "@/components/registration/RegistrationForm";
 
@@ -20,9 +23,17 @@ export default function RegistrationClient() {
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
             Join 500+ pharmacy educators and researchers at India's premier pharmaceutical education convention.
           </p>
-          <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Registration Open
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Registration Open
+            </div>
+            <Link href="/registration/status">
+              <Button variant="outline" size="sm">
+                <Search className="w-4 h-4" />
+                Check Registration Status
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

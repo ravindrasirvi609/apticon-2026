@@ -307,3 +307,12 @@ body {
   margin-inline: auto;
   padding-inline: clamp(1rem, 5vw, 4rem);
 }
+
+/* ─── Console mode: hide public site chrome ──────────────── */
+body[data-shell="console"] .site-chrome {
+  display: none !important;
+}
+body[data-shell="console"] main#main-content {
+  min-height: 100dvh;
+}
+

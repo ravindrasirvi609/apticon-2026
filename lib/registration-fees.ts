@@ -1,0 +1,45 @@
+/**
+ * Fee source of truth. Kept aligned with components/registration/FeeTable.tsx display.
+ */
+
+export type FeeTier = "early_bird" | "regular" | "on_spot";
+
+export const REGISTRATION_CATEGORIES = [
+  "APTI Life Member",
+  "APTI Annual Member",
+  "Non-Member",
+  "PG Student / Research Scholar",
+  "UG Student",
+  "Accompanying Person",
+] as const;
+
+export type RegistrationCategory = (typeof REGISTRATION_CATEGORIES)[number];
+
+// INR
+export const FEE_TABLE: Record<RegistrationCategory, Record<FeeTier, number>> = {
+  "APTI Life Member":            { early_bird: 3000, regular: 3500, on_spot: 4000 },
+  "APTI Annual Member":          { early_bird: 3500, regular: 4000, on_spot: 4500 },
+  "Non-Member":                  { early_bird: 5000, regular: 5500, on_spot: 6000 },
+  "PG Student / Research Scholar": { early_bird: 1500, regular: 2000, on_spot: 2500 },
+  "UG Student":                  { early_bird:  500, regular:  750, on_spot: 1000 },
+  "Accompanying Person":         { early_bird: 1000, regular: 1500, on_spot: 2000 },
+};
+
+// Same dates as the public FeeTable UI copy
+const EARLY_BIRD_CUTOFF = new Date("2026-09-01T00:00:00+05:30"); // "Till 31 Aug" (inclusive of Aug)
+const ON_SPOT_START     = new Date("2026-10-24T00:00:00+05:30"); // conference start
+
+export function currentFeeTier(now: Date = new Date()): FeeTier {
+  if (now < EARLY_BIRD_CUTOFF) return "early_bird";
+  if (now < ON_SPOT_START)     return "regular";
+  return "on_spot";
+}
+
+export function currentFeeAmount(category: RegistrationCategory, now: Date = new Date()): { tier: FeeTier; amount: number } {
+  const tier = currentFeeTier(now);
+  return { tier, amount: FEE_TABLE[category][tier] };
+}
+
+export function formatRupees(amount: number): string {
+  return `₹${amount.toLocaleString("en-IN")}`;
+}

@@ -1,0 +1,56 @@
+import { NextResponse, type NextRequest } from "next/server";
+import mongoose from "mongoose";
+import { connectDB } from "@/lib/db";
+import Abstract from "@/models/Abstract";
+import { abstractDecisionSchema } from "@/lib/validators/abstract";
+import { requireRole, authErrorResponse } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
+import { sendMail, abstractDecisionEmail } from "@/lib/email";
+
+export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+  try {
+    const admin = await requireRole("super_admin");
+    const { id } = await ctx.params;
+    if (!mongoose.isValidObjectId(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+
+    const body = await request.json().catch(() => null);
+    const parsed = abstractDecisionSchema.safeParse(body);
+    if (!parsed.success) return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+
+    await connectDB();
+    const abs = await Abstract.findById(id);
+    if (!abs) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+    const before = { status: abs.status, finalDecision: abs.finalDecision };
+
+    abs.finalDecision = parsed.data.decision;
+    abs.finalDecisionBy = new mongoose.Types.ObjectId(admin.uid);
+    abs.finalDecisionAt = new Date();
+    abs.finalDecisionNote = parsed.data.note;
+    abs.status = parsed.data.decision === "revision_requested" ? "revision_requested" : parsed.data.decision;
+    await abs.save();
+
+    await logAudit({
+      actor: admin.uid,
+      actorRole: "super_admin",
+      action: "abstract.decision",
+      resourceType: "abstract",
+      resourceId: abs._id.toString(),
+      details: { before, after: { status: abs.status, decision: parsed.data.decision }, note: parsed.data.note, submissionCode: abs.submissionCode },
+      request,
+    });
+
+    const { subject, html } = abstractDecisionEmail(
+      abs.presentingAuthor,
+      abs.submissionCode,
+      abs.title,
+      parsed.data.decision,
+      parsed.data.note
+    );
+    await sendMail({ to: abs.email, subject, html });
+
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    return authErrorResponse(err);
+  }
+}

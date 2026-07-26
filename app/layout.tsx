@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import AnnouncementBanner from "@/components/ui/AnnouncementBanner";
 import ScrollProgressBar  from "@/components/ui/ScrollProgressBar";
 import BackToTop          from "@/components/ui/BackToTop";
+import { Toaster }        from "@/components/ui/shadcn/sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -88,14 +89,18 @@ export default function RootLayout({
           Skip to main content
         </a>
         {/* Sticky header: banner stacks above navbar, both stick together */}
-        <div className="sticky top-0 z-30">
+        <div className="sticky top-0 z-30 site-chrome">
           <AnnouncementBanner />
           <Navbar />
         </div>
         <main id="main-content" className="flex-1">{children}</main>
-        <Footer />
-        {/* Floating back-to-top */}
-        <BackToTop />
+        <div className="site-chrome">
+          <Footer />
+          {/* Floating back-to-top */}
+          <BackToTop />
+        </div>
+        {/* Global toast notifications */}
+        <Toaster />
       </body>
     </html>
   );

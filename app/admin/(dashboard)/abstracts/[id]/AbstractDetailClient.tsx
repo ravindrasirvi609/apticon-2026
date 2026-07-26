@@ -1,0 +1,404 @@
+"use client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { ArrowLeft, ExternalLink, FileText, Loader2, Users, CheckCircle2, XCircle, RotateCcw } from "lucide-react";
+import { toast } from "sonner";
+import { format } from "date-fns";
+import PageHeader from "@/components/console/PageHeader";
+import StatusBadge from "@/components/console/StatusBadge";
+import RegistrationStatusBadge from "@/components/console/RegistrationStatusBadge";
+import { Button } from "@/components/ui/shadcn/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/shadcn/card";
+import { Badge } from "@/components/ui/shadcn/badge";
+import { Textarea } from "@/components/ui/shadcn/textarea";
+import { Label } from "@/components/ui/shadcn/label";
+import { Checkbox } from "@/components/ui/shadcn/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/shadcn/dialog";
+
+interface AbstractDoc {
+  _id: string;
+  submissionCode: string;
+  title: string;
+  authors: string;
+  presentingAuthor: string;
+  institution: string;
+  email: string;
+  phone: string;
+  theme: string;
+  type: string;
+  abstract: string;
+  fileUrl?: string;
+  fileName?: string;
+  status: string;
+  assignedReviewers: string[];
+  finalDecision?: string;
+  finalDecisionAt?: string;
+  finalDecisionNote?: string;
+  linkedRegistration?: string;
+  createdAt: string;
+}
+
+interface ReviewerLite { _id: string; name: string; email: string; expertise?: string[] }
+
+interface ReviewDoc {
+  _id: string;
+  reviewer: { _id: string; name: string; email: string } | string;
+  verdict: string;
+  scoreOriginality: number;
+  scoreMethodology: number;
+  scoreClarity: number;
+  scoreRelevance: number;
+  comments: string;
+  commentsPrivate?: string;
+  submittedAt: string;
+}
+
+interface LinkedRegLite {
+  _id?: string;
+  registrationCode?: string;
+  fullName?: string;
+  email?: string;
+  status?: string;
+  feeAmount?: number;
+  feeTier?: string;
+  createdAt?: string;
+  approvedAt?: string;
+}
+
+export default function AbstractDetailClient({ id }: { id: string }) {
+  const [data, setData] = useState<{ abstract: AbstractDoc; reviews: ReviewDoc[]; reviewers: ReviewerLite[]; linkedRegistration: LinkedRegLite | null } | null>(null);
+  const [allReviewers, setAllReviewers] = useState<ReviewerLite[]>([]);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [decisionOpen, setDecisionOpen] = useState<null | "accepted" | "rejected" | "revision_requested">(null);
+  const [decisionNote, setDecisionNote] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  async function load() {
+    const [res, uRes] = await Promise.all([
+      fetch(`/api/abstracts/${id}`),
+      fetch("/api/users?role=reviewer"),
+    ]);
+    if (res.ok) {
+      const d = await res.json();
+      setData(d);
+      setSelected(new Set(d.abstract.assignedReviewers as string[]));
+    }
+    if (uRes.ok) {
+      const u = await uRes.json();
+      setAllReviewers(u.users.filter((x: { role: string; isActive: boolean }) => x.role === "reviewer" && x.isActive).map((x: { id: string; name: string; email: string; expertise: string[] }) => ({
+        _id: x.id, name: x.name, email: x.email, expertise: x.expertise,
+      })));
+    }
+  }
+
+  useEffect(() => { load(); }, [id]);
+
+  async function saveAssignment() {
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/abstracts/${id}/assign`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ reviewerIds: [...selected] }),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error);
+      toast.success("Reviewers assigned. Notification emails sent.");
+      setAssignOpen(false);
+      await load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to assign");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function saveDecision() {
+    if (!decisionOpen) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/abstracts/${id}/decision`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ decision: decisionOpen, note: decisionNote || undefined }),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error);
+      toast.success("Decision recorded. Notification email sent to author.");
+      setDecisionOpen(null);
+      setDecisionNote("");
+      await load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to record decision");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (!data) return <div className="p-8 text-sm text-[var(--muted-text)]">Loading…</div>;
+  const a = data.abstract;
+
+  return (
+    <div className="p-4 md:p-8 max-w-6xl">
+      <Link href="/admin/abstracts" className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--crimson-800)] mb-4">
+        <ArrowLeft className="w-4 h-4" /> Back to list
+      </Link>
+
+      <PageHeader
+        title={a.title}
+        description={`${a.submissionCode} · Submitted ${format(new Date(a.createdAt), "d MMM yyyy, HH:mm")}`}
+        actions={
+          <div className="flex items-center gap-2">
+            <StatusBadge status={a.status} />
+            <Badge variant="secondary" className="capitalize">{a.type}</Badge>
+          </div>
+        }
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left: content */}
+        <div className="lg:col-span-2 space-y-6">
+          <Card>
+            <CardHeader><CardTitle>Abstract</CardTitle></CardHeader>
+            <CardContent>
+              <p className="text-sm whitespace-pre-line leading-relaxed">{a.abstract}</p>
+              {a.fileUrl && (
+                <div className="mt-4">
+                  <a href={a.fileUrl} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="sm">
+                      <FileText className="w-4 h-4" />
+                      Open attached file
+                      <ExternalLink className="w-3 h-3 opacity-70" />
+                    </Button>
+                  </a>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle>Reviews ({data.reviews.length})</CardTitle></CardHeader>
+            <CardContent className="space-y-4">
+              {data.reviews.length === 0 && <p className="text-sm text-[var(--muted-text)]">No reviews submitted yet.</p>}
+              {data.reviews.map((r) => {
+                const rev = typeof r.reviewer === "object" ? r.reviewer : { name: r.reviewer, email: "" };
+                const avg = ((r.scoreOriginality + r.scoreMethodology + r.scoreClarity + r.scoreRelevance) / 4).toFixed(1);
+                return (
+                  <div key={r._id} className="rounded-lg border border-[var(--gold-500)]/20 p-4">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div>
+                        <div className="font-semibold text-sm">{rev.name}</div>
+                        <div className="text-xs text-[var(--muted-text)]">{format(new Date(r.submittedAt), "d MMM yyyy, HH:mm")}</div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={r.verdict === "accept" ? "success" : r.verdict === "reject" ? "danger" : "warning"}>
+                          {r.verdict}
+                        </Badge>
+                        <span className="text-lg font-bold text-[var(--crimson-800)]">{avg}</span>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2 mb-3 text-xs">
+                      <ScoreBar label="Originality" value={r.scoreOriginality} />
+                      <ScoreBar label="Methodology" value={r.scoreMethodology} />
+                      <ScoreBar label="Clarity" value={r.scoreClarity} />
+                      <ScoreBar label="Relevance" value={r.scoreRelevance} />
+                    </div>
+                    <div className="text-sm whitespace-pre-line">{r.comments}</div>
+                    {r.commentsPrivate && (
+                      <div className="mt-3 p-3 rounded bg-amber-50 border border-amber-200 text-sm">
+                        <div className="text-xs font-semibold uppercase text-amber-800 mb-1">Private note to admin</div>
+                        <div className="whitespace-pre-line">{r.commentsPrivate}</div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right: metadata + actions */}
+        <div className="space-y-6">
+          {/* Linked registration panel — always shown for admin */}
+          <Card>
+            <CardHeader><CardTitle>Registration</CardTitle></CardHeader>
+            <CardContent>
+              {data.linkedRegistration && data.linkedRegistration.registrationCode ? (
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <Link href={`/admin/registrations/${data.linkedRegistration._id}`} className="font-mono text-xs text-[var(--crimson-800)] hover:underline">
+                      {data.linkedRegistration.registrationCode}
+                    </Link>
+                  </div>
+                  <div className="font-semibold">{data.linkedRegistration.fullName}</div>
+                  <div className="text-xs text-[var(--muted-text)]">{data.linkedRegistration.email}</div>
+                  <div>{data.linkedRegistration.status && <RegistrationStatusBadge status={data.linkedRegistration.status} />}</div>
+                  <div className="text-xs text-[var(--muted-text)]">
+                    {data.linkedRegistration.feeAmount ? `₹${data.linkedRegistration.feeAmount.toLocaleString("en-IN")} · ${data.linkedRegistration.feeTier?.replace("_", " ")}` : ""}
+                  </div>
+                  {!a.linkedRegistration && (
+                    <div className="mt-2 text-xs text-amber-700">
+                      Auto-matched by email — not yet formally linked. Open the registration to confirm.
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-sm text-amber-700">
+                  <div className="font-semibold">Not registered</div>
+                  <div className="text-[var(--muted-text)] mt-1">No registration found for <b>{a.email}</b>. Presenting authors must be registered delegates.</div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle>Submission Details</CardTitle></CardHeader>
+            <CardContent className="text-sm space-y-2">
+              <Field label="Presenting author" value={a.presentingAuthor} />
+              <Field label="All authors" value={a.authors} />
+              <Field label="Institution" value={a.institution} />
+              <Field label="Email" value={a.email} />
+              <Field label="Phone" value={a.phone} />
+              <Field label="Theme" value={a.theme} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Reviewers</CardTitle>
+              <Dialog open={assignOpen} onOpenChange={setAssignOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm" variant="outline"><Users className="w-4 h-4" />Assign</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Assign reviewers</DialogTitle>
+                  </DialogHeader>
+                  <div className="max-h-96 overflow-y-auto space-y-2">
+                    {allReviewers.map((r) => (
+                      <label key={r._id} className="flex items-center gap-3 p-3 rounded-lg border border-[var(--gold-500)]/20 cursor-pointer hover:bg-[var(--cream-50)]">
+                        <Checkbox
+                          checked={selected.has(r._id)}
+                          onCheckedChange={(v) => {
+                            const next = new Set(selected);
+                            if (v) next.add(r._id); else next.delete(r._id);
+                            setSelected(next);
+                          }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-semibold">{r.name}</div>
+                          <div className="text-xs text-[var(--muted-text)]">{r.email}</div>
+                          {r.expertise && r.expertise.length > 0 && (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {r.expertise.slice(0, 3).map((e) => <Badge key={e} variant="outline" className="text-[10px]">{e}</Badge>)}
+                            </div>
+                          )}
+                        </div>
+                      </label>
+                    ))}
+                    {allReviewers.length === 0 && <p className="text-sm text-[var(--muted-text)] p-4 text-center">No active reviewers. Create one in Users.</p>}
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setAssignOpen(false)}>Cancel</Button>
+                    <Button onClick={saveAssignment} disabled={saving}>
+                      {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+                      Save assignment
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </CardHeader>
+            <CardContent>
+              {data.reviewers.length === 0 && <p className="text-sm text-[var(--muted-text)]">Not yet assigned.</p>}
+              <div className="space-y-2">
+                {data.reviewers.map((r) => (
+                  <div key={r._id} className="text-sm">
+                    <div className="font-semibold">{r.name}</div>
+                    <div className="text-xs text-[var(--muted-text)]">{r.email}</div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle>Final Decision</CardTitle></CardHeader>
+            <CardContent>
+              {a.finalDecision ? (
+                <div className="space-y-2">
+                  <StatusBadge status={a.status} />
+                  {a.finalDecisionAt && (
+                    <div className="text-xs text-[var(--muted-text)]">Recorded {format(new Date(a.finalDecisionAt), "d MMM yyyy, HH:mm")}</div>
+                  )}
+                  {a.finalDecisionNote && (
+                    <div className="text-sm p-3 rounded bg-[var(--cream-100)] border-l-2 border-[var(--gold-500)] whitespace-pre-line">
+                      {a.finalDecisionNote}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-[var(--muted-text)]">No decision recorded yet.</p>
+              )}
+              <div className="mt-4 grid grid-cols-1 gap-2">
+                <Button variant="default" onClick={() => setDecisionOpen("accepted")}>
+                  <CheckCircle2 className="w-4 h-4" /> Accept
+                </Button>
+                <Button variant="outline" onClick={() => setDecisionOpen("revision_requested")}>
+                  <RotateCcw className="w-4 h-4" /> Request revision
+                </Button>
+                <Button variant="destructive" onClick={() => setDecisionOpen("rejected")}>
+                  <XCircle className="w-4 h-4" /> Reject
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Decision dialog */}
+      <Dialog open={decisionOpen !== null} onOpenChange={(v) => !v && setDecisionOpen(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm decision: {decisionOpen?.replace("_", " ")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-sm text-[var(--muted-text)]">The author will receive an email with your note (if provided). This action is recorded in the audit log.</p>
+            <div>
+              <Label htmlFor="note">Note to author (optional)</Label>
+              <Textarea id="note" className="mt-2" rows={5} value={decisionNote} onChange={(e) => setDecisionNote(e.target.value)} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDecisionOpen(null)}>Cancel</Button>
+            <Button onClick={saveDecision} disabled={saving}>
+              {saving && <Loader2 className="w-4 h-4 animate-spin" />} Record decision
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+function Field({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="text-xs uppercase tracking-wider text-[var(--muted-text)]">{label}</div>
+      <div className="text-sm">{value}</div>
+    </div>
+  );
+}
+
+function ScoreBar({ label, value }: { label: string; value: number }) {
+  return (
+    <div>
+      <div className="flex justify-between text-[10px] uppercase tracking-wider text-[var(--muted-text)]">
+        <span>{label}</span><span>{value}/10</span>
+      </div>
+      <div className="h-1 bg-[var(--cream-100)] rounded-full mt-1 overflow-hidden">
+        <div className="h-full bg-[var(--crimson-800)]" style={{ width: `${value * 10}%` }} />
+      </div>
+    </div>
+  );
+}
