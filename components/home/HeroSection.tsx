@@ -5,6 +5,7 @@ import FloatingParticles from "@/components/ui/FloatingParticles";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import PulseButton from "@/components/ui/PulseButton";
 import CountdownTimer from "./CountdownTimer";
+import HeroConceptStrip from "./HeroConceptStrip";
 import { staggerContainer, fadeUp, scaleIn } from "@/lib/animations";
 import { EVENT } from "@/lib/constants";
 
@@ -12,7 +13,7 @@ const APTICON_LETTERS = ["A", "P", "T", "I", "C", "O", "N"];
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[100svh] flex flex-col overflow-hidden">
+    <section className="relative min-h-[100svh] flex flex-col overflow-hidden pt-6 md:pt-10">
 
       {/* ── Background layers ─────────────────────────────── */}
       {/* Base gradient */}
@@ -47,7 +48,7 @@ export default function HeroSection() {
       <FloatingParticles count={10} />
 
       {/* ── Main content ──────────────────────────────────── */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 pt-8 pb-32 md:pb-40">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-4 pb-12 md:pb-16">
 
         {/* Logos row */}
         <motion.div
@@ -180,49 +181,33 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.55 }}
-          className="mt-14"
+          className="mt-12 md:mt-14"
         >
           <CountdownTimer />
         </motion.div>
-      </div>
 
-      {/* ── Folk dancer row at bottom ──────────────────────── */}
-      <div
-        aria-hidden
-        className="absolute bottom-0 inset-x-0 z-10 pointer-events-none overflow-hidden"
-      >
-        {/* Fade gradient above dancers */}
-        <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[var(--cream-50)] to-transparent" />
+        {/* Scroll cue */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.8 }}
-          className="dancer-sway"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.2 }}
+          className="mt-8"
         >
-          <img
-            src="/cultural/folk-dancers.svg"
-            alt=""
-            className="w-full max-w-2xl mx-auto block opacity-30"
-          />
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+            className="flex flex-col items-center gap-1 text-[var(--crimson-800)]/50"
+          >
+            <span className="text-[10px] tracking-widest uppercase font-medium">Scroll</span>
+            <ChevronDown size={18} />
+          </motion.div>
         </motion.div>
       </div>
 
-      {/* Scroll cue */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.2 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-1 text-[var(--crimson-800)]/50 cursor-pointer"
-        >
-          <span className="text-[10px] tracking-widest uppercase font-medium">Scroll</span>
-          <ChevronDown size={18} />
-        </motion.div>
-      </motion.div>
+      {/* ── Concept strip from flyer ── */}
+      <div className="relative z-10 mt-auto w-full pb-6 md:pb-8">
+        <HeroConceptStrip />
+      </div>
 
     </section>
   );

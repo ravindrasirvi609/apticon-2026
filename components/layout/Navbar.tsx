@@ -40,7 +40,7 @@ export default function Navbar() {
           boxShadow: navShadow as unknown as string,
           backdropFilter: scrolled ? "blur(12px)" : "none",
         }}
-        className="fixed top-0 inset-x-0 z-30 transition-[backdrop-filter] duration-300"
+        className="w-full transition-[backdrop-filter] duration-300"
       >
         {/* Top accent bar */}
         <div className="h-1 w-full bg-gradient-to-r from-[var(--crimson-900)] via-[var(--gold-500)] to-[var(--navy-800)]" />
@@ -142,9 +142,6 @@ export default function Navbar() {
           </div>
         </div>
       </motion.header>
-
-      {/* Spacer to push content below fixed navbar */}
-      <div className="h-16 md:h-20" aria-hidden />
 
       <MobileMenu
         isOpen={menuOpen}

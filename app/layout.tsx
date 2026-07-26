@@ -6,7 +6,6 @@ import Footer from "@/components/layout/Footer";
 import AnnouncementBanner from "@/components/ui/AnnouncementBanner";
 import ScrollProgressBar  from "@/components/ui/ScrollProgressBar";
 import BackToTop          from "@/components/ui/BackToTop";
-import CustomCursor       from "@/components/ui/CustomCursor";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -81,8 +80,6 @@ export default function RootLayout({
       <body className="min-h-dvh flex flex-col bg-[var(--cream-50)] text-[var(--dark-text)] font-sans overflow-x-hidden">
         {/* Scroll progress line */}
         <ScrollProgressBar />
-        {/* Custom cursor — desktop only, self-disables on touch */}
-        <CustomCursor />
         {/* Skip to content — visible on keyboard focus */}
         <a
           href="#main-content"
@@ -90,9 +87,11 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        {/* Announcement banner — dismissible */}
-        <AnnouncementBanner />
-        <Navbar />
+        {/* Sticky header: banner stacks above navbar, both stick together */}
+        <div className="sticky top-0 z-30">
+          <AnnouncementBanner />
+          <Navbar />
+        </div>
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
         {/* Floating back-to-top */}

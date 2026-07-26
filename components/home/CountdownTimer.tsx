@@ -64,20 +64,50 @@ function FlipUnit({ value, label }: { value: string; label: string }) {
   );
 }
 
+const UNIT_LABELS = ["Days", "Hours", "Minutes", "Seconds"] as const;
+
 export default function CountdownTimer() {
-  const [time, setTime] = useState<TimeLeft>(getTimeLeft());
+  // null on server — avoids Date.now() hydration mismatch
+  const [time, setTime] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
+    setTime(getTimeLeft());
     const id = setInterval(() => setTime(getTimeLeft()), 1000);
     return () => clearInterval(id);
   }, []);
 
+  // Invisible skeleton preserves layout space during SSR / first paint
+  if (time === null) {
+    return (
+      <div className="flex flex-col items-center gap-4 invisible">
+        <p className="text-xs font-semibold tracking-widest uppercase text-[var(--gold-500)]/80">
+          Conference begins in
+        </p>
+        <div className="flex items-end gap-3 sm:gap-4 md:gap-5">
+          {UNIT_LABELS.map((label, i) => (
+            <div key={label} className="flex items-end gap-3 sm:gap-4 md:gap-5">
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 rounded-xl bg-[var(--crimson-800)]" />
+                <span className="text-[10px] sm:text-xs font-semibold tracking-widest uppercase text-[var(--gold-500)]">
+                  {label}
+                </span>
+              </div>
+              {i < UNIT_LABELS.length - 1 && (
+                <span className="text-2xl sm:text-3xl font-black text-[var(--gold-500)] pb-7 leading-none">:</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   const units = [
-    { value: String(time.days),            label: "Days" },
-    { value: pad(time.hours),   label: "Hours" },
-    { value: pad(time.minutes), label: "Minutes" },
-    { value: pad(time.seconds), label: "Seconds" },
-  ];
+    { value: String(time.days),  label: "Days" },
+    { value: pad(time.hours),    label: "Hours" },
+    { value: pad(time.minutes),  label: "Minutes" },
+    { value: pad(time.seconds),  label: "Seconds" },
+  ] as const;
 
   return (
     <div className="flex flex-col items-center gap-4">
