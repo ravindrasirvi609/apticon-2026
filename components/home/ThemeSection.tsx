@@ -103,7 +103,7 @@ export default function ThemeSection() {
             {/* CTA */}
             <motion.div variants={fadeUp} className="mt-12">
               <PulseButton href="/about" variant="gold">
-                Learn More About APTICON
+                Know More About 28th APTICON
               </PulseButton>
             </motion.div>
           </motion.div>

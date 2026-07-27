@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Search, Download, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
 import StatusBadge from "@/components/console/StatusBadge";
@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { Input } from "@/components/ui/shadcn/input";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
 import { Button } from "@/components/ui/shadcn/button";
+import { toast } from "sonner";
 
 interface AbstractItem {
   _id: string;
@@ -30,6 +31,39 @@ export default function AbstractsListClient() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState(false);
+
+  async function downloadWord() {
+    if (downloading) return;
+    setDownloading(true);
+    try {
+      const res = await fetch("/api/abstracts/export-word");
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "Download failed" }));
+        toast.error(err.error || "Failed to generate Word file");
+        return;
+      }
+      const blob = await res.blob();
+      // Pull filename from Content-Disposition if present
+      const cd = res.headers.get("Content-Disposition") || "";
+      const match = /filename="?([^"]+)"?/i.exec(cd);
+      const filename = match?.[1] || `APTICON-2026-Abstracts-${new Date().toISOString().slice(0, 10)}.docx`;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast.success("Abstract book downloaded");
+    } catch (e) {
+      toast.error("Failed to download Word file");
+      console.error(e);
+    } finally {
+      setDownloading(false);
+    }
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -50,7 +84,29 @@ export default function AbstractsListClient() {
 
   return (
     <div className="p-4 md:p-8">
-      <PageHeader title="Abstracts" description="All submissions across the review pipeline." />
+      <PageHeader
+        title="Abstracts"
+        description="All submissions across the review pipeline."
+        actions={
+          <Button
+            onClick={downloadWord}
+            disabled={downloading || items.length === 0}
+            className="bg-[var(--crimson-800)] hover:bg-[var(--crimson-900)] text-white"
+          >
+            {downloading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Preparing…
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4 mr-2" />
+                Download Word
+              </>
+            )}
+          </Button>
+        }
+      />
 
       <Card className="mb-6">
         <CardContent className="pt-6">
