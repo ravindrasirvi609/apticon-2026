@@ -1,5 +1,4 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { nanoid } from "nanoid";
 
 const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID ?? "";
@@ -30,11 +29,6 @@ export function buildPaymentProofKey(originalName: string): string {
   const ext = originalName.split(".").pop()?.toLowerCase() ?? "bin";
   const safeExt = ["pdf", "jpg", "jpeg", "png", "webp"].includes(ext) ? ext : "bin";
   return `payment-proofs/${new Date().getUTCFullYear()}/${nanoid(16)}.${safeExt}`;
-}
-
-export async function presignUpload(key: string, contentType: string, expiresSec = 300): Promise<string> {
-  const cmd = new PutObjectCommand({ Bucket: BUCKET, Key: key, ContentType: contentType });
-  return getSignedUrl(r2, cmd, { expiresIn: expiresSec });
 }
 
 export function publicUrl(key: string): string {

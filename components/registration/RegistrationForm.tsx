@@ -74,30 +74,18 @@ export default function RegistrationForm() {
       toast.error("Payment proof must be under 5 MB.");
       return null;
     }
-    const presignRes = await fetch("/api/upload/presign", {
+    const uploadData = new FormData();
+    uploadData.append("file", f);
+    uploadData.append("purpose", "payment_proof");
+    const uploadRes = await fetch("/api/upload", {
       method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        fileName: f.name,
-        contentType,
-        size: f.size,
-        purpose: "payment_proof",
-      }),
+      body: uploadData,
     });
-    if (!presignRes.ok) {
-      toast.error("Could not prepare upload.");
-      return null;
-    }
-    const { uploadUrl, key } = (await presignRes.json()) as { uploadUrl: string; key: string };
-    const putRes = await fetch(uploadUrl, {
-      method: "PUT",
-      headers: { "content-type": contentType },
-      body: f,
-    });
-    if (!putRes.ok) {
+    if (!uploadRes.ok) {
       toast.error("Payment proof upload failed.");
       return null;
     }
+    const { key } = (await uploadRes.json()) as { key: string };
     return { key };
   }
 

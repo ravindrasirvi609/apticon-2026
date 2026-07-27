@@ -684,7 +684,7 @@ The abstract submission and review workflow supports three actors:
 
 ```
 npm i mongoose bcryptjs jsonwebtoken resend zod jose
-npm i @aws-sdk/client-s3 @aws-sdk/s3-request-presigner   # R2 is S3-compatible
+npm i @aws-sdk/client-s3   # R2 is S3-compatible
 npm i class-variance-authority clsx tailwind-merge
 npm i @radix-ui/react-dialog @radix-ui/react-dropdown-menu \
       @radix-ui/react-label @radix-ui/react-select \
@@ -844,7 +844,7 @@ createdAt  Date
 | POST | `/api/users` | admin |
 | PATCH | `/api/users/[id]` | admin |
 | GET  | `/api/audit` | admin |
-| POST | `/api/upload/presign` | authed OR public-with-nonce (for abstract PDF upload) |
+| POST | `/api/upload` | public (for abstract and payment-proof uploads) |
 
 ---
 
@@ -857,7 +857,7 @@ createdAt  Date
 5. **Zod at every input boundary** — reject anything not matching the schema before it hits the DB.
 6. **Audit on every mutation** — helper `logAudit({actor, action, resourceType, resourceId, details, request})` inserts one row per mutation, called from every write route.
 7. **Rate-limited login** — 5 failed attempts per IP per 15 min → 429 (in-memory Map for now, upgradeable to Redis later).
-8. **File upload**: PDF/DOC/DOCX only, max 10 MB, scanned by extension + magic bytes. Uploaded direct to R2 via presigned URL.
+8. **File upload**: PDF/DOC/DOCX only, max 10 MB, scanned by extension + magic bytes. Uploaded through the application server to R2.
 
 ---
 
@@ -880,7 +880,7 @@ createdAt  Date
 
 ### Phase 8 — Public submission
 - Refactor existing `/abstracts` page: wire to `POST /api/abstracts`
-- R2 upload via presigned URL
+- R2 upload through `/api/upload`
 - Resend confirmation email with submission code
 - Success page `/abstracts/success/[code]`
 - Status lookup page `/abstracts/status`
@@ -1050,7 +1050,7 @@ Add: `linkedRegistration: ObjectId?` — set on abstract submit if a matching re
 ## Payment Proof Upload
 
 - Allowed types: `image/jpeg`, `image/png`, `application/pdf`. Max 5 MB.
-- Uses the existing `/api/upload/presign` route — schema extended to accept image types.
+- Uses `/api/upload`, which accepts payment-proof image types.
 - R2 key namespace: `payment-proofs/<year>/<nanoid>.<ext>`.
 - Approver sees the proof inline via the R2 public URL; images render, PDFs open in a new tab.
 
@@ -1097,7 +1097,7 @@ Existing abstract templates refactored to the new builder for visual consistency
 - `POST /api/registrations` (public) + `GET status` (public)
 - `GET /api/registrations`, `GET /api/registrations/[id]` (approver+admin)
 - `PATCH /api/registrations/[id]/approve|reject|link`
-- Extend presign to accept image types for payment proof
+- Add payment-proof image type support to `/api/upload`
 - `GET /api/admin/delegates`, `POST /api/admin/nudge`
 
 ### 12.4 — Public UI

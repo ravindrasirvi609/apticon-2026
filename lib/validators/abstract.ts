@@ -29,23 +29,20 @@ export const abstractDecisionSchema = z.object({
   note: z.string().max(2000).optional(),
 });
 
-export const PRESIGN_ABSTRACT_TYPES = [
+export const UPLOAD_ABSTRACT_TYPES = [
   "application/pdf",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ] as const;
 
-export const PRESIGN_PAYMENT_TYPES = [
+export const UPLOAD_PAYMENT_TYPES = [
   "application/pdf",
   "image/jpeg",
   "image/png",
   "image/webp",
 ] as const;
 
-export const presignRequestSchema = z.object({
-  fileName: z.string().min(1).max(300),
-  contentType: z.enum([...PRESIGN_ABSTRACT_TYPES, ...PRESIGN_PAYMENT_TYPES]),
-  size: z.number().int().positive().max(10 * 1024 * 1024), // 10 MB
+export const uploadRequestSchema = z.object({
   purpose: z.enum(["abstract", "payment_proof"]).default("abstract"),
 });
 
@@ -53,4 +50,4 @@ export type AbstractSubmitInput = z.infer<typeof abstractSubmitSchema>;
 export type AbstractStatusLookupInput = z.infer<typeof abstractStatusLookupSchema>;
 export type AbstractAssignInput = z.infer<typeof abstractAssignSchema>;
 export type AbstractDecisionInput = z.infer<typeof abstractDecisionSchema>;
-export type PresignRequestInput = z.infer<typeof presignRequestSchema>;
+export type UploadRequestInput = z.infer<typeof uploadRequestSchema>;
