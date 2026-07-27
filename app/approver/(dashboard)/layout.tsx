@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { LayoutDashboard, ClipboardCheck, Settings as SettingsIcon } from "lucide-react";
 import { getSessionFromCookies } from "@/lib/auth";
-import ConsoleShell from "@/components/console/ConsoleShell";
+import ConsoleShell, { type NavItem } from "@/components/console/ConsoleShell";
 import ConsoleBodyClass from "@/components/console/ConsoleBodyClass";
 
 export const metadata: Metadata = {
@@ -10,10 +9,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const APPROVER_NAV = [
-  { href: "/approver",               label: "Dashboard",     icon: LayoutDashboard },
-  { href: "/approver/registrations", label: "Registrations", icon: ClipboardCheck },
-  { href: "/approver/settings",      label: "Settings",      icon: SettingsIcon },
+const APPROVER_NAV: NavItem[] = [
+  { href: "/approver",               label: "Dashboard",     icon: "dashboard" },
+  { href: "/approver/registrations", label: "Registrations", icon: "registrations" },
+  { href: "/approver/settings",      label: "Settings",      icon: "settings" },
 ];
 
 export default async function ApproverDashboardLayout({ children }: { children: React.ReactNode }) {

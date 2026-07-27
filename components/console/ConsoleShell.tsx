@@ -2,7 +2,18 @@
 import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Menu, X } from "lucide-react";
+import {
+  ClipboardCheck,
+  ClipboardList,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Settings,
+  Users,
+  UsersRound,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/shadcn/button";
@@ -10,7 +21,7 @@ import { Button } from "@/components/ui/shadcn/button";
 export interface NavItem {
   href: string;
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: "dashboard" | "delegates" | "registrations" | "abstracts" | "users" | "audit" | "settings";
 }
 
 interface Props {
@@ -26,6 +37,16 @@ const LOGIN_PATH_BY_ROLE: Record<Props["role"], string> = {
   super_admin: "/admin/login",
   reviewer: "/reviewer/login",
   registration_approver: "/approver/login",
+};
+
+const NAV_ICONS = {
+  dashboard: LayoutDashboard,
+  delegates: UsersRound,
+  registrations: ClipboardCheck,
+  abstracts: FileText,
+  users: Users,
+  audit: ClipboardList,
+  settings: Settings,
 };
 
 export default function ConsoleShell({ role, brand, brandSub, nav, user, children }: Props) {
@@ -53,6 +74,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {nav.map((item) => {
             const active = pathname === item.href || (item.href !== "/admin" && item.href !== "/reviewer" && pathname.startsWith(item.href));
+            const Icon = NAV_ICONS[item.icon];
             return (
               <Link
                 key={item.href}
@@ -64,7 +86,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
                     : "text-[var(--dark-text)] hover:bg-[var(--cream-100)] hover:text-[var(--crimson-800)]"
                 )}
               >
-                <item.icon className="w-4 h-4" />
+                <Icon className="w-4 h-4" />
                 {item.label}
               </Link>
             );
@@ -114,6 +136,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
             <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
               {nav.map((item) => {
                 const active = pathname === item.href;
+                const Icon = NAV_ICONS[item.icon];
                 return (
                   <Link
                     key={item.href}
@@ -126,7 +149,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
                         : "text-[var(--dark-text)] hover:bg-[var(--cream-100)]"
                     )}
                   >
-                    <item.icon className="w-4 h-4" />
+                    <Icon className="w-4 h-4" />
                     {item.label}
                   </Link>
                 );

@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { LayoutDashboard, FileText, Settings as SettingsIcon } from "lucide-react";
 import { getSessionFromCookies } from "@/lib/auth";
-import ConsoleShell from "@/components/console/ConsoleShell";
+import ConsoleShell, { type NavItem } from "@/components/console/ConsoleShell";
 import ConsoleBodyClass from "@/components/console/ConsoleBodyClass";
 
 export const metadata: Metadata = {
@@ -10,10 +9,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const REVIEWER_NAV = [
-  { href: "/reviewer",           label: "Dashboard",          icon: LayoutDashboard },
-  { href: "/reviewer/abstracts", label: "Assigned Abstracts", icon: FileText },
-  { href: "/reviewer/settings",  label: "Settings",           icon: SettingsIcon },
+const REVIEWER_NAV: NavItem[] = [
+  { href: "/reviewer",           label: "Dashboard",          icon: "dashboard" },
+  { href: "/reviewer/abstracts", label: "Assigned Abstracts", icon: "abstracts" },
+  { href: "/reviewer/settings",  label: "Settings",           icon: "settings" },
 ];
 
 export default async function ReviewerDashboardLayout({ children }: { children: React.ReactNode }) {

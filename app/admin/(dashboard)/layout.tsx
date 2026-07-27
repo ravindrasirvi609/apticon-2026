@@ -1,16 +1,7 @@
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import {
-  LayoutDashboard,
-  FileText,
-  Users,
-  ClipboardList,
-  Settings as SettingsIcon,
-  ClipboardCheck,
-  UsersRound,
-} from "lucide-react";
 import { getSessionFromCookies } from "@/lib/auth";
-import ConsoleShell from "@/components/console/ConsoleShell";
+import ConsoleShell, { type NavItem } from "@/components/console/ConsoleShell";
 import ConsoleBodyClass from "@/components/console/ConsoleBodyClass";
 
 export const metadata: Metadata = {
@@ -18,14 +9,14 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const ADMIN_NAV = [
-  { href: "/admin",              label: "Dashboard",     icon: LayoutDashboard },
-  { href: "/admin/delegates",    label: "Delegates",     icon: UsersRound },
-  { href: "/admin/registrations",label: "Registrations", icon: ClipboardCheck },
-  { href: "/admin/abstracts",    label: "Abstracts",     icon: FileText },
-  { href: "/admin/users",        label: "Users",         icon: Users },
-  { href: "/admin/audit",        label: "Audit Log",     icon: ClipboardList },
-  { href: "/admin/settings",     label: "Settings",      icon: SettingsIcon },
+const ADMIN_NAV: NavItem[] = [
+  { href: "/admin",               label: "Dashboard",     icon: "dashboard" },
+  { href: "/admin/delegates",     label: "Delegates",     icon: "delegates" },
+  { href: "/admin/registrations", label: "Registrations", icon: "registrations" },
+  { href: "/admin/abstracts",     label: "Abstracts",     icon: "abstracts" },
+  { href: "/admin/users",         label: "Users",         icon: "users" },
+  { href: "/admin/audit",         label: "Audit Log",     icon: "audit" },
+  { href: "/admin/settings",      label: "Settings",      icon: "settings" },
 ];
 
 export default async function AdminDashboardLayout({ children }: { children: React.ReactNode }) {

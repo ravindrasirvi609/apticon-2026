@@ -78,7 +78,10 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable} ${tiro.variable}`}
       data-scroll-behavior="smooth"
     >
-      <body className="min-h-dvh flex flex-col bg-[var(--cream-50)] text-[var(--dark-text)] font-sans overflow-x-hidden">
+      <body
+        suppressHydrationWarning
+        className="min-h-dvh flex flex-col bg-[var(--cream-50)] text-[var(--dark-text)] font-sans overflow-x-hidden"
+      >
         {/* Scroll progress line */}
         <ScrollProgressBar />
         {/* Skip to content — visible on keyboard focus */}
