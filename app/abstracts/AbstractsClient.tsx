@@ -25,7 +25,7 @@ interface AbstractForm {
   email: string;
   phone: string;
   theme: string;
-  type: "oral" | "poster";
+  type: "review" | "research";
   abstract: string;
 }
 
@@ -249,9 +249,29 @@ export default function AbstractsClient() {
                   {errors.email && <p className={errCls}>Valid email required.</p>}
                 </div>
                 <div>
-                  <Label htmlFor="phone">Phone *</Label>
-                  <Input id="phone" className="mt-2" {...register("phone", { required: true, minLength: 6 })} />
-                  {errors.phone && <p className={errCls}>Required.</p>}
+                  <Label htmlFor="phone">Mobile *</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={10}
+                    className="mt-2"
+                    placeholder="10-digit mobile"
+                    {...register("phone", {
+                      required: "Mobile is required",
+                      pattern: {
+                        value: /^[6-9]\d{9}$/,
+                        message: "Enter a valid 10-digit Indian mobile number",
+                      },
+                    })}
+                    onInput={(e) => {
+                      // Strip non-digits and cap at 10 as the user types
+                      const t = e.currentTarget;
+                      t.value = t.value.replace(/\D/g, "").slice(0, 10);
+                    }}
+                    aria-invalid={!!errors.phone}
+                  />
+                  {errors.phone && <p className={errCls}>{errors.phone.message || "Enter a valid 10-digit mobile."}</p>}
                 </div>
               </div>
 
@@ -271,15 +291,15 @@ export default function AbstractsClient() {
                 </div>
 
                 <div>
-                  <Label>Presentation Type *</Label>
+                  <Label>Article Type *</Label>
                   <div className="mt-2 flex gap-3">
                     <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--gold-500)]/30 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40">
-                      <input type="radio" value="oral" {...register("type", { required: true })} defaultChecked />
-                      <span className="text-sm">Oral</span>
+                      <input type="radio" value="review" {...register("type", { required: true })} defaultChecked />
+                      <span className="text-sm">Review Article</span>
                     </label>
                     <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--gold-500)]/30 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40">
-                      <input type="radio" value="poster" {...register("type", { required: true })} />
-                      <span className="text-sm">Poster</span>
+                      <input type="radio" value="research" {...register("type", { required: true })} />
+                      <span className="text-sm">Research Article</span>
                     </label>
                   </div>
                 </div>

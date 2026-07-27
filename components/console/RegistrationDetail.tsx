@@ -27,7 +27,6 @@ interface RegDoc {
   state?: string;
   email: string;
   phone: string;
-  whatsapp?: string;
   category: string;
   feeTier: string;
   feeAmount: number;
@@ -138,8 +137,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
             <CardHeader><CardTitle>Delegate Information</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <Field label="Email"        value={r.email} />
-              <Field label="Phone"        value={r.phone} />
-              <Field label="WhatsApp"     value={r.whatsapp ?? "—"} />
+              <Field label="Mobile"       value={r.phone} />
               <Field label="Designation"  value={r.designation} />
               <Field label="Institution"  value={r.institution} />
               <Field label="City / State" value={`${r.city ?? "—"}${r.state ? ", " + r.state : ""}`} />

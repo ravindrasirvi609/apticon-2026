@@ -52,9 +52,8 @@ export async function POST(request: NextRequest) {
     city:        data.city,
     state:       data.state,
 
-    email:    data.email,
-    phone:    data.phone,
-    whatsapp: data.whatsapp,
+    email: data.email,
+    phone: data.phone,
 
     category:           data.category,
     feeTier:            tier,

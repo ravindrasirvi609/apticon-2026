@@ -11,8 +11,10 @@ export const registrationSubmitSchema = z.object({
   state:       z.string().max(120).trim().optional(),
 
   email:       z.string().email().toLowerCase().trim(),
-  phone:       z.string().min(6).max(30).trim(),
-  whatsapp:    z.string().max(30).trim().optional(),
+  phone:       z
+    .string()
+    .trim()
+    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
 
   category:            CategoryEnum,
   willSubmitAbstract:  z.boolean().default(false),

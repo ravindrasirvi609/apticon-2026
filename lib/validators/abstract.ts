@@ -7,9 +7,12 @@ export const abstractSubmitSchema = z.object({
   presentingAuthor: z.string().min(2).max(200).trim(),
   institution: z.string().min(2).max(300).trim(),
   email: z.string().email().toLowerCase().trim(),
-  phone: z.string().min(6).max(30).trim(),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
   theme: z.string().refine((v) => ABSTRACT_THEMES.includes(v), "Invalid theme"),
-  type: z.enum(["oral", "poster"]),
+  type: z.enum(["review", "research"]),
   abstract: z.string().min(100).max(3500).trim(),
   fileKey: z.string().optional(),
   fileName: z.string().optional(),

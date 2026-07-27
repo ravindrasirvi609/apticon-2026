@@ -24,7 +24,6 @@ interface FormData {
   state: string;
   email: string;
   phone: string;
-  whatsapp: string;
   category: RegistrationCategory | "";
   willSubmitAbstract: boolean;
   paymentMode: "neft_rtgs" | "upi" | "dd" | "online" | "";
@@ -110,7 +109,6 @@ export default function RegistrationForm() {
         state: data.state || undefined,
         email: data.email,
         phone: data.phone,
-        whatsapp: data.whatsapp || undefined,
         category: data.category,
         willSubmitAbstract: !!data.willSubmitAbstract,
         paymentMode: data.paymentMode,
@@ -194,7 +192,7 @@ export default function RegistrationForm() {
         <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--gold-500)]/20">
           Contact Details
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="email">Email *</Label>
             <Input
@@ -214,18 +212,21 @@ export default function RegistrationForm() {
             <Input
               id="phone"
               type="tel"
+              inputMode="numeric"
+              maxLength={10}
               className="mt-2"
               placeholder="10-digit mobile"
               {...register("phone", {
                 required: "Mobile is required",
-                pattern: { value: /^[6-9]\d{9}$/, message: "Enter valid 10-digit number" },
+                pattern: { value: /^[6-9]\d{9}$/, message: "Enter a valid 10-digit Indian mobile number" },
               })}
+              onInput={(e) => {
+                // Strip non-digits and cap at 10 as the user types
+                const t = e.currentTarget;
+                t.value = t.value.replace(/\D/g, "").slice(0, 10);
+              }}
             />
             {errors.phone && <p className={errCls}>{errors.phone.message}</p>}
-          </div>
-          <div>
-            <Label htmlFor="whatsapp">WhatsApp</Label>
-            <Input id="whatsapp" type="tel" className="mt-2" placeholder="WhatsApp number" {...register("whatsapp")} />
           </div>
         </div>
       </div>
@@ -280,7 +281,7 @@ export default function RegistrationForm() {
             className="mt-0.5 w-4 h-4 accent-[var(--crimson-800)] cursor-pointer"
           />
           <label htmlFor="abstract" className="text-sm text-[var(--dark-text)] cursor-pointer">
-            I intend to submit an abstract for poster/oral presentation.
+            I intend to submit an abstract (review or research article).
             <span className="block text-xs text-[var(--muted-text)] mt-0.5">
               You'll submit the abstract separately on the <a href="/abstracts" className="text-[var(--crimson-800)] hover:underline">Abstracts page</a>. Registration and abstract will be linked automatically by your email.
             </span>

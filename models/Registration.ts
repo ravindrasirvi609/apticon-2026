@@ -24,7 +24,6 @@ export interface IRegistration {
   // Contact
   email: string;
   phone: string;
-  whatsapp?: string;
 
   // Registration
   category: RegistrationCategory;
@@ -67,9 +66,8 @@ const RegistrationSchema = new Schema<IRegistration>(
     city:         { type: String, trim: true },
     state:        { type: String, trim: true },
 
-    email:    { type: String, required: true, lowercase: true, trim: true, index: true },
-    phone:    { type: String, required: true, trim: true },
-    whatsapp: { type: String, trim: true },
+    email: { type: String, required: true, lowercase: true, trim: true, index: true },
+    phone: { type: String, required: true, trim: true },
 
     category:           { type: String, required: true },
     feeTier:            { type: String, enum: ["early_bird", "regular", "on_spot"], required: true },

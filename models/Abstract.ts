@@ -18,7 +18,9 @@ export interface IAbstract {
   email: string;
   phone: string;
   theme: string;
-  type: "oral" | "poster";
+  // Current values: "review" | "research". Legacy submissions may hold
+  // "oral" | "poster" — kept in the union so those documents type-check.
+  type: "review" | "research" | "oral" | "poster";
   abstract: string;
   fileUrl?: string;
   fileKey?: string;
@@ -44,7 +46,13 @@ const AbstractSchema = new Schema<IAbstract>(
     email: { type: String, required: true, lowercase: true, trim: true, index: true },
     phone: { type: String, required: true },
     theme: { type: String, required: true },
-    type: { type: String, enum: ["oral", "poster"], required: true },
+    // NOTE: legacy submissions may still have "oral"/"poster"; keeping them in
+    // the enum keeps historical records queryable without a data migration.
+    type: {
+      type: String,
+      enum: ["review", "research", "oral", "poster"],
+      required: true,
+    },
     abstract: { type: String, required: true },
     fileUrl: { type: String },
     fileKey: { type: String },
