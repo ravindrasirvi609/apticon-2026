@@ -2,12 +2,10 @@ import { NextResponse, type NextRequest } from "next/server";
 import {
   uploadRequestSchema,
   UPLOAD_ABSTRACT_TYPES,
-  UPLOAD_PAYMENT_TYPES,
 } from "@/lib/validators/abstract";
-import { buildAbstractKey, buildPaymentProofKey, uploadBuffer } from "@/lib/r2";
+import { buildAbstractKey, uploadBuffer } from "@/lib/r2";
 
 const MAX_ABSTRACT_SIZE = 10 * 1024 * 1024;
-const MAX_PAYMENT_PROOF_SIZE = 5 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData().catch(() => null);
@@ -21,9 +19,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "A file and valid upload purpose are required" }, { status: 400 });
   }
 
-  const { purpose } = parsed.data;
-  const allowedTypes = purpose === "payment_proof" ? UPLOAD_PAYMENT_TYPES : UPLOAD_ABSTRACT_TYPES;
-  const maxSize = purpose === "payment_proof" ? MAX_PAYMENT_PROOF_SIZE : MAX_ABSTRACT_SIZE;
+  const allowedTypes = UPLOAD_ABSTRACT_TYPES;
+  const maxSize = MAX_ABSTRACT_SIZE;
 
   if (!allowedTypes.includes(file.type as never)) {
     return NextResponse.json({ error: `File type ${file.type || "unknown"} is not allowed` }, { status: 400 });
@@ -33,7 +30,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const key = purpose === "payment_proof" ? buildPaymentProofKey(file.name) : buildAbstractKey(file.name);
+    const key = buildAbstractKey(file.name);
     await uploadBuffer(key, Buffer.from(await file.arrayBuffer()), file.type);
     return NextResponse.json({ key });
   } catch (error) {

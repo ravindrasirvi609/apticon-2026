@@ -23,6 +23,7 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     await connectDB();
     const reg = await Registration.findById(id);
     if (!reg) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (reg.paymentMode === "razorpay") return NextResponse.json({ error: "Razorpay registrations are approved automatically after payment capture." }, { status: 400 });
     if (reg.status === "approved") return NextResponse.json({ error: "Already approved" }, { status: 400 });
 
     const before = { status: reg.status };

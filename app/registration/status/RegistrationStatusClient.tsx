@@ -41,7 +41,7 @@ const STATUS_VARIANT: Record<string, "info" | "warning" | "success" | "danger" |
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  submitted: "Submitted",
+  submitted: "Payment Processing",
   payment_review: "Payment Under Review",
   approved: "Approved",
   rejected: "Payment Rejected",
@@ -171,7 +171,7 @@ export default function RegistrationStatusClient() {
                 </div>
               ) : result.registration.willSubmitAbstract ? (
                 <div className="text-sm">
-                  You indicated you'd submit an abstract but we haven't received one yet.
+                  You indicated you&apos;d submit an abstract but we haven&apos;t received one yet.
                   <Link href="/abstracts" className="ml-1 font-semibold text-[var(--crimson-800)] hover:underline">Submit now →</Link>
                 </div>
               ) : (

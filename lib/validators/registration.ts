@@ -28,6 +28,20 @@ export const registrationSubmitSchema = z.object({
   remarks: z.string().max(2000).optional(),
 });
 
+export const razorpayOrderSchema = registrationSubmitSchema.omit({
+  paymentMode: true,
+  transactionNumber: true,
+  paymentProofKey: true,
+  paymentProofName: true,
+});
+
+export const razorpayVerifySchema = z.object({
+  registrationId: z.string().length(24),
+  razorpay_payment_id: z.string().min(3).max(100),
+  razorpay_order_id: z.string().min(3).max(100),
+  razorpay_signature: z.string().length(64),
+});
+
 export const registrationStatusLookupSchema = z.object({
   code:  z.string().min(4).max(60).trim(),
   email: z.string().email().toLowerCase().trim(),

@@ -35,6 +35,11 @@ interface RegDoc {
   transactionNumber: string;
   paymentProofUrl: string;
   paymentProofName: string;
+  paymentStatus?: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  paymentMethod?: string;
+  paidAt?: string;
   status: string;
   approvedAt?: string;
   rejectedAt?: string;
@@ -163,11 +168,13 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <Field label="Transaction Number" value={r.transactionNumber} mono />
-                <Field label="Proof file name"    value={r.paymentProofName} />
+                <Field label={r.paymentMode === "razorpay" ? "Razorpay Payment ID" : "Transaction Number"} value={r.razorpayPaymentId ?? r.transactionNumber ?? "—"} mono />
+                <Field label={r.paymentMode === "razorpay" ? "Payment status" : "Proof file name"} value={r.paymentMode === "razorpay" ? (r.paymentStatus ?? "pending") : r.paymentProofName} />
+                {r.paymentMode === "razorpay" && <Field label="Razorpay Order ID" value={r.razorpayOrderId ?? "—"} mono />}
+                {r.paymentMode === "razorpay" && <Field label="Payment method" value={r.paymentMethod ?? "—"} />}
               </div>
 
-              <div className="rounded-lg border border-[var(--gold-500)]/25 overflow-hidden">
+              {r.paymentMode !== "razorpay" && <div className="rounded-lg border border-[var(--gold-500)]/25 overflow-hidden">
                 <div className="flex items-center justify-between px-4 py-2 bg-[var(--cream-50)] border-b border-[var(--gold-500)]/20">
                   <div className="flex items-center gap-2 text-sm font-semibold text-[var(--dark-text)]">
                     {isImage ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
@@ -183,11 +190,11 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
                     <img src={r.paymentProofUrl} alt="Payment proof" className="w-full max-h-[520px] object-contain bg-white" />
                   ) : (
                     <div className="p-8 text-center text-sm text-[var(--muted-text)]">
-                      PDF preview not embedded. Click "Open in new tab" to view.
+                      PDF preview not embedded. Click &ldquo;Open in new tab&rdquo; to view.
                     </div>
                   )}
                 </div>
-              </div>
+              </div>}
             </CardContent>
           </Card>
 

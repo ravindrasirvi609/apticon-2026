@@ -2,6 +2,26 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+## Razorpay payment setup
+
+The registration flow uses Razorpay Standard Checkout only; it does not accept bank-transfer details or payment-proof uploads.
+
+Set these server-only environment variables in the deployment environment (and in `.env.local` for development):
+
+```bash
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=...
+RAZORPAY_WEBHOOK_SECRET=use-a-separate-long-random-secret
+```
+
+In Razorpay Dashboard, enable automatic capture and add this webhook endpoint for both Test and Live mode:
+
+```text
+https://YOUR-DOMAIN/api/payments/razorpay/webhook
+```
+
+Subscribe to `payment.captured`, `payment.authorized`, `payment.failed`, and `payment.refunded`. Test the complete flow with test keys before replacing them with Live keys. The key secret and webhook secret must never be exposed to the browser or committed to source control.
+
 First, run the development server:
 
 ```bash

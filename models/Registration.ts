@@ -8,7 +8,8 @@ export type RegistrationStatus =
   | "rejected"
   | "resubmitted";
 
-export type PaymentMode = "neft_rtgs" | "upi" | "dd" | "online";
+export type PaymentMode = "neft_rtgs" | "upi" | "dd" | "online" | "razorpay";
+export type PaymentStatus = "pending" | "authorized" | "captured" | "failed" | "refunded";
 
 export interface IRegistration {
   _id: mongoose.Types.ObjectId;
@@ -37,6 +38,11 @@ export interface IRegistration {
   paymentProofKey: string;
   paymentProofUrl: string;
   paymentProofName: string;
+  paymentStatus?: PaymentStatus;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  paymentMethod?: string;
+  paidAt?: Date;
 
   // Workflow
   status: RegistrationStatus;
@@ -74,11 +80,16 @@ const RegistrationSchema = new Schema<IRegistration>(
     feeAmount:          { type: Number, required: true, min: 0 },
     willSubmitAbstract: { type: Boolean, default: false },
 
-    paymentMode:       { type: String, enum: ["neft_rtgs", "upi", "dd", "online"], required: true },
-    transactionNumber: { type: String, required: true, trim: true, index: true },
-    paymentProofKey:   { type: String, required: true },
-    paymentProofUrl:   { type: String, required: true },
-    paymentProofName:  { type: String, required: true },
+    paymentMode:       { type: String, enum: ["neft_rtgs", "upi", "dd", "online", "razorpay"], required: true },
+    transactionNumber: { type: String, default: "", trim: true, index: true },
+    paymentProofKey:   { type: String, default: "" },
+    paymentProofUrl:   { type: String, default: "" },
+    paymentProofName:  { type: String, default: "" },
+    paymentStatus:     { type: String, enum: ["pending", "authorized", "captured", "failed", "refunded"], index: true },
+    razorpayOrderId:   { type: String, sparse: true, unique: true, index: true },
+    razorpayPaymentId: { type: String, sparse: true, unique: true, index: true },
+    paymentMethod:     { type: String },
+    paidAt:            { type: Date },
 
     status: {
       type: String,

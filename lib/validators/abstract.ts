@@ -38,15 +38,8 @@ export const UPLOAD_ABSTRACT_TYPES = [
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ] as const;
 
-export const UPLOAD_PAYMENT_TYPES = [
-  "application/pdf",
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-] as const;
-
 export const uploadRequestSchema = z.object({
-  purpose: z.enum(["abstract", "payment_proof"]).default("abstract"),
+  purpose: z.literal("abstract").default("abstract"),
 });
 
 export type AbstractSubmitInput = z.infer<typeof abstractSubmitSchema>;

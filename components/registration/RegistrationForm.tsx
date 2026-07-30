@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Upload, Loader2, CreditCard, Info, Calculator } from "lucide-react";
+import { Loader2, Info, Calculator, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/shadcn/button";
 import { Input } from "@/components/ui/shadcn/input";
 import { Textarea } from "@/components/ui/shadcn/textarea";
@@ -28,32 +28,39 @@ interface FormData {
   phone: string;
   category: RegistrationCategory | "";
   willSubmitAbstract: boolean;
-  paymentMode: "neft_rtgs" | "upi" | "dd" | "online" | "";
-  transactionNumber: string;
   remarks: string;
 }
 
 const STATES = ["Andhra Pradesh","Assam","Bihar","Chhattisgarh","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu & Kashmir","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Odisha","Punjab","Rajasthan","Tamil Nadu","Telangana","Uttar Pradesh","Uttarakhand","West Bengal","Other"];
 
-const PAYMENT_MODES: { value: "neft_rtgs" | "upi" | "dd" | "online"; label: string; note: string }[] = [
-  { value: "neft_rtgs", label: "NEFT / RTGS", note: "Bank transfer — enter UTR number" },
-  { value: "upi",       label: "UPI",         note: "UPI transaction ID (e.g. 421...@paytm)" },
-  { value: "dd",        label: "Demand Draft", note: "Draft number issued by the bank" },
-  { value: "online",    label: "Online Portal", note: "Payment gateway reference / order ID" },
-];
-
-const PAYMENT_PROOF_TYPES: Record<string, "application/pdf" | "image/jpeg" | "image/png" | "image/webp"> = {
-  pdf:  "application/pdf",
-  jpg:  "image/jpeg",
-  jpeg: "image/jpeg",
-  png:  "image/png",
-  webp: "image/webp",
+type RazorpayResponse = { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string };
+type RazorpayOptions = {
+  key: string; amount: number; currency: string; name: string; description: string; order_id: string;
+  prefill: { name: string; email: string; contact: string }; theme: { color: string };
+  modal: { ondismiss: () => void }; handler: (response: RazorpayResponse) => void;
 };
+
+declare global {
+  interface Window { Razorpay?: new (options: RazorpayOptions) => { open: () => void; on: (event: string, callback: () => void) => void }; }
+}
+
+function loadRazorpayCheckout() {
+  if (window.Razorpay) return Promise.resolve();
+  return new Promise<void>((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+    if (existing) { existing.addEventListener("load", () => resolve(), { once: true }); existing.addEventListener("error", () => reject(new Error("Could not load Razorpay")), { once: true }); return; }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Could not load Razorpay"));
+    document.body.appendChild(script);
+  });
+}
 
 export default function RegistrationForm() {
   const router = useRouter();
-  const [proofFile, setProofFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [paying, setPaying] = useState(false);
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
     defaultValues: { willSubmitAbstract: false },
   });
@@ -65,43 +72,9 @@ export default function RegistrationForm() {
   const currentFee = chosenCategory ? currentFeeAmount(chosenCategory) : null;
   const feeBreakdown = currentFee ? calculateFeeWithGst(currentFee.amount) : null;
 
-  async function uploadProof(f: File): Promise<{ key: string } | null> {
-    const ext = f.name.split(".").pop()?.toLowerCase() ?? "";
-    const contentType = PAYMENT_PROOF_TYPES[ext];
-    if (!contentType) {
-      toast.error("Payment proof must be PDF, JPG, PNG or WEBP.");
-      return null;
-    }
-    if (f.size > 5 * 1024 * 1024) {
-      toast.error("Payment proof must be under 5 MB.");
-      return null;
-    }
-    const uploadData = new FormData();
-    uploadData.append("file", f);
-    uploadData.append("purpose", "payment_proof");
-    const uploadRes = await fetch("/api/upload", {
-      method: "POST",
-      body: uploadData,
-    });
-    if (!uploadRes.ok) {
-      toast.error("Payment proof upload failed.");
-      return null;
-    }
-    const { key } = (await uploadRes.json()) as { key: string };
-    return { key };
-  }
-
   const onSubmit = async (data: FormData) => {
-    if (!proofFile) {
-      toast.error("Please attach your payment proof.");
-      return;
-    }
-    setUploading(true);
-    const uploaded = await uploadProof(proofFile);
-    setUploading(false);
-    if (!uploaded) return;
-
-    const res = await fetch("/api/registrations", {
+    setPaying(true);
+    const res = await fetch("/api/payments/razorpay/order", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -114,20 +87,50 @@ export default function RegistrationForm() {
         phone: data.phone,
         category: data.category,
         willSubmitAbstract: !!data.willSubmitAbstract,
-        paymentMode: data.paymentMode,
-        transactionNumber: data.transactionNumber,
-        paymentProofKey: uploaded.key,
-        paymentProofName: proofFile.name,
         remarks: data.remarks || undefined,
       }),
     });
     const body = await res.json();
     if (!res.ok) {
       toast.error(body.error ?? "Registration failed. Please try again.");
+      setPaying(false);
       return;
     }
-    toast.success("Registration received. Check your email.");
-    router.push(`/registration/success/${body.registrationCode}`);
+    try {
+      await loadRazorpayCheckout();
+      if (!window.Razorpay) throw new Error("Razorpay did not load");
+      const checkout = new window.Razorpay({
+        key: body.key,
+        amount: body.amount,
+        currency: body.currency,
+        name: "APTICON 2026",
+        description: `Registration ${body.registrationCode}`,
+        order_id: body.orderId,
+        prefill: { name: data.fullName, email: data.email, contact: data.phone },
+        theme: { color: "#8f1737" },
+        modal: { ondismiss: () => setPaying(false) },
+        handler: async (response) => {
+          try {
+            const verify = await fetch("/api/payments/razorpay/verify", {
+              method: "POST", headers: { "content-type": "application/json" },
+              body: JSON.stringify({ registrationId: body.registrationId, ...response }),
+            });
+            const result = await verify.json();
+            if (!verify.ok) throw new Error(result.error ?? "Payment verification failed");
+            toast.success(result.captured ? "Payment confirmed. Your registration is complete." : "Payment verified and is being confirmed.");
+            router.push(`/registration/success/${result.registrationCode}?payment=${result.captured ? "confirmed" : "processing"}`);
+          } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Payment verification failed. It will be checked automatically.");
+            router.push(`/registration/success/${body.registrationCode}?payment=processing`);
+          } finally { setPaying(false); }
+        },
+      });
+      checkout.on("payment.failed", () => { setPaying(false); toast.error("Payment was not completed. You can try again."); });
+      checkout.open();
+    } catch (error) {
+      setPaying(false);
+      toast.error(error instanceof Error ? error.message : "Unable to open secure payment.");
+    }
   };
 
   const errCls = "mt-1 text-xs text-red-600";
@@ -297,7 +300,7 @@ export default function RegistrationForm() {
           <label htmlFor="abstract" className="text-sm text-[var(--dark-text)] cursor-pointer">
             I intend to submit an abstract (review or research article).
             <span className="block text-xs text-[var(--muted-text)] mt-0.5">
-              You'll submit the abstract separately on the <a href="/abstracts" className="text-[var(--crimson-800)] hover:underline">Abstracts page</a>. Registration and abstract will be linked automatically by your email.
+              You&apos;ll submit the abstract separately on the <a href="/abstracts" className="text-[var(--crimson-800)] hover:underline">Abstracts page</a>. Registration and abstract will be linked automatically by your email.
             </span>
           </label>
         </div>
@@ -306,73 +309,17 @@ export default function RegistrationForm() {
       {/* Payment */}
       <div>
         <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--gold-500)]/20">
-          Payment
+          Secure Online Payment
         </h3>
         <div className="mb-4 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/20 p-4 text-sm">
           <div className="flex items-start gap-2">
-            <CreditCard className="w-4 h-4 mt-0.5 text-[var(--crimson-800)] flex-shrink-0" />
+            <ShieldCheck className="w-4 h-4 mt-0.5 text-[var(--crimson-800)] flex-shrink-0" />
             <div>
-              <p className="font-semibold text-[var(--dark-text)] mb-1">Bank details for NEFT/RTGS/DD:</p>
+              <p className="font-semibold text-[var(--dark-text)] mb-1">Pay securely with Razorpay</p>
               <p className="text-[var(--muted-text)]">
-                Account Name: <b>APTI Chhattisgarh — APTICON 2026</b><br/>
-                Contact <a href="mailto:apticon2026@gmail.com" className="text-[var(--crimson-800)] hover:underline">apticon2026@gmail.com</a> to receive full bank details, UPI QR code, and payment instructions before making the transfer.
+                After you submit this form, Razorpay will open its secure checkout. You can pay using UPI, cards, net banking, or any method enabled by the organiser. Your registration is confirmed automatically only after payment is captured.
               </p>
             </div>
-          </div>
-        </div>
-
-        <div>
-          <Label>Payment Mode *</Label>
-          <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {PAYMENT_MODES.map((m) => (
-              <label key={m.value} className="flex items-start gap-3 p-3 rounded-lg border border-[var(--gold-500)]/25 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40 transition-colors">
-                <input
-                  type="radio"
-                  value={m.value}
-                  {...register("paymentMode", { required: "Select a payment mode" })}
-                  className="mt-1 accent-[var(--crimson-800)]"
-                />
-                <div>
-                  <div className="text-sm font-semibold">{m.label}</div>
-                  <div className="text-xs text-[var(--muted-text)] mt-0.5">{m.note}</div>
-                </div>
-              </label>
-            ))}
-          </div>
-          {errors.paymentMode && <p className={errCls}>{errors.paymentMode.message}</p>}
-        </div>
-
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="transactionNumber">Transaction / Reference Number *</Label>
-            <Input
-              id="transactionNumber"
-              className="mt-2 font-mono"
-              placeholder="UTR / UPI ref / DD number"
-              {...register("transactionNumber", { required: "Transaction number is required", minLength: 3 })}
-            />
-            {errors.transactionNumber && <p className={errCls}>{errors.transactionNumber.message}</p>}
-          </div>
-          <div>
-            <Label>Payment Proof *</Label>
-            <div className="mt-2 flex items-center gap-3">
-              <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--gold-500)]/40 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40 transition-colors">
-                <Upload className="w-4 h-4 text-[var(--muted-text)]" />
-                <span className="text-sm text-[var(--dark-text)] truncate">
-                  {proofFile ? proofFile.name : "Choose file (PDF/JPG/PNG, ≤5MB)…"}
-                </span>
-                <input
-                  type="file"
-                  accept=".pdf,.jpg,.jpeg,.png,.webp"
-                  className="hidden"
-                  onChange={(e) => setProofFile(e.target.files?.[0] ?? null)}
-                />
-              </label>
-              {proofFile && (
-                <Button type="button" variant="outline" size="sm" onClick={() => setProofFile(null)}>Remove</Button>
-              )}
-            </div>
-            <p className="mt-1 text-xs text-[var(--muted-text)]">Screenshot / receipt / DD photo. Approver will verify against your transaction number.</p>
           </div>
         </div>
       </div>
@@ -394,17 +341,17 @@ export default function RegistrationForm() {
           type="submit"
           size="lg"
           className="w-full"
-          disabled={isSubmitting || uploading || !proofFile}
+          disabled={isSubmitting || paying}
         >
-          {(uploading || isSubmitting) ? (
+          {(paying || isSubmitting) ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              {uploading ? "Uploading proof…" : "Submitting…"}
+              {paying ? "Opening secure payment…" : "Preparing payment…"}
             </>
-          ) : "Submit Registration"}
+          ) : "Continue to Secure Payment"}
         </Button>
         <p className="mt-3 text-center text-xs text-[var(--muted-text)]">
-          You'll receive a confirmation email with your registration code. Once payment is verified, we'll email your final confirmation.
+          No manual payment proof is required. Your registration confirmation is emailed automatically after Razorpay confirms the payment.
         </p>
       </div>
     </form>
