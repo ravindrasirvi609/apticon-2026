@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { CheckCircle, Upload, Loader2, FileText, Search } from "lucide-react";
+import { CheckCircle, Upload, Loader2, FileText, Search, Microscope, Users, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import GoldenBadge from "@/components/ui/GoldenBadge";
@@ -30,7 +30,7 @@ interface AbstractForm {
 }
 
 const IMPORTANT_DATES = [
-  { event: "Abstract Submission Opens",   date: "1 August 2026",     done: true },
+  { event: "Abstract Submission Opens",   date: "10 August 2026",     done: true },
   { event: "Last Date for Submission",    date: "30 September 2026", done: false },
   { event: "Acceptance Notification",    date: "10 October 2026",   done: false },
   { event: "Revised Abstract Deadline",  date: "18 October 2026",   done: false },
@@ -43,8 +43,6 @@ const GUIDELINES = [
   "Structure: Background, Objectives, Methods, Results, Conclusions.",
   "Do not include figures, tables, or references in the abstract.",
   "Presenting author must be listed first in the author list.",
-  "Each delegate may submit a maximum of 2 abstracts.",
-  "Attach the full-text PDF (max 10 MB, PDF/DOC/DOCX only).",
 ];
 
 const ALLOWED_MIME: Record<string, "application/pdf" | "application/msword" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"> = {
@@ -126,8 +124,20 @@ export default function AbstractsClient() {
             Submit Your Research
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-base md:text-lg text-[var(--muted-text)]">
-            Share your work with 500+ pharmacy educators and researchers at APTICON 2026, Raipur.
+            Share your work with 1500+ pharmacy educators and researchers at APTICON 2026, Raipur.
           </p>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3 text-left">
+            {[
+              { icon: Microscope, label: "Research spotlight" },
+              { icon: Users, label: "1500+ peers" },
+              { icon: Sparkles, label: "Ideas that inspire" },
+            ].map(({ icon: Icon, label }) => (
+              <div key={label} className="inline-flex items-center gap-2 rounded-full border border-[var(--gold-500)]/30 bg-white/80 px-4 py-2 text-sm font-medium text-[var(--dark-text)] shadow-sm">
+                <Icon className="h-4 w-4 text-[var(--crimson-800)]" aria-hidden />
+                {label}
+              </div>
+            ))}
+          </div>
           <div className="mt-6 flex items-center justify-center gap-3">
             <Link href="/abstracts/status">
               <Button variant="outline">

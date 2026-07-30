@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Upload, Loader2, CreditCard, Info } from "lucide-react";
+import { Upload, Loader2, CreditCard, Info, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/shadcn/button";
 import { Input } from "@/components/ui/shadcn/input";
 import { Textarea } from "@/components/ui/shadcn/textarea";
@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/shadcn/label";
 import {
   REGISTRATION_CATEGORIES,
   FEE_TABLE,
+  GST_RATE,
+  calculateFeeWithGst,
   currentFeeAmount,
   formatRupees,
   type RegistrationCategory,
@@ -61,6 +63,7 @@ export default function RegistrationForm() {
     ? (category as RegistrationCategory)
     : null;
   const currentFee = chosenCategory ? currentFeeAmount(chosenCategory) : null;
+  const feeBreakdown = currentFee ? calculateFeeWithGst(currentFee.amount) : null;
 
   async function uploadProof(f: File): Promise<{ key: string } | null> {
     const ext = f.name.split(".").pop()?.toLowerCase() ?? "";
@@ -251,13 +254,24 @@ export default function RegistrationForm() {
             {errors.category && <p className={errCls}>{errors.category.message}</p>}
           </div>
           <div>
-            <Label>Applicable Fee</Label>
-            <div className="mt-2 h-10 flex items-center px-3 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/25">
-              {currentFee ? (
-                <span className="text-sm">
-                  <b className="text-[var(--crimson-800)]">{formatRupees(currentFee.amount)}</b>
-                  <span className="ml-2 text-xs text-[var(--muted-text)] uppercase tracking-wider">{currentFee.tier.replace("_", " ")}</span>
-                </span>
+            <Label>Fee Calculator</Label>
+            <div className="mt-2 min-h-10 px-3 py-2.5 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/25">
+              {currentFee && feeBreakdown ? (
+                <div className="space-y-1 text-sm">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-[var(--muted-text)]">Registration fee</span>
+                    <span>{formatRupees(currentFee.amount)}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-[var(--muted-text)]">GST ({GST_RATE * 100}%)</span>
+                    <span>{formatRupees(feeBreakdown.gstAmount)}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-3 border-t border-[var(--gold-500)]/25 pt-1 font-semibold">
+                    <span className="inline-flex items-center gap-1 text-[var(--dark-text)]"><Calculator className="h-3.5 w-3.5" /> Total payable</span>
+                    <b className="text-[var(--crimson-800)]">{formatRupees(feeBreakdown.totalAmount)}</b>
+                  </div>
+                  <span className="block text-[10px] text-[var(--muted-text)] uppercase tracking-wider">{currentFee.tier.replace("_", " ")}</span>
+                </div>
               ) : (
                 <span className="text-sm text-[var(--muted-text)]/70">Select a category to see the fee</span>
               )}
@@ -268,7 +282,7 @@ export default function RegistrationForm() {
           <div className="mt-3 flex items-start gap-2 text-xs text-[var(--muted-text)]">
             <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
             <span>
-              This fee is auto-selected based on today's date. Full tier for this category:
+              Fees are auto-selected based on today&apos;s date; GST is calculated at 18% extra. Base-fee tiers for this category:
               early bird {formatRupees(FEE_TABLE[chosenCategory].early_bird)} · regular {formatRupees(FEE_TABLE[chosenCategory].regular)} · on-spot {formatRupees(FEE_TABLE[chosenCategory].on_spot)}.
             </span>
           </div>

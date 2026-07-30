@@ -4,7 +4,7 @@ import Registration from "@/models/Registration";
 import { registrationSubmitSchema } from "@/lib/validators/registration";
 import { generateRegistrationCode } from "@/lib/submission-code";
 import { publicUrl } from "@/lib/r2";
-import { currentFeeAmount } from "@/lib/registration-fees";
+import { calculateFeeWithGst, currentFeeAmount } from "@/lib/registration-fees";
 import { sendMail, registrationSubmittedEmail } from "@/lib/email";
 import { logAudit } from "@/lib/audit";
 import { getSessionFromCookies, getClientIp } from "@/lib/auth";
@@ -32,7 +32,8 @@ export async function POST(request: NextRequest) {
   }
 
   const data = parsed.data;
-  const { tier, amount } = currentFeeAmount(data.category);
+  const { tier, amount: baseAmount } = currentFeeAmount(data.category);
+  const { gstAmount, totalAmount } = calculateFeeWithGst(baseAmount);
 
   await connectDB();
 
@@ -57,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     category:           data.category,
     feeTier:            tier,
-    feeAmount:          amount,
+    feeAmount:          totalAmount,
     willSubmitAbstract: data.willSubmitAbstract,
 
     paymentMode:       data.paymentMode,
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
   // Sync — link to any existing abstract with the same email
   const linkResult = await linkFromRegistration(created._id, data.email, request);
 
-  const { subject, html } = registrationSubmittedEmail(data.fullName, registrationCode, amount, FEE_TIER_LABEL[tier]);
+  const { subject, html } = registrationSubmittedEmail(data.fullName, registrationCode, totalAmount, FEE_TIER_LABEL[tier]);
   await sendMail({ to: data.email, subject, html });
 
   await logAudit({
@@ -86,7 +87,9 @@ export async function POST(request: NextRequest) {
       email: data.email,
       category: data.category,
       feeTier: tier,
-      feeAmount: amount,
+      feeAmount: totalAmount,
+      baseAmount,
+      gstAmount,
       paymentMode: data.paymentMode,
       linkedAbstract: linkResult.abstractId ?? null,
     },
@@ -97,7 +100,7 @@ export async function POST(request: NextRequest) {
     ok: true,
     registrationCode,
     id: created._id.toString(),
-    feeAmount: amount,
+    feeAmount: totalAmount,
     feeTier: tier,
   });
 }

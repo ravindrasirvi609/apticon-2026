@@ -3,6 +3,7 @@
  */
 
 export type FeeTier = "early_bird" | "regular" | "on_spot";
+export const GST_RATE = 0.18;
 
 export const REGISTRATION_CATEGORIES = [
   "APTI Life Member",
@@ -20,8 +21,8 @@ export const FEE_TABLE: Record<RegistrationCategory, Record<FeeTier, number>> = 
   "APTI Life Member":            { early_bird: 3000, regular: 3500, on_spot: 4000 },
   "APTI Annual Member":          { early_bird: 3500, regular: 4000, on_spot: 4500 },
   "Non-Member":                  { early_bird: 5000, regular: 5500, on_spot: 6000 },
-  "PG Student / Research Scholar": { early_bird: 1500, regular: 2000, on_spot: 2500 },
-  "UG Student":                  { early_bird:  500, regular:  750, on_spot: 1000 },
+  "PG Student / Research Scholar": { early_bird: 2500, regular: 3000, on_spot: 3500 },
+  "UG Student":                  { early_bird: 2000, regular: 2500, on_spot: 3000 },
   "Accompanying Person":         { early_bird: 1000, regular: 1500, on_spot: 2000 },
 };
 
@@ -38,6 +39,11 @@ export function currentFeeTier(now: Date = new Date()): FeeTier {
 export function currentFeeAmount(category: RegistrationCategory, now: Date = new Date()): { tier: FeeTier; amount: number } {
   const tier = currentFeeTier(now);
   return { tier, amount: FEE_TABLE[category][tier] };
+}
+
+export function calculateFeeWithGst(baseAmount: number): { gstAmount: number; totalAmount: number } {
+  const gstAmount = Math.round(baseAmount * GST_RATE);
+  return { gstAmount, totalAmount: baseAmount + gstAmount };
 }
 
 export function formatRupees(amount: number): string {

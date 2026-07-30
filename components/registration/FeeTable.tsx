@@ -2,8 +2,8 @@ const FEES = [
   { category: "APTI Life Member",          early: "₹3,000", regular: "₹3,500", spot: "₹4,000" },
   { category: "APTI Annual Member",        early: "₹3,500", regular: "₹4,000", spot: "₹4,500" },
   { category: "Non-Member",               early: "₹5,000", regular: "₹5,500", spot: "₹6,000" },
-  { category: "PG Student / Research Scholar", early: "₹1,500", regular: "₹2,000", spot: "₹2,500" },
-  { category: "UG Student",               early: "₹500",   regular: "₹750",   spot: "₹1,000" },
+  { category: "PG Student / Research Scholar", early: "₹2,500", regular: "₹3,000", spot: "₹3,500" },
+  { category: "UG Student",               early: "₹2,000", regular: "₹2,500", spot: "₹3,000" },
   { category: "Accompanying Person",      early: "₹1,000", regular: "₹1,500", spot: "₹2,000" },
 ];
 
@@ -61,7 +61,10 @@ export default function FeeTable() {
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-[var(--muted-text)]">* All amounts are in Indian Rupees (INR) and inclusive of GST. Registration fee includes: conference kit, lunch & tea (both days), and souvenir.</p>
+      <div className="space-y-2 text-xs text-[var(--muted-text)]">
+        <p>* All amounts shown here are in Indian Rupees (INR). GST shall be applicable extra, as per prevailing government regulations.</p>
+        <p><span className="font-semibold text-[var(--dark-text)]">Remark:</span> Accompanying persons will not be entitled for issuance of Registration Kit, however they will be provided the access to Food Court.</p>
+      </div>
     </div>
   );
 }
