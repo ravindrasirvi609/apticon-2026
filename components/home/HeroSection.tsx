@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, ChevronDown } from "lucide-react";
 import FloatingParticles from "@/components/ui/FloatingParticles";
@@ -57,16 +58,28 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="flex items-center justify-center gap-6 mb-8"
         >
-          {/* APTI logo placeholder */}
-          <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[var(--crimson-800)]/10 border-2 border-[var(--crimson-800)]/20 flex items-center justify-center">
-            <span className="font-display font-black text-xs text-[var(--crimson-800)]">APTI</span>
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--crimson-800)]/20 bg-white/90 p-1.5 shadow-sm md:h-20 md:w-20">
+            <Image
+              src="/logo/APTI.png"
+              alt="Association of Pharmaceutical Teachers of India"
+              width={350}
+              height={437}
+              priority
+              className="h-full w-full object-contain"
+            />
           </div>
           <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[var(--gold-500)]/20 border border-[var(--gold-500)]/40 flex items-center justify-center">
             <img src="/cultural/lotus.svg" alt="" className="w-6 h-6" />
           </div>
-          {/* University logo placeholder */}
-          <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[var(--navy-800)]/10 border-2 border-[var(--navy-800)]/20 flex items-center justify-center">
-            <span className="font-display font-black text-[8px] text-[var(--navy-800)] text-center leading-tight px-1">Pt. RSU Raipur</span>
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--navy-800)]/20 bg-white/90 p-1.5 shadow-sm md:h-20 md:w-20">
+            <Image
+              src="/logo/Ravishankar_Shukla_University.png"
+              alt="Pt. Ravishankar Shukla University, Raipur"
+              width={217}
+              height={232}
+              priority
+              className="h-full w-full object-contain"
+            />
           </div>
         </motion.div>
 
