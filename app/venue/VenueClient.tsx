@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { MapPin, Plane, Train, Car, Utensils } from "lucide-react";
 import GoldenBadge from "@/components/ui/GoldenBadge";
@@ -44,6 +45,15 @@ const HOTELS = [
   { name: "Hotel Celebration",             stars: 3, distance: "1.5 km", area: "Shankar Nagar" },
   { name: "OYO / Budget Guesthouses",      stars: 2, distance: "0.5–2 km", area: "Near Venue" },
 ];
+
+const DESTINATION_IMAGES: Record<string, { src: string; alt: string }> = {
+  "Mahant Ghasidas Memorial Museum": { src: "/cultural/Mahant Ghasidas Memorial.jpg", alt: "Mahant Ghasidas Memorial Museum in Raipur" },
+  "Nandanvan Zoo & Fun World": { src: "/cultural/Nandanvan-zoo-safari.jpg", alt: "Nandanvan Zoo Safari near Raipur" },
+  "Rajim — Triveni Sangam": { src: "/cultural/Rajim Triveni Sangam .webp", alt: "Rajim Triveni Sangam in Chhattisgarh" },
+  "Sirpur Archaeological Site": { src: "/cultural/Sirpur Archaeological Site.jpg", alt: "Ancient structures at Sirpur Archaeological Site" },
+  "Bhoramdeo Temple": { src: "/cultural/Bhoramdeo Temple .jpg", alt: "Bhoramdeo Temple in Chhattisgarh" },
+  Champaran: { src: "/cultural/Champaran .avif", alt: "Champaran pilgrimage site in Chhattisgarh" },
+};
 
 export default function VenueClient() {
   return (
@@ -174,15 +184,30 @@ export default function VenueClient() {
             <h2 className="mt-5 font-display font-bold text-3xl sm:text-4xl text-[var(--dark-text)]">
               Explore <span className="text-gradient-crimson">Raipur & Chhattisgarh</span>
             </h2>
+            <p className="mt-3 text-sm text-[var(--muted-text)]">Make the most of your conference visit with a memorable local detour.</p>
           </ScrollReveal>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {RAIPUR_PLACES.map((place, i) => (
               <ScrollReveal key={place.name} delay={i * 0.08}>
-                <div className="rounded-2xl bg-white border border-[var(--gold-500)]/15 p-6 h-full hover:border-[var(--gold-500)]/50 hover:shadow-md transition-all duration-300 group">
-                  <span className="text-4xl mb-4 block">{place.icon}</span>
-                  <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-2 group-hover:text-[var(--crimson-800)] transition-colors">{place.name}</h3>
-                  <p className="text-sm text-[var(--muted-text)] leading-relaxed">{place.description}</p>
-                </div>
+                <article className="group h-full overflow-hidden rounded-2xl border border-[var(--gold-500)]/15 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--gold-500)]/50 hover:shadow-lg">
+                  <div className="relative aspect-[16/10] overflow-hidden bg-[var(--cream-100)]">
+                    <Image
+                      src={DESTINATION_IMAGES[place.name].src}
+                      alt={DESTINATION_IMAGES[place.name].alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" aria-hidden />
+                    <span className="absolute bottom-3 left-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-xl shadow-sm" aria-hidden>
+                      {place.icon}
+                    </span>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-display font-bold text-lg text-[var(--dark-text)] transition-colors group-hover:text-[var(--crimson-800)]">{place.name}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--muted-text)]">{place.description}</p>
+                  </div>
+                </article>
               </ScrollReveal>
             ))}
           </div>
