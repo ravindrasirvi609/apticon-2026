@@ -3,13 +3,13 @@ import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import Abstract from "@/models/Abstract";
 import { abstractDecisionSchema } from "@/lib/validators/abstract";
-import { requireRole, authErrorResponse } from "@/lib/auth";
+import { requireAnyRole, authErrorResponse } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { sendMail, abstractDecisionEmail } from "@/lib/email";
 
 export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   try {
-    const admin = await requireRole("super_admin");
+    const actor = await requireAnyRole("super_admin", "editorial");
     const { id } = await ctx.params;
     if (!mongoose.isValidObjectId(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
@@ -24,15 +24,15 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     const before = { status: abs.status, finalDecision: abs.finalDecision };
 
     abs.finalDecision = parsed.data.decision;
-    abs.finalDecisionBy = new mongoose.Types.ObjectId(admin.uid);
+    abs.finalDecisionBy = new mongoose.Types.ObjectId(actor.uid);
     abs.finalDecisionAt = new Date();
     abs.finalDecisionNote = parsed.data.note;
     abs.status = parsed.data.decision === "revision_requested" ? "revision_requested" : parsed.data.decision;
     await abs.save();
 
     await logAudit({
-      actor: admin.uid,
-      actorRole: "super_admin",
+      actor: actor.uid,
+      actorRole: actor.role,
       action: "abstract.decision",
       resourceType: "abstract",
       resourceId: abs._id.toString(),

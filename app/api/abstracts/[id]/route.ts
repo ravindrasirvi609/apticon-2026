@@ -42,18 +42,16 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
         })
       : reviews;
 
-  // Fetch linked registration (or lookup by email) — admin sees full row, reviewer sees stub
+  // Fetch linked registration (or lookup by email) — admin and editorial see the full row,
+  // reviewer sees only a stub.
+  const REG_FIELDS = "registrationCode fullName email status paymentStatus feeAmount feeTier createdAt approvedAt";
   let linkedRegistration: unknown = null;
-  if (s.role === "super_admin") {
+  if (s.role !== "reviewer") {
     if (abs.linkedRegistration) {
-      linkedRegistration = await Registration.findById(abs.linkedRegistration)
-        .select("registrationCode fullName email status feeAmount feeTier createdAt approvedAt")
-        .lean();
+      linkedRegistration = await Registration.findById(abs.linkedRegistration).select(REG_FIELDS).lean();
     } else {
       // Best-effort — is there a registration with the same email?
-      linkedRegistration = await Registration.findOne({ email: abs.email })
-        .select("registrationCode fullName email status feeAmount feeTier createdAt approvedAt")
-        .lean();
+      linkedRegistration = await Registration.findOne({ email: abs.email }).select(REG_FIELDS).lean();
     }
   } else if (abs.linkedRegistration) {
     // Reviewers only get an existence flag

@@ -42,6 +42,8 @@ export interface IRegistration {
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
   paymentMethod?: string;
+  /** Why the last attempt did not result in an approval (gateway error or amount mismatch). */
+  paymentError?: string;
   paidAt?: Date;
 
   // Workflow
@@ -89,12 +91,15 @@ const RegistrationSchema = new Schema<IRegistration>(
     razorpayOrderId:   { type: String, sparse: true, unique: true, index: true },
     razorpayPaymentId: { type: String, sparse: true, unique: true, index: true },
     paymentMethod:     { type: String },
+    paymentError:      { type: String },
     paidAt:            { type: Date },
 
+    // "payment_review", "rejected" and "resubmitted" are retained for legacy manual-payment
+    // documents only — nothing sets them now that Razorpay drives approval.
     status: {
       type: String,
       enum: ["submitted", "payment_review", "approved", "rejected", "resubmitted"],
-      default: "payment_review",
+      default: "submitted",
       index: true,
     },
     approvedBy: { type: Schema.Types.ObjectId, ref: "User" },

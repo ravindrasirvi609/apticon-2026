@@ -10,12 +10,13 @@ import RegistrationStatusBadge from "@/components/console/RegistrationStatusBadg
 import { format } from "date-fns";
 
 interface Stats {
-  totals: { abstracts: number; registrations: number; users: number; activeReviewers: number; activeApprovers: number; reviews: number; revenue: number };
+  totals: { abstracts: number; registrations: number; users: number; activeReviewers: number; activeEditorial: number; reviews: number; revenue: number };
   abstractsByStatus: Record<string, number>;
   registrationsByStatus: Record<string, number>;
+  paymentsByStatus: Record<string, number>;
   byTheme: { theme: string; count: number }[];
   recentAbstracts: { id: string; submissionCode: string; title: string; presentingAuthor: string; status: string; createdAt: string }[];
-  recentRegistrations: { id: string; registrationCode: string; fullName: string; email: string; status: string; feeAmount: number; createdAt: string }[];
+  recentRegistrations: { id: string; registrationCode: string; fullName: string; email: string; status: string; paymentStatus?: string | null; feeAmount: number; createdAt: string }[];
 }
 
 export default function AdminDashboard() {
@@ -32,11 +33,18 @@ export default function AdminDashboard() {
     <div className="p-4 md:p-8">
       <PageHeader title="Dashboard" description="Snapshot of registrations and abstract review pipeline." />
 
-      {/* Row 1 — registration metrics */}
+      {/* Row 1 — registration metrics. Payments are confirmed by Razorpay, so "Awaiting Payment"
+          is incomplete checkouts rather than a queue anyone has to work through. */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <StatCard label="Registrations" value={stats?.totals.registrations ?? "—"} icon={ClipboardCheck} />
-        <StatCard label="Payment Review" value={stats?.registrationsByStatus.payment_review ?? 0} icon={Clock} accent="amber" />
-        <StatCard label="Approved" value={stats?.registrationsByStatus.approved ?? 0} icon={CheckCircle2} accent="emerald" />
+        <StatCard
+          label="Awaiting Payment"
+          value={stats?.registrationsByStatus.submitted ?? 0}
+          icon={Clock}
+          accent="amber"
+          sub={stats?.paymentsByStatus.failed ? `${stats.paymentsByStatus.failed} failed` : undefined}
+        />
+        <StatCard label="Approved · Paid" value={stats?.registrationsByStatus.approved ?? 0} icon={CheckCircle2} accent="emerald" />
         <StatCard label="Revenue" value={stats ? "₹" + (stats.totals.revenue ?? 0).toLocaleString("en-IN") : "—"} icon={IndianRupee} />
       </div>
 
@@ -69,7 +77,7 @@ export default function AdminDashboard() {
                       <Link href={`/admin/registrations/${r.id}`} className="text-[var(--crimson-800)] hover:underline">{r.fullName}</Link>
                       <div className="text-xs text-[var(--muted-text)]">{r.email}</div>
                     </TableCell>
-                    <TableCell><RegistrationStatusBadge status={r.status} /></TableCell>
+                    <TableCell><RegistrationStatusBadge status={r.status} paymentStatus={r.paymentStatus ?? undefined} /></TableCell>
                     <TableCell className="text-xs text-[var(--muted-text)]">{format(new Date(r.createdAt), "d MMM, HH:mm")}</TableCell>
                   </TableRow>
                 ))}
@@ -141,7 +149,7 @@ export default function AdminDashboard() {
   );
 }
 
-function StatCard({ label, value, icon: Icon, accent }: { label: string; value: number | string; icon: React.ComponentType<{ className?: string }>; accent?: "amber" | "emerald" }) {
+function StatCard({ label, value, icon: Icon, accent, sub }: { label: string; value: number | string; icon: React.ComponentType<{ className?: string }>; accent?: "amber" | "emerald"; sub?: string }) {
   const color = accent === "emerald" ? "text-emerald-700" : accent === "amber" ? "text-amber-700" : "text-[var(--crimson-800)]";
   return (
     <Card>
@@ -150,6 +158,7 @@ function StatCard({ label, value, icon: Icon, accent }: { label: string; value: 
           <div>
             <div className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)]">{label}</div>
             <div className={"mt-1 font-display text-3xl font-black " + color}>{value}</div>
+            {sub && <div className="mt-0.5 text-xs text-red-700">{sub}</div>}
           </div>
           <div className="w-10 h-10 rounded-lg bg-[var(--cream-100)] flex items-center justify-center">
             <Icon className={"w-5 h-5 " + color} />

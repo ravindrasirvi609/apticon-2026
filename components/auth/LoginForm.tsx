@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/shadcn/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/shadcn/card";
 
 interface LoginFormProps {
-  role: "super_admin" | "reviewer" | "registration_approver";
+  role: "super_admin" | "reviewer" | "editorial";
   title: string;
   subtitle: string;
   successPath: string;
@@ -23,7 +23,7 @@ export default function LoginForm({ role, title, subtitle, successPath, forgotPa
   const from = params.get("from");
   const rolePrefix =
     role === "super_admin" ? "/admin"
-    : role === "registration_approver" ? "/approver"
+    : role === "editorial" ? "/editorial"
     : "/reviewer";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -4,13 +4,13 @@ import { connectDB } from "@/lib/db";
 import Abstract from "@/models/Abstract";
 import User from "@/models/User";
 import { abstractAssignSchema } from "@/lib/validators/abstract";
-import { requireRole, authErrorResponse } from "@/lib/auth";
+import { requireAnyRole, authErrorResponse } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { sendMail, reviewerAssignmentEmail } from "@/lib/email";
 
 export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   try {
-    const admin = await requireRole("super_admin");
+    const actor = await requireAnyRole("super_admin", "editorial");
     const { id } = await ctx.params;
     if (!mongoose.isValidObjectId(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
@@ -36,8 +36,8 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     await abs.save();
 
     await logAudit({
-      actor: admin.uid,
-      actorRole: "super_admin",
+      actor: actor.uid,
+      actorRole: actor.role,
       action: "abstract.assign_reviewer",
       resourceType: "abstract",
       resourceId: abs._id.toString(),

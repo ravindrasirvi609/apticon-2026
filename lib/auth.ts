@@ -10,7 +10,7 @@ if (!SECRET) console.warn("[auth] TOKEN_SECRET not set — sessions will fail");
 export const SESSION_COOKIE = "apticon_session";
 export const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
-export type Role = "super_admin" | "reviewer" | "registration_approver";
+export type Role = "super_admin" | "reviewer" | "editorial";
 
 export interface SessionPayload {
   uid: string;
@@ -34,7 +34,7 @@ export async function verifySession(token: string): Promise<SessionPayload | nul
     const { payload } = await jwtVerify(token, key);
     if (
       typeof payload.uid === "string" &&
-      (payload.role === "super_admin" || payload.role === "reviewer" || payload.role === "registration_approver") &&
+      (payload.role === "super_admin" || payload.role === "reviewer" || payload.role === "editorial") &&
       typeof payload.name === "string" &&
       typeof payload.email === "string"
     ) {

@@ -18,7 +18,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/shadcn/alert-dialog";
 
-type UserRole = "super_admin" | "reviewer" | "registration_approver";
+type UserRole = "super_admin" | "reviewer" | "editorial";
 
 interface UserRow {
   id: string;
@@ -35,7 +35,7 @@ interface UserRow {
 const ROLE_LABEL: Record<UserRole, string> = {
   super_admin: "Super Admin",
   reviewer: "Reviewer",
-  registration_approver: "Registration Approver",
+  editorial: "Editorial",
 };
 
 export default function UsersClient() {
@@ -121,7 +121,7 @@ export default function UsersClient() {
                 <div>
                   <Label>Role</Label>
                   <div className="mt-2 grid grid-cols-1 gap-2">
-                    {(["reviewer", "registration_approver", "super_admin"] as UserRole[]).map((r) => (
+                    {(["reviewer", "editorial", "super_admin"] as UserRole[]).map((r) => (
                       <button
                         key={r}
                         type="button"
@@ -133,7 +133,7 @@ export default function UsersClient() {
                         {ROLE_LABEL[r]}
                         <div className={`text-xs mt-0.5 ${form.role === r ? "opacity-90" : "text-[var(--muted-text)]"}`}>
                           {r === "reviewer" ? "Reviews assigned abstracts and submits scores"
-                          : r === "registration_approver" ? "Verifies payment proofs and approves registrations"
+                          : r === "editorial" ? "Assigns abstracts to reviewers and records final decisions"
                           : "Full access to all consoles, users, decisions, audit log"}
                         </div>
                       </button>
@@ -184,8 +184,8 @@ export default function UsersClient() {
                     <TableCell className="font-semibold text-sm">{u.name}</TableCell>
                     <TableCell className="text-sm">{u.email}</TableCell>
                     <TableCell>
-                      <Badge variant={u.role === "super_admin" ? "default" : u.role === "registration_approver" ? "info" : "secondary"}>
-                        {ROLE_LABEL[u.role]}
+                      <Badge variant={u.role === "super_admin" ? "default" : u.role === "editorial" ? "info" : "secondary"}>
+                        {ROLE_LABEL[u.role] ?? u.role}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-xs">

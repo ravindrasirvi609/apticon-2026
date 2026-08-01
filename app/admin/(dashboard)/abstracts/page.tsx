@@ -1,10 +1,10 @@
 import { Suspense } from "react";
-import AbstractsListClient from "./AbstractsListClient";
+import AbstractsList from "@/components/console/AbstractsList";
 
 export default function AdminAbstractsPage() {
   return (
     <Suspense fallback={null}>
-      <AbstractsListClient />
+      <AbstractsList detailBase="/admin/abstracts" />
     </Suspense>
   );
 }

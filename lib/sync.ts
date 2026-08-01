@@ -23,7 +23,7 @@ async function auditLink(
   registrationId: mongoose.Types.ObjectId,
   abstractId: mongoose.Types.ObjectId,
   origin: "registration_submit" | "abstract_submit" | "manual",
-  actor: { uid: string; role: "super_admin" | "reviewer" | "registration_approver" } | null,
+  actor: { uid: string; role: "super_admin" | "reviewer" | "editorial" } | null,
   request?: NextRequest | Request,
 ) {
   await logAudit({
@@ -83,7 +83,7 @@ export async function linkFromAbstract(
 export async function manualLink(
   registrationId: string,
   abstractId: string | null,
-  actor: { uid: string; role: "super_admin" | "reviewer" | "registration_approver" },
+  actor: { uid: string; role: "super_admin" | "reviewer" | "editorial" },
   request?: NextRequest | Request,
 ): Promise<LinkResult> {
   await connectDB();

@@ -11,16 +11,17 @@ export async function GET() {
     await requireRole("super_admin");
     await connectDB();
 
-    const [byStatusAbs, byTheme, byStatusReg, totalUsers, reviewersActive, approversActive, totalReviews, recentAbs, recentReg] = await Promise.all([
+    const [byStatusAbs, byTheme, byStatusReg, byPaymentStatus, totalUsers, reviewersActive, editorialActive, totalReviews, recentAbs, recentReg] = await Promise.all([
       Abstract.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
       Abstract.aggregate([{ $group: { _id: "$theme", count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
       Registration.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
+      Registration.aggregate([{ $match: { paymentStatus: { $ne: null } } }, { $group: { _id: "$paymentStatus", count: { $sum: 1 } } }]),
       User.countDocuments({}),
       User.countDocuments({ role: "reviewer", isActive: true }),
-      User.countDocuments({ role: "registration_approver", isActive: true }),
+      User.countDocuments({ role: "editorial", isActive: true }),
       Review.countDocuments({}),
       Abstract.find({}).sort({ createdAt: -1 }).limit(5).select("submissionCode title presentingAuthor status createdAt").lean(),
-      Registration.find({}).sort({ createdAt: -1 }).limit(5).select("registrationCode fullName email status feeAmount createdAt").lean(),
+      Registration.find({}).sort({ createdAt: -1 }).limit(5).select("registrationCode fullName email status paymentStatus feeAmount createdAt").lean(),
     ]);
 
     const abstractStatusMap: Record<string, number> = {};
@@ -28,6 +29,9 @@ export async function GET() {
 
     const regStatusMap: Record<string, number> = {};
     byStatusReg.forEach((s) => (regStatusMap[s._id] = s.count));
+
+    const paymentStatusMap: Record<string, number> = {};
+    byPaymentStatus.forEach((s) => (paymentStatusMap[s._id] = s.count));
 
     const totalAbstracts = byStatusAbs.reduce((a, b) => a + b.count, 0);
     const totalRegistrations = byStatusReg.reduce((a, b) => a + b.count, 0);
@@ -45,12 +49,13 @@ export async function GET() {
         registrations: totalRegistrations,
         users: totalUsers,
         activeReviewers: reviewersActive,
-        activeApprovers: approversActive,
+        activeEditorial: editorialActive,
         reviews: totalReviews,
         revenue: totalRevenue,
       },
       abstractsByStatus: abstractStatusMap,
       registrationsByStatus: regStatusMap,
+      paymentsByStatus: paymentStatusMap,
       byTheme: byTheme.map((t) => ({ theme: t._id, count: t.count })),
       recentAbstracts: recentAbs.map((r) => ({
         id: r._id.toString(),
@@ -66,6 +71,7 @@ export async function GET() {
         fullName: r.fullName,
         email: r.email,
         status: r.status,
+        paymentStatus: r.paymentStatus ?? null,
         feeAmount: r.feeAmount,
         createdAt: r.createdAt,
       })),

@@ -47,13 +47,8 @@ export const registrationStatusLookupSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
 });
 
-export const registrationApproveSchema = z.object({
-  internalNote: z.string().max(2000).optional(),
-});
-
-export const registrationRejectSchema = z.object({
-  reason:       z.string().min(4).max(2000),
-  internalNote: z.string().max(2000).optional(),
+export const registrationNoteSchema = z.object({
+  internalNote: z.string().max(2000),
 });
 
 export const registrationLinkSchema = z.object({
@@ -67,7 +62,6 @@ export const nudgeRequestSchema = z.object({
 
 export type RegistrationSubmitInput = z.infer<typeof registrationSubmitSchema>;
 export type RegistrationStatusLookupInput = z.infer<typeof registrationStatusLookupSchema>;
-export type RegistrationApproveInput = z.infer<typeof registrationApproveSchema>;
-export type RegistrationRejectInput = z.infer<typeof registrationRejectSchema>;
+export type RegistrationNoteInput = z.infer<typeof registrationNoteSchema>;
 export type RegistrationLinkInput = z.infer<typeof registrationLinkSchema>;
 export type NudgeRequestInput = z.infer<typeof nudgeRequestSchema>;

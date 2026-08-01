@@ -3,7 +3,7 @@ import { z } from "zod";
 export const userCreateSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
   name: z.string().min(2).max(200).trim(),
-  role: z.enum(["super_admin", "reviewer", "registration_approver"]),
+  role: z.enum(["super_admin", "reviewer", "editorial"]),
   expertise: z.array(z.string().min(1).max(80)).max(20).default([]),
 });
 

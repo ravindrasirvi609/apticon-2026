@@ -18,6 +18,8 @@ export type RazorpayPayment = {
   method?: string;
   error_code?: string | null;
   error_description?: string | null;
+  /** Epoch seconds. Used to pick the newest attempt on an order. */
+  created_at?: number;
 };
 
 function credentials() {
@@ -55,6 +57,11 @@ export async function createRazorpayOrder(input: { amount: number; receipt: stri
 
 export async function getRazorpayPayment(paymentId: string) {
   return api<RazorpayPayment>(`/payments/${encodeURIComponent(paymentId)}`);
+}
+
+/** Every payment attempt made against an order, oldest first. */
+export async function getRazorpayOrderPayments(orderId: string) {
+  return api<{ count: number; items: RazorpayPayment[] }>(`/orders/${encodeURIComponent(orderId)}/payments`);
 }
 
 export function verifyRazorpayPaymentSignature(orderId: string, paymentId: string, signature: string) {

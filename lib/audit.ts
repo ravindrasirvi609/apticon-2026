@@ -5,7 +5,7 @@ import { getClientIp } from "@/lib/auth";
 
 interface AuditInput {
   actor?: string | null;
-  actorRole: "super_admin" | "reviewer" | "registration_approver" | "public" | "system";
+  actorRole: "super_admin" | "reviewer" | "editorial" | "public" | "system";
   action: string;
   resourceType: "user" | "abstract" | "review" | "auth" | "registration";
   resourceId?: string | null;

@@ -1,6 +1,6 @@
-import AbstractDetailClient from "./AbstractDetailClient";
+import AbstractDetail from "@/components/console/AbstractDetail";
 
 export default async function AdminAbstractDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <AbstractDetailClient id={id} />;
+  return <AbstractDetail id={id} backHref="/admin/abstracts" registrationDetailBase="/admin/registrations" />;
 }

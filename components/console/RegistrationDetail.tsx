@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, FileText, Loader2, CheckCircle2, XCircle, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, ExternalLink, FileText, Loader2, Image as ImageIcon, RotateCcw, ShieldCheck, Info } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
@@ -13,9 +13,6 @@ import { Badge } from "@/components/ui/shadcn/badge";
 import { Textarea } from "@/components/ui/shadcn/textarea";
 import { Label } from "@/components/ui/shadcn/label";
 import { Input } from "@/components/ui/shadcn/input";
-import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
-} from "@/components/ui/shadcn/dialog";
 
 interface RegDoc {
   _id: string;
@@ -39,6 +36,7 @@ interface RegDoc {
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
   paymentMethod?: string;
+  paymentError?: string;
   paidAt?: string;
   status: string;
   approvedAt?: string;
@@ -68,14 +66,20 @@ interface Props {
   abstractDetailBase?: string; // e.g. "/admin/abstracts"
 }
 
+interface SyncResponse {
+  outcome: "captured" | "already_approved" | "updated" | "no_payments";
+  paymentStatus?: string;
+  paymentError?: string | null;
+}
+
 const IMAGE_EXT = /\.(jpe?g|png|webp|gif)(\?|$)/i;
+const RAZORPAY_DASHBOARD = "https://dashboard.razorpay.com/app/payments";
 
 export default function RegistrationDetail({ id, backHref, isAdmin, abstractDetailBase }: Props) {
   const [data, setData] = useState<{ registration: RegDoc; linkedAbstract: LinkedAbs | null } | null>(null);
-  const [decisionOpen, setDecisionOpen] = useState<null | "approve" | "reject">(null);
-  const [note, setNote] = useState("");
   const [internalNote, setInternalNote] = useState("");
-  const [saving, setSaving] = useState(false);
+  const [savingNote, setSavingNote] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   async function load() {
     const res = await fetch(`/api/registrations/${id}`);
@@ -87,40 +91,54 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
   }
   useEffect(() => { load(); }, [id]);
 
-  async function submitDecision() {
-    if (!decisionOpen) return;
-    setSaving(true);
+  /** Re-reads the payment from Razorpay. Approval still comes from the gateway, never from us. */
+  async function syncPayment() {
+    setSyncing(true);
     try {
-      const path = decisionOpen === "approve" ? "approve" : "reject";
-      const payload = decisionOpen === "approve"
-        ? (isAdmin ? { internalNote: internalNote || undefined } : {})
-        : { reason: note, internalNote: isAdmin ? (internalNote || undefined) : undefined };
+      const res = await fetch(`/api/registrations/${id}/sync-payment`, { method: "POST" });
+      const body = (await res.json()) as SyncResponse & { error?: string };
+      if (!res.ok) throw new Error(body.error);
 
-      if (decisionOpen === "reject" && note.trim().length < 4) {
-        toast.error("Provide a reason (min 4 chars).");
-        setSaving(false);
-        return;
+      if (body.outcome === "captured") {
+        toast.success("Payment confirmed by Razorpay. Registration approved and the delegate has been emailed.");
+      } else if (body.outcome === "already_approved") {
+        toast.info("Already approved — nothing changed.");
+      } else if (body.outcome === "no_payments") {
+        toast.info("Razorpay has no payment attempt for this order yet.");
+      } else if (body.paymentError) {
+        toast.warning(body.paymentError);
+      } else {
+        toast.info(`Razorpay reports this payment as “${body.paymentStatus ?? "pending"}”. Not approved.`);
       }
-      const res = await fetch(`/api/registrations/${id}/${path}`, {
+      await load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  }
+
+  async function saveNote() {
+    setSavingNote(true);
+    try {
+      const res = await fetch(`/api/registrations/${id}/note`, {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ internalNote }),
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error);
-      toast.success(decisionOpen === "approve" ? "Registration approved. Confirmation emailed." : "Rejected. Delegate notified.");
-      setDecisionOpen(null);
-      setNote("");
-      await load();
+      toast.success("Internal note saved.");
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed");
+      toast.error(e instanceof Error ? e.message : "Failed to save note");
     } finally {
-      setSaving(false);
+      setSavingNote(false);
     }
   }
 
   if (!data) return <div className="p-8 text-sm text-[var(--muted-text)]">Loading…</div>;
   const r = data.registration;
+  const isRazorpay = r.paymentMode === "razorpay";
   const isImage = IMAGE_EXT.test(r.paymentProofUrl) || IMAGE_EXT.test(r.paymentProofName);
 
   return (
@@ -132,7 +150,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
       <PageHeader
         title={r.fullName}
         description={`${r.registrationCode} · ${r.designation} · ${r.institution}`}
-        actions={<RegistrationStatusBadge status={r.status} />}
+        actions={<RegistrationStatusBadge status={r.status} paymentStatus={r.paymentStatus} />}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -163,38 +181,74 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Payment</CardTitle>
-                <Badge variant="outline" className="uppercase">{r.paymentMode.replace("_", " / ")}</Badge>
+                <Badge variant="outline" className="uppercase">{isRazorpay ? "Razorpay" : r.paymentMode.replace("_", " / ")}</Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <Field label={r.paymentMode === "razorpay" ? "Razorpay Payment ID" : "Transaction Number"} value={r.razorpayPaymentId ?? r.transactionNumber ?? "—"} mono />
-                <Field label={r.paymentMode === "razorpay" ? "Payment status" : "Proof file name"} value={r.paymentMode === "razorpay" ? (r.paymentStatus ?? "pending") : r.paymentProofName} />
-                {r.paymentMode === "razorpay" && <Field label="Razorpay Order ID" value={r.razorpayOrderId ?? "—"} mono />}
-                {r.paymentMode === "razorpay" && <Field label="Payment method" value={r.paymentMethod ?? "—"} />}
+                {isRazorpay ? (
+                  <>
+                    <div>
+                      <div className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Razorpay Payment ID</div>
+                      {r.razorpayPaymentId ? (
+                        <a
+                          href={`${RAZORPAY_DASHBOARD}/${r.razorpayPaymentId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-mono text-[var(--crimson-800)] hover:underline inline-flex items-center gap-1"
+                        >
+                          {r.razorpayPaymentId} <ExternalLink className="w-3 h-3 opacity-70" />
+                        </a>
+                      ) : (
+                        <div className="text-sm font-mono">—</div>
+                      )}
+                    </div>
+                    <Field label="Payment status"    value={r.paymentStatus ?? "pending"} />
+                    <Field label="Razorpay Order ID" value={r.razorpayOrderId ?? "—"} mono />
+                    <Field label="Payment method"    value={r.paymentMethod ?? "—"} />
+                    <Field label="Paid at"           value={r.paidAt ? format(new Date(r.paidAt), "d MMM yyyy, HH:mm") : "—"} />
+                    <Field label="Amount charged"    value={`₹${r.feeAmount.toLocaleString("en-IN")}`} />
+                  </>
+                ) : (
+                  <>
+                    <Field label="Transaction Number" value={r.transactionNumber || "—"} mono />
+                    <Field label="Proof file name"    value={r.paymentProofName || "—"} />
+                  </>
+                )}
               </div>
 
-              {r.paymentMode !== "razorpay" && <div className="rounded-lg border border-[var(--gold-500)]/25 overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-2 bg-[var(--cream-50)] border-b border-[var(--gold-500)]/20">
-                  <div className="flex items-center gap-2 text-sm font-semibold text-[var(--dark-text)]">
-                    {isImage ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
-                    Payment Proof
+              {r.paymentError && (
+                <div className="p-3 rounded bg-amber-50 border border-amber-200 text-sm">
+                  <div className="font-semibold text-amber-800 flex items-center gap-1.5">
+                    <Info className="w-4 h-4" /> Gateway note
                   </div>
-                  <a href={r.paymentProofUrl} target="_blank" rel="noopener noreferrer">
-                    <Button size="sm" variant="outline">Open in new tab <ExternalLink className="w-3 h-3 opacity-70" /></Button>
-                  </a>
+                  <div className="mt-1 text-amber-900 whitespace-pre-line">{r.paymentError}</div>
                 </div>
-                <div className="bg-black/5">
-                  {isImage ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={r.paymentProofUrl} alt="Payment proof" className="w-full max-h-[520px] object-contain bg-white" />
-                  ) : (
-                    <div className="p-8 text-center text-sm text-[var(--muted-text)]">
-                      PDF preview not embedded. Click &ldquo;Open in new tab&rdquo; to view.
+              )}
+
+              {!isRazorpay && r.paymentProofUrl && (
+                <div className="rounded-lg border border-[var(--gold-500)]/25 overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-2 bg-[var(--cream-50)] border-b border-[var(--gold-500)]/20">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-[var(--dark-text)]">
+                      {isImage ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                      Payment Proof
                     </div>
-                  )}
+                    <a href={r.paymentProofUrl} target="_blank" rel="noopener noreferrer">
+                      <Button size="sm" variant="outline">Open in new tab <ExternalLink className="w-3 h-3 opacity-70" /></Button>
+                    </a>
+                  </div>
+                  <div className="bg-black/5">
+                    {isImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={r.paymentProofUrl} alt="Payment proof" className="w-full max-h-[520px] object-contain bg-white" />
+                    ) : (
+                      <div className="p-8 text-center text-sm text-[var(--muted-text)]">
+                        PDF preview not embedded. Click &ldquo;Open in new tab&rdquo; to view.
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>}
+              )}
             </CardContent>
           </Card>
 
@@ -204,16 +258,21 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
               <CardContent>
                 <Label htmlFor="int">Not visible to delegate</Label>
                 <Textarea id="int" className="mt-2" rows={3} value={internalNote} onChange={(e) => setInternalNote(e.target.value)} placeholder="Notes for future reference…" />
-                <p className="mt-2 text-xs text-[var(--muted-text)]">Saved when you approve or reject the registration.</p>
+                <div className="mt-3 flex items-center gap-3">
+                  <Button size="sm" onClick={saveNote} disabled={savingNote}>
+                    {savingNote && <Loader2 className="w-4 h-4 animate-spin" />} Save note
+                  </Button>
+                  <span className="text-xs text-[var(--muted-text)]">Leave empty and save to clear the note.</span>
+                </div>
               </CardContent>
             </Card>
           )}
         </div>
 
-        {/* Right: decision + linked abstract */}
+        {/* Right: payment verification + linked abstract */}
         <div className="space-y-6">
           <Card>
-            <CardHeader><CardTitle>Verification</CardTitle></CardHeader>
+            <CardHeader><CardTitle>Payment Verification</CardTitle></CardHeader>
             <CardContent className="space-y-3">
               {r.status === "approved" && (
                 <div className="p-3 rounded bg-emerald-50 border border-emerald-200 text-sm">
@@ -228,17 +287,34 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
                   {r.reviewNote && <div className="mt-2 whitespace-pre-line">{r.reviewNote}</div>}
                 </div>
               )}
-              <div className="grid grid-cols-1 gap-2">
-                <Button variant="default" onClick={() => setDecisionOpen("approve")}>
-                  <CheckCircle2 className="w-4 h-4" /> Approve payment
-                </Button>
-                <Button variant="destructive" onClick={() => setDecisionOpen("reject")}>
-                  <XCircle className="w-4 h-4" /> Reject with reason
-                </Button>
-              </div>
-              <p className="text-xs text-[var(--muted-text)]">
-                Approval sends the delegate a confirmation email with next-step guidance. Rejection sends a resubmission email with your reason.
-              </p>
+
+              {isRazorpay ? (
+                <>
+                  <div className="flex items-start gap-2 text-sm text-[var(--muted-text)]">
+                    <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0 text-emerald-700" />
+                    <span>
+                      Registrations are approved <b>automatically</b> the moment Razorpay confirms the payment. There is
+                      nothing to approve by hand.
+                    </span>
+                  </div>
+                  <Button variant="outline" className="w-full" onClick={syncPayment} disabled={syncing}>
+                    {syncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RotateCcw className="w-4 h-4" />}
+                    Sync from Razorpay
+                  </Button>
+                  <p className="text-xs text-[var(--muted-text)]">
+                    Use this if a delegate says they paid but the status here hasn&rsquo;t caught up — a missed webhook or a
+                    closed browser mid-checkout. It re-reads the payment from Razorpay and applies the real result.
+                  </p>
+                </>
+              ) : (
+                <div className="p-3 rounded bg-[var(--cream-50)] border border-[var(--gold-500)]/25 text-sm">
+                  <div className="font-semibold text-[var(--dark-text)]">Legacy manual payment</div>
+                  <p className="mt-1 text-[var(--muted-text)]">
+                    This record predates online payments and was verified by hand. Manual approval has been retired from
+                    the console — registrations are now approved automatically by Razorpay.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -261,10 +337,10 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
               ) : r.willSubmitAbstract ? (
                 <div className="text-sm">
                   <div className="text-amber-700 font-semibold">Not submitted yet</div>
-                  <div className="text-[var(--muted-text)] mt-1">The delegate indicated they'd submit an abstract but we haven't received one for <b>{r.email}</b>.</div>
+                  <div className="text-[var(--muted-text)] mt-1">The delegate indicated they&rsquo;d submit an abstract but we haven&rsquo;t received one for <b>{r.email}</b>.</div>
                 </div>
               ) : (
-                <p className="text-sm text-[var(--muted-text)]">This delegate did not indicate they'd submit an abstract.</p>
+                <p className="text-sm text-[var(--muted-text)]">This delegate did not indicate they&rsquo;d submit an abstract.</p>
               )}
               {isAdmin && (
                 <div className="mt-4 pt-3 border-t border-[var(--gold-500)]/20">
@@ -275,42 +351,6 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
           </Card>
         </div>
       </div>
-
-      <Dialog open={decisionOpen !== null} onOpenChange={(v) => !v && setDecisionOpen(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{decisionOpen === "approve" ? "Approve payment" : "Reject payment"}</DialogTitle>
-            <DialogDescription>
-              {decisionOpen === "approve"
-                ? "The delegate will receive a confirmation email."
-                : "The delegate will receive an email with your reason and a resubmission link."}
-            </DialogDescription>
-          </DialogHeader>
-          {decisionOpen === "reject" && (
-            <div>
-              <Label htmlFor="reason">Reason (visible to delegate) *</Label>
-              <Textarea id="reason" className="mt-2" rows={4} value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. Transaction number could not be traced. Please share a clearer receipt including the UTR." />
-            </div>
-          )}
-          {decisionOpen === "approve" && isAdmin && (
-            <div>
-              <Label htmlFor="intNote">Internal note (admin only)</Label>
-              <Textarea id="intNote" className="mt-2" rows={3} value={internalNote} onChange={(e) => setInternalNote(e.target.value)} />
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDecisionOpen(null)}>Cancel</Button>
-            <Button
-              variant={decisionOpen === "reject" ? "destructive" : "default"}
-              onClick={submitDecision}
-              disabled={saving}
-            >
-              {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-              {decisionOpen === "approve" ? "Approve & notify" : "Reject & notify"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

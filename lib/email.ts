@@ -293,24 +293,6 @@ export function registrationApprovedEmail(name: string, code: string, feeAmount:
   };
 }
 
-export function registrationRejectedEmail(name: string, code: string, reason: string) {
-  return {
-    subject: `Payment Not Verified — ${code}`,
-    html: renderEmail({
-      title: "Payment Not Verified",
-      preheader: `We couldn't verify your payment for registration ${code}. Action needed.`,
-      blocks: [
-        { type: "text", html: `Dear ${esc(name)},` },
-        { type: "text", html: `We're writing about your APTICON 2026 registration <b>${esc(code)}</b>. Unfortunately, we were unable to verify the payment proof you submitted.` },
-        { type: "callout", variant: "danger", title: "Reason for rejection", body: nl2br(reason) },
-        { type: "text", html: `Please submit a fresh registration with corrected payment details. If you believe this is an error, reply to <a href="mailto:apticon2026@gmail.com" style="color:${BRAND.crimson800};font-weight:700;">apticon2026@gmail.com</a> with your transaction receipt and we'll help.` },
-        { type: "button", label: "Resubmit Registration", href: `${BASE_URL}/registration` },
-        { type: "signoff" },
-      ],
-    }),
-  };
-}
-
 // -- Nudges --
 
 export function nudgeRegisterEmail(name: string, abstractCode: string) {
@@ -369,10 +351,10 @@ export function reviewerAssignmentEmail(reviewerName: string, count: number) {
 
 export function newUserWelcomeEmail(name: string, email: string, tempPassword: string, role: string) {
   const loginPath = role === "super_admin" ? "/admin/login"
-                   : role === "registration_approver" ? "/approver/login"
+                   : role === "editorial" ? "/editorial/login"
                    : "/reviewer/login";
   const roleLabel = role === "super_admin" ? "Super Administrator"
-                   : role === "registration_approver" ? "Registration Approver"
+                   : role === "editorial" ? "Editorial"
                    : "Reviewer";
 
   return {
@@ -397,7 +379,7 @@ export function newUserWelcomeEmail(name: string, email: string, tempPassword: s
 
 export function passwordResetEmail(name: string, token: string, role: string) {
   const path = role === "super_admin" ? "/admin/reset-password"
-              : role === "registration_approver" ? "/approver/reset-password"
+              : role === "editorial" ? "/editorial/reset-password"
               : "/reviewer/reset-password";
   const link = `${BASE_URL}${path}?token=${encodeURIComponent(token)}`;
 

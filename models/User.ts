@@ -5,7 +5,7 @@ export interface IUser {
   email: string;
   name: string;
   passwordHash: string;
-  role: "super_admin" | "reviewer" | "registration_approver";
+  role: "super_admin" | "reviewer" | "editorial";
   expertise: string[];
   isActive: boolean;
   mustChangePassword: boolean;
@@ -21,7 +21,7 @@ const UserSchema = new Schema<IUser>(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
     name: { type: String, required: true, trim: true },
     passwordHash: { type: String, required: true, select: false },
-    role: { type: String, enum: ["super_admin", "reviewer", "registration_approver"], required: true, index: true },
+    role: { type: String, enum: ["super_admin", "reviewer", "editorial"], required: true, index: true },
     expertise: { type: [String], default: [] },
     isActive: { type: Boolean, default: true, index: true },
     mustChangePassword: { type: Boolean, default: true },

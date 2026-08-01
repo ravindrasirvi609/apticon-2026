@@ -2,19 +2,27 @@ import { NextResponse, type NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { userCreateSchema } from "@/lib/validators/user";
-import { requireRole, hashPassword, generateTempPassword, authErrorResponse } from "@/lib/auth";
+import { requireRole, requireAnyRole, hashPassword, generateTempPassword, authErrorResponse } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { sendMail, newUserWelcomeEmail } from "@/lib/email";
 
 export async function GET(request: NextRequest) {
   try {
-    await requireRole("super_admin");
+    // Editorial needs this to populate the reviewer-assignment picker, but only ever sees active
+    // reviewers — never admins, never account-state fields.
+    const s = await requireAnyRole("super_admin", "editorial");
+    const isAdmin = s.role === "super_admin";
     await connectDB();
 
     const url = new URL(request.url);
     const role = url.searchParams.get("role") ?? undefined;
     const filter: Record<string, unknown> = {};
-    if (role === "super_admin" || role === "reviewer") filter.role = role;
+    if (isAdmin) {
+      if (role === "super_admin" || role === "reviewer") filter.role = role;
+    } else {
+      filter.role = "reviewer";
+      filter.isActive = true;
+    }
 
     const users = await User.find(filter).sort({ createdAt: -1 }).lean();
     return NextResponse.json({
@@ -25,9 +33,13 @@ export async function GET(request: NextRequest) {
         role: u.role,
         expertise: u.expertise ?? [],
         isActive: u.isActive,
-        mustChangePassword: u.mustChangePassword,
-        lastLoginAt: u.lastLoginAt ?? null,
-        createdAt: u.createdAt,
+        ...(isAdmin
+          ? {
+              mustChangePassword: u.mustChangePassword,
+              lastLoginAt: u.lastLoginAt ?? null,
+              createdAt: u.createdAt,
+            }
+          : {}),
       })),
     });
   } catch (err) {

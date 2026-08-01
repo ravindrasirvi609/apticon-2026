@@ -25,7 +25,7 @@ export interface NavItem {
 }
 
 interface Props {
-  role: "super_admin" | "reviewer" | "registration_approver";
+  role: "super_admin" | "reviewer" | "editorial";
   brand: string;
   brandSub: string;
   nav: NavItem[];
@@ -36,8 +36,12 @@ interface Props {
 const LOGIN_PATH_BY_ROLE: Record<Props["role"], string> = {
   super_admin: "/admin/login",
   reviewer: "/reviewer/login",
-  registration_approver: "/approver/login",
+  editorial: "/editorial/login",
 };
+
+// Console roots are prefixes of every page beneath them, so they must match exactly or the
+// Dashboard link stays highlighted everywhere.
+const CONSOLE_ROOTS = new Set(["/admin", "/reviewer", "/editorial"]);
 
 const NAV_ICONS = {
   dashboard: LayoutDashboard,
@@ -73,7 +77,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
         </div>
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {nav.map((item) => {
-            const active = pathname === item.href || (item.href !== "/admin" && item.href !== "/reviewer" && pathname.startsWith(item.href));
+            const active = pathname === item.href || (!CONSOLE_ROOTS.has(item.href) && pathname.startsWith(item.href));
             const Icon = NAV_ICONS[item.icon];
             return (
               <Link

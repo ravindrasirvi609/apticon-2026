@@ -11,7 +11,7 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
 
   const s = await getSessionFromCookies();
   if (!s) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (s.role !== "super_admin" && s.role !== "registration_approver") {
+  if (s.role !== "super_admin" && s.role !== "editorial") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -26,8 +26,8 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
       .lean();
   }
 
-  // Redact internalNote for approvers (admin-only field)
-  if (s.role === "registration_approver") {
+  // Redact internalNote for non-admins (admin-only field)
+  if (s.role !== "super_admin") {
     delete (reg as Partial<typeof reg>).internalNote;
   }
 
