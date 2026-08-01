@@ -26,6 +26,11 @@ export interface IRegistration {
   email: string;
   phone: string;
 
+  // Delegate photo (badge / directory). Required for new registrations; blank on legacy rows.
+  photoKey: string;
+  photoUrl: string;
+  photoName: string;
+
   // Registration
   category: RegistrationCategory;
   feeTier: FeeTier;
@@ -76,6 +81,11 @@ const RegistrationSchema = new Schema<IRegistration>(
 
     email: { type: String, required: true, lowercase: true, trim: true, index: true },
     phone: { type: String, required: true, trim: true },
+
+    // Enforced at the API layer, not here, so legacy documents without a photo still save.
+    photoKey:  { type: String, default: "" },
+    photoUrl:  { type: String, default: "" },
+    photoName: { type: String, default: "" },
 
     category:           { type: String, required: true },
     feeTier:            { type: String, enum: ["early_bird", "regular", "on_spot"], required: true },

@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .select("registrationCode fullName email institution category feeAmount feeTier status createdAt linkedAbstract paymentMode transactionNumber paymentStatus razorpayOrderId razorpayPaymentId paymentError paidAt")
+      .select("registrationCode fullName email institution category feeAmount feeTier status createdAt linkedAbstract paymentMode transactionNumber paymentStatus razorpayOrderId razorpayPaymentId paymentError paidAt photoUrl")
       .lean(),
     Registration.aggregate<{ _id: string; count: number }>([
       { $match: scope },

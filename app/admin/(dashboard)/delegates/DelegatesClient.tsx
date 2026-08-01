@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import PageHeader from "@/components/console/PageHeader";
 import RegistrationStatusBadge from "@/components/console/RegistrationStatusBadge";
 import StatusBadge from "@/components/console/StatusBadge";
+import DelegatePhoto from "@/components/ui/DelegatePhoto";
 import { Button } from "@/components/ui/shadcn/button";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { Input } from "@/components/ui/shadcn/input";
@@ -17,10 +18,12 @@ interface DelegateRow {
   email: string;
   name: string;
   institution?: string;
+  photoUrl?: string;
   registration: {
     id: string;
     code: string;
     status: string;
+    paymentStatus?: string;
     feeAmount: number;
     createdAt: string;
   } | null;
@@ -195,8 +198,13 @@ export default function DelegatesClient() {
                       <Checkbox checked={selected.has(r.email)} onCheckedChange={() => toggleOne(r.email)} />
                     </TableCell>
                     <TableCell>
-                      <div className="font-semibold text-sm">{r.name}</div>
-                      <div className="text-xs text-[var(--muted-text)]">{r.email}</div>
+                      <div className="flex items-center gap-2.5">
+                        <DelegatePhoto url={r.photoUrl} name={r.name} size={32} />
+                        <div className="min-w-0">
+                          <div className="font-semibold text-sm">{r.name}</div>
+                          <div className="text-xs text-[var(--muted-text)]">{r.email}</div>
+                        </div>
+                      </div>
                     </TableCell>
                     <TableCell className="text-xs">{r.institution ?? "—"}</TableCell>
                     <TableCell>
@@ -205,7 +213,7 @@ export default function DelegatesClient() {
                           <Link href={`/admin/registrations/${r.registration.id}`} className="text-xs font-mono text-[var(--crimson-800)] hover:underline">
                             {r.registration.code}
                           </Link>
-                          <div className="mt-1"><RegistrationStatusBadge status={r.registration.status} /></div>
+                          <div className="mt-1"><RegistrationStatusBadge status={r.registration.status} paymentStatus={r.registration.paymentStatus} /></div>
                           <div className="text-[10px] text-[var(--muted-text)] mt-0.5">₹{r.registration.feeAmount.toLocaleString("en-IN")}</div>
                         </div>
                       ) : (

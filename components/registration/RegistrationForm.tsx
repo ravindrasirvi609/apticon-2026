@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/shadcn/button";
 import { Input } from "@/components/ui/shadcn/input";
 import { Textarea } from "@/components/ui/shadcn/textarea";
 import { Label } from "@/components/ui/shadcn/label";
+import PhotoUploadField from "@/components/registration/PhotoUploadField";
 import {
   REGISTRATION_CATEGORIES,
   FEE_TABLE,
@@ -61,6 +62,9 @@ function loadRazorpayCheckout() {
 export default function RegistrationForm() {
   const router = useRouter();
   const [paying, setPaying] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
     defaultValues: { willSubmitAbstract: false },
   });
@@ -72,7 +76,34 @@ export default function RegistrationForm() {
   const currentFee = chosenCategory ? currentFeeAmount(chosenCategory) : null;
   const feeBreakdown = currentFee ? calculateFeeWithGst(currentFee.amount) : null;
 
+  /** Uploads the photo and returns its storage key, or null if the upload failed. */
+  async function uploadPhoto(file: File): Promise<string | null> {
+    const payload = new FormData();
+    payload.append("file", file);
+    payload.append("purpose", "photo");
+    const res = await fetch("/api/upload", { method: "POST", body: payload });
+    const body = await res.json().catch(() => null);
+    if (!res.ok) {
+      toast.error(body?.error ?? "Photo upload failed. Please try again.");
+      return null;
+    }
+    return (body as { key: string }).key;
+  }
+
   const onSubmit = async (data: FormData) => {
+    if (!photo) {
+      setPhotoError("A profile photo is required.");
+      toast.error("Please upload a profile photo.");
+      return;
+    }
+    setPhotoError(null);
+
+    // Upload first — no point creating an order we'd have to discard.
+    setUploading(true);
+    const photoKey = await uploadPhoto(photo);
+    setUploading(false);
+    if (!photoKey) return;
+
     setPaying(true);
     const res = await fetch("/api/payments/razorpay/order", {
       method: "POST",
@@ -85,6 +116,8 @@ export default function RegistrationForm() {
         state: data.state || undefined,
         email: data.email,
         phone: data.phone,
+        photoKey,
+        photoName: photo.name,
         category: data.category,
         willSubmitAbstract: !!data.willSubmitAbstract,
         remarks: data.remarks || undefined,
@@ -144,6 +177,14 @@ export default function RegistrationForm() {
           Personal Information
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="sm:col-span-2">
+            <PhotoUploadField
+              file={photo}
+              onChange={(f) => { setPhoto(f); if (f) setPhotoError(null); }}
+              error={photoError ?? undefined}
+              disabled={uploading || paying}
+            />
+          </div>
           <div>
             <Label htmlFor="fullName">Full Name *</Label>
             <Input
@@ -341,12 +382,12 @@ export default function RegistrationForm() {
           type="submit"
           size="lg"
           className="w-full"
-          disabled={isSubmitting || paying}
+          disabled={isSubmitting || paying || uploading}
         >
-          {(paying || isSubmitting) ? (
+          {(paying || uploading || isSubmitting) ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              {paying ? "Opening secure payment…" : "Preparing payment…"}
+              {uploading ? "Uploading photo…" : paying ? "Opening secure payment…" : "Preparing payment…"}
             </>
           ) : "Continue to Secure Payment"}
         </Button>

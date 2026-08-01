@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/shadcn/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/shadcn/card";
 import { Badge } from "@/components/ui/shadcn/badge";
 import GoldenBadge from "@/components/ui/GoldenBadge";
+import DelegatePhoto from "@/components/ui/DelegatePhoto";
 
 interface RegStatus {
   registrationCode: string;
@@ -24,6 +25,7 @@ interface RegStatus {
   rejectedAt?: string;
   reviewNote?: string;
   willSubmitAbstract?: boolean;
+  photoUrl?: string;
 }
 
 interface LinkedAbs {
@@ -129,9 +131,12 @@ export default function RegistrationStatusClient() {
         <Card className="max-w-2xl mx-auto mt-8">
           <CardHeader>
             <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="text-xs uppercase tracking-widest text-[var(--muted-text)]">{result.registration.registrationCode}</div>
-                <CardTitle className="mt-1 text-2xl">{result.registration.fullName}</CardTitle>
+              <div className="flex items-center gap-4 min-w-0">
+                <DelegatePhoto url={result.registration.photoUrl} name={result.registration.fullName} size={64} />
+                <div className="min-w-0">
+                  <div className="text-xs uppercase tracking-widest text-[var(--muted-text)]">{result.registration.registrationCode}</div>
+                  <CardTitle className="mt-1 text-2xl">{result.registration.fullName}</CardTitle>
+                </div>
               </div>
               <Badge variant={STATUS_VARIANT[result.registration.status] ?? "secondary"}>
                 {STATUS_LABEL[result.registration.status] ?? result.registration.status}

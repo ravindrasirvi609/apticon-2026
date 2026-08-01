@@ -32,18 +32,7 @@ export const abstractDecisionSchema = z.object({
   note: z.string().max(2000).optional(),
 });
 
-export const UPLOAD_ABSTRACT_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-] as const;
-
-export const uploadRequestSchema = z.object({
-  purpose: z.literal("abstract").default("abstract"),
-});
-
 export type AbstractSubmitInput = z.infer<typeof abstractSubmitSchema>;
 export type AbstractStatusLookupInput = z.infer<typeof abstractStatusLookupSchema>;
 export type AbstractAssignInput = z.infer<typeof abstractAssignSchema>;
 export type AbstractDecisionInput = z.infer<typeof abstractDecisionSchema>;
-export type UploadRequestInput = z.infer<typeof uploadRequestSchema>;

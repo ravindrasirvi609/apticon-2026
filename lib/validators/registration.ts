@@ -3,7 +3,9 @@ import { REGISTRATION_CATEGORIES } from "@/lib/registration-fees";
 
 const CategoryEnum = z.enum(REGISTRATION_CATEGORIES);
 
-export const registrationSubmitSchema = z.object({
+// The only way a registration is created: Razorpay drives payment, so there are no
+// manual payment-mode or payment-proof fields here.
+export const razorpayOrderSchema = z.object({
   fullName:    z.string().min(2).max(200).trim(),
   designation: z.string().min(2).max(200).trim(),
   institution: z.string().min(2).max(300).trim(),
@@ -19,20 +21,12 @@ export const registrationSubmitSchema = z.object({
   category:            CategoryEnum,
   willSubmitAbstract:  z.boolean().default(false),
 
-  paymentMode:       z.enum(["neft_rtgs", "upi", "dd", "online"]),
-  transactionNumber: z.string().min(3).max(80).trim(),
-
-  paymentProofKey:   z.string().min(3),
-  paymentProofName:  z.string().min(1).max(300),
+  // Delegate photo — required, uploaded via /api/upload before the order is created. The key is
+  // pinned to the photo prefix so a crafted request can't point photoUrl at some other object.
+  photoKey:  z.string().max(300).regex(/^delegate-photos\/\d{4}\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp)$/, "Invalid photo reference"),
+  photoName: z.string().min(1).max(300),
 
   remarks: z.string().max(2000).optional(),
-});
-
-export const razorpayOrderSchema = registrationSubmitSchema.omit({
-  paymentMode: true,
-  transactionNumber: true,
-  paymentProofKey: true,
-  paymentProofName: true,
 });
 
 export const razorpayVerifySchema = z.object({
@@ -60,7 +54,7 @@ export const nudgeRequestSchema = z.object({
   kind:   z.enum(["register", "abstract"]),
 });
 
-export type RegistrationSubmitInput = z.infer<typeof registrationSubmitSchema>;
+export type RazorpayOrderInput = z.infer<typeof razorpayOrderSchema>;
 export type RegistrationStatusLookupInput = z.infer<typeof registrationStatusLookupSchema>;
 export type RegistrationNoteInput = z.infer<typeof registrationNoteSchema>;
 export type RegistrationLinkInput = z.infer<typeof registrationLinkSchema>;

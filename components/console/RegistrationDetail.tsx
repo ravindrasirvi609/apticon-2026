@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
 import RegistrationStatusBadge from "@/components/console/RegistrationStatusBadge";
 import StatusBadge from "@/components/console/StatusBadge";
+import DelegatePhoto from "@/components/ui/DelegatePhoto";
 import { Button } from "@/components/ui/shadcn/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/shadcn/card";
 import { Badge } from "@/components/ui/shadcn/badge";
@@ -24,6 +25,8 @@ interface RegDoc {
   state?: string;
   email: string;
   phone: string;
+  photoUrl?: string;
+  photoName?: string;
   category: string;
   feeTier: string;
   feeAmount: number;
@@ -159,6 +162,20 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
           <Card>
             <CardHeader><CardTitle>Delegate Information</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div className="sm:col-span-2 flex items-center gap-4 pb-3 mb-1 border-b border-[var(--gold-500)]/15">
+                <DelegatePhoto url={r.photoUrl} name={r.fullName} size={72} />
+                <div className="min-w-0">
+                  <div className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Profile photo</div>
+                  {r.photoUrl ? (
+                    <a href={r.photoUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-[var(--crimson-800)] hover:underline inline-flex items-center gap-1">
+                      View full size <ExternalLink className="w-3 h-3 opacity-70" />
+                    </a>
+                  ) : (
+                    <div className="text-sm text-[var(--muted-text)]">Not provided</div>
+                  )}
+                  {r.photoName && <div className="text-xs text-[var(--muted-text)] truncate">{r.photoName}</div>}
+                </div>
+              </div>
               <Field label="Email"        value={r.email} />
               <Field label="Mobile"       value={r.phone} />
               <Field label="Designation"  value={r.designation} />

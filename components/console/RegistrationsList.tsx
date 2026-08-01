@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
 import RegistrationStatusBadge from "@/components/console/RegistrationStatusBadge";
+import DelegatePhoto from "@/components/ui/DelegatePhoto";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { Input } from "@/components/ui/shadcn/input";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
@@ -28,6 +29,7 @@ interface RegItem {
   paymentStatus?: string;
   razorpayPaymentId?: string;
   paidAt?: string;
+  photoUrl?: string;
 }
 
 const STATUSES = ["", "submitted", "approved", "rejected"] as const;
@@ -127,10 +129,15 @@ export default function RegistrationsList({ detailBase, title = "Registrations",
                   <TableRow key={r._id}>
                     <TableCell className="font-mono text-xs">{r.registrationCode}</TableCell>
                     <TableCell>
-                      <Link href={`${detailBase}/${r._id}`} className="text-[var(--crimson-800)] hover:underline font-semibold">
-                        {r.fullName}
-                      </Link>
-                      <div className="text-xs text-[var(--muted-text)]">{r.email}</div>
+                      <div className="flex items-center gap-2.5">
+                        <DelegatePhoto url={r.photoUrl} name={r.fullName} size={32} />
+                        <div className="min-w-0">
+                          <Link href={`${detailBase}/${r._id}`} className="text-[var(--crimson-800)] hover:underline font-semibold">
+                            {r.fullName}
+                          </Link>
+                          <div className="text-xs text-[var(--muted-text)]">{r.email}</div>
+                        </div>
+                      </div>
                     </TableCell>
                     <TableCell className="text-xs">{r.institution}</TableCell>
                     <TableCell className="text-xs">{r.category}</TableCell>

@@ -11,10 +11,12 @@ interface DelegateRow {
   email: string;
   name: string;
   institution?: string;
+  photoUrl?: string;
   registration: {
     id: string;
     code: string;
     status: string;
+    paymentStatus?: string;
     feeAmount: number;
     createdAt: string;
   } | null;
@@ -54,10 +56,12 @@ export async function GET(request: NextRequest) {
       };
       row.name ||= r.fullName;
       row.institution ||= r.institution;
+      row.photoUrl ||= r.photoUrl || undefined;
       row.registration = {
         id: r._id.toString(),
         code: r.registrationCode,
         status: r.status,
+        paymentStatus: r.paymentStatus,
         feeAmount: r.feeAmount,
         createdAt: r.createdAt.toISOString(),
       };

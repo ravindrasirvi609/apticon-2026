@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import { generateRegistrationCode } from "@/lib/submission-code";
 import { calculateFeeWithGst, currentFeeAmount } from "@/lib/registration-fees";
 import { createRazorpayOrder } from "@/lib/razorpay";
+import { publicUrl } from "@/lib/r2";
 import { razorpayOrderSchema } from "@/lib/validators/registration";
 import Registration from "@/models/Registration";
 import { getClientIp } from "@/lib/auth";
@@ -43,6 +44,9 @@ export async function POST(request: NextRequest) {
     state: data.state,
     email: data.email,
     phone: data.phone,
+    photoKey: data.photoKey,
+    photoUrl: publicUrl(data.photoKey),
+    photoName: data.photoName,
     category: data.category,
     feeTier: tier,
     feeAmount: totalAmount,

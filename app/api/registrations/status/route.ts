@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     registrationCode: parsed.data.code.toUpperCase(),
     email: parsed.data.email,
   })
-    .select("registrationCode fullName email category feeAmount feeTier status createdAt approvedAt rejectedAt reviewNote linkedAbstract willSubmitAbstract")
+    .select("registrationCode fullName email category feeAmount feeTier status createdAt approvedAt rejectedAt reviewNote linkedAbstract willSubmitAbstract photoUrl paymentStatus")
     .lean();
 
   if (!reg) {
