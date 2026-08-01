@@ -8,14 +8,14 @@ import { staggerContainer, fadeUp, fadeLeft, fadeRight } from "@/lib/animations"
 import { EVENT } from "@/lib/constants";
 
 const HISTORY = [
-  { year: "1998", edition: "1st",  city: "Chandigarh",    note: "APTI Convention founded" },
-  { year: "2002", edition: "5th",  city: "Hyderabad",     note: "First south India edition" },
-  { year: "2008", edition: "11th", city: "Mumbai",        note: "1000+ delegates milestone" },
-  { year: "2013", edition: "16th", city: "Ahmedabad",     note: "International speakers invited" },
-  { year: "2018", edition: "21st", city: "Kolkata",       note: "Silver jubilee approaching" },
-  { year: "2022", edition: "25th", city: "Pune",          note: "Silver jubilee edition" },
-  { year: "2024", edition: "27th", city: "Bhopal",        note: "Pre-centenary preparation" },
-  { year: "2026", edition: "28th", city: "Raipur (C.G.)", note: "Viksit Bharat 2047 theme", current: true },
+  { year: "1996", edition: "1st",  city: "Mysore, Karnataka",     note: "APTI's first Annual National Convention" },
+  { year: "2000", edition: "5th",  city: "Udaipur, Rajasthan",    note: "Fifth edition of the convention" },
+  { year: "2006", edition: "11th", city: "Bangalore, Karnataka", note: "Second time hosted in Bangalore" },
+  { year: "2011", edition: "16th", city: "Moga, Punjab",         note: "Hosted in Punjab" },
+  { year: "2016", edition: "21st", city: "Manipal",              note: "Second time hosted at Manipal University" },
+  { year: "2022", edition: "25th", city: "Mysuru, Karnataka",    note: "Returned to APTICON's founding city" },
+  { year: "2024", edition: "27th", city: "Bhubaneswar, Odisha",  note: "Most recent edition before APTICON 2024" },
+  { year: "2026", edition: "28th", city: "Raipur (C.G.)",        note: "Viksit Bharat 2047 theme", current: true },
 ];
 
 const ABOUT_SECTIONS = [
@@ -126,7 +126,7 @@ export default function AboutClient() {
           <ScrollReveal className="text-center mb-16">
             <GoldenBadge>Our Journey</GoldenBadge>
             <h2 className="mt-5 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-[var(--dark-text)]">
-              28 Years of <span className="text-gradient-gold">Excellence</span>
+              28 Editions of <span className="text-gradient-gold">Excellence</span>
             </h2>
           </ScrollReveal>
 
