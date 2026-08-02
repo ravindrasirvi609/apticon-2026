@@ -1,5 +1,5 @@
 const FEES = [
-  { category: "APTI Life Member",          early: "₹1", regular: "₹1", spot: "₹1" },
+  { category: "APTI Life Member",          early: "₹3,000", regular: "₹3,500", spot: "₹4,000" },
   { category: "APTI Annual Member",        early: "₹3,500", regular: "₹4,000", spot: "₹4,500" },
   { category: "Non-Member",               early: "₹5,000", regular: "₹5,500", spot: "₹6,000" },
   { category: "PG Student / Research Scholar", early: "₹2,500", regular: "₹3,000", spot: "₹3,500" },
