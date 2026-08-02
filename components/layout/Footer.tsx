@@ -6,6 +6,12 @@ import CulturalDivider from "@/components/ui/CulturalDivider";
 const QUICK_LINKS = NAV_LINKS.slice(0, 6);
 const INFO_LINKS  = NAV_LINKS.slice(6);
 
+const LEGAL_LINKS = [
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms & Conditions", href: "/terms-conditions" },
+  { label: "Refund & Cancellation Policy", href: "/refund-policy" },
+];
+
 export default function Footer() {
   return (
     <footer className="bg-[var(--dark-text)] text-white">
@@ -134,14 +140,27 @@ export default function Footer() {
       {/* Bottom bar */}
       <CulturalDivider variant="bastar" className="opacity-20" />
       <div className="bg-[var(--crimson-900)]/60 py-4">
-        <div className="container-site flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/40">
-          <p>© 2026 APTICON · APTI Chhattisgarh State Branch. All rights reserved.</p>
-          <p>
-            Powered by{" "}
-            <span className="text-[var(--gold-500)]/70">
-              University Institute of Pharmacy, Pt. RSU Raipur
-            </span>
-          </p>
+        <div className="container-site flex flex-col gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5">
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-xs text-white/50 hover:text-[var(--gold-400)] transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/40">
+            <p>© 2026 APTICON · APTI Chhattisgarh State Branch. All rights reserved.</p>
+            <p>
+              Powered by{" "}
+              <span className="text-[var(--gold-500)]/70">
+                University Institute of Pharmacy, Pt. RSU Raipur
+              </span>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
