@@ -34,6 +34,8 @@ interface FormData {
 
 const STATES = ["Andhra Pradesh","Assam","Bihar","Chhattisgarh","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu & Kashmir","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Odisha","Punjab","Rajasthan","Tamil Nadu","Telangana","Uttar Pradesh","Uttarakhand","West Bengal","Other"];
 
+const DESIGNATIONS = ["Professor","Principal","Vice Principal","Consultant","PG Student / Research Scholar","UG Student","Intern","Other"];
+
 type RazorpayResponse = { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string };
 type RazorpayOptions = {
   key: string; amount: number; currency: string; name: string; description: string; order_id: string;
@@ -197,12 +199,15 @@ export default function RegistrationForm() {
           </div>
           <div>
             <Label htmlFor="designation">Designation *</Label>
-            <Input
+            <select
               id="designation"
-              className="mt-2"
-              placeholder="Professor / Associate Professor / Student"
+              className="mt-2 flex h-10 w-full rounded-lg border border-[var(--gold-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)]"
               {...register("designation", { required: "Designation is required" })}
-            />
+              defaultValue=""
+            >
+              <option value="">Select Designation</option>
+              {DESIGNATIONS.map((d) => <option key={d} value={d}>{d}</option>)}
+            </select>
             {errors.designation && <p className={errCls}>{errors.designation.message}</p>}
           </div>
           <div className="sm:col-span-2">
