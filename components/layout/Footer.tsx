@@ -157,7 +157,7 @@ export default function Footer() {
             <p>
               Powered by{" "}
               <span className="text-[var(--gold-500)]/70">
-                University Institute of Pharmacy, Pt. RSU Raipur
+                Operant Pharmacy Federation
               </span>
             </p>
           </div>
