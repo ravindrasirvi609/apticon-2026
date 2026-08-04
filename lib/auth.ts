@@ -10,7 +10,7 @@ if (!SECRET) console.warn("[auth] TOKEN_SECRET not set — sessions will fail");
 export const SESSION_COOKIE = "apticon_session";
 export const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
-export type Role = "super_admin" | "reviewer" | "editorial";
+export type Role = "super_admin" | "reviewer" | "editorial" | "checkin_staff";
 
 export interface SessionPayload {
   uid: string;
@@ -34,7 +34,10 @@ export async function verifySession(token: string): Promise<SessionPayload | nul
     const { payload } = await jwtVerify(token, key);
     if (
       typeof payload.uid === "string" &&
-      (payload.role === "super_admin" || payload.role === "reviewer" || payload.role === "editorial") &&
+      (payload.role === "super_admin" ||
+        payload.role === "reviewer" ||
+        payload.role === "editorial" ||
+        payload.role === "checkin_staff") &&
       typeof payload.name === "string" &&
       typeof payload.email === "string"
     ) {
@@ -75,18 +78,18 @@ export async function getSessionFromCookies(): Promise<SessionPayload | null> {
   return verifySession(token);
 }
 
-export async function requireRole(role: Role): Promise<SessionPayload> {
+export async function requireRole<R extends Role>(role: R): Promise<SessionPayload & { role: R }> {
   const s = await getSessionFromCookies();
   if (!s) throw new AuthError("Unauthorized", 401);
   if (s.role !== role) throw new AuthError("Forbidden", 403);
-  return s;
+  return s as SessionPayload & { role: R };
 }
 
-export async function requireAnyRole(...roles: Role[]): Promise<SessionPayload> {
+export async function requireAnyRole<R extends Role[]>(...roles: R): Promise<SessionPayload & { role: R[number] }> {
   const s = await getSessionFromCookies();
   if (!s) throw new AuthError("Unauthorized", 401);
   if (!roles.includes(s.role)) throw new AuthError("Forbidden", 403);
-  return s;
+  return s as SessionPayload & { role: R[number] };
 }
 
 export class AuthError extends Error {

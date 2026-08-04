@@ -5,7 +5,7 @@ export interface IAuditLog {
   actor: mongoose.Types.ObjectId | null;
   // "registration_approver" is retained for historical rows written before the role became
   // "editorial". Nothing writes it any more, but dropping it would invalidate existing entries.
-  actorRole: "super_admin" | "reviewer" | "editorial" | "registration_approver" | "public" | "system";
+  actorRole: "super_admin" | "reviewer" | "editorial" | "checkin_staff" | "registration_approver" | "public" | "system";
   action: string;
   resourceType: "user" | "abstract" | "review" | "auth" | "registration";
   resourceId: mongoose.Types.ObjectId | null;
@@ -18,7 +18,7 @@ export interface IAuditLog {
 const AuditLogSchema = new Schema<IAuditLog>(
   {
     actor: { type: Schema.Types.ObjectId, ref: "User", default: null, index: true },
-    actorRole: { type: String, enum: ["super_admin", "reviewer", "editorial", "registration_approver", "public", "system"], required: true, index: true },
+    actorRole: { type: String, enum: ["super_admin", "reviewer", "editorial", "checkin_staff", "registration_approver", "public", "system"], required: true, index: true },
     action: { type: String, required: true, index: true },
     resourceType: { type: String, enum: ["user", "abstract", "review", "auth", "registration"], required: true, index: true },
     resourceId: { type: Schema.Types.ObjectId, default: null },
