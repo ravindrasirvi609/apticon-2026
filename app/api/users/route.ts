@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const role = url.searchParams.get("role") ?? undefined;
     const filter: Record<string, unknown> = {};
     if (isAdmin) {
-      if (role === "super_admin" || role === "reviewer") filter.role = role;
+      if (role === "super_admin" || role === "reviewer" || role === "checkin_staff") filter.role = role;
     } else {
       filter.role = "reviewer";
       filter.isActive = true;

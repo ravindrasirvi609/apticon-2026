@@ -350,12 +350,17 @@ export function reviewerAssignmentEmail(reviewerName: string, count: number) {
 }
 
 export function newUserWelcomeEmail(name: string, email: string, tempPassword: string, role: string) {
+  const roleLabel = role === "super_admin" ? "Super Administrator"
+                   : role === "editorial" ? "Editorial"
+                   : role === "checkin_staff" ? "Check-in Staff"
+                   : "Reviewer";
+
+  // checkin_staff has no web console — they sign in from the APTICON Staff mobile app instead,
+  // so there's no login URL to link to.
+  const isMobileOnly = role === "checkin_staff";
   const loginPath = role === "super_admin" ? "/admin/login"
                    : role === "editorial" ? "/editorial/login"
                    : "/reviewer/login";
-  const roleLabel = role === "super_admin" ? "Super Administrator"
-                   : role === "editorial" ? "Editorial"
-                   : "Reviewer";
 
   return {
     subject: "Your APTICON 2026 Account",
@@ -370,7 +375,9 @@ export function newUserWelcomeEmail(name: string, email: string, tempPassword: s
           { label: "Temporary Password", value: tempPassword },
         ]},
         { type: "callout", variant: "warning", title: "Change your password on first login", body: `For your account's security, please sign in and change the temporary password immediately.` },
-        { type: "button", label: "Log in", href: `${BASE_URL}${loginPath}` },
+        ...(isMobileOnly
+          ? [{ type: "text" as const, html: `Open the <b>APTICON Staff</b> mobile app and sign in with the email and temporary password above.` }]
+          : [{ type: "button" as const, label: "Log in", href: `${BASE_URL}${loginPath}` }]),
         { type: "signoff" },
       ],
     }),

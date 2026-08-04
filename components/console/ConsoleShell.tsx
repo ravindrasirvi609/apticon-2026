@@ -10,6 +10,7 @@ import {
   LogOut,
   Menu,
   Settings,
+  UserCheck,
   Users,
   UsersRound,
   X,
@@ -21,7 +22,7 @@ import { Button } from "@/components/ui/shadcn/button";
 export interface NavItem {
   href: string;
   label: string;
-  icon: "dashboard" | "delegates" | "registrations" | "abstracts" | "users" | "audit" | "settings";
+  icon: "dashboard" | "delegates" | "registrations" | "abstracts" | "users" | "audit" | "settings" | "checkin";
 }
 
 interface Props {
@@ -51,6 +52,7 @@ const NAV_ICONS = {
   users: Users,
   audit: ClipboardList,
   settings: Settings,
+  checkin: UserCheck,
 };
 
 export default function ConsoleShell({ role, brand, brandSub, nav, user, children }: Props) {

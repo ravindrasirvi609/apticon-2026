@@ -18,7 +18,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/shadcn/alert-dialog";
 
-type UserRole = "super_admin" | "reviewer" | "editorial";
+type UserRole = "super_admin" | "reviewer" | "editorial" | "checkin_staff";
 
 interface UserRow {
   id: string;
@@ -36,6 +36,7 @@ const ROLE_LABEL: Record<UserRole, string> = {
   super_admin: "Super Admin",
   reviewer: "Reviewer",
   editorial: "Editorial",
+  checkin_staff: "Check-in Staff",
 };
 
 export default function UsersClient() {
@@ -98,7 +99,7 @@ export default function UsersClient() {
     <div className="p-4 md:p-8">
       <PageHeader
         title="Users"
-        description="Manage super admins and reviewers."
+        description="Manage super admins, reviewers, editorial, and check-in staff accounts."
         actions={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -121,7 +122,7 @@ export default function UsersClient() {
                 <div>
                   <Label>Role</Label>
                   <div className="mt-2 grid grid-cols-1 gap-2">
-                    {(["reviewer", "editorial", "super_admin"] as UserRole[]).map((r) => (
+                    {(["reviewer", "editorial", "super_admin", "checkin_staff"] as UserRole[]).map((r) => (
                       <button
                         key={r}
                         type="button"
@@ -134,6 +135,7 @@ export default function UsersClient() {
                         <div className={`text-xs mt-0.5 ${form.role === r ? "opacity-90" : "text-[var(--muted-text)]"}`}>
                           {r === "reviewer" ? "Reviews assigned abstracts and submits scores"
                           : r === "editorial" ? "Assigns abstracts to reviewers and records final decisions"
+                          : r === "checkin_staff" ? "Uses the mobile app to check in attendees and record meal/kit/certificate distribution during the event"
                           : "Full access to all consoles, users, decisions, audit log"}
                         </div>
                       </button>
@@ -184,7 +186,14 @@ export default function UsersClient() {
                     <TableCell className="font-semibold text-sm">{u.name}</TableCell>
                     <TableCell className="text-sm">{u.email}</TableCell>
                     <TableCell>
-                      <Badge variant={u.role === "super_admin" ? "default" : u.role === "editorial" ? "info" : "secondary"}>
+                      <Badge
+                        variant={
+                          u.role === "super_admin" ? "default"
+                          : u.role === "editorial" ? "info"
+                          : u.role === "checkin_staff" ? "success"
+                          : "secondary"
+                        }
+                      >
                         {ROLE_LABEL[u.role] ?? u.role}
                       </Badge>
                     </TableCell>
