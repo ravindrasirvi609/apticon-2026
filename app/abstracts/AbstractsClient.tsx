@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/shadcn/input";
 import { Textarea } from "@/components/ui/shadcn/textarea";
 import { Label } from "@/components/ui/shadcn/label";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
-import { ABSTRACT_THEMES } from "@/lib/constants";
+import { ABSTRACT_THEMES, EVENT } from "@/lib/constants";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 
 interface AbstractForm {
@@ -43,6 +43,20 @@ const GUIDELINES = [
   "Structure: Background, Objectives, Methods, Results, Conclusions.",
   "Do not include figures, tables, or references in the abstract.",
   "Presenting author must be listed first in the author list.",
+];
+
+const SUBMISSION_NOTES = [
+  "The presenting author must be a member of APTI.",
+  "Abstracts must be submitted online only through this website. No other form of submission will be accepted.",
+  "Only registered delegates will be allowed to present the abstracts during APTICON.",
+  `All queries related to the abstract submission should be done through e-mail: ${EVENT.contact}`,
+  "Poster/Oral acceptance letters and presentation schedule will be displayed on the APTICON website; no personal communication will be made in this regard.",
+];
+
+const REJECTED_CATEGORIES = [
+  "Review articles",
+  "Papers without methodology and results",
+  "Papers describing simple laboratory experiments",
 ];
 
 const ALLOWED_MIME: Record<string, "application/pdf" | "application/msword" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"> = {
@@ -202,7 +216,7 @@ export default function AbstractsClient() {
       {/* Themes */}
       <section className="py-8 px-4 max-w-4xl mx-auto">
         <ScrollReveal>
-          <h3 className="font-display text-xl font-bold text-[var(--dark-text)] mb-4">Themes</h3>
+          <h3 className="font-display text-xl font-bold text-[var(--dark-text)] mb-4">Areas of Specialization</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {ABSTRACT_THEMES.map((t) => (
               <div key={t} className="px-4 py-3 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/25 text-sm text-[var(--dark-text)]">
@@ -211,6 +225,42 @@ export default function AbstractsClient() {
             ))}
           </div>
         </ScrollReveal>
+      </section>
+
+      {/* Notes */}
+      <section className="py-8 px-4 max-w-4xl mx-auto">
+        <Card>
+          <CardContent className="pt-6">
+            <h3 className="font-display text-xl font-bold text-[var(--dark-text)] mb-4">Note</h3>
+            <ul className="space-y-2 text-sm text-[var(--muted-text)]">
+              {SUBMISSION_NOTES.map((n) => (
+                <li key={n} className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-[var(--crimson-800)] mt-0.5 flex-shrink-0" />
+                  <span>{n}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Rejected Categories */}
+      <section className="py-8 px-4 max-w-4xl mx-auto">
+        <Card>
+          <CardContent className="pt-6">
+            <h3 className="font-display text-xl font-bold text-[var(--dark-text)] mb-4">
+              The following categories of papers will be rejected
+            </h3>
+            <ol className="space-y-2 text-sm text-[var(--muted-text)] list-decimal list-inside">
+              {REJECTED_CATEGORIES.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </ol>
+            <p className="mt-4 text-sm font-medium text-[var(--crimson-800)]">
+              All accepted abstracts will be published in a special issue of IJPER.
+            </p>
+          </CardContent>
+        </Card>
       </section>
 
       {/* ── Submission Form ─────────────────────────────────── */}

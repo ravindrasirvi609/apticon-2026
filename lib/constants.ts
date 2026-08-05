@@ -36,14 +36,16 @@ export const STATS = [
 ];
 
 export const ABSTRACT_THEMES = [
-  "Pharmaceutical Education Innovation",
-  "Drug Discovery & Development",
-  "Clinical Pharmacy & Pharmacovigilance",
-  "Herbal & Traditional Medicine",
-  "Regulatory Affairs & Quality Assurance",
-  "Pharmacy Practice & Patient Care",
-  "Social & Community Pharmacy",
   "Pharmaceutical Technology",
+  "Medicinal Chemistry",
+  "Pharmacognosy, Indigenous Drugs, Herbal Formulations and Phytochemistry",
+  "Pharmacology, Toxicology, Clinical Research & Pharmacovigilance",
+  "Pharmaceutical Analysis and Quality Assurance",
+  "Biopharmaceutics, Pharmacokinetics & Drug Metabolism",
+  "Biotechnology and Biotherapeutics",
+  "Pharmaceutical Education and Professional Pharmacy",
+  "Drug Regulatory Affairs & Pharmaceutical Management",
+  "Artificial Intelligence / Bioinformatics / Data Analytics",
 ];
 
 export const SCHEDULE_DAY1 = [
