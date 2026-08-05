@@ -52,12 +52,12 @@ export default function Navbar() {
             <Link href="/" className="flex items-center gap-3 group" aria-label="APTICON 2026 Home">
               <div className="flex flex-col leading-none">
                 <Image
-                  src="/logo/APTICON_WORDMARK.png"
+                  src="/logo/APTICON_LOGO.png"
                   alt="APTICON 2026"
                   width={1536}
-                  height={375}
+                  height={1024}
                   priority
-                  className="h-8 md:h-10 w-auto"
+                  className="h-12 md:h-16 w-auto"
                 />
               </div>
             </Link>

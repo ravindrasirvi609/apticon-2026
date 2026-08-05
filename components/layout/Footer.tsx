@@ -37,11 +37,11 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <div className="mb-4">
               <Image
-                src="/logo/APTICON_WORDMARK.png"
+                src="/logo/APTICON_LOGO.png"
                 alt="APTICON 2026"
                 width={1536}
-                height={375}
-                className="h-10 w-auto"
+                height={1024}
+                className="h-16 w-auto"
               />
             </div>
             <p className="text-xs font-semibold tracking-widest uppercase text-white/50 mb-4">

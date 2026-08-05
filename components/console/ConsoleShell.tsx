@@ -75,7 +75,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
       {/* ─── Sidebar (desktop) ─── */}
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-white border-r border-[var(--gold-500)]/20 z-40">
         <div className="p-6 border-b border-[var(--gold-500)]/20">
-          <Image src="/logo/APTICON_WORDMARK.png" alt={brand} width={1536} height={375} className="h-8 w-auto" />
+          <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-12 w-auto" />
           <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-1">{brandSub}</div>
         </div>
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
@@ -119,7 +119,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
       {/* ─── Mobile top bar ─── */}
       <div className="lg:hidden sticky top-0 z-40 bg-white border-b border-[var(--gold-500)]/20 px-4 h-14 flex items-center justify-between">
         <div>
-          <Image src="/logo/APTICON_WORDMARK.png" alt={brand} width={1536} height={375} className="h-6 w-auto" />
+          <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-9 w-auto" />
           <div className="text-[9px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-0.5">{brandSub}</div>
         </div>
         <Button variant="ghost" size="icon" onClick={() => setOpen(true)} aria-label="Open menu">
@@ -133,7 +133,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
           <div className="absolute left-0 top-0 bottom-0 w-72 bg-white flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="p-4 border-b border-[var(--gold-500)]/20 flex items-center justify-between">
               <div>
-                <Image src="/logo/APTICON_WORDMARK.png" alt={brand} width={1536} height={375} className="h-6 w-auto" />
+                <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-9 w-auto" />
                 <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-0.5">{brandSub}</div>
               </div>
               <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Close">
