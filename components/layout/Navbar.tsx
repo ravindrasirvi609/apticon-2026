@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Menu } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
@@ -50,18 +51,15 @@ export default function Navbar() {
             {/* Logo / Brand */}
             <Link href="/" className="flex items-center gap-3 group" aria-label="APTICON 2026 Home">
               <div className="flex flex-col leading-none">
-                <span
-                  className="font-display font-black text-xl md:text-2xl tracking-tight"
-                  style={{
-                    background: "linear-gradient(135deg, #1A237E 0%, #8B1A1A 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  APTI<span className="text-[var(--gold-500)]">CON</span>
-                </span>
-                <span className="text-[10px] md:text-xs font-semibold tracking-[0.2em] text-[var(--muted-text)] uppercase">
+                <Image
+                  src="/logo/APTICON_WORDMARK.png"
+                  alt="APTICON 2026"
+                  width={1536}
+                  height={375}
+                  priority
+                  className="h-8 md:h-10 w-auto"
+                />
+                <span className="text-[10px] md:text-xs font-semibold tracking-[0.2em] text-[var(--muted-text)] uppercase mt-1">
                   2026 · Raipur
                 </span>
               </div>

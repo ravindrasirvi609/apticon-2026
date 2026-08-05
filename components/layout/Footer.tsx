@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Calendar } from "lucide-react";
 import { NAV_LINKS, EVENT } from "@/lib/constants";
@@ -34,10 +35,13 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="mb-4">
-              <span className="font-display font-black text-3xl text-[var(--gold-400)]">
-                APTI<span className="text-white">CON</span>
-              </span>
-              <span className="text-[var(--gold-500)] font-bold text-xl ml-1">2026</span>
+              <Image
+                src="/logo/APTICON_WORDMARK.png"
+                alt="APTICON 2026"
+                width={1536}
+                height={375}
+                className="h-10 w-auto"
+              />
             </div>
             <p className="text-xs font-semibold tracking-widest uppercase text-white/50 mb-4">
               28th Annual National Convention
