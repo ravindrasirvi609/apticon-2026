@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FileText, Users, CheckCircle2, Clock, ClipboardCheck, IndianRupee } from "lucide-react";
+import { FileText, Users, CheckCircle2, Clock, ClipboardCheck, IndianRupee, BadgeCheck } from "lucide-react";
 import PageHeader from "@/components/console/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/shadcn/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
@@ -10,7 +10,7 @@ import RegistrationStatusBadge from "@/components/console/RegistrationStatusBadg
 import { format } from "date-fns";
 
 interface Stats {
-  totals: { abstracts: number; registrations: number; users: number; activeReviewers: number; activeEditorial: number; reviews: number; revenue: number };
+  totals: { abstracts: number; registrations: number; users: number; activeReviewers: number; activeEditorial: number; reviews: number; revenue: number; aptiMembershipRegistrations: number };
   abstractsByStatus: Record<string, number>;
   registrationsByStatus: Record<string, number>;
   paymentsByStatus: Record<string, number>;
@@ -46,6 +46,7 @@ export default function AdminDashboard() {
         />
         <StatCard label="Approved · Paid" value={stats?.registrationsByStatus.approved ?? 0} icon={CheckCircle2} accent="emerald" />
         <StatCard label="Revenue" value={stats ? "₹" + (stats.totals.revenue ?? 0).toLocaleString("en-IN") : "—"} icon={IndianRupee} />
+        <StatCard label="APTI Membership + Reg." value={stats?.totals.aptiMembershipRegistrations ?? 0} icon={BadgeCheck} accent="emerald" />
       </div>
 
       {/* Row 2 — abstract metrics */}

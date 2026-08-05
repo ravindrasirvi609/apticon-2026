@@ -13,7 +13,6 @@ interface Assigned {
   _id: string;
   submissionCode: string;
   title: string;
-  presentingAuthor: string;
   theme: string;
   type: string;
   status: string;

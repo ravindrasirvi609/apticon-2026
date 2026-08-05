@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
     theme: data.theme,
     type: data.type,
     abstract: data.abstract,
+    keywords: data.keywords,
     fileKey: data.fileKey,
     fileName: data.fileName,
     fileUrl: data.fileKey ? publicUrl(data.fileKey) : undefined,
@@ -102,13 +103,18 @@ export async function GET(request: NextRequest) {
     filter.assignedReviewers = s.uid;
   }
 
+  const fields =
+    s.role === "reviewer"
+      ? "submissionCode title theme type status createdAt assignedReviewers"
+      : "submissionCode title presentingAuthor email theme type status createdAt assignedReviewers";
+
   const [total, items] = await Promise.all([
     Abstract.countDocuments(filter),
     Abstract.find(filter)
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .select("submissionCode title presentingAuthor email theme type status createdAt assignedReviewers")
+      .select(fields)
       .lean(),
   ]);
 

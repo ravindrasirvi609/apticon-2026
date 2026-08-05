@@ -22,6 +22,7 @@ export interface IAbstract {
   // "oral" | "poster" — kept in the union so those documents type-check.
   type: "review" | "research" | "oral" | "poster";
   abstract: string;
+  keywords: string[];
   fileUrl?: string;
   fileKey?: string;
   fileName?: string;
@@ -31,6 +32,10 @@ export interface IAbstract {
   finalDecisionBy?: mongoose.Types.ObjectId;
   finalDecisionAt?: Date;
   finalDecisionNote?: string;
+  // Set only once, when editorial confirms acceptance — distinct from `type`
+  // (the submission's review/research classification).
+  presentationType?: "oral" | "poster";
+  abstractCode?: string;
   linkedRegistration?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -54,6 +59,7 @@ const AbstractSchema = new Schema<IAbstract>(
       required: true,
     },
     abstract: { type: String, required: true },
+    keywords: { type: [String], required: true },
     fileUrl: { type: String },
     fileKey: { type: String },
     fileName: { type: String },
@@ -68,6 +74,8 @@ const AbstractSchema = new Schema<IAbstract>(
     finalDecisionBy: { type: Schema.Types.ObjectId, ref: "User" },
     finalDecisionAt: { type: Date },
     finalDecisionNote: { type: String },
+    presentationType: { type: String, enum: ["oral", "poster"] },
+    abstractCode: { type: String, sparse: true, unique: true, index: true },
     linkedRegistration: { type: Schema.Types.ObjectId, ref: "Registration", index: true },
   },
   { timestamps: true }

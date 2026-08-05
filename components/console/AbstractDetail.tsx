@@ -27,6 +27,7 @@ interface AbstractDoc {
   theme: string;
   type: string;
   abstract: string;
+  keywords: string[];
   fileUrl?: string;
   fileName?: string;
   status: string;
@@ -34,6 +35,8 @@ interface AbstractDoc {
   finalDecision?: string;
   finalDecisionAt?: string;
   finalDecisionNote?: string;
+  presentationType?: string;
+  abstractCode?: string;
   linkedRegistration?: string;
   createdAt: string;
 }
@@ -79,6 +82,7 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
   const [assignOpen, setAssignOpen] = useState(false);
   const [decisionOpen, setDecisionOpen] = useState<null | "accepted" | "rejected" | "revision_requested">(null);
   const [decisionNote, setDecisionNote] = useState("");
+  const [presentationType, setPresentationType] = useState<"oral" | "poster" | null>(null);
   const [saving, setSaving] = useState(false);
 
   async function load() {
@@ -123,18 +127,27 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
 
   async function saveDecision() {
     if (!decisionOpen) return;
+    if (decisionOpen === "accepted" && !presentationType) {
+      toast.error("Select Oral or Poster before accepting.");
+      return;
+    }
     setSaving(true);
     try {
       const res = await fetch(`/api/abstracts/${id}/decision`, {
         method: "PATCH",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ decision: decisionOpen, note: decisionNote || undefined }),
+        body: JSON.stringify({
+          decision: decisionOpen,
+          note: decisionNote || undefined,
+          presentationType: decisionOpen === "accepted" ? presentationType : undefined,
+        }),
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error);
       toast.success("Decision recorded. Notification email sent to author.");
       setDecisionOpen(null);
       setDecisionNote("");
+      setPresentationType(null);
       await load();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed to record decision");
@@ -169,6 +182,9 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
           <Card>
             <CardHeader><CardTitle>Abstract</CardTitle></CardHeader>
             <CardContent>
+              <div className="mb-4 flex flex-wrap gap-1">
+                {(a.keywords ?? []).map((k) => <Badge key={k} variant="outline">{k}</Badge>)}
+              </div>
               <p className="text-sm whitespace-pre-line leading-relaxed">{a.abstract}</p>
               {a.fileUrl && (
                 <div className="mt-4">
@@ -335,6 +351,12 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
               {a.finalDecision ? (
                 <div className="space-y-2">
                   <StatusBadge status={a.status} />
+                  {a.abstractCode && (
+                    <div className="text-sm">
+                      <span className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Abstract Code ({a.presentationType})</span>
+                      <div className="font-mono font-bold text-[var(--crimson-800)]">{a.abstractCode}</div>
+                    </div>
+                  )}
                   {a.finalDecisionAt && (
                     <div className="text-xs text-[var(--muted-text)]">Recorded {format(new Date(a.finalDecisionAt), "d MMM yyyy, HH:mm")}</div>
                   )}
@@ -364,21 +386,51 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
       </div>
 
       {/* Decision dialog */}
-      <Dialog open={decisionOpen !== null} onOpenChange={(v) => !v && setDecisionOpen(null)}>
+      <Dialog
+        open={decisionOpen !== null}
+        onOpenChange={(v) => {
+          if (!v) {
+            setDecisionOpen(null);
+            setPresentationType(null);
+          }
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Confirm decision: {decisionOpen?.replace("_", " ")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             <p className="text-sm text-[var(--muted-text)]">The author will receive an email with your note (if provided). This action is recorded in the audit log.</p>
+            {decisionOpen === "accepted" && (
+              <div>
+                <Label>Presentation type *</Label>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  {(["oral", "poster"] as const).map((v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => setPresentationType(v)}
+                      className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
+                        presentationType === v
+                          ? "bg-emerald-600 text-white border-emerald-600"
+                          : "bg-white border-[var(--gold-500)]/30"
+                      }`}
+                    >
+                      {v}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-2 text-xs text-[var(--muted-text)]">An Abstract Code will be generated based on this choice and cannot be changed afterwards.</p>
+              </div>
+            )}
             <div>
               <Label htmlFor="note">Note to author (optional)</Label>
               <Textarea id="note" className="mt-2" rows={5} value={decisionNote} onChange={(e) => setDecisionNote(e.target.value)} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDecisionOpen(null)}>Cancel</Button>
-            <Button onClick={saveDecision} disabled={saving}>
+            <Button variant="outline" onClick={() => { setDecisionOpen(null); setPresentationType(null); }}>Cancel</Button>
+            <Button onClick={saveDecision} disabled={saving || (decisionOpen === "accepted" && !presentationType)}>
               {saving && <Loader2 className="w-4 h-4 animate-spin" />} Record decision
             </Button>
           </DialogFooter>

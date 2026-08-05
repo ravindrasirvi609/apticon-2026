@@ -21,6 +21,8 @@ interface AbstractStatus {
   finalDecision?: string;
   finalDecisionAt?: string;
   finalDecisionNote?: string;
+  abstractCode?: string;
+  presentationType?: string;
 }
 
 const STATUS_VARIANT: Record<string, "info" | "warning" | "success" | "danger" | "secondary"> = {
@@ -127,6 +129,12 @@ export default function StatusClient() {
             <div><b>Theme:</b> {result.theme}</div>
             <div><b>Type:</b> {result.type}</div>
             <div><b>Submitted:</b> {format(new Date(result.createdAt), "d MMM yyyy, h:mm a")}</div>
+            {result.abstractCode && (
+              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+                <b>Abstract Code ({result.presentationType}):</b>{" "}
+                <span className="font-mono font-bold">{result.abstractCode}</span>
+              </div>
+            )}
             {result.finalDecisionAt && (
               <div><b>Decision recorded:</b> {format(new Date(result.finalDecisionAt), "d MMM yyyy, h:mm a")}</div>
             )}

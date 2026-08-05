@@ -208,7 +208,7 @@ export function abstractSubmittedEmail(name: string, code: string, title: string
   };
 }
 
-export function abstractDecisionEmail(name: string, code: string, title: string, decision: string, note?: string) {
+export function abstractDecisionEmail(name: string, code: string, title: string, decision: string, note?: string, abstractCode?: string, presentationType?: string) {
   const label: Record<string, string> = {
     accepted: "Accepted",
     rejected: "Not Accepted",
@@ -231,6 +231,7 @@ export function abstractDecisionEmail(name: string, code: string, title: string,
         { type: "text", html: `Dear ${esc(name)},` },
         { type: "text", html: `The scientific committee has completed the review of your abstract submission.` },
         { type: "callout", variant: cvariant, title: `Decision: ${decisionLabel}`, body: `Submission <b>${esc(code)}</b> — <i>${esc(title)}</i>` },
+        ...(abstractCode ? [{ type: "kv" as const, rows: [{ label: `Abstract Code (${presentationType})`, value: abstractCode }] }] : []),
         ...(note ? [{ type: "callout" as const, variant: "info" as const, title: "Committee note", body: nl2br(note) }] : []),
         { type: "button", label: "View full details", href: `${BASE_URL}/abstracts/status` },
         ...(decision === "accepted" ? [{ type: "callout" as const, variant: "info" as const, title: "Reminder", body: `Presenting authors must be registered delegates. Please ensure your <a href="${BASE_URL}/registration" style="color:${BRAND.crimson800};font-weight:700;">registration</a> is complete.` }] : []),

@@ -12,6 +12,7 @@ export const REGISTRATION_CATEGORIES = [
   "PG Student / Research Scholar",
   "UG Student",
   "Accompanying Person",
+  "APTI Membership + APTICON Registration",
 ] as const;
 
 export type RegistrationCategory = (typeof REGISTRATION_CATEGORIES)[number];
@@ -24,6 +25,8 @@ export const FEE_TABLE: Record<RegistrationCategory, Record<FeeTier, number>> = 
   "PG Student / Research Scholar": { early_bird: 2500, regular: 3000, on_spot: 3500 },
   "UG Student":                  { early_bird: 2000, regular: 2500, on_spot: 3000 },
   "Accompanying Person":         { early_bird: 1000, regular: 1500, on_spot: 2000 },
+  // TODO: confirm final pricing — placeholder amount for now.
+  "APTI Membership + APTICON Registration": { early_bird: 6000, regular: 6000, on_spot: 6000 },
 };
 
 // Same dates as the public FeeTable UI copy

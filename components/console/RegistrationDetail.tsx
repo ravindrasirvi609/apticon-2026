@@ -31,6 +31,7 @@ interface RegDoc {
   feeTier: string;
   feeAmount: number;
   willSubmitAbstract: boolean;
+  includesAptiMembership: boolean;
   paymentMode: string;
   transactionNumber: string;
   paymentProofUrl: string;
@@ -182,6 +183,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
               <Field label="Institution"  value={r.institution} />
               <Field label="City / State" value={`${r.city ?? "—"}${r.state ? ", " + r.state : ""}`} />
               <Field label="Category"     value={r.category} />
+              {r.includesAptiMembership && <Badge variant="secondary">Includes APTI Membership</Badge>}
               <Field label="Fee"          value={`₹${r.feeAmount.toLocaleString("en-IN")} (${r.feeTier.replace("_", " ")})`} />
               <Field label="Submitted"    value={format(new Date(r.createdAt), "d MMM yyyy, HH:mm")} />
               <Field label="Registration wanted abstract?" value={r.willSubmitAbstract ? "Yes" : "No"} />

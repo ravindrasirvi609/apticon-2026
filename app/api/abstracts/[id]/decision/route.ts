@@ -6,6 +6,7 @@ import { abstractDecisionSchema } from "@/lib/validators/abstract";
 import { requireAnyRole, authErrorResponse } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { sendMail, abstractDecisionEmail } from "@/lib/email";
+import { generateAbstractCode } from "@/lib/abstract-code";
 
 export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   try {
@@ -28,6 +29,14 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     abs.finalDecisionAt = new Date();
     abs.finalDecisionNote = parsed.data.note;
     abs.status = parsed.data.decision === "revision_requested" ? "revision_requested" : parsed.data.decision;
+
+    if (parsed.data.decision === "accepted" && parsed.data.presentationType) {
+      abs.presentationType = parsed.data.presentationType;
+      if (!abs.abstractCode) {
+        abs.abstractCode = await generateAbstractCode(parsed.data.presentationType, abs.theme);
+      }
+    }
+
     await abs.save();
 
     await logAudit({
@@ -45,7 +54,9 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
       abs.submissionCode,
       abs.title,
       parsed.data.decision,
-      parsed.data.note
+      parsed.data.note,
+      abs.abstractCode,
+      abs.presentationType
     );
     await sendMail({ to: abs.email, subject, html });
 

@@ -58,5 +58,15 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
     linkedRegistration = { present: true };
   }
 
-  return NextResponse.json({ abstract: abs, reviews: scrubbedReviews, reviewers, linkedRegistration });
+  // Reviewers get a de-identified abstract — no author name, institution, or contact info.
+  const responseAbstract =
+    s.role === "reviewer"
+      ? (() => {
+          const { authors: _authors, presentingAuthor: _presentingAuthor, institution: _institution, email: _email, phone: _phone, ...rest } = abs;
+          void _authors; void _presentingAuthor; void _institution; void _email; void _phone;
+          return rest;
+        })()
+      : abs;
+
+  return NextResponse.json({ abstract: responseAbstract, reviews: scrubbedReviews, reviewers, linkedRegistration });
 }

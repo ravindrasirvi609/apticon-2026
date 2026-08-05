@@ -1,19 +1,34 @@
 "use client";
 import { motion } from "framer-motion";
-import { User } from "lucide-react";
+import { Mail, User } from "lucide-react";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { staggerContainer, fadeUp } from "@/lib/animations";
+import { NATIONAL_BODY, STATE_BRANCHES } from "@/lib/committee-data";
 
 interface Member {
   name: string;
   designation: string;
   institution: string;
   role?: string;
+  email?: string;
+  image?: string;
 }
 
 const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
+  {
+    group: "National Body",
+    color: "from-[var(--crimson-800)] to-[var(--gold-500)]",
+    members: NATIONAL_BODY.map((m) => ({
+      name: m.name,
+      designation: m.designation,
+      institution: m.institution,
+      role: m.role,
+      email: m.email,
+      image: m.image,
+    })),
+  },
   {
     group: "Patrons",
     color: "from-[var(--gold-500)] to-amber-600",
@@ -82,9 +97,18 @@ function MemberCard({ member, gradient }: { member: Member; gradient: string }) 
       {/* Color strip */}
       <div className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />
       <div className="p-5 flex gap-4 items-start">
-        <div className={`w-12 h-12 rounded-full bg-gradient-to-b ${gradient} flex items-center justify-center flex-shrink-0`}>
-          <User size={20} className="text-white/80" />
-        </div>
+        {member.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={member.image}
+            alt={member.name}
+            className="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-black/5"
+          />
+        ) : (
+          <div className={`w-12 h-12 rounded-full bg-gradient-to-b ${gradient} flex items-center justify-center flex-shrink-0`}>
+            <User size={20} className="text-white/80" />
+          </div>
+        )}
         <div className="min-w-0">
           {member.role && (
             <span className={`inline-block mb-1 text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-sm bg-gradient-to-r ${gradient} text-white`}>
@@ -96,6 +120,15 @@ function MemberCard({ member, gradient }: { member: Member; gradient: string }) 
           </p>
           <p className="text-xs text-[var(--muted-text)] mt-0.5 leading-snug">{member.designation}</p>
           <p className="text-xs text-[var(--muted-text)] leading-snug">{member.institution}</p>
+          {member.email && (
+            <a
+              href={`mailto:${member.email}`}
+              className="mt-1 inline-flex items-center gap-1 text-xs text-[var(--crimson-800)] hover:underline truncate"
+            >
+              <Mail size={11} className="flex-shrink-0" />
+              <span className="truncate">{member.email}</span>
+            </a>
+          )}
         </div>
       </div>
     </motion.div>
@@ -148,6 +181,45 @@ export default function CommitteeClient() {
               </motion.div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <CulturalDivider variant="bastar" className="opacity-40" />
+
+      {/* State APTI Branches */}
+      <section className="py-16 md:py-20">
+        <div className="container-site">
+          <ScrollReveal className="mb-12 text-center">
+            <GoldenBadge>Across India</GoldenBadge>
+            <h2 className="mt-4 font-display font-bold text-2xl sm:text-3xl text-[var(--dark-text)]">
+              State APTI Branches
+            </h2>
+          </ScrollReveal>
+          <div className="space-y-12">
+            {STATE_BRANCHES.map((branch) => (
+              <div key={branch.state}>
+                <h3 className="font-display font-semibold text-lg text-[var(--crimson-800)] mb-4 flex items-center gap-3">
+                  <span className="h-6 w-1 rounded-full bg-gradient-to-b from-[var(--navy-800)] to-[var(--navy-900)]" />
+                  {branch.state}
+                </h3>
+                <motion.div
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-60px" }}
+                  variants={staggerContainer}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+                >
+                  {branch.members.map((member, i) => (
+                    <MemberCard
+                      key={i}
+                      member={member}
+                      gradient="from-[var(--navy-800)] to-[var(--navy-900)]"
+                    />
+                  ))}
+                </motion.div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>

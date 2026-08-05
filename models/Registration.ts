@@ -36,6 +36,7 @@ export interface IRegistration {
   feeTier: FeeTier;
   feeAmount: number;
   willSubmitAbstract: boolean;
+  includesAptiMembership: boolean;
 
   // Payment
   paymentMode: PaymentMode;
@@ -87,10 +88,11 @@ const RegistrationSchema = new Schema<IRegistration>(
     photoUrl:  { type: String, default: "" },
     photoName: { type: String, default: "" },
 
-    category:           { type: String, required: true },
-    feeTier:            { type: String, enum: ["early_bird", "regular", "on_spot"], required: true },
-    feeAmount:          { type: Number, required: true, min: 0 },
-    willSubmitAbstract: { type: Boolean, default: false },
+    category:               { type: String, required: true },
+    feeTier:                { type: String, enum: ["early_bird", "regular", "on_spot"], required: true },
+    feeAmount:              { type: Number, required: true, min: 0 },
+    willSubmitAbstract:     { type: Boolean, default: false },
+    includesAptiMembership: { type: Boolean, default: false, index: true },
 
     paymentMode:       { type: String, enum: ["neft_rtgs", "upi", "dd", "online", "razorpay"], required: true },
     transactionNumber: { type: String, default: "", trim: true, index: true },

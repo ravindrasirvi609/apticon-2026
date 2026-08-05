@@ -16,12 +16,10 @@ interface AbstractDoc {
   _id: string;
   submissionCode: string;
   title: string;
-  authors: string;
-  presentingAuthor: string;
-  institution: string;
   theme: string;
   type: string;
   abstract: string;
+  keywords: string[];
   fileUrl?: string;
   status: string;
   createdAt: string;
@@ -136,10 +134,13 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
             <CardHeader><CardTitle>Abstract</CardTitle></CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
-                <div><span className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Presenting author</span><div>{a.presentingAuthor}</div></div>
-                <div><span className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Institution</span><div>{a.institution}</div></div>
-                <div className="col-span-2"><span className="text-xs uppercase tracking-wider text-[var(--muted-text)]">All authors</span><div>{a.authors}</div></div>
                 <div><span className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Theme</span><div>{a.theme}</div></div>
+                <div className="col-span-2">
+                  <span className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Keywords</span>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {(a.keywords ?? []).map((k) => <Badge key={k} variant="outline">{k}</Badge>)}
+                  </div>
+                </div>
               </div>
               <p className="text-sm whitespace-pre-line leading-relaxed">{a.abstract}</p>
               {a.fileUrl && (
