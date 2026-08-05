@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/db";
 import Registration from "@/models/Registration";
+import MobileActionLog from "@/models/MobileActionLog";
 import { getAttendeeStatus } from "@/lib/mobile/status";
 
 const ATTENDEE_LIST_FIELDS =
@@ -53,7 +54,32 @@ export async function searchAttendees(params: SearchAttendeesParams) {
       .lean(),
   ]);
 
-  return { total, page, limit, items };
+  const actionRows = await MobileActionLog.find({
+    registration: { $in: items.map((item) => item._id) },
+    actionType: { $in: ["check_in", "kit"] },
+  })
+    .select("registration actionType createdAt")
+    .lean();
+
+  const statusByRegistration = new Map<string, { checkedInAt: Date | null; kitIssuedAt: Date | null }>();
+  for (const row of actionRows) {
+    const key = row.registration.toString();
+    const entry = statusByRegistration.get(key) ?? { checkedInAt: null, kitIssuedAt: null };
+    if (row.actionType === "check_in") entry.checkedInAt = row.createdAt;
+    if (row.actionType === "kit") entry.kitIssuedAt = row.createdAt;
+    statusByRegistration.set(key, entry);
+  }
+
+  const itemsWithStatus = items.map((item) => {
+    const entry = statusByRegistration.get(item._id.toString());
+    return {
+      ...item,
+      checkedInAt: entry?.checkedInAt ?? null,
+      kitIssuedAt: entry?.kitIssuedAt ?? null,
+    };
+  });
+
+  return { total, page, limit, items: itemsWithStatus };
 }
 
 export async function getAttendeeById(id: string) {

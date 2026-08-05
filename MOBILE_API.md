@@ -249,15 +249,20 @@ if you want a narrower search.
         "status": "approved",
         "paymentStatus": "captured",
         "photoUrl": "https://<r2-domain>/photos/....jpg",
-        "createdAt": "2026-06-01T10:00:00.000Z"
+        "createdAt": "2026-06-01T10:00:00.000Z",
+        "checkedInAt": "2026-10-24T09:12:00.000Z",
+        "kitIssuedAt": null
       }
     ]
   }
 }
 ```
 
-This is a **list** view — use it for the search-results screen. Tap a row to
-open the full profile via `GET /attendees/{id}`.
+This is a **list** view — use it for the search-results screen.
+`checkedInAt`/`kitIssuedAt` are `null` until that action has been recorded,
+so the results screen can show an "Already checked in" / "Kit issued" badge
+without opening the full profile. Tap a row to open the full profile via
+`GET /attendees/{id}`.
 
 ---
 
