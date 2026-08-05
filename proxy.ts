@@ -7,6 +7,19 @@ const ADMIN_PREFIX     = "/admin";
 const REVIEWER_PREFIX  = "/reviewer";
 const EDITORIAL_PREFIX = "/editorial";
 
+// The mobile app authenticates with a Bearer token (checked inside each route via
+// requireStaff), never cookies — so it needs CORS headers here instead of the cookie-based
+// role gating below, which doesn't apply to it at all.
+const MOBILE_API_PREFIX = "/api/mobile";
+
+function withCorsHeaders(response: NextResponse): NextResponse {
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  response.headers.set("Access-Control-Max-Age", "86400");
+  return response;
+}
+
 const PUBLIC_AUTH_PATHS = new Set([
   "/admin/login",    "/admin/forgot-password",    "/admin/reset-password",
   "/reviewer/login", "/reviewer/forgot-password", "/reviewer/reset-password",
@@ -21,6 +34,13 @@ const HOME_BY_ROLE: Record<string, string> = {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith(MOBILE_API_PREFIX)) {
+    if (request.method === "OPTIONS") {
+      return withCorsHeaders(new NextResponse(null, { status: 204 }));
+    }
+    return withCorsHeaders(NextResponse.next());
+  }
 
   if (PUBLIC_AUTH_PATHS.has(pathname)) return NextResponse.next();
 
@@ -55,5 +75,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/reviewer/:path*", "/editorial/:path*"],
+  matcher: ["/admin/:path*", "/reviewer/:path*", "/editorial/:path*", "/api/mobile/:path*"],
 };
