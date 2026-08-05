@@ -21,7 +21,7 @@ export default function RegistrationClient() {
             Register for <span className="text-gradient-crimson">APTICON 2026</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
-            Join 500+ pharmacy educators and researchers at India's premier pharmaceutical education convention.
+            Join 1500+ pharmacy educators and researchers at India's premier pharmaceutical education convention.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold">

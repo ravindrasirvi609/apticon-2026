@@ -1,6 +1,6 @@
 const ITEMS = [
   "28th Annual National Convention",
-  "500+ Delegates Expected",
+  "1500+ Delegates Expected",
   "24–25 October 2026",
   "Raipur, Chhattisgarh",
   "Registration Opens Soon",

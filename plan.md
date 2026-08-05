@@ -213,13 +213,13 @@ components/
 
 #### Highlights Bar
 - Horizontal scrolling marquee strip (crimson bg, gold text):
-  `28th Annual Convention  •  500+ Delegates Expected  •  24–25 Oct 2026  •  Raipur, C.G.  •  Registration Opens Soon`
+  `28th Annual Convention  •  1500+ Delegates Expected  •  24–25 Oct 2026  •  Raipur, C.G.  •  Registration Opens Soon`
 
 #### About Preview
 - Two-column: left = text fade-in, right = animated stats counters
   - 28 years of APTICON
   - 1000+ Pharmacy Teachers network
-  - 500+ Expected delegates
+  - 1500+ Expected delegates
   - 20+ Speakers
 - Bastar art border frame around the stats block
 

@@ -8,7 +8,7 @@ import { SPONSORSHIP_TIERS } from "@/lib/constants";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 
 const BENEFITS_WHY = [
-  { icon: "👥", title: "500+ Pharmacy Leaders",    desc: "Direct access to pharmacy educators, HODs, Principals and Deans from across India." },
+  { icon: "👥", title: "1500+ Pharmacy Leaders",    desc: "Direct access to pharmacy educators, HODs, Principals and Deans from across India." },
   { icon: "🎓", title: "Academic Reach",           desc: "Your brand in front of decision-makers in pharmaceutical education and research." },
   { icon: "📰", title: "Souvenir Publication",     desc: "Full and half-page advertisement in the official conference souvenir book." },
   { icon: "🏆", title: "Brand Visibility",         desc: "Logo on backdrops, banners, registration kits, website, and social media." },
@@ -29,7 +29,7 @@ export default function SponsorsClient() {
             Partner with <span className="text-gradient-crimson">APTICON 2026</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
-            Gain unparalleled visibility among 500+ pharmacy professionals. Support India's premier pharmacy education convention and be part of a national movement.
+            Gain unparalleled visibility among 1500+ pharmacy professionals. Support India's premier pharmacy education convention and be part of a national movement.
           </p>
           <div className="mt-8">
             <PulseButton href="mailto:apticon2026@gmail.com" variant="gold" pulse external>
