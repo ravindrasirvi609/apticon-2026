@@ -59,9 +59,6 @@ export default function Navbar() {
                   priority
                   className="h-8 md:h-10 w-auto"
                 />
-                <span className="text-[10px] md:text-xs font-semibold tracking-[0.2em] text-[var(--muted-text)] uppercase mt-1">
-                  2026 · Raipur
-                </span>
               </div>
             </Link>
 
