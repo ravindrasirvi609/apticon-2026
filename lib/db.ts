@@ -1,5 +1,19 @@
 import mongoose from "mongoose";
 
+// Side-effect imports: several queries populate() a ref (e.g. MobileActionLog.staff -> "User",
+// reports.registration -> "Registration") from files that don't otherwise import that model.
+// Mongoose only registers a schema once its model file is actually loaded, and Next.js/Vercel can
+// bundle each API route as an isolated function — so a route that never imports models/User.ts
+// throws MissingSchemaError the moment it populates "staff". Registering every model here,
+// where every DB-touching code path already calls connectDB() first, closes that gap for good.
+import "@/models/User";
+import "@/models/Registration";
+import "@/models/MobileActionLog";
+import "@/models/AuditLog";
+import "@/models/Abstract";
+import "@/models/Review";
+import "@/models/PasswordReset";
+
 const MONGO_URI = process.env.MONGO_URI;
 
 if (!MONGO_URI) {
