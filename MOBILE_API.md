@@ -393,14 +393,16 @@ shape as §6):
 }
 ```
 
-### 7.4 Duplicate-action rule (important)
+### 7.4 Conflict responses (409)
 
-Every action type can be recorded **at most once per attendee** — for
-`breakfast`/`lunch`/`dinner` that's once **per day** (a different `day` value
-is a separate, allowed action); for everything else it's once ever. This is
-enforced by the database itself, not just app logic, so it cannot be raced.
+This endpoint returns `409` for **two distinct reasons** — always check `message`, not just the
+status code:
 
-Attempting a duplicate returns **HTTP 409**:
+**1. Duplicate action.** Every action type can be recorded **at most once per attendee** — for
+`breakfast`/`lunch`/`dinner` that's once **per day** (a different `day` value is a separate,
+allowed action); for everything else it's once ever. This is enforced by the database itself, not
+just app logic, so it cannot be raced.
+
 ```json
 {
   "success": false,
@@ -409,8 +411,21 @@ Attempting a duplicate returns **HTTP 409**:
 }
 ```
 
-The mobile UI should treat `409` as an expected, user-facing outcome (show it
-as a toast/banner, e.g. "Already checked in"), not as a crash/retry case.
+**2. Registration not approved.** The attendee's registration `status` (see §6) is not `"approved"`
+yet — e.g. payment is still processing or was rejected. No action can be recorded until it is. This
+is expected to be transient: registrations are usually approved automatically within moments of a
+successful payment capture.
+
+```json
+{
+  "success": false,
+  "message": "This attendee's registration is not approved yet (status: payment_review). Actions cannot be recorded until payment is confirmed.",
+  "errors": []
+}
+```
+
+The mobile UI should treat **both** `409` cases as an expected, user-facing outcome (show it as a
+toast/banner, e.g. "Already checked in" / "Not approved yet"), not as a crash/retry case.
 
 **Other errors**
 - `400` — invalid `{id}`, invalid/missing `actionType`, missing `day` for a meal type, or a `day` provided for a non-meal type
@@ -556,10 +571,14 @@ public-facing security boundary.
 - An attendee can receive **breakfast**, **lunch**, **dinner** at most once
   **per conference day** (a `day` value is required on every request for
   these three).
-- All of the above are enforced server-side (HTTP 409 on duplicate) — the app
-  should still disable/hide already-completed action buttons using the
-  `status` object for a good UX, but must not rely on client-side state alone
-  to prevent duplicates.
+- An attendee's registration must have **`status: "approved"`** (see §6)
+  before **any** action can be recorded — `GET` endpoints (search, profile,
+  by-code, history) are unaffected and always return full attendee data
+  regardless of status, so staff can always see *why* an action is blocked.
+- All of the above are enforced server-side (HTTP 409 on duplicate or
+  not-approved) — the app should still disable/hide already-completed or
+  not-yet-available action buttons using the `status` object for a good UX,
+  but must not rely on client-side state alone to prevent either case.
 - Every action is attributed to the staff member who performed it (from their
   auth token) and, optionally, a device string — visible via
   `GET /attendees/{id}/history` and the reports endpoints.

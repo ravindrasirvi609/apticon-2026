@@ -73,7 +73,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
   return (
     <div className="min-h-dvh bg-[var(--cream-50)]">
       {/* ─── Sidebar (desktop) ─── */}
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-white border-r border-[var(--gold-500)]/20 z-40">
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-white border-r border-[var(--gold-500)]/20 z-40 print:hidden">
         <div className="p-6 border-b border-[var(--gold-500)]/20">
           <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-12 w-auto" />
           <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-1">{brandSub}</div>
@@ -117,7 +117,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
       </aside>
 
       {/* ─── Mobile top bar ─── */}
-      <div className="lg:hidden sticky top-0 z-40 bg-white border-b border-[var(--gold-500)]/20 px-4 h-14 flex items-center justify-between">
+      <div className="lg:hidden sticky top-0 z-40 bg-white border-b border-[var(--gold-500)]/20 px-4 h-14 flex items-center justify-between print:hidden">
         <div>
           <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-9 w-auto" />
           <div className="text-[9px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-0.5">{brandSub}</div>
@@ -182,7 +182,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
       )}
 
       {/* ─── Main ─── */}
-      <main className="lg:pl-64">{children}</main>
+      <main className="lg:pl-64 print:pl-0">{children}</main>
     </div>
   );
 }

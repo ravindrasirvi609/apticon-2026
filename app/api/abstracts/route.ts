@@ -10,6 +10,7 @@ import { getSessionFromCookies } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/auth";
 import { linkFromAbstract } from "@/lib/sync";
+import { verifyAptiMember } from "@/lib/apti-membership";
 
 // POST /api/abstracts — public abstract submission
 export async function POST(request: NextRequest) {
@@ -28,6 +29,16 @@ export async function POST(request: NextRequest) {
   const data = parsed.data;
   await connectDB();
 
+  const membership = await verifyAptiMember(data.aptiMemberId, data.email);
+  if (!membership.valid) {
+    return NextResponse.json(
+      {
+        error: `Only verified APTI members can submit an abstract. We couldn't verify Membership ID "${data.aptiMemberId}". Please double-check it, or contact APTI to confirm your membership.`,
+      },
+      { status: 400 }
+    );
+  }
+
   // Regenerate on collision (astronomically unlikely, but cheap)
   let submissionCode = generateSubmissionCode();
   for (let i = 0; i < 5; i++) {
@@ -44,6 +55,7 @@ export async function POST(request: NextRequest) {
     institution: data.institution,
     email: data.email,
     phone: data.phone,
+    aptiMemberId: data.aptiMemberId,
     theme: data.theme,
     type: data.type,
     abstract: data.abstract,

@@ -37,6 +37,8 @@ export interface IRegistration {
   feeAmount: number;
   willSubmitAbstract: boolean;
   includesAptiMembership: boolean;
+  /** Verified against the APTI membership registry — set only for "APTI Life Member" / "APTI Annual Member" categories. */
+  aptiMemberId?: string;
 
   // Payment
   paymentMode: PaymentMode;
@@ -93,6 +95,7 @@ const RegistrationSchema = new Schema<IRegistration>(
     feeAmount:              { type: Number, required: true, min: 0 },
     willSubmitAbstract:     { type: Boolean, default: false },
     includesAptiMembership: { type: Boolean, default: false, index: true },
+    aptiMemberId:           { type: String, trim: true, uppercase: true },
 
     paymentMode:       { type: String, enum: ["neft_rtgs", "upi", "dd", "online", "razorpay"], required: true },
     transactionNumber: { type: String, default: "", trim: true, index: true },

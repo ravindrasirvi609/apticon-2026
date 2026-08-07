@@ -18,6 +18,8 @@ import {
   formatRupees,
   type RegistrationCategory,
 } from "@/lib/registration-fees";
+import { APTI_MEMBER_CATEGORIES } from "@/lib/validators/registration";
+import AptiMembershipIdField from "@/components/ui/AptiMembershipIdField";
 
 interface FormData {
   fullName: string;
@@ -29,6 +31,7 @@ interface FormData {
   phone: string;
   category: RegistrationCategory | "";
   willSubmitAbstract: boolean;
+  aptiMemberId: string;
   remarks: string;
 }
 
@@ -77,6 +80,7 @@ export default function RegistrationForm() {
     : null;
   const currentFee = chosenCategory ? currentFeeAmount(chosenCategory) : null;
   const feeBreakdown = currentFee ? calculateFeeWithGst(currentFee.amount) : null;
+  const requiresMembershipId = !!chosenCategory && APTI_MEMBER_CATEGORIES.includes(chosenCategory as (typeof APTI_MEMBER_CATEGORIES)[number]);
 
   /** Uploads the photo and returns its storage key, or null if the upload failed. */
   async function uploadPhoto(file: File): Promise<string | null> {
@@ -122,6 +126,7 @@ export default function RegistrationForm() {
         photoName: photo.name,
         category: data.category,
         willSubmitAbstract: !!data.willSubmitAbstract,
+        aptiMemberId: data.aptiMemberId || undefined,
         remarks: data.remarks || undefined,
       }),
     });
@@ -334,6 +339,17 @@ export default function RegistrationForm() {
               Fees are auto-selected based on today&apos;s date; GST is calculated at 18% extra. Base-fee tiers for this category:
               early bird {formatRupees(FEE_TABLE[chosenCategory].early_bird)} · regular {formatRupees(FEE_TABLE[chosenCategory].regular)} · on-spot {formatRupees(FEE_TABLE[chosenCategory].on_spot)}.
             </span>
+          </div>
+        )}
+        {requiresMembershipId && (
+          <div className="mt-4">
+            <AptiMembershipIdField
+              registerProps={register("aptiMemberId", {
+                validate: (v) => !requiresMembershipId || (v?.trim().length ?? 0) >= 3 || "APTI Membership ID is required for this category",
+              })}
+              error={errors.aptiMemberId?.message}
+              helperText="As printed on your APTI membership card/email — we'll verify this before confirming your registration."
+            />
           </div>
         )}
         <div className="mt-4 flex items-start gap-3 p-3 rounded-lg bg-[var(--cream-50)] border border-[var(--gold-500)]/20">

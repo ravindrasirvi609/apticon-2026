@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, FileText, Loader2, Image as ImageIcon, RotateCcw, ShieldCheck, Info } from "lucide-react";
+import { ArrowLeft, ExternalLink, FileText, Loader2, Image as ImageIcon, RotateCcw, ShieldCheck, Info, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
@@ -32,6 +32,7 @@ interface RegDoc {
   feeAmount: number;
   willSubmitAbstract: boolean;
   includesAptiMembership: boolean;
+  aptiMemberId?: string;
   paymentMode: string;
   transactionNumber: string;
   paymentProofUrl: string;
@@ -50,6 +51,7 @@ interface RegDoc {
   linkedAbstract?: string | null;
   remarks?: string;
   createdAt: string;
+  qrCode?: string;
 }
 
 interface LinkedAbs {
@@ -183,6 +185,12 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
               <Field label="Institution"  value={r.institution} />
               <Field label="City / State" value={`${r.city ?? "—"}${r.state ? ", " + r.state : ""}`} />
               <Field label="Category"     value={r.category} />
+              {r.aptiMemberId && (
+                <Field
+                  label="APTI Membership ID"
+                  value={<span className="inline-flex items-center gap-1.5">{r.aptiMemberId} <Badge variant="secondary">Verified</Badge></span>}
+                />
+              )}
               {r.includesAptiMembership && <Badge variant="secondary">Includes APTI Membership</Badge>}
               <Field label="Fee"          value={`₹${r.feeAmount.toLocaleString("en-IN")} (${r.feeTier.replace("_", " ")})`} />
               <Field label="Submitted"    value={format(new Date(r.createdAt), "d MMM yyyy, HH:mm")} />
@@ -338,6 +346,29 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
           </Card>
 
           <Card>
+            <CardHeader><CardTitle>QR / Badge</CardTitle></CardHeader>
+            <CardContent className="flex flex-col items-center gap-3">
+              {r.qrCode ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={r.qrCode}
+                  alt="QR code encoding this registration code"
+                  width={180}
+                  height={180}
+                  className="rounded-lg border border-[var(--gold-500)]/20 bg-white p-2"
+                />
+              ) : (
+                <div className="text-sm text-[var(--muted-text)]">QR unavailable</div>
+              )}
+              <Link href={`${backHref}/${id}/badge`} className="w-full">
+                <Button variant="outline" className="w-full">
+                  <Printer className="w-4 h-4" /> Print Badge
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card>
             <CardHeader><CardTitle>Linked Abstract</CardTitle></CardHeader>
             <CardContent>
               {data.linkedAbstract ? (
@@ -374,7 +405,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
   );
 }
 
-function Field({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+function Field({ label, value, mono }: { label: string; value: ReactNode; mono?: boolean }) {
   return (
     <div>
       <div className="text-xs uppercase tracking-wider text-[var(--muted-text)]">{label}</div>

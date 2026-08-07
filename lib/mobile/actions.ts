@@ -42,8 +42,14 @@ export async function performAction(input: PerformActionInput): Promise<Attendee
   await connectDB();
   const { registrationId, actionType, staffId, staffRole, device, request } = input;
 
-  const registration = await Registration.findById(registrationId).select("_id").lean();
+  const registration = await Registration.findById(registrationId).select("_id status").lean();
   if (!registration) throw new MobileActionError("Attendee not found", 404);
+  if (registration.status !== "approved") {
+    throw new MobileActionError(
+      `This attendee's registration is not approved yet (status: ${registration.status}). Actions cannot be recorded until payment is confirmed.`,
+      409
+    );
+  }
 
   const isDayScoped = DAY_SCOPED_ACTION_TYPES.includes(actionType);
   if (isDayScoped && (!input.day || input.day < 1)) {

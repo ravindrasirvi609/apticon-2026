@@ -11,6 +11,7 @@
  */
 
 import { Resend } from "resend";
+import { generateRegistrationQrDataUrl } from "@/lib/qrcode";
 
 const KEY = process.env.RESEND_API_KEY ?? "";
 const FROM = process.env.RESEND_FROM ?? "APTICON 2026 <onboarding@resend.dev>";
@@ -58,6 +59,7 @@ export type EmailBlock =
   | { type: "text";     html: string }                                                          // pre-escaped HTML paragraph
   | { type: "heading";  text: string }                                                          // small H2
   | { type: "code";     label: string; value: string }                                          // big monospace code card
+  | { type: "qr";       dataUrl: string; caption?: string }                                     // centered QR image
   | { type: "kv";       rows: { label: string; value: string }[] }                              // key/value rows
   | { type: "callout";  variant: "info" | "success" | "warning" | "danger"; title?: string; body: string }
   | { type: "button";   label: string; href: string; variant?: "primary" | "secondary" }
@@ -77,6 +79,14 @@ function renderBlock(b: EmailBlock): string {
         <div style="background:${BRAND.cream100};border-left:4px solid ${BRAND.gold500};padding:16px 20px;margin:20px 0;border-radius:4px;">
           <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:${BRAND.muted};font-weight:700;">${esc(b.label)}</div>
           <div style="font-size:22px;font-weight:900;color:${BRAND.crimson800};margin-top:6px;font-family:'Courier New',monospace;letter-spacing:1px;">${esc(b.value)}</div>
+        </div>`;
+
+    case "qr":
+      return `
+        <div style="background:${BRAND.cream100};border-left:4px solid ${BRAND.gold500};padding:16px 20px;margin:20px 0;border-radius:4px;text-align:center;">
+          <img src="${esc(b.dataUrl)}" width="160" height="160" alt="QR code for registration"
+               style="display:inline-block;border-radius:4px;background:#fff;padding:8px;" />
+          ${b.caption ? `<div style="margin-top:10px;font-size:12px;color:${BRAND.muted};">${esc(b.caption)}</div>` : ""}
         </div>`;
 
     case "kv":
@@ -265,10 +275,11 @@ export function registrationSubmittedEmail(name: string, code: string, feeAmount
   };
 }
 
-export function registrationApprovedEmail(name: string, code: string, feeAmount: number, hasLinkedAbstract: boolean) {
+export async function registrationApprovedEmail(name: string, code: string, feeAmount: number, hasLinkedAbstract: boolean) {
   const nextStepsInfo = hasLinkedAbstract
     ? `We can see your abstract submission is linked to this registration — you're fully set up.`
     : `If you plan to present a paper or poster, please submit your abstract before <b>30 September 2026</b>.`;
+  const qrDataUrl = await generateRegistrationQrDataUrl(code);
   return {
     subject: `Registration Confirmed — ${code}`,
     html: renderEmail({
@@ -278,6 +289,7 @@ export function registrationApprovedEmail(name: string, code: string, feeAmount:
         { type: "text", html: `Dear ${esc(name)},` },
         { type: "callout", variant: "success", title: "Payment verified — you're all set!", body: `Your registration for <b>APTICON 2026</b> is confirmed. We look forward to welcoming you to Raipur on 24–25 October 2026.` },
         { type: "code", label: "Your Registration Code", value: code },
+        { type: "qr", dataUrl: qrDataUrl, caption: "Show this at the registration desk" },
         { type: "kv", rows: [
           { label: "Amount paid", value: `₹${feeAmount.toLocaleString("en-IN")}` },
           { label: "Venue",       value: "Pt. Deendayal Upadhyay Auditorium, G.E. Road, Raipur (C.G.)" },

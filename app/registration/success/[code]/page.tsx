@@ -2,6 +2,7 @@ import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/shadcn/button";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
+import { generateRegistrationQrDataUrl } from "@/lib/qrcode";
 
 export default async function RegistrationSuccessPage({
   params, searchParams,
@@ -12,6 +13,7 @@ export default async function RegistrationSuccessPage({
   const { code } = await params;
   const { payment } = await searchParams;
   const confirmed = payment === "confirmed";
+  const qrDataUrl = await generateRegistrationQrDataUrl(code);
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-16 bg-[var(--cream-50)]">
       <Card className="w-full max-w-lg text-center">
@@ -25,6 +27,17 @@ export default async function RegistrationSuccessPage({
           <div className="mt-6 rounded-xl border border-[var(--gold-500)]/30 bg-[var(--cream-100)] p-5">
             <div className="text-xs font-semibold tracking-widest uppercase text-[var(--muted-text)]">Your Registration Code</div>
             <div className="mt-1 font-mono text-2xl font-black text-[var(--crimson-800)]">{code}</div>
+            <div className="mt-4 flex flex-col items-center gap-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={qrDataUrl}
+                alt="QR code encoding your registration code"
+                width={180}
+                height={180}
+                className="rounded-lg border border-[var(--gold-500)]/20 bg-white p-2"
+              />
+              <p className="text-xs text-[var(--muted-text)]">Scan this at the registration desk</p>
+            </div>
           </div>
 
           <div className={`mt-6 p-4 rounded-lg text-sm text-left ${confirmed ? "bg-emerald-50 border border-emerald-200 text-emerald-900" : "bg-amber-50 border border-amber-200 text-amber-900"}`}>

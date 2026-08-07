@@ -11,6 +11,7 @@ export const abstractSubmitSchema = z.object({
     .string()
     .trim()
     .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
+  aptiMemberId: z.string().trim().min(3, "APTI Membership ID is required to submit an abstract"),
   theme: z.string().refine((v) => ABSTRACT_THEMES.includes(v), "Invalid theme"),
   type: z.enum(["review", "research"]),
   abstract: z.string().min(100).max(3800).trim(),

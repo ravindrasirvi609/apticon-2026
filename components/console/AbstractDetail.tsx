@@ -24,6 +24,7 @@ interface AbstractDoc {
   institution: string;
   email: string;
   phone: string;
+  aptiMemberId?: string;
   theme: string;
   type: string;
   abstract: string;
@@ -283,6 +284,7 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
               <Field label="Institution" value={a.institution} />
               <Field label="Email" value={a.email} />
               <Field label="Phone" value={a.phone} />
+              <Field label="APTI Membership ID" value={a.aptiMemberId || "—"} />
               <Field label="Theme" value={a.theme} />
             </CardContent>
           </Card>

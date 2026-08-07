@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# member registry — contains real PII (names/emails/phones), never commit
+/All APTI Data.xlsx

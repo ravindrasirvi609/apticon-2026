@@ -13,6 +13,7 @@ import "@/models/AuditLog";
 import "@/models/Abstract";
 import "@/models/Review";
 import "@/models/PasswordReset";
+import "@/models/AptiMember";
 
 const MONGO_URI = process.env.MONGO_URI;
 

@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/shadcn/label";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { ABSTRACT_THEMES, EVENT } from "@/lib/constants";
 import { staggerContainer, fadeUp } from "@/lib/animations";
+import AptiMembershipIdField from "@/components/ui/AptiMembershipIdField";
 
 interface AbstractForm {
   title: string;
@@ -24,6 +25,7 @@ interface AbstractForm {
   institution: string;
   email: string;
   phone: string;
+  aptiMemberId: string;
   theme: string;
   type: "review" | "research";
   keywords: string;
@@ -51,7 +53,7 @@ const GUIDELINES = [
 ];
 
 const SUBMISSION_NOTES = [
-  "The presenting author must be a member of APTI.",
+  "The presenting author must be a member of APTI — your Membership ID is verified against the official APTI registry before submission is accepted.",
   "Abstracts must be submitted online only through this website. No other form of submission will be accepted.",
   "Only registered delegates will be allowed to present the abstracts during APTICON.",
   `All queries related to the abstract submission should be done through e-mail: ${EVENT.contact}`,
@@ -349,6 +351,12 @@ export default function AbstractsClient() {
                   {errors.phone && <p className={errCls}>{errors.phone.message || "Enter a valid 10-digit mobile."}</p>}
                 </div>
               </div>
+
+              <AptiMembershipIdField
+                registerProps={register("aptiMemberId", { required: "APTI Membership ID is required to submit an abstract", minLength: 3 })}
+                error={errors.aptiMemberId?.message}
+                helperText="Only verified APTI members can submit an abstract — enter the presenting author's Membership ID."
+              />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>

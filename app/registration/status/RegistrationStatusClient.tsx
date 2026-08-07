@@ -26,6 +26,7 @@ interface RegStatus {
   reviewNote?: string;
   willSubmitAbstract?: boolean;
   photoUrl?: string;
+  qrCode?: string;
 }
 
 interface LinkedAbs {
@@ -160,6 +161,20 @@ export default function RegistrationStatusClient() {
                 <div className="mt-3">
                   <Link href="/registration" className="text-sm font-semibold text-[var(--crimson-800)] hover:underline">Resubmit registration →</Link>
                 </div>
+              </div>
+            )}
+
+            {result.registration.qrCode && (
+              <div className="mt-4 p-4 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/20 flex flex-col items-center gap-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={result.registration.qrCode}
+                  alt="QR code encoding your registration code"
+                  width={160}
+                  height={160}
+                  className="rounded-lg border border-[var(--gold-500)]/20 bg-white p-2"
+                />
+                <p className="text-xs text-[var(--muted-text)]">Show this at the registration desk</p>
               </div>
             )}
 

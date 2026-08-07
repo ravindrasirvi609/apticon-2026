@@ -4,12 +4,13 @@ import { generateRegistrationCode } from "@/lib/submission-code";
 import { calculateFeeWithGst, currentFeeAmount } from "@/lib/registration-fees";
 import { createRazorpayOrder } from "@/lib/razorpay";
 import { publicUrl } from "@/lib/r2";
-import { razorpayOrderSchema } from "@/lib/validators/registration";
+import { APTI_MEMBER_CATEGORIES, razorpayOrderSchema } from "@/lib/validators/registration";
 import Registration from "@/models/Registration";
 import { getClientIp } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { linkFromRegistration } from "@/lib/sync";
 import { logAudit } from "@/lib/audit";
+import { verifyAptiMember } from "@/lib/apti-membership";
 
 // Creates the local registration and its Razorpay Order. The amount is always derived server-side.
 export async function POST(request: NextRequest) {
@@ -25,6 +26,19 @@ export async function POST(request: NextRequest) {
   const parsed = razorpayOrderSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
   const data = parsed.data;
+
+  if (APTI_MEMBER_CATEGORIES.includes(data.category as (typeof APTI_MEMBER_CATEGORIES)[number])) {
+    const check = await verifyAptiMember(data.aptiMemberId!, data.email);
+    if (!check.valid) {
+      return NextResponse.json(
+        {
+          error: `We couldn't verify APTI Membership ID "${data.aptiMemberId}". Please double-check it, or select "Non-Member" if you're not currently an APTI member.`,
+        },
+        { status: 400 }
+      );
+    }
+  }
+
   const { tier, amount: baseAmount } = currentFeeAmount(data.category);
   const { gstAmount, totalAmount } = calculateFeeWithGst(baseAmount);
 
@@ -52,6 +66,7 @@ export async function POST(request: NextRequest) {
     feeAmount: totalAmount,
     willSubmitAbstract: data.willSubmitAbstract,
     includesAptiMembership: data.category === "APTI Membership + APTICON Registration",
+    aptiMemberId: data.aptiMemberId,
     paymentMode: "razorpay",
     paymentStatus: "pending",
     status: "submitted",

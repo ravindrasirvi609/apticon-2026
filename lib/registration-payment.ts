@@ -44,7 +44,7 @@ export async function recordCapturedRazorpayPayment(
     details: { registrationCode: reg.registrationCode, razorpayOrderId: payment.order_id, razorpayPaymentId: payment.id, amount: payment.amount },
     request,
   });
-  const { subject, html } = registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, !!reg.linkedAbstract);
+  const { subject, html } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, !!reg.linkedAbstract);
   await sendMail({ to: reg.email, subject, html });
   return reg;
 }

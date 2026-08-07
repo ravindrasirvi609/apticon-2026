@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db";
 import Registration from "@/models/Registration";
 import Abstract from "@/models/Abstract";
 import { registrationStatusLookupSchema } from "@/lib/validators/registration";
+import { generateRegistrationQrDataUrl } from "@/lib/qrcode";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -31,5 +32,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  return NextResponse.json({ registration: reg, linkedAbstract });
+  const qrCode = await generateRegistrationQrDataUrl(reg.registrationCode);
+
+  return NextResponse.json({ registration: { ...reg, qrCode }, linkedAbstract });
 }

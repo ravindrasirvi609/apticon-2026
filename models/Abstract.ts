@@ -17,6 +17,8 @@ export interface IAbstract {
   institution: string;
   email: string;
   phone: string;
+  /** Verified against the APTI membership registry at submission time — only members may submit. */
+  aptiMemberId: string;
   theme: string;
   // Current values: "review" | "research". Legacy submissions may hold
   // "oral" | "poster" — kept in the union so those documents type-check.
@@ -50,6 +52,8 @@ const AbstractSchema = new Schema<IAbstract>(
     institution: { type: String, required: true, trim: true },
     email: { type: String, required: true, lowercase: true, trim: true, index: true },
     phone: { type: String, required: true },
+    // Enforced at the API layer, not here, so legacy submissions without a membership ID still save.
+    aptiMemberId: { type: String, default: "", trim: true, uppercase: true },
     theme: { type: String, required: true },
     // NOTE: legacy submissions may still have "oral"/"poster"; keeping them in
     // the enum keeps historical records queryable without a data migration.

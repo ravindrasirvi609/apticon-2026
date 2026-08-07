@@ -1,0 +1,19 @@
+import QRCode from "qrcode";
+
+/**
+ * Encodes a registration's badge identifier as a QR PNG data URL. The payload is always the
+ * plain `registrationCode` string — no JSON, no signed token — matching the convention the
+ * mobile scanner already expects (see MOBILE_API.md §10): it decodes the raw text and calls
+ * `GET /attendees/by-code/{code}` with it.
+ *
+ * ECC "H" costs nothing extra here: registrationCode is 19 chars (`APT-REG-2026-XXXXXX`), well
+ * within the alphanumeric-mode capacity of a small QR version even at the highest error
+ * correction level, so we get the strongest damage/print tolerance for free.
+ */
+export async function generateRegistrationQrDataUrl(registrationCode: string): Promise<string> {
+  return QRCode.toDataURL(registrationCode, {
+    errorCorrectionLevel: "H",
+    margin: 2,
+    width: 320,
+  });
+}

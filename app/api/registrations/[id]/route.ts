@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/db";
 import Registration from "@/models/Registration";
 import Abstract from "@/models/Abstract";
 import { getSessionFromCookies } from "@/lib/auth";
+import { generateRegistrationQrDataUrl } from "@/lib/qrcode";
 
 export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const { id } = await ctx.params;
@@ -31,5 +32,7 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
     delete (reg as Partial<typeof reg>).internalNote;
   }
 
-  return NextResponse.json({ registration: reg, linkedAbstract });
+  const qrCode = await generateRegistrationQrDataUrl(reg.registrationCode);
+
+  return NextResponse.json({ registration: { ...reg, qrCode }, linkedAbstract });
 }
