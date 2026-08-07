@@ -1,11 +1,13 @@
 "use client";
 import { motion } from "framer-motion";
+import { Mail, User } from "lucide-react";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 import PulseButton from "@/components/ui/PulseButton";
 import { staggerContainer, fadeUp, fadeLeft, fadeRight } from "@/lib/animations";
 import { EVENT } from "@/lib/constants";
+import { NATIONAL_BODY } from "@/lib/committee-data";
 
 const HISTORY = [
   { year: "1996", edition: "1st",  city: "Mysore, Karnataka",     note: "APTI's first Annual National Convention" },
@@ -49,6 +51,53 @@ const ABOUT_SECTIONS = [
   },
 ];
 
+function MemberCard({ member }: { member: (typeof NATIONAL_BODY)[number] }) {
+  const gradient = "from-[var(--crimson-800)] to-[var(--gold-500)]";
+  return (
+    <motion.div
+      variants={fadeUp}
+      className="rounded-2xl bg-white border border-[var(--gold-500)]/15 overflow-hidden shadow-sm hover:shadow-md hover:border-[var(--gold-500)]/40 transition-all duration-300 group"
+    >
+      <div className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />
+      <div className="p-5 flex gap-4 items-start">
+        {member.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={member.image}
+            alt={member.name}
+            className="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-black/5"
+          />
+        ) : (
+          <div className={`w-12 h-12 rounded-full bg-gradient-to-b ${gradient} flex items-center justify-center flex-shrink-0`}>
+            <User size={20} className="text-white/80" />
+          </div>
+        )}
+        <div className="min-w-0">
+          {member.role && (
+            <span className={`inline-block mb-1 text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-sm bg-gradient-to-r ${gradient} text-white`}>
+              {member.role}
+            </span>
+          )}
+          <p className="font-semibold text-sm text-[var(--dark-text)] leading-snug truncate group-hover:text-[var(--crimson-800)] transition-colors">
+            {member.name}
+          </p>
+          <p className="text-xs text-[var(--muted-text)] mt-0.5 leading-snug">{member.designation}</p>
+          <p className="text-xs text-[var(--muted-text)] leading-snug">{member.institution}</p>
+          {member.email && (
+            <a
+              href={`mailto:${member.email}`}
+              className="mt-1 inline-flex items-center gap-1 text-xs text-[var(--crimson-800)] hover:underline truncate"
+            >
+              <Mail size={11} className="flex-shrink-0" />
+              <span className="truncate">{member.email}</span>
+            </a>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function AboutClient() {
   return (
     <div className="bg-[var(--cream-50)] min-h-screen">
@@ -91,6 +140,29 @@ export default function AboutClient() {
               </ScrollReveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* National Body */}
+      <section className="py-20 md:py-24 bg-[var(--cream-100)]">
+        <div className="container-site">
+          <ScrollReveal className="mb-12 text-center">
+            <GoldenBadge>APTI National Body</GoldenBadge>
+            <h2 className="mt-4 font-display font-bold text-2xl sm:text-3xl md:text-4xl text-[var(--dark-text)]">
+              National <span className="text-gradient-crimson">Office Bearers</span>
+            </h2>
+          </ScrollReveal>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={staggerContainer}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+          >
+            {NATIONAL_BODY.map((member, i) => (
+              <MemberCard key={i} member={member} />
+            ))}
+          </motion.div>
         </div>
       </section>
 
