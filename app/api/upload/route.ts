@@ -5,9 +5,11 @@ import { getClientIp } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
-  // Public endpoint — cap it so it can't be used as free object storage.
+  // Public endpoint — cap it so it can't be used as free object storage. Raised from 20 to
+  // accommodate group registration coordinators uploading one photo per delegate (up to
+  // GROUP_MAX_DELEGATES) in a single sitting, from behind one shared IP (e.g. a campus network).
   const ip = getClientIp(request);
-  const limit = rateLimit(`upload:${ip}`, 20, 60 * 60_000);
+  const limit = rateLimit(`upload:${ip}`, 150, 60 * 60_000);
   if (!limit.ok) {
     return NextResponse.json({ error: "Too many uploads. Please retry in an hour." }, { status: 429 });
   }

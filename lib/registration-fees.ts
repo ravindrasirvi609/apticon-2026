@@ -49,6 +49,20 @@ export function calculateFeeWithGst(baseAmount: number): { gstAmount: number; to
   return { gstAmount, totalAmount: baseAmount + gstAmount };
 }
 
+export const GROUP_MIN_SIZE = 10;
+
+/** Flat +1 free seat once a group reaches GROUP_MIN_SIZE — not a scaling ratio. */
+export function groupComplimentaryCount(delegateCount: number): number {
+  return delegateCount >= GROUP_MIN_SIZE ? 1 : 0;
+}
+
+export function currentGroupFeeAmount(category: RegistrationCategory, delegateCount: number, now: Date = new Date()) {
+  const { tier, amount: perHead } = currentFeeAmount(category, now);
+  const complimentaryCount = groupComplimentaryCount(delegateCount);
+  const paidCount = delegateCount - complimentaryCount;
+  return { tier, perHead, paidCount, complimentaryCount, baseAmount: perHead * paidCount };
+}
+
 export function formatRupees(amount: number): string {
   return `₹${amount.toLocaleString("en-IN")}`;
 }

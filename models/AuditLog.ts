@@ -7,7 +7,7 @@ export interface IAuditLog {
   // "editorial". Nothing writes it any more, but dropping it would invalidate existing entries.
   actorRole: "super_admin" | "reviewer" | "editorial" | "checkin_staff" | "registration_approver" | "public" | "system";
   action: string;
-  resourceType: "user" | "abstract" | "review" | "auth" | "registration";
+  resourceType: "user" | "abstract" | "review" | "auth" | "registration" | "group_registration";
   resourceId: mongoose.Types.ObjectId | null;
   details: unknown;
   ip: string;
@@ -20,7 +20,7 @@ const AuditLogSchema = new Schema<IAuditLog>(
     actor: { type: Schema.Types.ObjectId, ref: "User", default: null, index: true },
     actorRole: { type: String, enum: ["super_admin", "reviewer", "editorial", "checkin_staff", "registration_approver", "public", "system"], required: true, index: true },
     action: { type: String, required: true, index: true },
-    resourceType: { type: String, enum: ["user", "abstract", "review", "auth", "registration"], required: true, index: true },
+    resourceType: { type: String, enum: ["user", "abstract", "review", "auth", "registration", "group_registration"], required: true, index: true },
     resourceId: { type: Schema.Types.ObjectId, default: null },
     details: { type: Schema.Types.Mixed },
     ip: { type: String, default: "unknown" },

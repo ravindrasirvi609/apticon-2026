@@ -306,6 +306,64 @@ export async function registrationApprovedEmail(name: string, code: string, feeA
   };
 }
 
+// -- Group registration lifecycle --
+
+export function groupRegistrationSubmittedEmail(coordinatorName: string, groupCode: string, delegateCount: number, complimentaryCount: number, feeAmount: number) {
+  return {
+    subject: `Group Registration Payment Received — ${groupCode}`,
+    html: renderEmail({
+      title: "Group Payment Received",
+      preheader: `Your group registration ${groupCode} is now pending confirmation.`,
+      blocks: [
+        { type: "text", html: `Dear ${esc(coordinatorName)},` },
+        { type: "text", html: `Thank you for registering your group of <b>${delegateCount}</b> delegates for <b>APTICON 2026</b>. Your payment has been received.` },
+        { type: "code", label: "Your Group Registration Code", value: groupCode },
+        { type: "kv", rows: [
+          { label: "Delegates",      value: String(delegateCount) },
+          { label: "Complimentary", value: String(complimentaryCount) },
+          { label: "Amount paid",   value: `₹${feeAmount.toLocaleString("en-IN")}` },
+        ]},
+        { type: "callout", variant: "warning", title: "Pending confirmation", body: `Our team will review your delegate list before the group is confirmed. You and each delegate will receive an email with individual registration codes once approved — usually within 2 working days.` },
+        { type: "signoff" },
+      ],
+    }),
+  };
+}
+
+export function groupRegistrationApprovedEmail(coordinatorName: string, groupCode: string, delegateCount: number) {
+  return {
+    subject: `Group Registration Confirmed — ${groupCode}`,
+    html: renderEmail({
+      title: "Group Registration Confirmed",
+      preheader: `Your group registration ${groupCode} is confirmed.`,
+      blocks: [
+        { type: "text", html: `Dear ${esc(coordinatorName)},` },
+        { type: "callout", variant: "success", title: "Group confirmed", body: `Your group of <b>${delegateCount}</b> delegates is confirmed for <b>APTICON 2026</b>. Each delegate has been emailed their own registration code and QR badge separately.` },
+        { type: "code", label: "Your Group Registration Code", value: groupCode },
+        { type: "text", html: `Please make sure every delegate checks their inbox (including spam) for their individual confirmation.` },
+        { type: "signoff" },
+      ],
+    }),
+  };
+}
+
+export function groupRegistrationRejectedEmail(coordinatorName: string, groupCode: string, reviewNote: string) {
+  return {
+    subject: `Group Registration Not Confirmed — ${groupCode}`,
+    html: renderEmail({
+      title: "Group Registration Not Confirmed",
+      preheader: `Your group registration ${groupCode} could not be confirmed.`,
+      blocks: [
+        { type: "text", html: `Dear ${esc(coordinatorName)},` },
+        { type: "callout", variant: "danger", title: "Not confirmed", body: `We're sorry, but your group registration could not be confirmed.` },
+        { type: "callout", variant: "info", title: "Reason", body: nl2br(reviewNote) },
+        { type: "text", html: `A refund for the amount paid will be processed to your original payment method. If you have questions, please contact the organising committee.` },
+        { type: "signoff" },
+      ],
+    }),
+  };
+}
+
 // -- Nudges --
 
 export function nudgeRegisterEmail(name: string, abstractCode: string) {

@@ -13,6 +13,7 @@ const EDITORIAL_NAV: NavItem[] = [
   { href: "/editorial",               label: "Dashboard",     icon: "dashboard" },
   { href: "/editorial/abstracts",     label: "Abstracts",     icon: "abstracts" },
   { href: "/editorial/registrations", label: "Registrations", icon: "registrations" },
+  { href: "/editorial/group-registrations", label: "Group Registrations", icon: "groups" },
   { href: "/editorial/settings",      label: "Settings",      icon: "settings" },
 ];
 

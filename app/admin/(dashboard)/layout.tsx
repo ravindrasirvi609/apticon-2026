@@ -14,6 +14,7 @@ const ADMIN_NAV: NavItem[] = [
   { href: "/admin/delegates",     label: "Delegates",     icon: "delegates" },
   { href: "/admin/checkin",       label: "Check-in Activity", icon: "checkin" },
   { href: "/admin/registrations", label: "Registrations", icon: "registrations" },
+  { href: "/admin/group-registrations", label: "Group Registrations", icon: "groups" },
   { href: "/admin/abstracts",     label: "Abstracts",     icon: "abstracts" },
   { href: "/admin/users",         label: "Users",         icon: "users" },
   { href: "/admin/audit",         label: "Audit Log",     icon: "audit" },

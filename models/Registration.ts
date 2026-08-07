@@ -65,6 +65,8 @@ export interface IRegistration {
 
   // Cross-link
   linkedAbstract?: mongoose.Types.ObjectId;
+  /** Set when this delegate was created from an approved GroupRegistration, not individual signup. */
+  groupRegistration?: mongoose.Types.ObjectId;
 
   // Meta
   remarks?: string;
@@ -125,6 +127,7 @@ const RegistrationSchema = new Schema<IRegistration>(
     internalNote: { type: String },
 
     linkedAbstract: { type: Schema.Types.ObjectId, ref: "Abstract", index: true },
+    groupRegistration: { type: Schema.Types.ObjectId, ref: "GroupRegistration", index: true, sparse: true },
 
     remarks: { type: String },
   },

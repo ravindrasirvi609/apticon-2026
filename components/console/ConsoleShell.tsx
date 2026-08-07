@@ -8,6 +8,7 @@ import {
   ClipboardList,
   FileText,
   LayoutDashboard,
+  Layers,
   LogOut,
   Menu,
   Settings,
@@ -23,7 +24,7 @@ import { Button } from "@/components/ui/shadcn/button";
 export interface NavItem {
   href: string;
   label: string;
-  icon: "dashboard" | "delegates" | "registrations" | "abstracts" | "users" | "audit" | "settings" | "checkin";
+  icon: "dashboard" | "delegates" | "registrations" | "groups" | "abstracts" | "users" | "audit" | "settings" | "checkin";
 }
 
 interface Props {
@@ -49,6 +50,7 @@ const NAV_ICONS = {
   dashboard: LayoutDashboard,
   delegates: UsersRound,
   registrations: ClipboardCheck,
+  groups: Layers,
   abstracts: FileText,
   users: Users,
   audit: ClipboardList,

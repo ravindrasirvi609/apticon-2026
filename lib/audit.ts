@@ -7,7 +7,7 @@ interface AuditInput {
   actor?: string | null;
   actorRole: "super_admin" | "reviewer" | "editorial" | "checkin_staff" | "public" | "system";
   action: string;
-  resourceType: "user" | "abstract" | "review" | "auth" | "registration";
+  resourceType: "user" | "abstract" | "review" | "auth" | "registration" | "group_registration";
   resourceId?: string | null;
   details?: unknown;
   request?: NextRequest | Request;
