@@ -8,11 +8,16 @@ export type AbstractStatus =
   | "revision_requested"
   | "resubmitted";
 
+export interface ICoAuthor {
+  name: string;
+  institution: string;
+}
+
 export interface IAbstract {
   _id: mongoose.Types.ObjectId;
   submissionCode: string;
   title: string;
-  authors: string;
+  coAuthors: ICoAuthor[];
   presentingAuthor: string;
   institution: string;
   email: string;
@@ -48,11 +53,19 @@ export interface IAbstract {
   updatedAt: Date;
 }
 
+const CoAuthorSchema = new Schema<ICoAuthor>(
+  {
+    name: { type: String, required: true, trim: true },
+    institution: { type: String, required: true, trim: true },
+  },
+  { _id: false }
+);
+
 const AbstractSchema = new Schema<IAbstract>(
   {
     submissionCode: { type: String, required: true, unique: true, index: true },
     title: { type: String, required: true, trim: true },
-    authors: { type: String, required: true },
+    coAuthors: { type: [CoAuthorSchema], default: [] },
     presentingAuthor: { type: String, required: true, trim: true },
     institution: { type: String, required: true, trim: true },
     email: { type: String, required: true, lowercase: true, trim: true, index: true },

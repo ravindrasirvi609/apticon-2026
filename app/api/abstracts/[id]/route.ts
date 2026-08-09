@@ -62,8 +62,8 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
   const responseAbstract =
     s.role === "reviewer"
       ? (() => {
-          const { authors: _authors, presentingAuthor: _presentingAuthor, institution: _institution, email: _email, phone: _phone, ...rest } = abs;
-          void _authors; void _presentingAuthor; void _institution; void _email; void _phone;
+          const { coAuthors: _coAuthors, presentingAuthor: _presentingAuthor, institution: _institution, email: _email, phone: _phone, ...rest } = abs;
+          void _coAuthors; void _presentingAuthor; void _institution; void _email; void _phone;
           return rest;
         })()
       : abs;

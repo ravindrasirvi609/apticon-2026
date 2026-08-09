@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { CheckCircle, Upload, Loader2, FileText, Search, Microscope, Users, Sparkles } from "lucide-react";
+import { CheckCircle, Upload, Loader2, FileText, Search, Microscope, Users, Sparkles, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import GoldenBadge from "@/components/ui/GoldenBadge";
@@ -15,12 +15,18 @@ import { Textarea } from "@/components/ui/shadcn/textarea";
 import { Label } from "@/components/ui/shadcn/label";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { ABSTRACT_THEMES, EVENT } from "@/lib/constants";
+import { MAX_CO_AUTHORS } from "@/lib/validators/abstract";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 import AptiMembershipIdField from "@/components/ui/AptiMembershipIdField";
 
+interface CoAuthorRow {
+  name: string;
+  institution: string;
+}
+
 interface AbstractForm {
   title: string;
-  authors: string;
+  coAuthors: CoAuthorRow[];
   presentingAuthor: string;
   institution: string;
   email: string;
@@ -80,9 +86,20 @@ export default function AbstractsClient() {
   const [file, setFile] = useState<File | null>(null);
   const [graphicalAbstractFile, setGraphicalAbstractFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<AbstractForm>();
+  const { register, handleSubmit, watch, control, formState: { errors, isSubmitting } } = useForm<AbstractForm>({
+    defaultValues: { coAuthors: [] },
+  });
+  const { fields: coAuthorFields, append: appendCoAuthor, remove: removeCoAuthor } = useFieldArray({ control, name: "coAuthors" });
   const abstractText = watch("abstract");
   const wordCount = (abstractText ?? "").trim().split(/\s+/).filter(Boolean).length;
+
+  function addCoAuthor() {
+    if (coAuthorFields.length >= MAX_CO_AUTHORS) {
+      toast.error(`Up to ${MAX_CO_AUTHORS} co-authors are supported.`);
+      return;
+    }
+    appendCoAuthor({ name: "", institution: "" });
+  }
 
   async function uploadFile(
     f: File,
@@ -329,9 +346,47 @@ export default function AbstractsClient() {
               </div>
 
               <div>
-                <Label htmlFor="authors">All Authors * <span className="text-xs font-normal text-[var(--muted-text)]">(comma-separated)</span></Label>
-                <Input id="authors" className="mt-2" placeholder="Jane Doe*, John Smith, Priya Sharma" {...register("authors", { required: true })} />
-                {errors.authors && <p className={errCls}>List all authors.</p>}
+                <div className="flex items-center justify-between">
+                  <Label>Co-Authors <span className="text-xs font-normal text-[var(--muted-text)]">(optional)</span></Label>
+                  <Button type="button" variant="outline" size="sm" onClick={addCoAuthor}>
+                    <Plus className="w-4 h-4" /> Add Co-Author
+                  </Button>
+                </div>
+                <div className="mt-2 space-y-3">
+                  {coAuthorFields.map((field, index) => (
+                    <div key={field.id} className="rounded-lg border border-[var(--gold-500)]/30 bg-white p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)]">Co-Author #{index + 1}</span>
+                        <Button type="button" variant="ghost" size="sm" onClick={() => removeCoAuthor(index)}>
+                          <Trash2 className="w-3.5 h-3.5" /> Remove
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <Label htmlFor={`coAuthors.${index}.name`} className="text-xs font-normal text-[var(--muted-text)]">Name *</Label>
+                          <Input
+                            id={`coAuthors.${index}.name`}
+                            className="mt-1"
+                            {...register(`coAuthors.${index}.name`, { required: true, minLength: 2 })}
+                          />
+                          {errors.coAuthors?.[index]?.name && <p className={errCls}>Required.</p>}
+                        </div>
+                        <div>
+                          <Label htmlFor={`coAuthors.${index}.institution`} className="text-xs font-normal text-[var(--muted-text)]">Institution *</Label>
+                          <Input
+                            id={`coAuthors.${index}.institution`}
+                            className="mt-1"
+                            {...register(`coAuthors.${index}.institution`, { required: true, minLength: 2 })}
+                          />
+                          {errors.coAuthors?.[index]?.institution && <p className={errCls}>Required.</p>}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {coAuthorFields.length === 0 && (
+                    <p className="text-xs text-[var(--muted-text)]">No co-authors added. Click "Add Co-Author" if this work has other authors besides the presenting author.</p>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

@@ -89,7 +89,7 @@ function bodyRuns(text: string): TextRun[] {
 interface AbstractDoc {
   submissionCode: string;
   title: string;
-  authors: string;
+  coAuthors: { name: string; institution: string }[];
   presentingAuthor: string;
   institution: string;
   abstract: string;
@@ -97,21 +97,22 @@ interface AbstractDoc {
   type?: string;
 }
 
-// Format the author line so the presenting author gets an asterisk suffix, as
-// in the print book. `authors` is stored as a free-text string, but if the
-// presenting author's name is embedded we ensure the * is placed on it.
+// Format the author line so the presenting author gets an asterisk suffix, as in the print
+// book, with each author's own institution printed inline right after their name.
 function formatAuthorLine(a: AbstractDoc): string {
-  const authors = (a.authors || "").trim();
+  const parts: string[] = [];
   const presenter = (a.presentingAuthor || "").trim();
-  if (!authors) return presenter ? `${presenter}*` : "";
-  if (!presenter) return authors;
-  // If presenter appears in authors and doesn't already end with *, add one.
-  if (authors.includes(presenter)) {
-    if (authors.includes(`${presenter}*`)) return authors;
-    return authors.replace(presenter, `${presenter}*`);
+  const presenterInstitution = (a.institution || "").trim();
+  if (presenter) {
+    parts.push(`${presenter}*${presenterInstitution ? ` (${presenterInstitution})` : ""}`);
   }
-  // Otherwise prepend presenter with * followed by co-authors
-  return `${presenter}*, ${authors}`;
+  for (const co of a.coAuthors ?? []) {
+    const name = (co.name || "").trim();
+    if (!name) continue;
+    const institution = (co.institution || "").trim();
+    parts.push(`${name}${institution ? ` (${institution})` : ""}`);
+  }
+  return parts.join(", ");
 }
 
 function buildAbstractSection(a: AbstractDoc, index: number): Paragraph[] {
@@ -149,11 +150,11 @@ function buildAbstractSection(a: AbstractDoc, index: number): Paragraph[] {
     })
   );
 
-  // Authors — centered
+  // Authors — centered, each author's institution printed inline right after their name
   paras.push(
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      spacing: { after: pt(1) },
+      spacing: { after: pt(4) },
       children: [
         new TextRun({
           text: formatAuthorLine(a),
@@ -163,23 +164,6 @@ function buildAbstractSection(a: AbstractDoc, index: number): Paragraph[] {
       ],
     })
   );
-
-  // Institution — centered
-  if (a.institution) {
-    paras.push(
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        spacing: { after: pt(4) },
-        children: [
-          new TextRun({
-            text: a.institution,
-            font: FONT,
-            size: pt(10),
-          }),
-        ],
-      })
-    );
-  }
 
   // "Abstract:" label — bold, left-aligned, above two-column body
   paras.push(
@@ -213,12 +197,12 @@ async function loadAbstracts(): Promise<AbstractDoc[]> {
   await connectDB();
   const items = await Abstract.find({})
     .sort({ submissionCode: 1, createdAt: 1 })
-    .select("submissionCode title authors presentingAuthor institution abstract theme type")
+    .select("submissionCode title coAuthors presentingAuthor institution abstract theme type")
     .lean();
   return items.map((d) => ({
     submissionCode: d.submissionCode,
     title: d.title,
-    authors: d.authors,
+    coAuthors: d.coAuthors,
     presentingAuthor: d.presentingAuthor,
     institution: d.institution,
     abstract: d.abstract,

@@ -19,7 +19,7 @@ interface AbstractDoc {
   _id: string;
   submissionCode: string;
   title: string;
-  authors: string;
+  coAuthors?: { name: string; institution: string }[];
   presentingAuthor: string;
   institution: string;
   email: string;
@@ -281,8 +281,19 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
             <CardHeader><CardTitle>Submission Details</CardTitle></CardHeader>
             <CardContent className="text-sm space-y-2">
               <Field label="Presenting author" value={a.presentingAuthor} />
-              <Field label="All authors" value={a.authors} />
               <Field label="Institution" value={a.institution} />
+              <div>
+                <div className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Co-authors</div>
+                {a.coAuthors && a.coAuthors.length > 0 ? (
+                  <ul className="text-sm mt-0.5 space-y-0.5">
+                    {a.coAuthors.map((c, i) => (
+                      <li key={i}>{c.name} — {c.institution}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="text-sm">None</div>
+                )}
+              </div>
               <Field label="Email" value={a.email} />
               <Field label="Phone" value={a.phone} />
               <Field label="APTI Membership ID" value={a.aptiMemberId || "—"} />

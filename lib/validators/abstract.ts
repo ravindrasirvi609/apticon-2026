@@ -1,9 +1,19 @@
 import { z } from "zod";
 import { ABSTRACT_THEMES } from "@/lib/constants";
 
+export const MAX_CO_AUTHORS = 10;
+
 export const abstractSubmitSchema = z.object({
   title: z.string().min(5).max(300).trim(),
-  authors: z.string().min(3).max(1000).trim(),
+  coAuthors: z
+    .array(
+      z.object({
+        name: z.string().min(2).max(200).trim(),
+        institution: z.string().min(2).max(300).trim(),
+      })
+    )
+    .max(MAX_CO_AUTHORS)
+    .default([]),
   presentingAuthor: z.string().min(2).max(200).trim(),
   institution: z.string().min(2).max(300).trim(),
   email: z.string().email().toLowerCase().trim(),

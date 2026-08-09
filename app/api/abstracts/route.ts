@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
   const created = await Abstract.create({
     submissionCode,
     title: data.title,
-    authors: data.authors,
+    coAuthors: data.coAuthors,
     presentingAuthor: data.presentingAuthor,
     institution: data.institution,
     email: data.email,
