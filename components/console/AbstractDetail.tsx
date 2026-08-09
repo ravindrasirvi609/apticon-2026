@@ -28,9 +28,11 @@ interface AbstractDoc {
   theme: string;
   type: string;
   abstract: string;
+  preferredPresentationType?: string;
   keywords: string[];
   fileUrl?: string;
   fileName?: string;
+  graphicalAbstractUrl?: string;
   status: string;
   assignedReviewers: string[];
   finalDecision?: string;
@@ -187,6 +189,17 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
                 {(a.keywords ?? []).map((k) => <Badge key={k} variant="outline">{k}</Badge>)}
               </div>
               <p className="text-sm whitespace-pre-line leading-relaxed">{a.abstract}</p>
+              {a.graphicalAbstractUrl && (
+                <div className="mt-4">
+                  <span className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Graphical Abstract</span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={a.graphicalAbstractUrl}
+                    alt="Graphical abstract"
+                    className="mt-2 max-w-full rounded-lg border border-[var(--gold-500)]/30"
+                  />
+                </div>
+              )}
               {a.fileUrl && (
                 <div className="mt-4">
                   <a href={a.fileUrl} target="_blank" rel="noopener noreferrer">
@@ -286,6 +299,10 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
               <Field label="Phone" value={a.phone} />
               <Field label="APTI Membership ID" value={a.aptiMemberId || "—"} />
               <Field label="Theme" value={a.theme} />
+              <Field
+                label="Presentation preference"
+                value={a.preferredPresentationType ? a.preferredPresentationType[0].toUpperCase() + a.preferredPresentationType.slice(1) : "—"}
+              />
             </CardContent>
           </Card>
 
@@ -372,7 +389,13 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
                 <p className="text-sm text-[var(--muted-text)]">No decision recorded yet.</p>
               )}
               <div className="mt-4 grid grid-cols-1 gap-2">
-                <Button variant="default" onClick={() => setDecisionOpen("accepted")}>
+                <Button
+                  variant="default"
+                  onClick={() => {
+                    setDecisionOpen("accepted");
+                    setPresentationType((a.preferredPresentationType as "oral" | "poster" | undefined) ?? null);
+                  }}
+                >
                   <CheckCircle2 className="w-4 h-4" /> Accept
                 </Button>
                 <Button variant="outline" onClick={() => setDecisionOpen("revision_requested")}>
@@ -406,6 +429,11 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
             {decisionOpen === "accepted" && (
               <div>
                 <Label>Presentation type *</Label>
+                {a.preferredPresentationType && (
+                  <p className="mt-1 text-xs text-[var(--muted-text)]">
+                    Author preferred <span className="font-semibold capitalize">{a.preferredPresentationType}</span> — confirm or change it below.
+                  </p>
+                )}
                 <div className="mt-2 grid grid-cols-2 gap-2">
                   {(["oral", "poster"] as const).map((v) => (
                     <button

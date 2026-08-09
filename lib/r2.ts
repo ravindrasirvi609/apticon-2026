@@ -21,7 +21,7 @@ export const r2 = new S3Client({
 
 export function buildAbstractKey(originalName: string): string {
   const ext = originalName.split(".").pop()?.toLowerCase() ?? "bin";
-  const safeExt = ["pdf", "doc", "docx"].includes(ext) ? ext : "bin";
+  const safeExt = ["doc", "docx"].includes(ext) ? ext : "bin";
   return `abstracts/${new Date().getUTCFullYear()}/${nanoid(16)}.${safeExt}`;
 }
 
@@ -29,6 +29,12 @@ export function buildPhotoKey(originalName: string): string {
   const ext = originalName.split(".").pop()?.toLowerCase() ?? "bin";
   const safeExt = ["jpg", "jpeg", "png", "webp"].includes(ext) ? ext : "bin";
   return `delegate-photos/${new Date().getUTCFullYear()}/${nanoid(16)}.${safeExt}`;
+}
+
+export function buildGraphicalAbstractKey(originalName: string): string {
+  const ext = originalName.split(".").pop()?.toLowerCase() ?? "bin";
+  const safeExt = ["jpg", "jpeg", "png", "webp"].includes(ext) ? ext : "bin";
+  return `graphical-abstracts/${new Date().getUTCFullYear()}/${nanoid(16)}.${safeExt}`;
 }
 
 export function buildPaymentProofKey(originalName: string): string {

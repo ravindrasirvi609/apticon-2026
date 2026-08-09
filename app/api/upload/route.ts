@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { uploadRequestSchema, UPLOAD_RULES } from "@/lib/validators/upload";
-import { buildAbstractKey, buildPhotoKey, uploadBuffer } from "@/lib/r2";
+import { buildAbstractKey, buildGraphicalAbstractKey, buildPhotoKey, uploadBuffer } from "@/lib/r2";
 import { getClientIp } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 
@@ -36,7 +36,12 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const key = purpose === "photo" ? buildPhotoKey(file.name) : buildAbstractKey(file.name);
+    const key =
+      purpose === "photo"
+        ? buildPhotoKey(file.name)
+        : purpose === "graphicalAbstract"
+          ? buildGraphicalAbstractKey(file.name)
+          : buildAbstractKey(file.name);
     const url = await uploadBuffer(key, Buffer.from(await file.arrayBuffer()), file.type);
     return NextResponse.json({ key, url });
   } catch (error) {

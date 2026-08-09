@@ -15,6 +15,7 @@ export const abstractSubmitSchema = z.object({
   theme: z.string().refine((v) => ABSTRACT_THEMES.includes(v), "Invalid theme"),
   type: z.enum(["review", "research"]),
   abstract: z.string().min(100).max(3800).trim(),
+  preferredPresentationType: z.enum(["oral", "poster"]).optional(),
   keywords: z
     .string()
     .min(3)
@@ -23,6 +24,8 @@ export const abstractSubmitSchema = z.object({
     .refine((arr) => arr.length >= 1 && arr.length <= 8, "Provide 1–8 keywords"),
   fileKey: z.string().min(1, "Please attach your abstract file"),
   fileName: z.string().min(1),
+  graphicalAbstractKey: z.string().optional(),
+  graphicalAbstractName: z.string().optional(),
 });
 
 export const abstractStatusLookupSchema = z.object({

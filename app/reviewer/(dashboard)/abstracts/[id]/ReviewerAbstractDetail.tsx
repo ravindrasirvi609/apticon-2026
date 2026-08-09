@@ -21,6 +21,7 @@ interface AbstractDoc {
   abstract: string;
   keywords: string[];
   fileUrl?: string;
+  graphicalAbstractUrl?: string;
   status: string;
   createdAt: string;
 }
@@ -143,6 +144,17 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
                 </div>
               </div>
               <p className="text-sm whitespace-pre-line leading-relaxed">{a.abstract}</p>
+              {a.graphicalAbstractUrl && (
+                <div className="mt-4">
+                  <span className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Graphical Abstract</span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={a.graphicalAbstractUrl}
+                    alt="Graphical abstract"
+                    className="mt-2 max-w-full rounded-lg border border-[var(--gold-500)]/30"
+                  />
+                </div>
+              )}
               {a.fileUrl && (
                 <div className="mt-4">
                   <a href={a.fileUrl} target="_blank" rel="noopener noreferrer">

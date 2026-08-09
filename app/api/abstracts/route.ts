@@ -59,10 +59,14 @@ export async function POST(request: NextRequest) {
     theme: data.theme,
     type: data.type,
     abstract: data.abstract,
+    preferredPresentationType: data.preferredPresentationType,
     keywords: data.keywords,
     fileKey: data.fileKey,
     fileName: data.fileName,
     fileUrl: data.fileKey ? publicUrl(data.fileKey) : undefined,
+    graphicalAbstractKey: data.graphicalAbstractKey,
+    graphicalAbstractName: data.graphicalAbstractName,
+    graphicalAbstractUrl: data.graphicalAbstractKey ? publicUrl(data.graphicalAbstractKey) : undefined,
     status: "submitted",
   });
 

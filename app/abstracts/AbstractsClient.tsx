@@ -28,12 +28,9 @@ interface AbstractForm {
   aptiMemberId: string;
   theme: string;
   type: "review" | "research";
+  preferredPresentationType?: "oral" | "poster";
   keywords: string;
-  background: string;
-  objectives: string;
-  methods: string;
-  results: string;
-  conclusions: string;
+  abstract: string;
 }
 
 const IMPORTANT_DATES = [
@@ -66,35 +63,46 @@ const REJECTED_CATEGORIES = [
   "Papers describing simple laboratory experiments",
 ];
 
-const ALLOWED_MIME: Record<string, "application/pdf" | "application/msword" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"> = {
-  pdf: "application/pdf",
+const ALLOWED_MIME: Record<string, "application/msword" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"> = {
   doc: "application/msword",
   docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+};
+
+const ALLOWED_IMAGE_MIME: Record<string, "image/jpeg" | "image/png" | "image/webp"> = {
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+  webp: "image/webp",
 };
 
 export default function AbstractsClient() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
+  const [graphicalAbstractFile, setGraphicalAbstractFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<AbstractForm>();
-  const [background, objectives, methods, results, conclusions] = watch(["background", "objectives", "methods", "results", "conclusions"]);
-  const combinedAbstractText = [background, objectives, methods, results, conclusions].filter(Boolean).join(" ");
-  const wordCount = combinedAbstractText.trim().split(/\s+/).filter(Boolean).length;
+  const abstractText = watch("abstract");
+  const wordCount = (abstractText ?? "").trim().split(/\s+/).filter(Boolean).length;
 
-  async function uploadFile(f: File): Promise<{ key: string } | null> {
+  async function uploadFile(
+    f: File,
+    purpose: "abstract" | "graphicalAbstract",
+    allowedMime: Record<string, string>,
+    maxBytes: number
+  ): Promise<{ key: string } | null> {
     const ext = f.name.split(".").pop()?.toLowerCase() ?? "";
-    const contentType = ALLOWED_MIME[ext];
+    const contentType = allowedMime[ext];
     if (!contentType) {
-      toast.error("Only PDF, DOC or DOCX files are allowed.");
+      toast.error(purpose === "abstract" ? "Only DOC or DOCX files are allowed." : "Only JPG, PNG or WebP images are allowed.");
       return null;
     }
-    if (f.size > 10 * 1024 * 1024) {
-      toast.error("File must be under 10 MB.");
+    if (f.size > maxBytes) {
+      toast.error(`File must be under ${maxBytes / 1024 / 1024} MB.`);
       return null;
     }
     const uploadData = new FormData();
     uploadData.append("file", f);
-    uploadData.append("purpose", "abstract");
+    uploadData.append("purpose", purpose);
     const uploadRes = await fetch("/api/upload", {
       method: "POST",
       body: uploadData,
@@ -109,30 +117,37 @@ export default function AbstractsClient() {
 
   const onSubmit = async (data: AbstractForm) => {
     if (!file) {
-      toast.error("Please attach your abstract file (PDF, DOC or DOCX).");
+      toast.error("Please attach your abstract file (DOC or DOCX).");
       return;
     }
 
     setUploading(true);
-    const result = await uploadFile(file);
+    const result = await uploadFile(file, "abstract", ALLOWED_MIME, 10 * 1024 * 1024);
+    if (!result) {
+      setUploading(false);
+      return;
+    }
+
+    let graphicalAbstractKey: string | undefined;
+    let graphicalAbstractName: string | undefined;
+    if (graphicalAbstractFile) {
+      const gaResult = await uploadFile(graphicalAbstractFile, "graphicalAbstract", ALLOWED_IMAGE_MIME, 5 * 1024 * 1024);
+      if (!gaResult) {
+        setUploading(false);
+        return;
+      }
+      graphicalAbstractKey = gaResult.key;
+      graphicalAbstractName = graphicalAbstractFile.name;
+    }
     setUploading(false);
-    if (!result) return;
+
     const fileKey = result.key;
     const fileName = file.name;
-
-    const { background, objectives, methods, results, conclusions, ...rest } = data;
-    const abstract = [
-      `Background: ${background}`,
-      `Objectives: ${objectives}`,
-      `Methods: ${methods}`,
-      `Results: ${results}`,
-      `Conclusions: ${conclusions}`,
-    ].join("\n\n");
 
     const res = await fetch("/api/abstracts", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ ...rest, abstract, fileKey, fileName }),
+      body: JSON.stringify({ ...data, fileKey, fileName, graphicalAbstractKey, graphicalAbstractName }),
     });
     const body = await res.json();
     if (!res.ok) {
@@ -389,6 +404,22 @@ export default function AbstractsClient() {
               </div>
 
               <div>
+                <Label>
+                  Presentation Type Preference <span className="text-xs font-normal text-[var(--muted-text)]">(optional — editorial confirms this on acceptance)</span>
+                </Label>
+                <div className="mt-2 flex gap-3">
+                  <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--gold-500)]/30 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40">
+                    <input type="radio" value="oral" {...register("preferredPresentationType")} />
+                    <span className="text-sm">Oral</span>
+                  </label>
+                  <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--gold-500)]/30 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40">
+                    <input type="radio" value="poster" {...register("preferredPresentationType")} />
+                    <span className="text-sm">Poster</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
                 <Label htmlFor="keywords">Keywords * <span className="text-xs font-normal text-[var(--muted-text)]">(comma-separated, 1–8)</span></Label>
                 <Input id="keywords" className="mt-2" placeholder="nanoparticles, drug delivery, controlled release" {...register("keywords", { required: true })} />
                 {errors.keywords && <p className={errCls}>Enter at least one keyword.</p>}
@@ -396,40 +427,51 @@ export default function AbstractsClient() {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <Label>Abstract Body *</Label>
+                  <Label htmlFor="abstract">Abstract Body *</Label>
                   <span className={`text-xs ${wordCount > 300 ? "text-red-600" : "text-[var(--muted-text)]"}`}>
                     {wordCount} / 300 words
                   </span>
                 </div>
-                <div className="mt-2 space-y-3">
-                  <div>
-                    <Label htmlFor="background" className="text-xs font-normal text-[var(--muted-text)]">Background</Label>
-                    <Textarea id="background" className="mt-1 min-h-[70px]" {...register("background", { required: true, minLength: 20 })} />
-                  </div>
-                  <div>
-                    <Label htmlFor="objectives" className="text-xs font-normal text-[var(--muted-text)]">Objectives</Label>
-                    <Textarea id="objectives" className="mt-1 min-h-[70px]" {...register("objectives", { required: true, minLength: 20 })} />
-                  </div>
-                  <div>
-                    <Label htmlFor="methods" className="text-xs font-normal text-[var(--muted-text)]">Methods</Label>
-                    <Textarea id="methods" className="mt-1 min-h-[70px]" {...register("methods", { required: true, minLength: 20 })} />
-                  </div>
-                  <div>
-                    <Label htmlFor="results" className="text-xs font-normal text-[var(--muted-text)]">Results</Label>
-                    <Textarea id="results" className="mt-1 min-h-[70px]" {...register("results", { required: true, minLength: 20 })} />
-                  </div>
-                  <div>
-                    <Label htmlFor="conclusions" className="text-xs font-normal text-[var(--muted-text)]">Conclusions</Label>
-                    <Textarea id="conclusions" className="mt-1 min-h-[70px]" {...register("conclusions", { required: true, minLength: 20 })} />
-                  </div>
-                </div>
-                {(errors.background || errors.objectives || errors.methods || errors.results || errors.conclusions) && (
-                  <p className={errCls}>Each section is required (at least 20 characters).</p>
-                )}
+                <Textarea
+                  id="abstract"
+                  className="mt-2 min-h-[220px]"
+                  {...register("abstract", { required: true, minLength: 100, maxLength: 3800 })}
+                  aria-invalid={!!errors.abstract}
+                />
+                {errors.abstract && <p className={errCls}>Abstract is required (100–3800 characters).</p>}
+                <p className="mt-2 text-xs text-[var(--muted-text)]">
+                  Note: Your abstract should clearly cover the Objectives, Methods, Results, and Conclusion of your work.
+                </p>
               </div>
 
               <div>
-                <Label htmlFor="file">Abstract file * (PDF, DOC, DOCX, max 10 MB)</Label>
+                <Label htmlFor="graphicalAbstract">
+                  Graphical Abstract <span className="text-xs font-normal text-[var(--muted-text)]">(optional — image, JPG/PNG/WebP, max 5 MB)</span>
+                </Label>
+                <div className="mt-2 flex items-center gap-3">
+                  <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--gold-500)]/40 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40 transition-colors">
+                    <Upload className="w-4 h-4 text-[var(--muted-text)]" />
+                    <span className="text-sm text-[var(--dark-text)] truncate">
+                      {graphicalAbstractFile ? graphicalAbstractFile.name : "Choose image..."}
+                    </span>
+                    <input
+                      id="graphicalAbstract"
+                      type="file"
+                      accept=".jpg,.jpeg,.png,.webp"
+                      className="hidden"
+                      onChange={(e) => setGraphicalAbstractFile(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                  {graphicalAbstractFile && (
+                    <Button type="button" variant="outline" size="sm" onClick={() => setGraphicalAbstractFile(null)}>
+                      Remove
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="file">Abstract file * (DOC or DOCX, max 10 MB)</Label>
                 <div className="mt-2 flex items-center gap-3">
                   <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--gold-500)]/40 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40 transition-colors">
                     <Upload className="w-4 h-4 text-[var(--muted-text)]" />
@@ -439,7 +481,7 @@ export default function AbstractsClient() {
                     <input
                       id="file"
                       type="file"
-                      accept=".pdf,.doc,.docx"
+                      accept=".doc,.docx"
                       className="hidden"
                       onChange={(e) => setFile(e.target.files?.[0] ?? null)}
                     />

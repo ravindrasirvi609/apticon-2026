@@ -24,10 +24,15 @@ export interface IAbstract {
   // "oral" | "poster" — kept in the union so those documents type-check.
   type: "review" | "research" | "oral" | "poster";
   abstract: string;
+  /** Author's preference, collected at submission — editorial can confirm or override it via `presentationType` on acceptance. */
+  preferredPresentationType?: "oral" | "poster";
   keywords: string[];
   fileUrl?: string;
   fileKey?: string;
   fileName?: string;
+  graphicalAbstractUrl?: string;
+  graphicalAbstractKey?: string;
+  graphicalAbstractName?: string;
   status: AbstractStatus;
   assignedReviewers: mongoose.Types.ObjectId[];
   finalDecision?: "accepted" | "rejected" | "revision_requested";
@@ -63,10 +68,14 @@ const AbstractSchema = new Schema<IAbstract>(
       required: true,
     },
     abstract: { type: String, required: true },
+    preferredPresentationType: { type: String, enum: ["oral", "poster"] },
     keywords: { type: [String], required: true },
     fileUrl: { type: String },
     fileKey: { type: String },
     fileName: { type: String },
+    graphicalAbstractUrl: { type: String },
+    graphicalAbstractKey: { type: String },
+    graphicalAbstractName: { type: String },
     status: {
       type: String,
       enum: ["submitted", "under_review", "accepted", "rejected", "revision_requested", "resubmitted"],
