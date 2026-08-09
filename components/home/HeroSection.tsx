@@ -7,10 +7,8 @@ import GoldenBadge from "@/components/ui/GoldenBadge";
 import PulseButton from "@/components/ui/PulseButton";
 import CountdownTimer from "./CountdownTimer";
 import HeroConceptStrip from "./HeroConceptStrip";
-import { staggerContainer, fadeUp, scaleIn } from "@/lib/animations";
+import { fadeUp, scaleIn } from "@/lib/animations";
 import { EVENT } from "@/lib/constants";
-
-const APTICON_LETTERS = ["A", "P", "T", "I", "C", "O", "N"];
 
 export default function HeroSection() {
   return (
@@ -86,56 +84,22 @@ export default function HeroSection() {
         {/* Badge */}
         <GoldenBadge>{EVENT.edition}</GoldenBadge>
 
-        {/* APTICON title — letter stagger */}
-        <div className="mt-6 mb-2 overflow-hidden">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
-            className="flex items-baseline justify-center gap-0 sm:gap-1"
-            aria-label="APTICON"
-          >
-            {APTICON_LETTERS.map((letter, i) => (
-              <motion.span
-                key={i}
-                variants={{
-                  hidden:  { opacity: 0, y: 80, rotateX: -90 },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    rotateX: 0,
-                    transition: { duration: 0.55, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] },
-                  },
-                }}
-                className="inline-block font-display font-black leading-none select-none"
-                style={{
-                  fontSize: "clamp(3.5rem, 12vw, 8rem)",
-                  color: i === 4 ? "transparent" : undefined,
-                  background: i === 4
-                    ? "linear-gradient(135deg, #D4AF37, #F5C842)"
-                    : "linear-gradient(160deg, #0D1B6E 0%, #1A237E 40%, #8B1A1A 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  textShadow: "none",
-                }}
-              >
-                {letter}
-              </motion.span>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Year */}
-        <motion.p
-          initial={{ opacity: 0, scale: 0.7 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="font-display font-black text-[var(--crimson-800)] leading-none mb-6"
-          style={{ fontSize: "clamp(2rem, 6vw, 4.5rem)" }}
+        {/* APTICON logo */}
+        <motion.div
+          initial={{ opacity: 0, y: 30, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-6 mb-6 w-full max-w-md sm:max-w-xl md:max-w-2xl px-4"
         >
-          2026
-        </motion.p>
+          <Image
+            src="/logo/APTICON_LOGO.png"
+            alt="APTICON 2026 — Annual National Convention"
+            width={1536}
+            height={1024}
+            priority
+            className="w-full h-auto"
+          />
+        </motion.div>
 
         {/* Theme — typewriter effect via Framer */}
         <motion.p
