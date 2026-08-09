@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     submissionCode: parsed.data.code.toUpperCase(),
     email: parsed.data.email,
   })
-    .select("submissionCode title presentingAuthor status theme type keywords createdAt finalDecision finalDecisionAt finalDecisionNote abstractCode presentationType")
+    .select("submissionCode title presentingAuthor status theme type keywords createdAt finalDecision finalDecisionAt finalDecisionNote abstractCode presentationType abstract fileUrl fileName graphicalAbstractUrl graphicalAbstractName")
     .lean();
 
   if (!abs) {

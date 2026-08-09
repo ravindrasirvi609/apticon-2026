@@ -243,7 +243,9 @@ export function abstractDecisionEmail(name: string, code: string, title: string,
         { type: "callout", variant: cvariant, title: `Decision: ${decisionLabel}`, body: `Submission <b>${esc(code)}</b> — <i>${esc(title)}</i>` },
         ...(abstractCode ? [{ type: "kv" as const, rows: [{ label: `Abstract Code (${presentationType})`, value: abstractCode }] }] : []),
         ...(note ? [{ type: "callout" as const, variant: "info" as const, title: "Committee note", body: nl2br(note) }] : []),
-        { type: "button", label: "View full details", href: `${BASE_URL}/abstracts/status` },
+        decision === "revision_requested"
+          ? { type: "button" as const, label: "Revise & Resubmit Abstract", href: `${BASE_URL}/abstracts/revise?code=${encodeURIComponent(code)}` }
+          : { type: "button" as const, label: "View full details", href: `${BASE_URL}/abstracts/status` },
         ...(decision === "accepted" ? [{ type: "callout" as const, variant: "info" as const, title: "Reminder", body: `Presenting authors must be registered delegates. Please ensure your <a href="${BASE_URL}/registration" style="color:${BRAND.crimson800};font-weight:700;">registration</a> is complete.` }] : []),
         { type: "signoff" },
       ],
@@ -271,6 +273,41 @@ export function abstractReviewFlaggedEmail(
         { type: "callout", variant: cvariant, title: label, body: `Submission <b>${esc(code)}</b> — <i>${esc(title)}</i><br/>Reviewer: ${esc(reviewerName)}` },
         { type: "callout", variant: "info", title: "Reviewer comments", body: nl2br(comments) },
         { type: "text", html: `This abstract has <b>not</b> been finalized — please review and record the final decision.` },
+        { type: "button", label: "Open Abstracts Console", href: `${BASE_URL}/admin/abstracts` },
+        { type: "signoff" },
+      ],
+    }),
+  };
+}
+
+export function abstractResubmittedEmail(name: string, code: string, title: string) {
+  return {
+    subject: `Revised Abstract Received — ${code}`,
+    html: renderEmail({
+      title: "Revised Abstract Received",
+      preheader: `Your revised submission ${code} has been received and is back under review.`,
+      blocks: [
+        { type: "text", html: `Dear ${esc(name)},` },
+        { type: "text", html: `Thank you for revising your abstract. We've received your updated submission and it is back with our scientific committee for review.` },
+        { type: "code", label: "Your Submission Code", value: code },
+        { type: "kv", rows: [{ label: "Abstract Title", value: title }] },
+        { type: "text", html: `You can check the review status any time using your submission code and email.` },
+        { type: "button", label: "Check Submission Status", href: `${BASE_URL}/abstracts/status` },
+        { type: "signoff" },
+      ],
+    }),
+  };
+}
+
+export function abstractResubmissionNoticeEmail(code: string, title: string, presentingAuthor: string) {
+  return {
+    subject: `Abstract Resubmitted — ${code}`,
+    html: renderEmail({
+      title: "Abstract Resubmitted",
+      preheader: `${presentingAuthor} resubmitted a revised version of submission ${code}.`,
+      blocks: [
+        { type: "text", html: `A delegate has resubmitted a revised abstract that needs re-review.` },
+        { type: "callout", variant: "info", title: "Resubmitted", body: `Submission <b>${esc(code)}</b> — <i>${esc(title)}</i><br/>Presenting author: ${esc(presentingAuthor)}` },
         { type: "button", label: "Open Abstracts Console", href: `${BASE_URL}/admin/abstracts` },
         { type: "signoff" },
       ],

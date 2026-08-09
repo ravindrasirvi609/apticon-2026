@@ -43,6 +43,16 @@ export const abstractStatusLookupSchema = z.object({
   email: z.string().email().toLowerCase().trim(),
 });
 
+export const abstractResubmitSchema = z.object({
+  code: z.string().min(4).max(50).trim(),
+  email: z.string().email().toLowerCase().trim(),
+  abstract: z.string().min(100).max(3800).trim(),
+  fileKey: z.string().optional(),
+  fileName: z.string().optional(),
+  graphicalAbstractKey: z.string().optional(),
+  graphicalAbstractName: z.string().optional(),
+});
+
 export const abstractAssignSchema = z.object({
   reviewerIds: z.array(z.string().length(24)).min(1).max(10),
 });
@@ -60,5 +70,6 @@ export const abstractDecisionSchema = z
 
 export type AbstractSubmitInput = z.infer<typeof abstractSubmitSchema>;
 export type AbstractStatusLookupInput = z.infer<typeof abstractStatusLookupSchema>;
+export type AbstractResubmitInput = z.infer<typeof abstractResubmitSchema>;
 export type AbstractAssignInput = z.infer<typeof abstractAssignSchema>;
 export type AbstractDecisionInput = z.infer<typeof abstractDecisionSchema>;

@@ -18,6 +18,7 @@ import { ABSTRACT_THEMES, EVENT } from "@/lib/constants";
 import { MAX_CO_AUTHORS } from "@/lib/validators/abstract";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 import AptiMembershipIdField from "@/components/ui/AptiMembershipIdField";
+import { ABSTRACT_FILE_MIME, IMAGE_MIME, uploadPublicFile } from "@/lib/upload-client";
 
 interface CoAuthorRow {
   name: string;
@@ -69,18 +70,6 @@ const REJECTED_CATEGORIES = [
   "Papers describing simple laboratory experiments",
 ];
 
-const ALLOWED_MIME: Record<string, "application/msword" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"> = {
-  doc: "application/msword",
-  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-};
-
-const ALLOWED_IMAGE_MIME: Record<string, "image/jpeg" | "image/png" | "image/webp"> = {
-  jpg: "image/jpeg",
-  jpeg: "image/jpeg",
-  png: "image/png",
-  webp: "image/webp",
-};
-
 export default function AbstractsClient() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
@@ -101,37 +90,6 @@ export default function AbstractsClient() {
     appendCoAuthor({ name: "", institution: "" });
   }
 
-  async function uploadFile(
-    f: File,
-    purpose: "abstract" | "graphicalAbstract",
-    allowedMime: Record<string, string>,
-    maxBytes: number
-  ): Promise<{ key: string } | null> {
-    const ext = f.name.split(".").pop()?.toLowerCase() ?? "";
-    const contentType = allowedMime[ext];
-    if (!contentType) {
-      toast.error(purpose === "abstract" ? "Only DOC or DOCX files are allowed." : "Only JPG, PNG or WebP images are allowed.");
-      return null;
-    }
-    if (f.size > maxBytes) {
-      toast.error(`File must be under ${maxBytes / 1024 / 1024} MB.`);
-      return null;
-    }
-    const uploadData = new FormData();
-    uploadData.append("file", f);
-    uploadData.append("purpose", purpose);
-    const uploadRes = await fetch("/api/upload", {
-      method: "POST",
-      body: uploadData,
-    });
-    if (!uploadRes.ok) {
-      toast.error("File upload failed.");
-      return null;
-    }
-    const { key } = (await uploadRes.json()) as { key: string };
-    return { key };
-  }
-
   const onSubmit = async (data: AbstractForm) => {
     if (!file) {
       toast.error("Please attach your abstract file (DOC or DOCX).");
@@ -139,7 +97,7 @@ export default function AbstractsClient() {
     }
 
     setUploading(true);
-    const result = await uploadFile(file, "abstract", ALLOWED_MIME, 10 * 1024 * 1024);
+    const result = await uploadPublicFile(file, "abstract", ABSTRACT_FILE_MIME, 10 * 1024 * 1024);
     if (!result) {
       setUploading(false);
       return;
@@ -148,7 +106,7 @@ export default function AbstractsClient() {
     let graphicalAbstractKey: string | undefined;
     let graphicalAbstractName: string | undefined;
     if (graphicalAbstractFile) {
-      const gaResult = await uploadFile(graphicalAbstractFile, "graphicalAbstract", ALLOWED_IMAGE_MIME, 5 * 1024 * 1024);
+      const gaResult = await uploadPublicFile(graphicalAbstractFile, "graphicalAbstract", IMAGE_MIME, 5 * 1024 * 1024);
       if (!gaResult) {
         setUploading(false);
         return;

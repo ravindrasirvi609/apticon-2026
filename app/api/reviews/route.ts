@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const isAssigned = abs.assignedReviewers.some((r) => r.toString() === reviewer.uid);
     if (!isAssigned) return NextResponse.json({ error: "You are not assigned to this abstract" }, { status: 403 });
 
-    if (abs.finalDecision) {
+    if (abs.finalDecision === "accepted" || abs.finalDecision === "rejected") {
       return NextResponse.json({ error: "This abstract has already been finalized." }, { status: 409 });
     }
 
