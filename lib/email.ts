@@ -251,6 +251,33 @@ export function abstractDecisionEmail(name: string, code: string, title: string,
   };
 }
 
+export function abstractReviewFlaggedEmail(
+  reviewerName: string,
+  code: string,
+  title: string,
+  verdict: "reject" | "revise",
+  comments: string
+) {
+  const label = verdict === "reject" ? "Rejection recommended" : "Revision recommended";
+  const cvariant = verdict === "reject" ? "danger" : "warning";
+
+  return {
+    subject: `Reviewer flagged ${code} — ${label}`,
+    html: renderEmail({
+      title: "Reviewer Recommendation",
+      preheader: `${reviewerName} recommends ${verdict === "reject" ? "rejecting" : "revising"} submission ${code}.`,
+      blocks: [
+        { type: "text", html: `A reviewer has submitted a recommendation that needs your final decision.` },
+        { type: "callout", variant: cvariant, title: label, body: `Submission <b>${esc(code)}</b> — <i>${esc(title)}</i><br/>Reviewer: ${esc(reviewerName)}` },
+        { type: "callout", variant: "info", title: "Reviewer comments", body: nl2br(comments) },
+        { type: "text", html: `This abstract has <b>not</b> been finalized — please review and record the final decision.` },
+        { type: "button", label: "Open Abstracts Console", href: `${BASE_URL}/admin/abstracts` },
+        { type: "signoff" },
+      ],
+    }),
+  };
+}
+
 // -- Registration lifecycle --
 
 export function registrationSubmittedEmail(name: string, code: string, feeAmount: number, feeTierLabel: string) {

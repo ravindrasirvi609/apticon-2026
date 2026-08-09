@@ -5,10 +5,8 @@ export interface IReview {
   abstract: mongoose.Types.ObjectId;
   reviewer: mongoose.Types.ObjectId;
   verdict: "accept" | "reject" | "revise";
-  scoreOriginality: number;
-  scoreMethodology: number;
-  scoreClarity: number;
-  scoreRelevance: number;
+  /** Only set when verdict is "accept" — the reviewer's Oral/Poster choice, used to finalize the abstract. */
+  presentationType?: "oral" | "poster";
   comments: string;
   commentsPrivate?: string;
   submittedAt: Date;
@@ -21,10 +19,7 @@ const ReviewSchema = new Schema<IReview>(
     abstract: { type: Schema.Types.ObjectId, ref: "Abstract", required: true, index: true },
     reviewer: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
     verdict: { type: String, enum: ["accept", "reject", "revise"], required: true },
-    scoreOriginality: { type: Number, min: 1, max: 10, required: true },
-    scoreMethodology: { type: Number, min: 1, max: 10, required: true },
-    scoreClarity: { type: Number, min: 1, max: 10, required: true },
-    scoreRelevance: { type: Number, min: 1, max: 10, required: true },
+    presentationType: { type: String, enum: ["oral", "poster"] },
     comments: { type: String, required: true },
     commentsPrivate: { type: String },
     submittedAt: { type: Date, default: Date.now },

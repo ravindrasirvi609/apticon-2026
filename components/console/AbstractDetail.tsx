@@ -50,10 +50,7 @@ interface ReviewDoc {
   _id: string;
   reviewer: { _id: string; name: string; email: string } | string;
   verdict: string;
-  scoreOriginality: number;
-  scoreMethodology: number;
-  scoreClarity: number;
-  scoreRelevance: number;
+  presentationType?: string;
   comments: string;
   commentsPrivate?: string;
   submittedAt: string;
@@ -220,7 +217,6 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
               {data.reviews.length === 0 && <p className="text-sm text-[var(--muted-text)]">No reviews submitted yet.</p>}
               {data.reviews.map((r) => {
                 const rev = typeof r.reviewer === "object" ? r.reviewer : { name: r.reviewer, email: "" };
-                const avg = ((r.scoreOriginality + r.scoreMethodology + r.scoreClarity + r.scoreRelevance) / 4).toFixed(1);
                 return (
                   <div key={r._id} className="rounded-lg border border-[var(--gold-500)]/20 p-4">
                     <div className="flex items-start justify-between gap-3 mb-3">
@@ -228,18 +224,10 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
                         <div className="font-semibold text-sm">{rev.name}</div>
                         <div className="text-xs text-[var(--muted-text)]">{format(new Date(r.submittedAt), "d MMM yyyy, HH:mm")}</div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={r.verdict === "accept" ? "success" : r.verdict === "reject" ? "danger" : "warning"}>
-                          {r.verdict}
-                        </Badge>
-                        <span className="text-lg font-bold text-[var(--crimson-800)]">{avg}</span>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2 mb-3 text-xs">
-                      <ScoreBar label="Originality" value={r.scoreOriginality} />
-                      <ScoreBar label="Methodology" value={r.scoreMethodology} />
-                      <ScoreBar label="Clarity" value={r.scoreClarity} />
-                      <ScoreBar label="Relevance" value={r.scoreRelevance} />
+                      <Badge variant={r.verdict === "accept" ? "success" : r.verdict === "reject" ? "danger" : "warning"}>
+                        {r.verdict}
+                        {r.presentationType ? ` · ${r.presentationType}` : ""}
+                      </Badge>
                     </div>
                     <div className="text-sm whitespace-pre-line">{r.comments}</div>
                     {r.commentsPrivate && (
@@ -475,19 +463,6 @@ function Field({ label, value }: { label: string; value: string }) {
     <div>
       <div className="text-xs uppercase tracking-wider text-[var(--muted-text)]">{label}</div>
       <div className="text-sm">{value}</div>
-    </div>
-  );
-}
-
-function ScoreBar({ label, value }: { label: string; value: number }) {
-  return (
-    <div>
-      <div className="flex justify-between text-[10px] uppercase tracking-wider text-[var(--muted-text)]">
-        <span>{label}</span><span>{value}/10</span>
-      </div>
-      <div className="h-1 bg-[var(--cream-100)] rounded-full mt-1 overflow-hidden">
-        <div className="h-full bg-[var(--crimson-800)]" style={{ width: `${value * 10}%` }} />
-      </div>
     </div>
   );
 }

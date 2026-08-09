@@ -22,6 +22,10 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     const abs = await Abstract.findById(id);
     if (!abs) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+    if (abs.finalDecision) {
+      return NextResponse.json({ error: "A decision has already been recorded for this abstract." }, { status: 409 });
+    }
+
     const before = { status: abs.status, finalDecision: abs.finalDecision };
 
     abs.finalDecision = parsed.data.decision;

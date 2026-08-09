@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/shadcn
 import { Badge } from "@/components/ui/shadcn/badge";
 import { Textarea } from "@/components/ui/shadcn/textarea";
 import { Label } from "@/components/ui/shadcn/label";
+import { Checkbox } from "@/components/ui/shadcn/checkbox";
 
 interface AbstractDoc {
   _id: string;
@@ -23,6 +24,7 @@ interface AbstractDoc {
   fileUrl?: string;
   graphicalAbstractUrl?: string;
   status: string;
+  finalDecision?: string;
   createdAt: string;
 }
 
@@ -30,10 +32,7 @@ interface ReviewDoc {
   _id: string;
   reviewer: { _id: string; name: string; email: string } | string;
   verdict: "accept" | "reject" | "revise";
-  scoreOriginality: number;
-  scoreMethodology: number;
-  scoreClarity: number;
-  scoreRelevance: number;
+  presentationType?: "oral" | "poster";
   comments: string;
   commentsPrivate?: string;
   submittedAt: string;
@@ -43,11 +42,9 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
   const [data, setData] = useState<{ abstract: AbstractDoc; reviews: ReviewDoc[] } | null>(null);
   const [me, setMe] = useState<{ uid: string } | null>(null);
 
-  const [verdict, setVerdict] = useState<"accept" | "reject" | "revise">("accept");
-  const [scoreOriginality, setOrig] = useState(7);
-  const [scoreMethodology, setMeth] = useState(7);
-  const [scoreClarity, setClar] = useState(7);
-  const [scoreRelevance, setRel] = useState(7);
+  const [accept, setAccept] = useState(false);
+  const [verdict, setVerdict] = useState<"reject" | "revise">("revise");
+  const [presentationType, setPresentationType] = useState<"oral" | "poster" | null>(null);
   const [comments, setComments] = useState("");
   const [commentsPrivate, setCommentsPrivate] = useState("");
   const [saving, setSaving] = useState(false);
@@ -74,11 +71,13 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
     if (!data || !me) return;
     const mine = data.reviews.find((r) => (typeof r.reviewer === "object" ? r.reviewer._id : r.reviewer) === me.uid);
     if (mine) {
-      setVerdict(mine.verdict);
-      setOrig(mine.scoreOriginality);
-      setMeth(mine.scoreMethodology);
-      setClar(mine.scoreClarity);
-      setRel(mine.scoreRelevance);
+      if (mine.verdict === "accept") {
+        setAccept(true);
+        setPresentationType(mine.presentationType ?? null);
+      } else {
+        setAccept(false);
+        setVerdict(mine.verdict);
+      }
       setComments(mine.comments);
       setCommentsPrivate(mine.commentsPrivate ?? "");
     }
@@ -86,6 +85,7 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
 
   async function submit() {
     if (comments.trim().length < 20) return toast.error("Comments must be at least 20 characters.");
+    if (accept && !presentationType) return toast.error("Select Oral or Poster to accept this abstract.");
     setSaving(true);
     try {
       const res = await fetch("/api/reviews", {
@@ -93,18 +93,15 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           abstractId: id,
-          verdict,
-          scoreOriginality,
-          scoreMethodology,
-          scoreClarity,
-          scoreRelevance,
+          verdict: accept ? "accept" : verdict,
+          presentationType: accept ? presentationType : undefined,
           comments,
           commentsPrivate: commentsPrivate || undefined,
         }),
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error);
-      toast.success("Review submitted.");
+      toast.success(accept ? "Abstract accepted." : "Review submitted.");
       await load();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed");
@@ -168,52 +165,85 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
           </Card>
 
           <Card>
-            <CardHeader><CardTitle>{mine ? "Update your review" : "Submit your review"}</CardTitle></CardHeader>
+            <CardHeader><CardTitle>{a.finalDecision ? "Decision recorded" : mine ? "Update your review" : "Submit your review"}</CardTitle></CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <Label>Verdict</Label>
-                <div className="mt-2 grid grid-cols-3 gap-2">
-                  {(["accept", "revise", "reject"] as const).map((v) => (
-                    <button
-                      key={v}
-                      type="button"
-                      onClick={() => setVerdict(v)}
-                      className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
-                        verdict === v
-                          ? v === "accept" ? "bg-emerald-600 text-white border-emerald-600"
-                          : v === "reject" ? "bg-red-600 text-white border-red-600"
-                          : "bg-amber-500 text-white border-amber-500"
-                          : "bg-white border-[var(--gold-500)]/30"
-                      }`}
-                    >
-                      {v}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {a.finalDecision ? (
+                <p className="text-sm text-[var(--muted-text)]">
+                  This abstract has already been finalized ({a.finalDecision.replace("_", " ")}) — no further review can be submitted.
+                </p>
+              ) : (
+                <>
+                  <div>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <Checkbox checked={accept} onCheckedChange={(v) => setAccept(v === true)} />
+                      <span className="text-sm font-semibold">Accept this abstract</span>
+                    </label>
+                    <p className="mt-1 text-xs text-[var(--muted-text)]">
+                      Checking this finalizes the abstract as accepted immediately — no further confirmation from admin or editorial is needed.
+                    </p>
+                  </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <ScoreInput label="Originality" value={scoreOriginality} setValue={setOrig} />
-                <ScoreInput label="Methodology" value={scoreMethodology} setValue={setMeth} />
-                <ScoreInput label="Clarity"      value={scoreClarity}   setValue={setClar} />
-                <ScoreInput label="Relevance"    value={scoreRelevance} setValue={setRel} />
-              </div>
+                  {accept ? (
+                    <div>
+                      <Label>Presentation type *</Label>
+                      <div className="mt-2 grid grid-cols-2 gap-2">
+                        {(["oral", "poster"] as const).map((v) => (
+                          <button
+                            key={v}
+                            type="button"
+                            onClick={() => setPresentationType(v)}
+                            className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
+                              presentationType === v
+                                ? "bg-emerald-600 text-white border-emerald-600"
+                                : "bg-white border-[var(--gold-500)]/30"
+                            }`}
+                          >
+                            {v}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="mt-2 text-xs text-[var(--muted-text)]">An Abstract Code will be generated based on this choice and cannot be changed afterwards.</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <Label>Recommendation</Label>
+                      <div className="mt-2 grid grid-cols-2 gap-2">
+                        {(["revise", "reject"] as const).map((v) => (
+                          <button
+                            key={v}
+                            type="button"
+                            onClick={() => setVerdict(v)}
+                            className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
+                              verdict === v
+                                ? v === "reject" ? "bg-red-600 text-white border-red-600" : "bg-amber-500 text-white border-amber-500"
+                                : "bg-white border-[var(--gold-500)]/30"
+                            }`}
+                          >
+                            {v}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="mt-2 text-xs text-[var(--muted-text)]">This is a recommendation only — admin/editorial will be emailed to make the final decision.</p>
+                    </div>
+                  )}
 
-              <div>
-                <Label htmlFor="comments">Public comments (shared with author) *</Label>
-                <Textarea id="comments" className="mt-2" rows={6} value={comments} onChange={(e) => setComments(e.target.value)} placeholder="Constructive feedback for the author…" />
-                <div className="text-xs text-[var(--muted-text)] mt-1">{comments.length} / 4000</div>
-              </div>
+                  <div>
+                    <Label htmlFor="comments">Public comments (shared with author) *</Label>
+                    <Textarea id="comments" className="mt-2" rows={6} value={comments} onChange={(e) => setComments(e.target.value)} placeholder="Constructive feedback for the author…" />
+                    <div className="text-xs text-[var(--muted-text)] mt-1">{comments.length} / 4000</div>
+                  </div>
 
-              <div>
-                <Label htmlFor="private">Private note to admin (optional)</Label>
-                <Textarea id="private" className="mt-2" rows={3} value={commentsPrivate} onChange={(e) => setCommentsPrivate(e.target.value)} placeholder="Only visible to the super admin" />
-              </div>
+                  <div>
+                    <Label htmlFor="private">Private note to admin (optional)</Label>
+                    <Textarea id="private" className="mt-2" rows={3} value={commentsPrivate} onChange={(e) => setCommentsPrivate(e.target.value)} placeholder="Only visible to the super admin" />
+                  </div>
 
-              <Button onClick={submit} disabled={saving} size="lg" className="w-full">
-                {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-                {mine ? "Update review" : "Submit review"}
-              </Button>
+                  <Button onClick={submit} disabled={saving} size="lg" className="w-full">
+                    {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+                    {accept ? "Accept abstract" : mine ? "Update review" : "Submit review"}
+                  </Button>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -229,13 +259,12 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
                 .filter((r) => (typeof r.reviewer === "object" ? r.reviewer._id : r.reviewer) !== me?.uid)
                 .map((r) => {
                   const rev = typeof r.reviewer === "object" ? r.reviewer : { name: "Reviewer" };
-                  const avg = ((r.scoreOriginality + r.scoreMethodology + r.scoreClarity + r.scoreRelevance) / 4).toFixed(1);
                   return (
                     <div key={r._id} className="p-3 rounded-lg border border-[var(--gold-500)]/20 text-sm">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-semibold">{rev.name}</span>
                         <Badge variant={r.verdict === "accept" ? "success" : r.verdict === "reject" ? "danger" : "warning"}>
-                          {r.verdict} · {avg}
+                          {r.verdict}
                         </Badge>
                       </div>
                       <div className="text-xs text-[var(--muted-text)] mb-2">{format(new Date(r.submittedAt), "d MMM yyyy")}</div>
@@ -247,18 +276,6 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
           </Card>
         </div>
       </div>
-    </div>
-  );
-}
-
-function ScoreInput({ label, value, setValue }: { label: string; value: number; setValue: (n: number) => void }) {
-  return (
-    <div>
-      <div className="flex items-center justify-between">
-        <Label>{label}</Label>
-        <span className="text-sm font-bold text-[var(--crimson-800)]">{value}/10</span>
-      </div>
-      <input type="range" min={1} max={10} value={value} onChange={(e) => setValue(parseInt(e.target.value, 10))} className="w-full mt-2 accent-[var(--crimson-800)]" />
     </div>
   );
 }
