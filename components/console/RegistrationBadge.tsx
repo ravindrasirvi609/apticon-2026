@@ -13,6 +13,7 @@ interface BadgeData {
   category: string;
   photoUrl?: string;
   qrCode?: string;
+  status: string;
 }
 
 interface Props {
@@ -31,6 +32,19 @@ export default function RegistrationBadge({ id, detailHref }: Props) {
   }, [id]);
 
   if (!data) return <div className="p-8 text-sm text-[var(--muted-text)]">Loading…</div>;
+
+  if (data.status !== "approved") {
+    return (
+      <div className="p-8 flex flex-col items-center gap-3 text-center">
+        <div className="text-sm text-[var(--muted-text)]">
+          The badge is only available once payment is confirmed. This registration&rsquo;s payment is not complete yet.
+        </div>
+        <Link href={detailHref} className="inline-flex items-center gap-1 text-sm text-[var(--crimson-800)] hover:underline">
+          <ArrowLeft className="w-4 h-4" /> Back
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 md:p-8 flex flex-col items-center">

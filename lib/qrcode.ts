@@ -17,3 +17,17 @@ export async function generateRegistrationQrDataUrl(registrationCode: string): P
     width: 320,
   });
 }
+
+/**
+ * Same QR content as {@link generateRegistrationQrDataUrl}, but as a PNG buffer suitable for
+ * a `cid:`-referenced inline email attachment. Gmail (and Outlook) routinely strip `data:` URI
+ * images out of HTML emails, so confirmation emails must attach the PNG and reference it via
+ * `cid:` rather than inlining base64 in the `<img src>`.
+ */
+export async function generateRegistrationQrPngBuffer(registrationCode: string): Promise<Buffer> {
+  return QRCode.toBuffer(registrationCode, {
+    errorCorrectionLevel: "H",
+    margin: 2,
+    width: 320,
+  });
+}

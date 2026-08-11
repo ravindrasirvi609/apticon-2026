@@ -110,8 +110,8 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
       });
       createdIds.push(reg._id);
 
-      const { subject, html } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, false);
-      await sendMail({ to: reg.email, subject, html });
+      const { subject, html, attachments } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, false);
+      await sendMail({ to: reg.email, subject, html, attachments });
     }
 
     await GroupRegistration.updateOne({ _id: group._id }, { $set: { createdRegistrations: createdIds } });

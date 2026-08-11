@@ -345,28 +345,30 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader><CardTitle>QR / Badge</CardTitle></CardHeader>
-            <CardContent className="flex flex-col items-center gap-3">
-              {r.qrCode ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={r.qrCode}
-                  alt="QR code encoding this registration code"
-                  width={180}
-                  height={180}
-                  className="rounded-lg border border-[var(--gold-500)]/20 bg-white p-2"
-                />
-              ) : (
-                <div className="text-sm text-[var(--muted-text)]">QR unavailable</div>
-              )}
-              <Link href={`${backHref}/${id}/badge`} className="w-full">
-                <Button variant="outline" className="w-full">
-                  <Printer className="w-4 h-4" /> Print Badge
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+          {r.status === "approved" && (
+            <Card>
+              <CardHeader><CardTitle>QR / Badge</CardTitle></CardHeader>
+              <CardContent className="flex flex-col items-center gap-3">
+                {r.qrCode ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={r.qrCode}
+                    alt="QR code encoding this registration code"
+                    width={180}
+                    height={180}
+                    className="rounded-lg border border-[var(--gold-500)]/20 bg-white p-2"
+                  />
+                ) : (
+                  <div className="text-sm text-[var(--muted-text)]">QR unavailable</div>
+                )}
+                <Link href={`${backHref}/${id}/badge`} className="w-full">
+                  <Button variant="outline" className="w-full">
+                    <Printer className="w-4 h-4" /> Print Badge
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          )}
 
           <Card>
             <CardHeader><CardTitle>Linked Abstract</CardTitle></CardHeader>

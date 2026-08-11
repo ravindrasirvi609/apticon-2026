@@ -11,7 +11,7 @@
  */
 
 import { Resend } from "resend";
-import { generateRegistrationQrDataUrl } from "@/lib/qrcode";
+import { generateRegistrationQrPngBuffer } from "@/lib/qrcode";
 
 const KEY = process.env.RESEND_API_KEY ?? "";
 const FROM = process.env.RESEND_FROM ?? "APTICON 2026 <onboarding@resend.dev>";
@@ -59,7 +59,7 @@ export type EmailBlock =
   | { type: "text";     html: string }                                                          // pre-escaped HTML paragraph
   | { type: "heading";  text: string }                                                          // small H2
   | { type: "code";     label: string; value: string }                                          // big monospace code card
-  | { type: "qr";       dataUrl: string; caption?: string }                                     // centered QR image
+  | { type: "qr";       cid: string; caption?: string }                                         // centered QR image (cid: inline attachment)
   | { type: "kv";       rows: { label: string; value: string }[] }                              // key/value rows
   | { type: "callout";  variant: "info" | "success" | "warning" | "danger"; title?: string; body: string }
   | { type: "button";   label: string; href: string; variant?: "primary" | "secondary" }
@@ -84,7 +84,7 @@ function renderBlock(b: EmailBlock): string {
     case "qr":
       return `
         <div style="background:${BRAND.cream100};border-left:4px solid ${BRAND.gold500};padding:16px 20px;margin:20px 0;border-radius:4px;text-align:center;">
-          <img src="${esc(b.dataUrl)}" width="160" height="160" alt="QR code for registration"
+          <img src="cid:${esc(b.cid)}" width="160" height="160" alt="QR code for registration"
                style="display:inline-block;border-radius:4px;background:#fff;padding:8px;" />
           ${b.caption ? `<div style="margin-top:10px;font-size:12px;color:${BRAND.muted};">${esc(b.caption)}</div>` : ""}
         </div>`;
@@ -185,13 +185,14 @@ export function renderEmail({ title, preheader, blocks }: RenderOpts): string {
 }
 
 // ─── Send helper ────────────────────────────────────────────
-interface SendOpts { to: string; subject: string; html: string }
-export async function sendMail({ to, subject, html }: SendOpts) {
+export interface EmailAttachment { filename: string; content: Buffer; contentId: string }
+interface SendOpts { to: string; subject: string; html: string; attachments?: EmailAttachment[] }
+export async function sendMail({ to, subject, html, attachments }: SendOpts) {
   if (!KEY) {
     console.warn("[email] RESEND_API_KEY missing — skipping send to", to);
     return { skipped: true as const };
   }
-  return resend.emails.send({ from: FROM, to, subject, html });
+  return resend.emails.send({ from: FROM, to, subject, html, attachments });
 }
 
 // ─── Templates ──────────────────────────────────────────────
@@ -343,7 +344,8 @@ export async function registrationApprovedEmail(name: string, code: string, feeA
   const nextStepsInfo = hasLinkedAbstract
     ? `We can see your abstract submission is linked to this registration — you're fully set up.`
     : `If you plan to present a paper or poster, please submit your abstract before <b>30 September 2026</b>.`;
-  const qrDataUrl = await generateRegistrationQrDataUrl(code);
+  const qrCid = `qr-${code}`;
+  const qrPng = await generateRegistrationQrPngBuffer(code);
   return {
     subject: `Registration Confirmed — ${code}`,
     html: renderEmail({
@@ -353,7 +355,7 @@ export async function registrationApprovedEmail(name: string, code: string, feeA
         { type: "text", html: `Dear ${esc(name)},` },
         { type: "callout", variant: "success", title: "Payment verified — you're all set!", body: `Your registration for <b>APTICON 2026</b> is confirmed. We look forward to welcoming you to Raipur on 24–25 October 2026.` },
         { type: "code", label: "Your Registration Code", value: code },
-        { type: "qr", dataUrl: qrDataUrl, caption: "Show this at the registration desk" },
+        { type: "qr", cid: qrCid, caption: "Show this at the registration desk" },
         { type: "kv", rows: [
           { label: "Amount paid", value: `₹${feeAmount.toLocaleString("en-IN")}` },
           { label: "Venue",       value: "Pt. Deendayal Upadhyay Auditorium, G.E. Road, Raipur (C.G.)" },
@@ -367,6 +369,7 @@ export async function registrationApprovedEmail(name: string, code: string, feeA
         { type: "signoff" },
       ],
     }),
+    attachments: [{ filename: `${code}-qr.png`, content: qrPng, contentId: qrCid }] as EmailAttachment[],
   };
 }
 

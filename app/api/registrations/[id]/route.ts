@@ -32,7 +32,7 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
     delete (reg as Partial<typeof reg>).internalNote;
   }
 
-  const qrCode = await generateRegistrationQrDataUrl(reg.registrationCode);
+  const qrCode = reg.status === "approved" ? await generateRegistrationQrDataUrl(reg.registrationCode) : undefined;
 
   return NextResponse.json({ registration: { ...reg, qrCode }, linkedAbstract });
 }
