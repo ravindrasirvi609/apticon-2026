@@ -20,6 +20,7 @@ import {
 } from "@/lib/registration-fees";
 import { APTI_MEMBER_CATEGORIES } from "@/lib/validators/registration";
 import AptiMembershipIdField from "@/components/ui/AptiMembershipIdField";
+import PaymentRedirectDialog from "@/components/registration/PaymentRedirectDialog";
 
 interface FormData {
   fullName: string;
@@ -67,6 +68,7 @@ function loadRazorpayCheckout() {
 export default function RegistrationForm() {
   const router = useRouter();
   const [paying, setPaying] = useState(false);
+  const [redirectingToConfirmation, setRedirectingToConfirmation] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
@@ -150,6 +152,7 @@ export default function RegistrationForm() {
         theme: { color: "#8f1737" },
         modal: { ondismiss: () => setPaying(false) },
         handler: async (response) => {
+          setRedirectingToConfirmation(true);
           try {
             const verify = await fetch("/api/payments/razorpay/verify", {
               method: "POST", headers: { "content-type": "application/json" },
@@ -177,6 +180,7 @@ export default function RegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-8">
+      <PaymentRedirectDialog open={redirectingToConfirmation} />
 
       {/* Personal Info */}
       <div>

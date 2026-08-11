@@ -17,6 +17,7 @@ import {
   type RegistrationCategory,
 } from "@/lib/registration-fees";
 import { GROUP_MIN_DELEGATES, GROUP_MAX_DELEGATES } from "@/lib/validators/group-registration";
+import PaymentRedirectDialog from "@/components/registration/PaymentRedirectDialog";
 
 interface DelegateRow {
   name: string;
@@ -68,6 +69,7 @@ function loadRazorpayCheckout() {
 export default function GroupRegistrationForm() {
   const router = useRouter();
   const [paying, setPaying] = useState(false);
+  const [redirectingToConfirmation, setRedirectingToConfirmation] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null);
   const [photos, setPhotos] = useState<(File | null)[]>(Array.from({ length: GROUP_MIN_DELEGATES }, () => null));
@@ -180,6 +182,7 @@ export default function GroupRegistrationForm() {
         theme: { color: "#8f1737" },
         modal: { ondismiss: () => setPaying(false) },
         handler: async (response) => {
+          setRedirectingToConfirmation(true);
           try {
             const verify = await fetch("/api/payments/razorpay/group-verify", {
               method: "POST", headers: { "content-type": "application/json" },
@@ -208,6 +211,7 @@ export default function GroupRegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-8">
+      <PaymentRedirectDialog open={redirectingToConfirmation} />
 
       {/* Coordinator */}
       <div>
