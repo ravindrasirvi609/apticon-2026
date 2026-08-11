@@ -90,8 +90,8 @@ export default function Card3D({ badge, cardRef, onDragChange }: Props) {
       </mesh>
 
       <Text
-        position={[0, -0.1, CARD_DEPTH / 2 + 0.003]}
-        fontSize={0.11}
+        position={[0, -0.08, CARD_DEPTH / 2 + 0.003]}
+        fontSize={0.1}
         maxWidth={CARD_WIDTH * 0.85}
         textAlign="center"
         color={CRIMSON}
@@ -113,7 +113,7 @@ export default function Card3D({ badge, cardRef, onDragChange }: Props) {
         {designation}
       </Text>
       <Text
-        position={[0, -0.36, CARD_DEPTH / 2 + 0.003]}
+        position={[0, -0.365, CARD_DEPTH / 2 + 0.003]}
         fontSize={0.055}
         maxWidth={CARD_WIDTH * 0.88}
         textAlign="center"
