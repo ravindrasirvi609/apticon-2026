@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import GroupRegistration from "@/models/GroupRegistration";
 import Registration from "@/models/Registration";
-import { generateRegistrationCode } from "@/lib/submission-code";
+import { generateRegistrationCode } from "@/lib/registration-code";
 import { groupDecisionSchema } from "@/lib/validators/group-registration";
 import { requireAnyRole, authErrorResponse } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
@@ -75,11 +75,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
 
     const createdIds: mongoose.Types.ObjectId[] = [];
     for (const delegate of group.delegates) {
-      let registrationCode = generateRegistrationCode();
-      for (let i = 0; i < 5; i++) {
-        if (!(await Registration.exists({ registrationCode }))) break;
-        registrationCode = generateRegistrationCode();
-      }
+      const registrationCode = await generateRegistrationCode(group.category);
 
       const reg = await Registration.create({
         registrationCode,

@@ -7,10 +7,6 @@ export function generateSubmissionCode(): string {
   return `APT-2026-${gen()}`;
 }
 
-export function generateRegistrationCode(): string {
-  return `APT-REG-2026-${gen()}`;
-}
-
 export function generateGroupRegistrationCode(): string {
   return `APT-GRP-2026-${gen()}`;
 }

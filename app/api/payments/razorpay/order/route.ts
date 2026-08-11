@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
-import { generateRegistrationCode } from "@/lib/submission-code";
+import { generateRegistrationCode } from "@/lib/registration-code";
 import { calculateFeeWithGst, currentFeeAmount } from "@/lib/registration-fees";
 import { createRazorpayOrder } from "@/lib/razorpay";
 import { publicUrl } from "@/lib/r2";
@@ -43,11 +43,7 @@ export async function POST(request: NextRequest) {
   const { gstAmount, totalAmount } = calculateFeeWithGst(baseAmount);
 
   await connectDB();
-  let registrationCode = generateRegistrationCode();
-  for (let i = 0; i < 5; i++) {
-    if (!(await Registration.exists({ registrationCode }))) break;
-    registrationCode = generateRegistrationCode();
-  }
+  const registrationCode = await generateRegistrationCode(data.category);
 
   const registration = await Registration.create({
     registrationCode,

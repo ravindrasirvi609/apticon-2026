@@ -111,7 +111,7 @@ export default function RegistrationStatusClient() {
               <Input
                 id="code"
                 className="mt-2 font-mono"
-                placeholder="APT-REG-2026-XXXXX"
+                placeholder="AM1001"
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 required

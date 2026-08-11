@@ -6,9 +6,10 @@ import QRCode from "qrcode";
  * mobile scanner already expects (see MOBILE_API.md §10): it decodes the raw text and calls
  * `GET /attendees/by-code/{code}` with it.
  *
- * ECC "H" costs nothing extra here: registrationCode is 19 chars (`APT-REG-2026-XXXXXX`), well
- * within the alphanumeric-mode capacity of a small QR version even at the highest error
- * correction level, so we get the strongest damage/print tolerance for free.
+ * ECC "H" costs nothing extra here: registrationCode is short (legacy `APT-REG-2026-XXXXXX`
+ * codes, or newer category-prefixed codes like `AM1001`/`AA501`), well within the alphanumeric-
+ * mode capacity of a small QR version even at the highest error correction level, so we get the
+ * strongest damage/print tolerance for free.
  */
 export async function generateRegistrationQrDataUrl(registrationCode: string): Promise<string> {
   return QRCode.toDataURL(registrationCode, {
