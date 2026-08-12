@@ -88,31 +88,37 @@ export const RAIPUR_PLACES = [
     name: "Mahant Ghasidas Memorial Museum",
     description: "One of the oldest museums in central India, housing rare artifacts, sculptures, and coins.",
     icon: "🏛️",
+    image: { src: "/cultural/Mahant Ghasidas Memorial.jpg", alt: "Mahant Ghasidas Memorial Museum in Raipur" },
   },
   {
     name: "Nandanvan Zoo & Fun World",
     description: "A beautiful zoo and amusement park, home to white tigers and diverse wildlife.",
     icon: "🐯",
+    image: { src: "/cultural/Nandanvan-zoo-safari.jpg", alt: "Nandanvan Zoo Safari near Raipur" },
   },
   {
     name: "Rajim — Triveni Sangam",
     description: "Sacred confluence of Mahanadi, Pairi & Sondur rivers. Ancient temples and spiritual heritage.",
     icon: "🕌",
+    image: { src: "/cultural/Rajim Triveni Sangam .webp", alt: "Rajim Triveni Sangam in Chhattisgarh" },
   },
   {
     name: "Sirpur Archaeological Site",
     description: "Ancient Buddhist heritage site with temples dating back to the 5th–8th century CE.",
     icon: "🏺",
+    image: { src: "/cultural/Sirpur Archaeological Site.jpg", alt: "Ancient structures at Sirpur Archaeological Site" },
   },
   {
     name: "Bhoramdeo Temple",
     description: "11th-century Shaivite temple, often called the 'Khajuraho of Chhattisgarh'.",
     icon: "⛩️",
+    image: { src: "/cultural/Bhoramdeo Temple .jpg", alt: "Bhoramdeo Temple in Chhattisgarh" },
   },
   {
     name: "Champaran",
     description: "Birthplace of Mahaprabhu Vallabhacharya, a revered Vaishnava pilgrimage site.",
     icon: "🪷",
+    image: { src: "/cultural/Champaran .avif", alt: "Champaran pilgrimage site in Chhattisgarh" },
   },
 ];
 

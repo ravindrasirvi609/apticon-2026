@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, ChevronDown } from "lucide-react";
@@ -7,23 +8,30 @@ import GoldenBadge from "@/components/ui/GoldenBadge";
 import PulseButton from "@/components/ui/PulseButton";
 import CountdownTimer from "./CountdownTimer";
 import HeroConceptStrip from "./HeroConceptStrip";
+import HeroBackgroundSlider from "./HeroBackgroundSlider";
 import { fadeUp, scaleIn } from "@/lib/animations";
-import { EVENT } from "@/lib/constants";
+import { EVENT, RAIPUR_PLACES } from "@/lib/constants";
+
+const HERO_SLIDES = RAIPUR_PLACES.map((p) => p.image);
+const SLIDE_INTERVAL_MS = 5000;
 
 export default function HeroSection() {
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(
+      () => setSlideIndex((i) => (i + 1) % HERO_SLIDES.length),
+      SLIDE_INTERVAL_MS
+    );
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <section className="relative min-h-[100svh] flex flex-col overflow-hidden pt-6 md:pt-10">
 
       {/* ── Background layers ─────────────────────────────── */}
-      {/* Base gradient */}
-      <div
-        aria-hidden
-        className="absolute inset-0 z-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 120% 80% at 50% 0%, #fff8e1 0%, #fffde7 45%, #fff3cd 100%)",
-        }}
-      />
+      {/* Rotating photo background */}
+      <HeroBackgroundSlider slides={HERO_SLIDES} index={slideIndex} />
 
       {/* Gondi sun watermark */}
       <div
@@ -106,7 +114,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.85 }}
-          className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg font-semibold text-[var(--dark-text)]/75 leading-relaxed mb-2 px-2"
+          className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg font-semibold text-white/90 leading-relaxed mb-2 px-2"
         >
           {EVENT.theme}
         </motion.p>
@@ -116,7 +124,7 @@ export default function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.1 }}
-          className="font-devanagari text-sm md:text-base text-[var(--crimson-800)]/70 mb-8"
+          className="font-devanagari text-sm md:text-base text-[var(--gold-400)]/90 mb-8"
         >
           {EVENT.themeHindi}
         </motion.p>
@@ -148,7 +156,7 @@ export default function HeroSection() {
           <PulseButton href="/registration" variant="gold" pulse className="min-w-[160px]">
             Register Now
           </PulseButton>
-          <PulseButton href="/schedule" variant="outline" className="min-w-[160px]">
+          <PulseButton href="/schedule" variant="outline-light" className="min-w-[160px]">
             View Program
           </PulseButton>
         </motion.div>
@@ -173,7 +181,7 @@ export default function HeroSection() {
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-            className="flex flex-col items-center gap-1 text-[var(--crimson-800)]/50"
+            className="flex flex-col items-center gap-1 text-white/70"
           >
             <span className="text-[10px] tracking-widest uppercase font-medium">Scroll</span>
             <ChevronDown size={18} />
@@ -182,7 +190,22 @@ export default function HeroSection() {
       </div>
 
       {/* ── Concept strip from flyer ── */}
-      <div className="relative z-10 mt-auto w-full pb-6 md:pb-8">
+      <div className="relative z-10 mt-auto w-full pb-6 md:pb-8 flex flex-col items-center gap-4">
+        {/* Background photo slide indicators */}
+        <div className="flex justify-center gap-2">
+          {HERO_SLIDES.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Show background photo ${i + 1}`}
+              onClick={() => setSlideIndex(i)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === slideIndex ? "w-6 bg-[var(--gold-400)]" : "w-1.5 bg-white/40 hover:bg-white/70"
+              }`}
+            />
+          ))}
+        </div>
+
         <HeroConceptStrip />
       </div>
 

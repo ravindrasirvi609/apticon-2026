@@ -46,15 +46,6 @@ const HOTELS = [
   { name: "OYO / Budget Guesthouses",      stars: 2, distance: "0.5–2 km", area: "Near Venue" },
 ];
 
-const DESTINATION_IMAGES: Record<string, { src: string; alt: string }> = {
-  "Mahant Ghasidas Memorial Museum": { src: "/cultural/Mahant Ghasidas Memorial.jpg", alt: "Mahant Ghasidas Memorial Museum in Raipur" },
-  "Nandanvan Zoo & Fun World": { src: "/cultural/Nandanvan-zoo-safari.jpg", alt: "Nandanvan Zoo Safari near Raipur" },
-  "Rajim — Triveni Sangam": { src: "/cultural/Rajim Triveni Sangam .webp", alt: "Rajim Triveni Sangam in Chhattisgarh" },
-  "Sirpur Archaeological Site": { src: "/cultural/Sirpur Archaeological Site.jpg", alt: "Ancient structures at Sirpur Archaeological Site" },
-  "Bhoramdeo Temple": { src: "/cultural/Bhoramdeo Temple .jpg", alt: "Bhoramdeo Temple in Chhattisgarh" },
-  Champaran: { src: "/cultural/Champaran .avif", alt: "Champaran pilgrimage site in Chhattisgarh" },
-};
-
 export default function VenueClient() {
   return (
     <div className="bg-[var(--cream-50)] min-h-screen">
@@ -192,8 +183,8 @@ export default function VenueClient() {
                 <article className="group h-full overflow-hidden rounded-2xl border border-[var(--gold-500)]/15 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--gold-500)]/50 hover:shadow-lg">
                   <div className="relative aspect-[16/10] overflow-hidden bg-[var(--cream-100)]">
                     <Image
-                      src={DESTINATION_IMAGES[place.name].src}
-                      alt={DESTINATION_IMAGES[place.name].alt}
+                      src={place.image.src}
+                      alt={place.image.alt}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"

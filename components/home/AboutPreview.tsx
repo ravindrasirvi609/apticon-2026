@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { staggerContainer, fadeLeft, fadeRight } from "@/lib/animations";
 import ScrollReveal from "@/components/ui/ScrollReveal";
@@ -90,6 +91,34 @@ export default function AboutPreview() {
             <motion.p variants={fadeLeft} className="mt-4 font-devanagari text-sm text-[var(--crimson-800)]/70">
               "विकसित फार्मासिस्ट — आत्मनिर्भर भारत की नींव"
             </motion.p>
+
+            {/* Cultural photo collage */}
+            <motion.div variants={fadeLeft} className="relative mt-10 mb-6 w-full max-w-sm">
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg border-4 border-white">
+                <Image
+                  src="/cultural/Sirpur Archaeological Site.jpg"
+                  alt="Sirpur Archaeological Site near Raipur"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  className="object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-6 -right-6 w-28 sm:w-36 aspect-square rounded-2xl overflow-hidden shadow-xl border-4 border-white rotate-3">
+                <Image
+                  src="/cultural/Bhoramdeo Temple .jpg"
+                  alt="Bhoramdeo Temple in Chhattisgarh"
+                  fill
+                  sizes="144px"
+                  className="object-cover"
+                />
+              </div>
+              <span
+                aria-hidden
+                className="absolute -top-3 -left-3 w-10 h-10 rounded-full bg-[var(--gold-500)]/15 border border-[var(--gold-500)]/30 flex items-center justify-center text-lg"
+              >
+                📍
+              </span>
+            </motion.div>
           </motion.div>
 
           {/* Right — Stats with Bastar frame */}

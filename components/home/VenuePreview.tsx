@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { MapPin, Plane, Train, Car } from "lucide-react";
 import { staggerContainer, fadeLeft, fadeRight } from "@/lib/animations";
@@ -95,28 +96,37 @@ export default function VenuePreview() {
             <h3 className="font-display font-bold text-2xl text-[var(--dark-text)] mb-6">
               Explore <span className="text-gradient-gold">Raipur</span>
             </h3>
-            <div className="space-y-3">
-              {RAIPUR_PLACES.map((place, i) => (
+            <div className="grid grid-cols-2 gap-4">
+              {RAIPUR_PLACES.slice(0, 4).map((place, i) => (
                 <motion.div
                   key={place.name}
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
                   className="
-                    flex gap-4 p-4 rounded-2xl
-                    bg-white border border-[var(--gold-500)]/15
-                    hover:border-[var(--gold-500)]/40 hover:shadow-md
-                    transition-all duration-300 group
+                    group relative overflow-hidden rounded-2xl
+                    border border-[var(--gold-500)]/15 bg-white shadow-sm
+                    hover:-translate-y-1 hover:border-[var(--gold-500)]/50 hover:shadow-lg
+                    transition-all duration-300
                   "
                 >
-                  <span className="text-2xl flex-shrink-0">{place.icon}</span>
-                  <div>
-                    <p className="font-semibold text-sm text-[var(--dark-text)] group-hover:text-[var(--crimson-800)] transition-colors">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-[var(--cream-100)]">
+                    <Image
+                      src={place.image.src}
+                      alt={place.image.alt}
+                      fill
+                      sizes="(max-width: 640px) 50vw, 25vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" aria-hidden />
+                    <span className="absolute bottom-2 left-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-base shadow-sm" aria-hidden>
+                      {place.icon}
+                    </span>
+                  </div>
+                  <div className="p-3">
+                    <p className="font-semibold text-xs sm:text-sm text-[var(--dark-text)] group-hover:text-[var(--crimson-800)] transition-colors leading-snug">
                       {place.name}
-                    </p>
-                    <p className="text-xs text-[var(--muted-text)] mt-0.5 leading-relaxed">
-                      {place.description}
                     </p>
                   </div>
                 </motion.div>
