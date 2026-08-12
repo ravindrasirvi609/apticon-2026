@@ -12,7 +12,6 @@ import HeroBackgroundSlider from "./HeroBackgroundSlider";
 import { fadeUp, scaleIn } from "@/lib/animations";
 import { EVENT, RAIPUR_PLACES } from "@/lib/constants";
 
-const HERO_SLIDES = RAIPUR_PLACES.map((p) => p.image);
 const SLIDE_INTERVAL_MS = 5000;
 
 export default function HeroSection() {
@@ -20,7 +19,7 @@ export default function HeroSection() {
 
   useEffect(() => {
     const id = setInterval(
-      () => setSlideIndex((i) => (i + 1) % HERO_SLIDES.length),
+      () => setSlideIndex((i) => (i + 1) % RAIPUR_PLACES.length),
       SLIDE_INTERVAL_MS
     );
     return () => clearInterval(id);
@@ -31,7 +30,7 @@ export default function HeroSection() {
 
       {/* ── Background layers ─────────────────────────────── */}
       {/* Rotating photo background */}
-      <HeroBackgroundSlider slides={HERO_SLIDES} index={slideIndex} />
+      <HeroBackgroundSlider places={RAIPUR_PLACES} index={slideIndex} />
 
       {/* Gondi sun watermark */}
       <div
@@ -193,7 +192,7 @@ export default function HeroSection() {
       <div className="relative z-10 mt-auto w-full pb-6 md:pb-8 flex flex-col items-center gap-4">
         {/* Background photo slide indicators */}
         <div className="flex justify-center gap-2">
-          {HERO_SLIDES.map((_, i) => (
+          {RAIPUR_PLACES.map((_, i) => (
             <button
               key={i}
               type="button"

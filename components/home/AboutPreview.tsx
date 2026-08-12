@@ -96,8 +96,8 @@ export default function AboutPreview() {
             <motion.div variants={fadeLeft} className="relative mt-10 mb-6 w-full max-w-sm">
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg border-4 border-white">
                 <Image
-                  src="/cultural/Sirpur Archaeological Site.jpg"
-                  alt="Sirpur Archaeological Site near Raipur"
+                  src="/cultural/CHITRAKOTE.jpg"
+                  alt="Chitrakote Falls, the 'Niagara of India' in Chhattisgarh"
                   fill
                   sizes="(max-width: 768px) 100vw, 400px"
                   className="object-cover"
@@ -105,8 +105,8 @@ export default function AboutPreview() {
               </div>
               <div className="absolute -bottom-6 -right-6 w-28 sm:w-36 aspect-square rounded-2xl overflow-hidden shadow-xl border-4 border-white rotate-3">
                 <Image
-                  src="/cultural/Bhoramdeo Temple .jpg"
-                  alt="Bhoramdeo Temple in Chhattisgarh"
+                  src="/cultural/kotumsar-caves-jagdalpur-chhattisgarh-1-attr-hero.jpeg"
+                  alt="Kotumsar Caves near Jagdalpur, Chhattisgarh"
                   fill
                   sizes="144px"
                   className="object-cover"
