@@ -6,6 +6,15 @@ import { useThree, type ThreeEvent } from "@react-three/fiber";
 import type { RapierRigidBody } from "@react-three/rapier";
 import { RigidBodyType } from "@dimforge/rapier3d-compat";
 
+/**
+ * How much of the raw pointer-on-plane movement actually carries over to the card. Raycasting the
+ * literal cursor position onto the drag plane is "correct" but, at the scale this scene is
+ * framed, makes the badge cross the whole rig for a small mouse move — a heavier, damped badge
+ * reads as more physical (and more like something on the end of a lanyard) than one that snaps
+ * exactly to the cursor.
+ */
+const DRAG_GAIN = 0.45;
+
 /** Mutable scratch objects for the drag gesture — a ref, not memoized state, since these are
  *  written from pointer handlers/effects (outside render), never read for render output. */
 function createScratch() {
@@ -15,7 +24,9 @@ function createScratch() {
     plane: new THREE.Plane(),
     planeNormal: new THREE.Vector3(),
     dragPoint: new THREE.Vector3(),
-    grabOffset: new THREE.Vector3(),
+    dragStartHit: new THREE.Vector3(),
+    dragStartWorld: new THREE.Vector3(),
+    delta: new THREE.Vector3(),
     targetPoint: new THREE.Vector3(),
     prevPoint: new THREE.Vector3(),
     velocity: new THREE.Vector3(),
@@ -26,9 +37,10 @@ function createScratch() {
 /**
  * Drives the card's grab/drag/release lifecycle directly against its Rapier rigid body:
  * pointer-down flips it to a kinematic body the pointer can push around; pointer-move raycasts
- * onto a plane at the card's current depth so it tracks the cursor/finger in 3D; pointer-up hands
- * the last frame's velocity back to the (now dynamic-again) body so the release keeps momentum —
- * gravity, the rope joints, and their damping take it from there.
+ * onto a plane at the card's current depth and moves the card by a damped fraction of that
+ * movement (see DRAG_GAIN); pointer-up hands the last frame's velocity back to the (now
+ * dynamic-again) body so the release keeps momentum — gravity, the rope joints, and their damping
+ * take it from there.
  *
  * Window-level listeners (not R3F's per-mesh pointer props) are used for move/up so the drag keeps
  * tracking even once the pointer moves off the card's small hit area mid-swing.
@@ -65,13 +77,14 @@ export default function useBadgeDrag(
       const s = scratch.current;
 
       const t = body.translation();
+      s.dragStartWorld.set(t.x, t.y, t.z);
       camera.getWorldDirection(s.planeNormal);
-      s.plane.setFromNormalAndCoplanarPoint(s.planeNormal, new THREE.Vector3(t.x, t.y, t.z));
+      s.plane.setFromNormalAndCoplanarPoint(s.planeNormal, s.dragStartWorld);
 
       updatePointerNdc(event.nativeEvent.clientX, event.nativeEvent.clientY);
       raycastToPlane();
-      s.grabOffset.set(t.x - s.dragPoint.x, t.y - s.dragPoint.y, t.z - s.dragPoint.z);
-      s.prevPoint.set(t.x, t.y, t.z);
+      s.dragStartHit.copy(s.dragPoint);
+      s.prevPoint.copy(s.dragStartWorld);
       s.velocity.set(0, 0, 0);
       s.lastMoveTime = performance.now();
 
@@ -96,7 +109,8 @@ export default function useBadgeDrag(
 
       updatePointerNdc(event.clientX, event.clientY);
       raycastToPlane();
-      s.targetPoint.copy(s.dragPoint).add(s.grabOffset);
+      s.delta.subVectors(s.dragPoint, s.dragStartHit).multiplyScalar(DRAG_GAIN);
+      s.targetPoint.copy(s.dragStartWorld).add(s.delta);
 
       s.velocity
         .set(s.targetPoint.x - s.prevPoint.x, s.targetPoint.y - s.prevPoint.y, s.targetPoint.z - s.prevPoint.z)

@@ -14,7 +14,10 @@ interface Props {
  */
 export default function BadgeScene({ badge, onDragStart }: Props) {
   return (
-    <div className="h-[420px] sm:h-[480px] md:h-[540px] w-full touch-none" style={{ touchAction: "none" }}>
+    <div
+      className="mx-auto h-[420px] w-[280px] touch-none sm:h-[480px] sm:w-[320px] md:h-[540px] md:w-[360px]"
+      style={{ touchAction: "none" }}
+    >
       <Canvas
         dpr={[1, 2]}
         camera={{ position: [0, 1, 5.5], fov: 32 }}
