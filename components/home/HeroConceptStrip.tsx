@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 /**
@@ -22,9 +23,12 @@ export default function HeroConceptStrip() {
         aria-hidden
       >
         <div className="rounded-2xl border border-white/15 bg-white/95 px-4 py-2.5 shadow-2xl shadow-black/30 sm:px-6 sm:py-3">
-          <img
+          <Image
             src="/cultural/concept-strip.png"
             alt=""
+            width={710}
+            height={185}
+            sizes="(max-width: 640px) 17rem, (max-width: 768px) 28rem, (max-width: 1024px) 36rem, 42rem"
             className="h-auto w-full max-w-[17rem] select-none object-contain sm:max-w-md md:max-w-xl lg:max-w-2xl"
             draggable={false}
           />

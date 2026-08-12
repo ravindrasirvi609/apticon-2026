@@ -1,28 +1,40 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { EVENT } from "@/lib/constants";
 
-interface TimeLeft {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
+const TARGET_MS = EVENT.targetDate.getTime();
+
+/**
+ * The countdown reads from the system clock — an external, mutable source —
+ * so it subscribes via useSyncExternalStore rather than setting state in an
+ * effect. The server snapshot is `-1` ("not measured yet"), which keeps SSR
+ * markup identical to the first client render and avoids a hydration mismatch.
+ */
+let snapshot = -1;
+
+function measure() {
+  return Math.max(0, TARGET_MS - Date.now());
 }
+
+function subscribe(onStoreChange: () => void) {
+  // Seed a real value; React re-reads the snapshot right after subscribing.
+  snapshot = measure();
+  onStoreChange();
+
+  const id = setInterval(() => {
+    snapshot = measure();
+    onStoreChange();
+  }, 1000);
+
+  return () => clearInterval(id);
+}
+
+const getSnapshot = () => snapshot;
+const getServerSnapshot = () => -1;
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
-}
-
-function getTimeLeft(): TimeLeft {
-  const diff = EVENT.targetDate.getTime() - Date.now();
-  if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  return {
-    days:    Math.floor(diff / (1000 * 60 * 60 * 24)),
-    hours:   Math.floor((diff / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((diff / (1000 * 60)) % 60),
-    seconds: Math.floor((diff / 1000) % 60),
-  };
 }
 
 const UNIT_LABELS = ["Days", "Hours", "Mins", "Secs"] as const;
@@ -55,23 +67,22 @@ function Unit({ value, label }: { value: string; label: string }) {
 }
 
 export default function CountdownTimer() {
-  // null on server — avoids Date.now() hydration mismatch
-  const [time, setTime] = useState<TimeLeft | null>(null);
+  const remaining = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const ready = remaining >= 0;
 
-  useEffect(() => {
-    setTime(getTimeLeft());
-    const id = setInterval(() => setTime(getTimeLeft()), 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  const values = time
-    ? [String(time.days), pad(time.hours), pad(time.minutes), pad(time.seconds)]
+  const values = ready
+    ? [
+        String(Math.floor(remaining / 86_400_000)),
+        pad(Math.floor((remaining / 3_600_000) % 24)),
+        pad(Math.floor((remaining / 60_000) % 60)),
+        pad(Math.floor((remaining / 1000) % 60)),
+      ]
     : ["--", "--", "--", "--"];
 
   return (
     <div
       className={`flex flex-col items-center gap-3 transition-opacity duration-500 ${
-        time ? "opacity-100" : "opacity-0"
+        ready ? "opacity-100" : "opacity-0"
       }`}
     >
       <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--accent-300)] sm:text-xs">

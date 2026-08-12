@@ -5,7 +5,7 @@ import { MapPin, Plane, Train, Car } from "lucide-react";
 import { staggerContainer, fadeLeft, fadeRight } from "@/lib/animations";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import PulseButton from "@/components/ui/PulseButton";
-import { RAIPUR_PLACES, EVENT } from "@/lib/constants";
+import { RAIPUR_PLACES } from "@/lib/constants";
 
 const TRANSPORT = [
   { icon: Plane, label: "By Air", detail: "Swami Vivekananda Airport (RPR) — 15 km from venue" },
