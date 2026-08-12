@@ -13,7 +13,7 @@ interface LayoutProps {
 
 export function LegalPageLayout({ badge, title, subtitle, updated, children }: LayoutProps) {
   return (
-    <div className="bg-[var(--cream-50)] min-h-screen">
+    <div className="bg-[var(--surface-50)] min-h-screen">
       <section className="relative py-20 md:py-24 overflow-hidden">
         <div className="absolute inset-0 tribal-pattern-bg opacity-30" aria-hidden />
         <div className="container-site relative z-10 text-center">
@@ -27,7 +27,7 @@ export function LegalPageLayout({ badge, title, subtitle, updated, children }: L
             </p>
           )}
           {updated && (
-            <p className="mt-4 text-xs font-semibold tracking-widest uppercase text-[var(--gold-500)]">
+            <p className="mt-4 text-xs font-semibold tracking-widest uppercase text-[var(--accent-500)]">
               Last updated: {updated}
             </p>
           )}
@@ -39,7 +39,7 @@ export function LegalPageLayout({ badge, title, subtitle, updated, children }: L
       <section className="py-16 md:py-20">
         <div className="container-site">
           <ScrollReveal>
-            <div className="max-w-3xl mx-auto rounded-2xl bg-white border border-[var(--gold-500)]/15 shadow-sm p-6 md:p-10">
+            <div className="max-w-3xl mx-auto rounded-2xl bg-white border border-[var(--accent-500)]/15 shadow-sm p-6 md:p-10">
               {children}
             </div>
           </ScrollReveal>
@@ -70,7 +70,7 @@ export function LegalList({ items }: { items: React.ReactNode[] }) {
     <ul className="space-y-3 mb-4">
       {items.map((item, i) => (
         <li key={i} className="flex gap-3 text-sm md:text-base text-[var(--muted-text)] leading-relaxed">
-          <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--gold-500)] shrink-0" />
+          <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--accent-500)] shrink-0" />
           <span>{item}</span>
         </li>
       ))}

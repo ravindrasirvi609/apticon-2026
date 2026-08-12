@@ -18,15 +18,15 @@ export default function ThemeSection() {
       {/* Wave top */}
       <CulturalDivider variant="wave" />
 
-      <div className="bg-[var(--crimson-800)] relative">
+      <div className="bg-[var(--primary-800)] relative">
         {/* Tribal pattern overlay */}
         <div
           aria-hidden
           className="absolute inset-0 tribal-pattern-bg opacity-[0.06] pointer-events-none"
         />
         {/* Gold shimmer lines */}
-        <div aria-hidden className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--gold-500)]/60 to-transparent" />
-        <div aria-hidden className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--gold-500)]/60 to-transparent" />
+        <div aria-hidden className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--accent-500)]/60 to-transparent" />
+        <div aria-hidden className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--accent-500)]/60 to-transparent" />
 
         <div className="container-site py-20 md:py-28 relative z-10">
           <motion.div
@@ -38,10 +38,10 @@ export default function ThemeSection() {
           >
             {/* Theme badge */}
             <motion.div variants={scaleIn} className="flex justify-center mb-6">
-              <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-[var(--gold-500)]/40 bg-[var(--gold-500)]/10 text-[var(--gold-400)] text-xs font-bold tracking-widest uppercase">
-                <span className="w-4 h-px bg-[var(--gold-500)]/50" />
+              <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-[var(--accent-500)]/40 bg-[var(--accent-500)]/10 text-[var(--accent-400)] text-xs font-bold tracking-widest uppercase">
+                <span className="w-4 h-px bg-[var(--accent-500)]/50" />
                 Conference Theme
-                <span className="w-4 h-px bg-[var(--gold-500)]/50" />
+                <span className="w-4 h-px bg-[var(--accent-500)]/50" />
               </span>
             </motion.div>
 
@@ -55,7 +55,7 @@ export default function ThemeSection() {
             </motion.h2>
 
             {/* Hindi */}
-            <motion.p variants={fadeUp} className="mt-4 font-devanagari text-lg md:text-xl text-[var(--gold-400)]/80">
+            <motion.p variants={fadeUp} className="mt-4 font-devanagari text-lg md:text-xl text-[var(--accent-400)]/80">
               {EVENT.themeHindi}
             </motion.p>
 
@@ -65,14 +65,14 @@ export default function ThemeSection() {
                 <span className="text-2xl">🚀</span>
                 <div className="text-left">
                   <p className="text-xs text-white/60 font-semibold tracking-widest uppercase">Sub-Vision</p>
-                  <p className="text-sm font-bold text-[var(--gold-400)]">{EVENT.vision}</p>
+                  <p className="text-sm font-bold text-[var(--accent-400)]">{EVENT.vision}</p>
                 </div>
               </div>
             </motion.div>
 
             {/* Lotus divider */}
             <motion.div variants={fadeUp} className="mt-12">
-              <CulturalDivider variant="lotus-row" className="[&>div]:bg-[var(--gold-500)]/20 [&_span]:border-[var(--gold-500)]/20" />
+              <CulturalDivider variant="lotus-row" className="[&>div]:bg-[var(--accent-500)]/20 [&_span]:border-[var(--accent-500)]/20" />
             </motion.div>
 
             {/* Pillars grid */}
@@ -87,12 +87,12 @@ export default function ThemeSection() {
                   className="
                     group rounded-2xl p-6 text-left
                     bg-white/8 border border-white/10
-                    hover:bg-white/15 hover:border-[var(--gold-500)]/30
+                    hover:bg-white/15 hover:border-[var(--accent-500)]/30
                     transition-all duration-300
                   "
                 >
                   <span className="text-3xl mb-4 block">{p.icon}</span>
-                  <h3 className="font-display font-bold text-white text-lg mb-2 group-hover:text-[var(--gold-400)] transition-colors">
+                  <h3 className="font-display font-bold text-white text-lg mb-2 group-hover:text-[var(--accent-400)] transition-colors">
                     {p.title}
                   </h3>
                   <p className="text-sm text-white/65 leading-relaxed">{p.desc}</p>
@@ -102,7 +102,7 @@ export default function ThemeSection() {
 
             {/* CTA */}
             <motion.div variants={fadeUp} className="mt-12">
-              <PulseButton href="/about" variant="gold">
+              <PulseButton href="/about" variant="accent">
                 Know More About 28th APTICON
               </PulseButton>
             </motion.div>

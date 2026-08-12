@@ -30,14 +30,14 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
   return (
     <span ref={ref} className="tabular-nums">
       {count}
-      <span className="text-[var(--gold-500)]">{suffix}</span>
+      <span className="text-[var(--accent-500)]">{suffix}</span>
     </span>
   );
 }
 
 export default function AboutPreview() {
   return (
-    <section className="relative py-20 md:py-28 bg-[var(--cream-50)]">
+    <section className="relative py-20 md:py-28 bg-[var(--surface-50)]">
       {/* Gondi sun watermark */}
       <div className="absolute right-0 top-0 w-72 h-72 opacity-30 pointer-events-none" aria-hidden>
         <img src="/cultural/gondi-sun.svg" alt="" className="w-full h-full" />
@@ -62,7 +62,7 @@ export default function AboutPreview() {
               className="mt-5 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-[var(--dark-text)] leading-tight"
             >
               India's Premier{" "}
-              <span className="text-gradient-crimson">Pharmacy</span>{" "}
+              <span className="text-gradient-primary">Pharmacy</span>{" "}
               Education Convention
             </motion.h2>
 
@@ -76,7 +76,7 @@ export default function AboutPreview() {
 
             <motion.p variants={fadeLeft} className="mt-4 text-base text-[var(--muted-text)] leading-relaxed">
               The 28th edition is proudly hosted by{" "}
-              <strong className="text-[var(--crimson-800)]">APTI Chhattisgarh State Branch</strong>{" "}
+              <strong className="text-[var(--primary-800)]">APTI Chhattisgarh State Branch</strong>{" "}
               in association with the{" "}
               <strong className="text-[var(--dark-text)]">
                 University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur
@@ -88,7 +88,7 @@ export default function AboutPreview() {
               <CulturalDivider variant="lotus-row" className="justify-start max-w-xs" />
             </motion.div>
 
-            <motion.p variants={fadeLeft} className="mt-4 font-devanagari text-sm text-[var(--crimson-800)]/70">
+            <motion.p variants={fadeLeft} className="mt-4 font-devanagari text-sm text-[var(--primary-800)]/70">
               "विकसित फार्मासिस्ट — आत्मनिर्भर भारत की नींव"
             </motion.p>
 
@@ -114,7 +114,7 @@ export default function AboutPreview() {
               </div>
               <span
                 aria-hidden
-                className="absolute -top-3 -left-3 w-10 h-10 rounded-full bg-[var(--gold-500)]/15 border border-[var(--gold-500)]/30 flex items-center justify-center text-lg"
+                className="absolute -top-3 -left-3 w-10 h-10 rounded-full bg-[var(--accent-500)]/15 border border-[var(--accent-500)]/30 flex items-center justify-center text-lg"
               >
                 📍
               </span>
@@ -132,7 +132,7 @@ export default function AboutPreview() {
             {/* Bastar art border frame */}
             <div className="absolute -inset-4 rounded-3xl overflow-hidden pointer-events-none" aria-hidden>
               <CulturalDivider variant="bastar" />
-              <div className="flex-1 border-x-2 border-[var(--gold-500)]/20 h-full" />
+              <div className="flex-1 border-x-2 border-[var(--accent-500)]/20 h-full" />
               <CulturalDivider variant="bastar" />
             </div>
 
@@ -146,12 +146,12 @@ export default function AboutPreview() {
                   transition={{ delay: i * 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                   className="
                     relative rounded-2xl p-6 text-center
-                    bg-white shadow-sm border border-[var(--gold-500)]/15
-                    hover:shadow-md hover:border-[var(--gold-500)]/40
+                    bg-white shadow-sm border border-[var(--accent-500)]/15
+                    hover:shadow-md hover:border-[var(--accent-500)]/40
                     transition-all duration-300
                   "
                 >
-                  <p className="font-display font-black text-4xl md:text-5xl text-[var(--crimson-800)]">
+                  <p className="font-display font-black text-4xl md:text-5xl text-[var(--primary-800)]">
                     <CountUp target={stat.value} suffix={stat.suffix} />
                   </p>
                   <p className="mt-2 text-xs sm:text-sm font-semibold text-[var(--muted-text)] leading-snug">
@@ -160,7 +160,7 @@ export default function AboutPreview() {
                   {/* Gold corner accent */}
                   <span
                     aria-hidden
-                    className="absolute top-3 right-3 w-2 h-2 rounded-full bg-[var(--gold-500)]/40"
+                    className="absolute top-3 right-3 w-2 h-2 rounded-full bg-[var(--accent-500)]/40"
                   />
                 </motion.div>
               ))}

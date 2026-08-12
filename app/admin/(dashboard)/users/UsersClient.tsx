@@ -128,7 +128,7 @@ export default function UsersClient() {
                         type="button"
                         onClick={() => setForm({ ...form, role: r })}
                         className={`px-4 py-2 rounded-lg border text-sm font-medium text-left ${
-                          form.role === r ? "bg-[var(--crimson-800)] text-white border-[var(--crimson-800)]" : "bg-white border-[var(--gold-500)]/30"
+                          form.role === r ? "bg-[var(--primary-800)] text-white border-[var(--primary-800)]" : "bg-white border-[var(--accent-500)]/30"
                         }`}
                       >
                         {ROLE_LABEL[r]}

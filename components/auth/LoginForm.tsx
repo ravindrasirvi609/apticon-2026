@@ -59,11 +59,11 @@ export default function LoginForm({ role, title, subtitle, successPath, forgotPa
   }
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-[var(--cream-50)] px-4 py-12">
+    <div className="min-h-dvh flex items-center justify-center bg-[var(--surface-50)] px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-[var(--crimson-800)] to-[var(--crimson-900)] flex items-center justify-center mb-3">
-            <LogIn className="w-6 h-6 text-[var(--gold-300)]" />
+          <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-[var(--primary-800)] to-[var(--primary-900)] flex items-center justify-center mb-3">
+            <LogIn className="w-6 h-6 text-[var(--accent-300)]" />
           </div>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{subtitle}</CardDescription>
@@ -86,7 +86,7 @@ export default function LoginForm({ role, title, subtitle, successPath, forgotPa
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <Link href={forgotPath} className="text-xs text-[var(--crimson-800)] hover:underline">
+                <Link href={forgotPath} className="text-xs text-[var(--primary-800)] hover:underline">
                   Forgot?
                 </Link>
               </div>

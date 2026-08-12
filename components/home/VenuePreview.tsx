@@ -15,7 +15,7 @@ const TRANSPORT = [
 
 export default function VenuePreview() {
   return (
-    <section className="py-20 md:py-28 bg-[var(--cream-50)] overflow-hidden">
+    <section className="py-20 md:py-28 bg-[var(--surface-50)] overflow-hidden">
       <div className="container-site">
 
         {/* Header */}
@@ -33,7 +33,7 @@ export default function VenuePreview() {
             variants={fadeLeft}
             className="mt-5 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-[var(--dark-text)]"
           >
-            Heart of <span className="text-gradient-crimson">Chhattisgarh</span>
+            Heart of <span className="text-gradient-primary">Chhattisgarh</span>
           </motion.h2>
           <motion.p variants={fadeLeft} className="mt-4 text-[var(--muted-text)] max-w-2xl mx-auto text-base md:text-lg">
             Raipur — the vibrant capital city, home to ancient temples, tribal heritage, and modern academia.
@@ -50,7 +50,7 @@ export default function VenuePreview() {
             variants={fadeLeft}
           >
             {/* Map embed */}
-            <div className="rounded-2xl overflow-hidden shadow-lg border border-[var(--gold-500)]/20 aspect-[4/3]">
+            <div className="rounded-2xl overflow-hidden shadow-lg border border-[var(--accent-500)]/20 aspect-[4/3]">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3718.8!2d81.6296!3d21.2514!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a28dd5a7b4dd70d%3A0xf5b2ec7c97b86d3e!2sPt.%20Deendayal%20Upadhyaya%20Auditorium!5e0!3m2!1sen!2sin!4v1"
                 width="100%"
@@ -64,10 +64,10 @@ export default function VenuePreview() {
             </div>
 
             {/* Venue card */}
-            <div className="mt-4 rounded-2xl bg-white border border-[var(--gold-500)]/20 p-5 shadow-sm">
+            <div className="mt-4 rounded-2xl bg-white border border-[var(--accent-500)]/20 p-5 shadow-sm">
               <div className="flex gap-3 items-start">
-                <div className="w-10 h-10 rounded-full bg-[var(--crimson-800)]/10 flex items-center justify-center flex-shrink-0">
-                  <MapPin size={18} className="text-[var(--crimson-800)]" />
+                <div className="w-10 h-10 rounded-full bg-[var(--primary-800)]/10 flex items-center justify-center flex-shrink-0">
+                  <MapPin size={18} className="text-[var(--primary-800)]" />
                 </div>
                 <div>
                   <p className="font-bold text-[var(--dark-text)]">Pt. Deendayal Upadhyay Auditorium</p>
@@ -76,8 +76,8 @@ export default function VenuePreview() {
               </div>
               <div className="mt-4 grid grid-cols-3 gap-3">
                 {TRANSPORT.map(({ icon: Icon, label, detail }) => (
-                  <div key={label} className="text-center p-3 rounded-xl bg-[var(--cream-100)]">
-                    <Icon size={18} className="mx-auto text-[var(--crimson-800)] mb-1" />
+                  <div key={label} className="text-center p-3 rounded-xl bg-[var(--surface-100)]">
+                    <Icon size={18} className="mx-auto text-[var(--primary-800)] mb-1" />
                     <p className="text-xs font-bold text-[var(--dark-text)]">{label}</p>
                     <p className="text-[10px] text-[var(--muted-text)] mt-0.5 leading-snug hidden sm:block">{detail}</p>
                   </div>
@@ -94,7 +94,7 @@ export default function VenuePreview() {
             variants={fadeRight}
           >
             <h3 className="font-display font-bold text-2xl text-[var(--dark-text)] mb-6">
-              Explore <span className="text-gradient-gold">Raipur</span>
+              Explore <span className="text-gradient-accent">Raipur</span>
             </h3>
             <div className="grid grid-cols-2 gap-4">
               {RAIPUR_PLACES.slice(0, 4).map((place, i) => (
@@ -106,12 +106,12 @@ export default function VenuePreview() {
                   transition={{ delay: i * 0.1, duration: 0.5 }}
                   className="
                     group relative overflow-hidden rounded-2xl
-                    border border-[var(--gold-500)]/15 bg-white shadow-sm
-                    hover:-translate-y-1 hover:border-[var(--gold-500)]/50 hover:shadow-lg
+                    border border-[var(--accent-500)]/15 bg-white shadow-sm
+                    hover:-translate-y-1 hover:border-[var(--accent-500)]/50 hover:shadow-lg
                     transition-all duration-300
                   "
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-[var(--cream-100)]">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-[var(--surface-100)]">
                     <Image
                       src={place.image.src}
                       alt={place.image.alt}
@@ -125,7 +125,7 @@ export default function VenuePreview() {
                     </span>
                   </div>
                   <div className="p-3">
-                    <p className="font-semibold text-xs sm:text-sm text-[var(--dark-text)] group-hover:text-[var(--crimson-800)] transition-colors leading-snug">
+                    <p className="font-semibold text-xs sm:text-sm text-[var(--dark-text)] group-hover:text-[var(--primary-800)] transition-colors leading-snug">
                       {place.name}
                     </p>
                   </div>
@@ -134,7 +134,7 @@ export default function VenuePreview() {
             </div>
 
             <div className="mt-8">
-              <PulseButton href="/venue" variant="crimson">
+              <PulseButton href="/venue" variant="primary">
                 Full Venue & Travel Guide
               </PulseButton>
             </div>

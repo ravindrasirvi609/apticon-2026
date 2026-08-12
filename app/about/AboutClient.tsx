@@ -26,7 +26,7 @@ const ABOUT_SECTIONS = [
     subtitle: "Association of Pharmaceutical Teachers of India",
     body: "Founded to unite pharmacy educators across India, APTI is the apex body representing pharmaceutical teachers at all levels. With a network of over 1,000 members spanning every state, APTI shapes the academic and professional direction of pharmacy education in India.",
     icon: "🏛️",
-    color: "from-[var(--crimson-800)] to-[var(--crimson-900)]",
+    color: "from-[var(--primary-800)] to-[var(--primary-900)]",
   },
   {
     title: "APTI Chhattisgarh",
@@ -40,23 +40,23 @@ const ABOUT_SECTIONS = [
     subtitle: "Pt. Ravishankar Shukla University, Raipur",
     body: "Established as a premier centre for pharmaceutical education in Chhattisgarh, UIP at Pt. RSU offers undergraduate, postgraduate and doctoral programmes. The university holds NAAC 'A+' accreditation and has produced thousands of pharmacy graduates serving across India and abroad.",
     icon: "🎓",
-    color: "from-[var(--navy-800)] to-[var(--navy-900)]",
+    color: "from-[var(--secondary-800)] to-[var(--secondary-900)]",
   },
   {
     title: "Pt. Ravishankar Shukla University",
     subtitle: "NAAC A+ Accredited — Raipur, C.G.",
     body: "Named after Chhattisgarh's first Chief Minister, Pt. RSU is one of the largest universities in central India. Spread across a lush campus in Raipur, the university is home to 35+ departments and has been consistently accredited at the highest grade by NAAC.",
     icon: "🏫",
-    color: "from-[var(--gold-500)] to-amber-600",
+    color: "from-[var(--accent-500)] to-amber-600",
   },
 ];
 
 function MemberCard({ member }: { member: (typeof NATIONAL_BODY)[number] }) {
-  const gradient = "from-[var(--crimson-800)] to-[var(--gold-500)]";
+  const gradient = "from-[var(--primary-800)] to-[var(--accent-500)]";
   return (
     <motion.div
       variants={fadeUp}
-      className="rounded-2xl bg-white border border-[var(--gold-500)]/15 overflow-hidden shadow-sm hover:shadow-md hover:border-[var(--gold-500)]/40 transition-all duration-300 group"
+      className="rounded-2xl bg-white border border-[var(--accent-500)]/15 overflow-hidden shadow-sm hover:shadow-md hover:border-[var(--accent-500)]/40 transition-all duration-300 group"
     >
       <div className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />
       <div className="p-5 flex gap-4 items-start">
@@ -78,7 +78,7 @@ function MemberCard({ member }: { member: (typeof NATIONAL_BODY)[number] }) {
               {member.role}
             </span>
           )}
-          <p className="font-semibold text-sm text-[var(--dark-text)] leading-snug truncate group-hover:text-[var(--crimson-800)] transition-colors">
+          <p className="font-semibold text-sm text-[var(--dark-text)] leading-snug truncate group-hover:text-[var(--primary-800)] transition-colors">
             {member.name}
           </p>
           <p className="text-xs text-[var(--muted-text)] mt-0.5 leading-snug">{member.designation}</p>
@@ -86,7 +86,7 @@ function MemberCard({ member }: { member: (typeof NATIONAL_BODY)[number] }) {
           {member.email && (
             <a
               href={`mailto:${member.email}`}
-              className="mt-1 inline-flex items-center gap-1 text-xs text-[var(--crimson-800)] hover:underline truncate"
+              className="mt-1 inline-flex items-center gap-1 text-xs text-[var(--primary-800)] hover:underline truncate"
             >
               <Mail size={11} className="flex-shrink-0" />
               <span className="truncate">{member.email}</span>
@@ -100,7 +100,7 @@ function MemberCard({ member }: { member: (typeof NATIONAL_BODY)[number] }) {
 
 export default function AboutClient() {
   return (
-    <div className="bg-[var(--cream-50)] min-h-screen">
+    <div className="bg-[var(--surface-50)] min-h-screen">
 
       {/* Hero */}
       <section className="relative py-24 md:py-32 overflow-hidden">
@@ -111,7 +111,7 @@ export default function AboutClient() {
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>About</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            About <span className="text-gradient-crimson">APTICON</span> 2026
+            About <span className="text-gradient-primary">APTICON</span> 2026
           </h1>
           <p className="mt-6 text-base md:text-xl text-[var(--muted-text)] max-w-2xl mx-auto leading-relaxed">
             The 28th Annual National Convention of the Association of Pharmaceutical Teachers of India — uniting educators, researchers, and leaders to shape the future of pharmacy.
@@ -127,13 +127,13 @@ export default function AboutClient() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {ABOUT_SECTIONS.map((s, i) => (
               <ScrollReveal key={s.title} delay={i * 0.1}>
-                <div className="rounded-2xl overflow-hidden border border-[var(--gold-500)]/15 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col sm:flex-row">
+                <div className="rounded-2xl overflow-hidden border border-[var(--accent-500)]/15 bg-white shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col sm:flex-row">
                   <div className={`w-full sm:w-20 py-6 sm:py-0 flex items-center justify-center bg-gradient-to-b ${s.color} flex-shrink-0`}>
                     <span className="text-4xl">{s.icon}</span>
                   </div>
                   <div className="p-6">
                     <h3 className="font-display font-bold text-xl text-[var(--dark-text)]">{s.title}</h3>
-                    <p className="text-xs font-semibold text-[var(--gold-500)] tracking-wide uppercase mt-1 mb-3">{s.subtitle}</p>
+                    <p className="text-xs font-semibold text-[var(--accent-500)] tracking-wide uppercase mt-1 mb-3">{s.subtitle}</p>
                     <p className="text-sm text-[var(--muted-text)] leading-relaxed">{s.body}</p>
                   </div>
                 </div>
@@ -144,12 +144,12 @@ export default function AboutClient() {
       </section>
 
       {/* National Body */}
-      <section className="py-20 md:py-24 bg-[var(--cream-100)]">
+      <section className="py-20 md:py-24 bg-[var(--surface-100)]">
         <div className="container-site">
           <ScrollReveal className="mb-12 text-center">
             <GoldenBadge>APTI National Body</GoldenBadge>
             <h2 className="mt-4 font-display font-bold text-2xl sm:text-3xl md:text-4xl text-[var(--dark-text)]">
-              National <span className="text-gradient-crimson">Office Bearers</span>
+              National <span className="text-gradient-primary">Office Bearers</span>
             </h2>
           </ScrollReveal>
           <motion.div
@@ -167,11 +167,11 @@ export default function AboutClient() {
       </section>
 
       {/* Viksit Bharat section */}
-      <section className="py-16 bg-[var(--navy-900)] relative overflow-hidden">
+      <section className="py-16 bg-[var(--secondary-900)] relative overflow-hidden">
         <div className="absolute inset-0 tribal-pattern-bg opacity-5" aria-hidden />
         <div className="container-site relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--gold-500)]/40 bg-[var(--gold-500)]/10 text-[var(--gold-400)] text-xs font-bold tracking-widest uppercase mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--accent-500)]/40 bg-[var(--accent-500)]/10 text-[var(--accent-400)] text-xs font-bold tracking-widest uppercase mb-6">
               Vision 2047
             </span>
             <h2 className="font-display font-bold text-3xl md:text-4xl text-white mb-6">
@@ -183,7 +183,7 @@ export default function AboutClient() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
               {["Skilled Pharmacy Graduates","Indigenous Drug Development","Community Health Champions"].map((item, i) => (
                 <div key={i} className="flex gap-3 items-start p-4 rounded-xl bg-white/5 border border-white/10">
-                  <span className="text-[var(--gold-400)] font-black font-display text-xl leading-none">{String(i+1).padStart(2,"0")}</span>
+                  <span className="text-[var(--accent-400)] font-black font-display text-xl leading-none">{String(i+1).padStart(2,"0")}</span>
                   <p className="text-sm text-white/80 font-medium leading-snug">{item}</p>
                 </div>
               ))}
@@ -193,18 +193,18 @@ export default function AboutClient() {
       </section>
 
       {/* History Timeline */}
-      <section className="py-20 md:py-28 bg-[var(--cream-50)]">
+      <section className="py-20 md:py-28 bg-[var(--surface-50)]">
         <div className="container-site">
           <ScrollReveal className="text-center mb-16">
             <GoldenBadge>Our Journey</GoldenBadge>
             <h2 className="mt-5 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-[var(--dark-text)]">
-              28 Editions of <span className="text-gradient-gold">Excellence</span>
+              28 Editions of <span className="text-gradient-accent">Excellence</span>
             </h2>
           </ScrollReveal>
 
           <div className="relative max-w-3xl mx-auto">
             {/* Vertical line */}
-            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--gold-500)] via-[var(--crimson-800)] to-[var(--gold-500)] -translate-x-px" aria-hidden />
+            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--accent-500)] via-[var(--primary-800)] to-[var(--accent-500)] -translate-x-px" aria-hidden />
 
             {HISTORY.map((h, i) => (
               <motion.div
@@ -217,19 +217,19 @@ export default function AboutClient() {
               >
                 {/* Dot */}
                 <div className={`absolute top-3 left-3 md:left-auto ${i % 2 === 0 ? "md:-right-3.5" : "md:-left-3.5"} w-7 h-7 rounded-full border-2 flex items-center justify-center z-10
-                  ${h.current ? "border-[var(--gold-500)] bg-[var(--gold-500)]" : "border-[var(--crimson-800)] bg-white"}`}
+                  ${h.current ? "border-[var(--accent-500)] bg-[var(--accent-500)]" : "border-[var(--primary-800)] bg-white"}`}
                 >
                   {h.current && <span className="text-[10px] font-black text-white">★</span>}
                 </div>
 
                 <div className={`rounded-2xl p-5 border shadow-sm
                   ${h.current
-                    ? "bg-[var(--crimson-800)] border-[var(--gold-500)]/40 text-white"
-                    : "bg-white border-[var(--gold-500)]/20 text-[var(--dark-text)]"}`}
+                    ? "bg-[var(--primary-800)] border-[var(--accent-500)]/40 text-white"
+                    : "bg-white border-[var(--accent-500)]/20 text-[var(--dark-text)]"}`}
                 >
                   <div className="flex items-center gap-3 mb-1 flex-wrap">
-                    <span className={`font-display font-black text-2xl ${h.current ? "text-[var(--gold-400)]" : "text-[var(--crimson-800)]"}`}>{h.year}</span>
-                    <span className={`text-xs font-bold tracking-widest uppercase px-2 py-0.5 rounded-sm ${h.current ? "bg-[var(--gold-500)]/20 text-[var(--gold-400)]" : "bg-[var(--cream-200)] text-[var(--muted-text)]"}`}>{h.edition} Edition</span>
+                    <span className={`font-display font-black text-2xl ${h.current ? "text-[var(--accent-400)]" : "text-[var(--primary-800)]"}`}>{h.year}</span>
+                    <span className={`text-xs font-bold tracking-widest uppercase px-2 py-0.5 rounded-sm ${h.current ? "bg-[var(--accent-500)]/20 text-[var(--accent-400)]" : "bg-[var(--surface-200)] text-[var(--muted-text)]"}`}>{h.edition} Edition</span>
                   </div>
                   <p className={`font-semibold text-sm ${h.current ? "text-white" : "text-[var(--dark-text)]"}`}>{h.city}</p>
                   <p className={`text-xs mt-1 ${h.current ? "text-white/70" : "text-[var(--muted-text)]"}`}>{h.note}</p>
@@ -243,7 +243,7 @@ export default function AboutClient() {
       <CulturalDivider variant="lotus-row" className="container-site" />
 
       <div className="py-12 text-center">
-        <PulseButton href="/registration" variant="gold" pulse>Register for APTICON 2026</PulseButton>
+        <PulseButton href="/registration" variant="accent" pulse>Register for APTICON 2026</PulseButton>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
   <rect width="60" height="60" fill="none"/>
   <!-- Bastar-inspired geometric tile -->
-  <g opacity="0.18" fill="none" stroke="#8B1A1A" stroke-width="1">
+  <g opacity="0.18" fill="none" stroke="#312E81" stroke-width="1">
     <!-- Outer diamond -->
     <polygon points="30,4 56,30 30,56 4,30"/>
     <!-- Inner diamond -->
@@ -10,11 +10,11 @@
     <line x1="30" y1="14" x2="30" y2="46"/>
     <line x1="14" y1="30" x2="46" y2="30"/>
     <!-- Corner dots -->
-    <circle cx="30" cy="4"  r="2" fill="#D4AF37" stroke="none"/>
-    <circle cx="56" cy="30" r="2" fill="#D4AF37" stroke="none"/>
-    <circle cx="30" cy="56" r="2" fill="#D4AF37" stroke="none"/>
-    <circle cx="4"  cy="30" r="2" fill="#D4AF37" stroke="none"/>
+    <circle cx="30" cy="4"  r="2" fill="#EA580C" stroke="none"/>
+    <circle cx="56" cy="30" r="2" fill="#EA580C" stroke="none"/>
+    <circle cx="30" cy="56" r="2" fill="#EA580C" stroke="none"/>
+    <circle cx="4"  cy="30" r="2" fill="#EA580C" stroke="none"/>
     <!-- Center -->
-    <circle cx="30" cy="30" r="3" fill="#8B1A1A" stroke="none"/>
+    <circle cx="30" cy="30" r="3" fill="#312E81" stroke="none"/>
   </g>
 </svg>

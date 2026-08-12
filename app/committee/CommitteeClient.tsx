@@ -19,7 +19,7 @@ interface Member {
 const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
   {
     group: "National Body",
-    color: "from-[var(--crimson-800)] to-[var(--gold-500)]",
+    color: "from-[var(--primary-800)] to-[var(--accent-500)]",
     members: NATIONAL_BODY.map((m) => ({
       name: m.name,
       designation: m.designation,
@@ -31,7 +31,7 @@ const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
   },
   {
     group: "Patrons",
-    color: "from-[var(--gold-500)] to-amber-600",
+    color: "from-[var(--accent-500)] to-amber-600",
     members: [
       { name: "Vice Chancellor", designation: "Vice Chancellor", institution: "Pt. Ravishankar Shukla University, Raipur", role: "Chief Patron" },
       { name: "APTI National President", designation: "National President, APTI", institution: "To Be Announced", role: "Patron" },
@@ -39,7 +39,7 @@ const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
   },
   {
     group: "Organizing Leadership",
-    color: "from-[var(--crimson-800)] to-[var(--crimson-900)]",
+    color: "from-[var(--primary-800)] to-[var(--primary-900)]",
     members: [
       { name: "Organizing Chairman", designation: "Professor & Head", institution: "University Institute of Pharmacy, Pt. RSU, Raipur", role: "Chairman" },
       { name: "Organizing Secretary", designation: "Associate Professor", institution: "University Institute of Pharmacy, Pt. RSU, Raipur", role: "Secretary" },
@@ -49,7 +49,7 @@ const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
   },
   {
     group: "Scientific Committee",
-    color: "from-[var(--navy-800)] to-[var(--navy-900)]",
+    color: "from-[var(--secondary-800)] to-[var(--secondary-900)]",
     members: [
       { name: "Scientific Chairperson", designation: "Professor", institution: "To Be Announced" },
       { name: "Scientific Co-Chair", designation: "Associate Professor", institution: "To Be Announced" },
@@ -92,7 +92,7 @@ function MemberCard({ member, gradient }: { member: Member; gradient: string }) 
   return (
     <motion.div
       variants={fadeUp}
-      className="rounded-2xl bg-white border border-[var(--gold-500)]/15 overflow-hidden shadow-sm hover:shadow-md hover:border-[var(--gold-500)]/40 transition-all duration-300 group"
+      className="rounded-2xl bg-white border border-[var(--accent-500)]/15 overflow-hidden shadow-sm hover:shadow-md hover:border-[var(--accent-500)]/40 transition-all duration-300 group"
     >
       {/* Color strip */}
       <div className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />
@@ -115,7 +115,7 @@ function MemberCard({ member, gradient }: { member: Member; gradient: string }) 
               {member.role}
             </span>
           )}
-          <p className="font-semibold text-sm text-[var(--dark-text)] leading-snug truncate group-hover:text-[var(--crimson-800)] transition-colors">
+          <p className="font-semibold text-sm text-[var(--dark-text)] leading-snug truncate group-hover:text-[var(--primary-800)] transition-colors">
             {member.name}
           </p>
           <p className="text-xs text-[var(--muted-text)] mt-0.5 leading-snug">{member.designation}</p>
@@ -123,7 +123,7 @@ function MemberCard({ member, gradient }: { member: Member; gradient: string }) 
           {member.email && (
             <a
               href={`mailto:${member.email}`}
-              className="mt-1 inline-flex items-center gap-1 text-xs text-[var(--crimson-800)] hover:underline truncate"
+              className="mt-1 inline-flex items-center gap-1 text-xs text-[var(--primary-800)] hover:underline truncate"
             >
               <Mail size={11} className="flex-shrink-0" />
               <span className="truncate">{member.email}</span>
@@ -137,7 +137,7 @@ function MemberCard({ member, gradient }: { member: Member; gradient: string }) 
 
 export default function CommitteeClient() {
   return (
-    <div className="bg-[var(--cream-50)] min-h-screen">
+    <div className="bg-[var(--surface-50)] min-h-screen">
 
       {/* Hero */}
       <section className="relative py-24 md:py-28 overflow-hidden">
@@ -145,7 +145,7 @@ export default function CommitteeClient() {
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>Organizing Committee</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            The <span className="text-gradient-crimson">Team</span> Behind APTICON
+            The <span className="text-gradient-primary">Team</span> Behind APTICON
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
             Dedicated pharmacy educators and professionals working together to make APTICON 2026 a landmark event.
@@ -198,8 +198,8 @@ export default function CommitteeClient() {
           <div className="space-y-12">
             {STATE_BRANCHES.map((branch) => (
               <div key={branch.state}>
-                <h3 className="font-display font-semibold text-lg text-[var(--crimson-800)] mb-4 flex items-center gap-3">
-                  <span className="h-6 w-1 rounded-full bg-gradient-to-b from-[var(--navy-800)] to-[var(--navy-900)]" />
+                <h3 className="font-display font-semibold text-lg text-[var(--primary-800)] mb-4 flex items-center gap-3">
+                  <span className="h-6 w-1 rounded-full bg-gradient-to-b from-[var(--secondary-800)] to-[var(--secondary-900)]" />
                   {branch.state}
                 </h3>
                 <motion.div
@@ -213,7 +213,7 @@ export default function CommitteeClient() {
                     <MemberCard
                       key={i}
                       member={member}
-                      gradient="from-[var(--navy-800)] to-[var(--navy-900)]"
+                      gradient="from-[var(--secondary-800)] to-[var(--secondary-900)]"
                     />
                   ))}
                 </motion.div>

@@ -76,7 +76,7 @@ export default function StatusClient() {
     <div className="min-h-[80vh] px-4 py-16">
       <div className="max-w-2xl mx-auto text-center mb-8">
         <GoldenBadge>Submission Status</GoldenBadge>
-        <h1 className="mt-6 font-display text-3xl md:text-4xl font-black text-[var(--crimson-800)]">
+        <h1 className="mt-6 font-display text-3xl md:text-4xl font-black text-[var(--primary-800)]">
           Check Your Abstract Status
         </h1>
         <p className="mt-3 text-[var(--muted-text)]">Enter your submission code and email to view the current status.</p>
@@ -139,7 +139,7 @@ export default function StatusClient() {
               <div><b>Decision recorded:</b> {format(new Date(result.finalDecisionAt), "d MMM yyyy, h:mm a")}</div>
             )}
             {result.finalDecisionNote && (
-              <div className="mt-4 p-4 rounded-lg bg-[var(--cream-100)] border-l-4 border-[var(--gold-500)]">
+              <div className="mt-4 p-4 rounded-lg bg-[var(--surface-100)] border-l-4 border-[var(--accent-500)]">
                 <div className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)] mb-1">Committee note</div>
                 <div className="whitespace-pre-line">{result.finalDecisionNote}</div>
               </div>

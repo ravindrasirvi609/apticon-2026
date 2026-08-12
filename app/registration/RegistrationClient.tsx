@@ -10,7 +10,7 @@ import RegistrationForm from "@/components/registration/RegistrationForm";
 
 export default function RegistrationClient() {
   return (
-    <div className="bg-[var(--cream-50)] min-h-screen">
+    <div className="bg-[var(--surface-50)] min-h-screen">
 
       {/* Hero */}
       <section className="relative py-24 md:py-28 overflow-hidden">
@@ -18,7 +18,7 @@ export default function RegistrationClient() {
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>Registration</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            Register for <span className="text-gradient-crimson">APTICON 2026</span>
+            Register for <span className="text-gradient-primary">APTICON 2026</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
             Join 1500+ pharmacy educators and researchers at India's premier pharmaceutical education convention.
@@ -71,7 +71,7 @@ export default function RegistrationClient() {
               <p className="text-[var(--muted-text)] text-sm">Fields marked with <span className="text-red-500">*</span> are required.</p>
             </ScrollReveal>
             <ScrollReveal>
-              <div className="rounded-2xl bg-white border border-[var(--gold-500)]/20 shadow-sm p-6 md:p-8">
+              <div className="rounded-2xl bg-white border border-[var(--accent-500)]/20 shadow-sm p-6 md:p-8">
                 <RegistrationForm />
               </div>
             </ScrollReveal>

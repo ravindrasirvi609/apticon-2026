@@ -25,7 +25,7 @@ export default function ScrollProgressBar() {
       <div
         ref={barRef}
         style={{ width: "0%" }}
-        className="h-full will-change-[width] transition-[width] duration-75 bg-gradient-to-r from-[var(--crimson-800)] via-[var(--gold-500)] to-[var(--gold-300)]"
+        className="h-full will-change-[width] transition-[width] duration-75 bg-gradient-to-r from-[var(--primary-800)] via-[var(--accent-500)] to-[var(--accent-300)]"
       />
     </div>
   );

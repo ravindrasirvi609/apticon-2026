@@ -75,7 +75,7 @@ export default function AdminDashboard() {
                   <TableRow key={r.id}>
                     <TableCell className="font-mono text-xs">{r.registrationCode}</TableCell>
                     <TableCell>
-                      <Link href={`/admin/registrations/${r.id}`} className="text-[var(--crimson-800)] hover:underline">{r.fullName}</Link>
+                      <Link href={`/admin/registrations/${r.id}`} className="text-[var(--primary-800)] hover:underline">{r.fullName}</Link>
                       <div className="text-xs text-[var(--muted-text)]">{r.email}</div>
                     </TableCell>
                     <TableCell><RegistrationStatusBadge status={r.status} paymentStatus={r.paymentStatus ?? undefined} /></TableCell>
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
                   <TableRow key={r.id}>
                     <TableCell className="font-mono text-xs">{r.submissionCode}</TableCell>
                     <TableCell>
-                      <Link href={`/admin/abstracts/${r.id}`} className="text-[var(--crimson-800)] hover:underline">
+                      <Link href={`/admin/abstracts/${r.id}`} className="text-[var(--primary-800)] hover:underline">
                         {r.title.length > 40 ? r.title.slice(0, 40) + "…" : r.title}
                       </Link>
                     </TableCell>
@@ -134,9 +134,9 @@ export default function AdminDashboard() {
                   <span className="text-[var(--dark-text)]">{t.theme}</span>
                   <span className="font-semibold">{t.count}</span>
                 </div>
-                <div className="h-1.5 bg-[var(--cream-100)] rounded-full overflow-hidden">
+                <div className="h-1.5 bg-[var(--surface-100)] rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-[var(--crimson-800)] rounded-full"
+                    className="h-full bg-[var(--primary-800)] rounded-full"
                     style={{ width: `${Math.min(100, (t.count / Math.max(1, stats?.totals.abstracts ?? 1)) * 100)}%` }}
                   />
                 </div>
@@ -151,7 +151,7 @@ export default function AdminDashboard() {
 }
 
 function StatCard({ label, value, icon: Icon, accent, sub }: { label: string; value: number | string; icon: React.ComponentType<{ className?: string }>; accent?: "amber" | "emerald"; sub?: string }) {
-  const color = accent === "emerald" ? "text-emerald-700" : accent === "amber" ? "text-amber-700" : "text-[var(--crimson-800)]";
+  const color = accent === "emerald" ? "text-emerald-700" : accent === "amber" ? "text-amber-700" : "text-[var(--primary-800)]";
   return (
     <Card>
       <CardContent className="pt-6">
@@ -161,7 +161,7 @@ function StatCard({ label, value, icon: Icon, accent, sub }: { label: string; va
             <div className={"mt-1 font-display text-3xl font-black " + color}>{value}</div>
             {sub && <div className="mt-0.5 text-xs text-red-700">{sub}</div>}
           </div>
-          <div className="w-10 h-10 rounded-lg bg-[var(--cream-100)] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-[var(--surface-100)] flex items-center justify-center">
             <Icon className={"w-5 h-5 " + color} />
           </div>
         </div>

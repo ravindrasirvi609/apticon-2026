@@ -127,11 +127,11 @@ export default function PrivacyPolicyClient() {
 
       <LegalP>
         For any questions regarding this Privacy Policy, please contact us at{" "}
-        <a href={`mailto:${EVENT.contact}`} className="text-[var(--crimson-800)] font-semibold hover:underline">
+        <a href={`mailto:${EVENT.contact}`} className="text-[var(--primary-800)] font-semibold hover:underline">
           {EVENT.contact}
         </a>
         . For details on registration cancellations and refunds, see our{" "}
-        <Link href="/refund-policy" className="text-[var(--crimson-800)] font-semibold hover:underline">
+        <Link href="/refund-policy" className="text-[var(--primary-800)] font-semibold hover:underline">
           Refund &amp; Cancellation Policy
         </Link>
         .

@@ -31,7 +31,7 @@ const DOUBLED = [...TIERS, ...TIERS];
 
 export default function SponsorMarquee() {
   return (
-    <section className="py-16 md:py-20 bg-[var(--cream-100)] border-y border-[var(--gold-500)]/10">
+    <section className="py-16 md:py-20 bg-[var(--surface-100)] border-y border-[var(--accent-500)]/10">
       <div className="container-site mb-10 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -39,7 +39,7 @@ export default function SponsorMarquee() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <p className="text-xs font-bold tracking-widest uppercase text-[var(--gold-500)] mb-3">
+          <p className="text-xs font-bold tracking-widest uppercase text-[var(--accent-500)] mb-3">
             Sponsors & Partners
           </p>
           <h2 className="font-display font-bold text-2xl sm:text-3xl text-[var(--dark-text)]">

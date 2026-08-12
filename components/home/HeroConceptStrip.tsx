@@ -10,7 +10,7 @@ export default function HeroConceptStrip() {
       className="w-full flex items-center justify-center px-2 sm:px-4"
       aria-hidden
     >
-      <div className="rounded-2xl bg-[var(--cream-50)]/95 shadow-lg px-4 py-3 sm:px-6 sm:py-4">
+      <div className="rounded-2xl bg-[var(--surface-50)]/95 shadow-lg px-4 py-3 sm:px-6 sm:py-4">
         <img
           src="/cultural/concept-strip.png"
           alt=""

@@ -39,7 +39,7 @@ export default function RegistrationBadge({ id, detailHref }: Props) {
         <div className="text-sm text-[var(--muted-text)]">
           The badge is only available once payment is confirmed. This registration&rsquo;s payment is not complete yet.
         </div>
-        <Link href={detailHref} className="inline-flex items-center gap-1 text-sm text-[var(--crimson-800)] hover:underline">
+        <Link href={detailHref} className="inline-flex items-center gap-1 text-sm text-[var(--primary-800)] hover:underline">
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
       </div>
@@ -52,7 +52,7 @@ export default function RegistrationBadge({ id, detailHref }: Props) {
       <style>{"@page { margin: 0.5in; }"}</style>
 
       <div className="w-full max-w-md flex items-center justify-between mb-6 print:hidden">
-        <Link href={detailHref} className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--crimson-800)]">
+        <Link href={detailHref} className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--primary-800)]">
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
         <Button onClick={() => window.print()}>
@@ -60,8 +60,8 @@ export default function RegistrationBadge({ id, detailHref }: Props) {
         </Button>
       </div>
 
-      <div className="w-full max-w-md rounded-2xl border-2 border-[var(--gold-500)]/40 bg-white p-8 text-center shadow-sm">
-        <div className="text-xs font-semibold tracking-widest uppercase text-[var(--crimson-800)]">APTICON 2026</div>
+      <div className="w-full max-w-md rounded-2xl border-2 border-[var(--accent-500)]/40 bg-white p-8 text-center shadow-sm">
+        <div className="text-xs font-semibold tracking-widest uppercase text-[var(--primary-800)]">APTICON 2026</div>
         <div className="text-[10px] text-[var(--muted-text)] mt-0.5">28th Annual National Convention · Raipur (C.G.)</div>
 
         <div className="mt-5 flex justify-center">
@@ -71,7 +71,7 @@ export default function RegistrationBadge({ id, detailHref }: Props) {
         <div className="mt-4 font-display text-xl font-bold text-[var(--dark-text)]">{data.fullName}</div>
         <div className="text-sm text-[var(--muted-text)] mt-1">{data.designation}</div>
         <div className="text-sm text-[var(--muted-text)]">{data.institution}</div>
-        <div className="text-xs uppercase tracking-wider text-[var(--crimson-800)] font-semibold mt-2">{data.category}</div>
+        <div className="text-xs uppercase tracking-wider text-[var(--primary-800)] font-semibold mt-2">{data.category}</div>
 
         {data.qrCode && (
           <div className="mt-5 flex justify-center">
@@ -81,12 +81,12 @@ export default function RegistrationBadge({ id, detailHref }: Props) {
               alt="QR code encoding this registration code"
               width={160}
               height={160}
-              className="rounded-lg border border-[var(--gold-500)]/20 bg-white p-2"
+              className="rounded-lg border border-[var(--accent-500)]/20 bg-white p-2"
             />
           </div>
         )}
 
-        <div className="mt-4 font-mono text-lg font-black text-[var(--crimson-800)]">{data.registrationCode}</div>
+        <div className="mt-4 font-mono text-lg font-black text-[var(--primary-800)]">{data.registrationCode}</div>
       </div>
     </div>
   );

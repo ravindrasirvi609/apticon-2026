@@ -70,7 +70,7 @@ export default function HomePage() {
       {/* 4. Bastar border separator */}
       <CulturalDivider variant="bastar" className="opacity-40" />
 
-      {/* 5. Conference theme — crimson full-width */}
+      {/* 5. Conference theme — primary full-width */}
       <ThemeSection />
 
       {/* 6. Speakers teaser */}

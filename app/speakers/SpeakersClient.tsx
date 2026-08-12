@@ -39,7 +39,7 @@ export default function SpeakersClient() {
     : SPEAKERS.filter((s) => s.role === activeTab);
 
   return (
-    <div className="bg-[var(--cream-50)] min-h-screen">
+    <div className="bg-[var(--surface-50)] min-h-screen">
 
       {/* Hero */}
       <section className="relative py-24 md:py-32 overflow-hidden">
@@ -50,7 +50,7 @@ export default function SpeakersClient() {
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>Distinguished Speakers</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            Meet the <span className="text-gradient-crimson">Experts</span>
+            Meet the <span className="text-gradient-primary">Experts</span>
           </h1>
           <p className="mt-6 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
             Speaker announcements are coming soon. We are curating an outstanding lineup of pharmacy educators and industry leaders.
@@ -61,7 +61,7 @@ export default function SpeakersClient() {
       <CulturalDivider variant="bastar" className="opacity-40" />
 
       {/* Filter tabs */}
-      <section className="sticky top-16 md:top-20 z-20 bg-[var(--cream-50)]/95 backdrop-blur-sm border-b border-[var(--gold-500)]/15 py-4">
+      <section className="sticky top-16 md:top-20 z-20 bg-[var(--surface-50)]/95 backdrop-blur-sm border-b border-[var(--accent-500)]/15 py-4">
         <div className="container-site">
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
             {TABS.map((tab) => (
@@ -70,8 +70,8 @@ export default function SpeakersClient() {
                 onClick={() => setActiveTab(tab.key)}
                 className={`flex-shrink-0 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200
                   ${activeTab === tab.key
-                    ? "bg-[var(--crimson-800)] text-white shadow-md shadow-[var(--crimson-800)]/25"
-                    : "bg-white border border-[var(--gold-500)]/25 text-[var(--muted-text)] hover:border-[var(--gold-500)]/60 hover:text-[var(--crimson-800)]"
+                    ? "bg-[var(--primary-800)] text-white shadow-md shadow-[var(--primary-800)]/25"
+                    : "bg-white border border-[var(--accent-500)]/25 text-[var(--muted-text)] hover:border-[var(--accent-500)]/60 hover:text-[var(--primary-800)]"
                   }`}
               >
                 {tab.label}
@@ -104,7 +104,7 @@ export default function SpeakersClient() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="mt-16 rounded-2xl bg-[var(--crimson-800)] p-8 text-center"
+            className="mt-16 rounded-2xl bg-[var(--primary-800)] p-8 text-center"
           >
             <p className="font-display font-bold text-2xl text-white mb-2">More Speakers Being Confirmed</p>
             <p className="text-white/70 text-sm max-w-md mx-auto mb-6">
@@ -112,7 +112,7 @@ export default function SpeakersClient() {
             </p>
             <a
               href={`mailto:${process.env.NEXT_PUBLIC_EMAIL ?? "apticon2026@gmail.com"}`}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--gold-400)] text-[var(--dark-text)] font-semibold text-sm hover:bg-[var(--gold-300)] transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent-400)] text-[var(--dark-text)] font-semibold text-sm hover:bg-[var(--accent-300)] transition-colors"
             >
               Nominate a Speaker
             </a>

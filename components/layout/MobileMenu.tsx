@@ -36,7 +36,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: Props) {
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
-              <span className="font-display font-bold text-lg text-[var(--gold-400)]">
+              <span className="font-display font-bold text-lg text-[var(--accent-400)]">
                 APTICON 2026
               </span>
               <button
@@ -66,14 +66,14 @@ export default function MobileMenu({ isOpen, onClose, pathname }: Props) {
                         flex items-center px-4 py-3 rounded-xl text-sm font-medium
                         transition-all duration-200
                         ${active
-                          ? "bg-[var(--crimson-800)] text-[var(--gold-400)]"
+                          ? "bg-[var(--primary-800)] text-[var(--accent-400)]"
                           : "text-white/80 hover:bg-white/8 hover:text-white"
                         }
                       `}
                     >
                       {link.label}
                       {active && (
-                        <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--gold-400)]" />
+                        <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[var(--accent-400)]" />
                       )}
                     </Link>
                   </motion.li>
@@ -88,9 +88,9 @@ export default function MobileMenu({ isOpen, onClose, pathname }: Props) {
                 onClick={onClose}
                 className="
                   block w-full text-center px-6 py-3 rounded-full
-                  bg-[var(--gold-400)] text-[var(--dark-text)]
+                  bg-[var(--accent-400)] text-[var(--dark-text)]
                   font-semibold text-sm tracking-wide
-                  hover:bg-[var(--gold-300)] transition-colors
+                  hover:bg-[var(--accent-300)] transition-colors
                 "
               >
                 Register Now

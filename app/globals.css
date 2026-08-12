@@ -2,35 +2,35 @@
 
 /* ─── Brand Color Palette ─────────────────────────────────── */
 :root {
-  /* Crimson scale */
-  --crimson-900: #6B0F0F;
-  --crimson-800: #8B1A1A;
-  --crimson-700: #A52020;
-  --crimson-600: #C0392B;
+  /* Primary (indigo) scale */
+  --primary-900: #1E1B4B;
+  --primary-800: #312E81;
+  --primary-700: #4338CA;
+  --primary-600: #4F46E5;
 
-  /* Gold scale */
-  --gold-500: #D4AF37;
-  --gold-400: #F5C842;
-  --gold-300: #FFD95A;
-  --gold-200: #FFF0A0;
+  /* Accent (orange) scale */
+  --accent-500: #EA580C;
+  --accent-400: #F97316;
+  --accent-300: #FB923C;
+  --accent-200: #FDBA74;
 
-  /* Navy scale */
-  --navy-900: #0D1B6E;
-  --navy-800: #1A237E;
-  --navy-700: #283593;
+  /* Secondary (slate) scale */
+  --secondary-900: #0F172A;
+  --secondary-800: #1E293B;
+  --secondary-700: #334155;
 
   /* Backgrounds */
-  --cream-50: #FFFDE7;
-  --cream-100: #FFF8E1;
-  --cream-200: #FFECB3;
+  --surface-50: #F8FAFC;
+  --surface-100: #F1F5F9;
+  --surface-200: #E2E8F0;
 
   /* Text */
-  --dark-text: #1A1A2E;
-  --muted-text: #5D4037;
-  --light-text: #FFFDE7;
+  --dark-text: #0F172A;
+  --muted-text: #475569;
+  --light-text: #F8FAFC;
 
   /* Semantic */
-  --background: var(--cream-50);
+  --background: var(--surface-50);
   --foreground: var(--dark-text);
 }
 
@@ -39,23 +39,23 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-crimson-900: var(--crimson-900);
-  --color-crimson-800: var(--crimson-800);
-  --color-crimson-700: var(--crimson-700);
-  --color-crimson-600: var(--crimson-600);
+  --color-primary-900: var(--primary-900);
+  --color-primary-800: var(--primary-800);
+  --color-primary-700: var(--primary-700);
+  --color-primary-600: var(--primary-600);
 
-  --color-gold-500: var(--gold-500);
-  --color-gold-400: var(--gold-400);
-  --color-gold-300: var(--gold-300);
-  --color-gold-200: var(--gold-200);
+  --color-accent-500: var(--accent-500);
+  --color-accent-400: var(--accent-400);
+  --color-accent-300: var(--accent-300);
+  --color-accent-200: var(--accent-200);
 
-  --color-navy-900: var(--navy-900);
-  --color-navy-800: var(--navy-800);
-  --color-navy-700: var(--navy-700);
+  --color-secondary-900: var(--secondary-900);
+  --color-secondary-800: var(--secondary-800);
+  --color-secondary-700: var(--secondary-700);
 
-  --color-cream-50: var(--cream-50);
-  --color-cream-100: var(--cream-100);
-  --color-cream-200: var(--cream-200);
+  --color-surface-50: var(--surface-50);
+  --color-surface-100: var(--surface-100);
+  --color-surface-200: var(--surface-200);
 
   --font-display: var(--font-playfair), Georgia, serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
@@ -79,7 +79,7 @@ html[data-scroll-behavior="smooth"] {
 }
 
 body {
-  background-color: var(--cream-50);
+  background-color: var(--surface-50);
   color: var(--dark-text);
   font-family: var(--font-sans);
   min-height: 100dvh;
@@ -91,14 +91,14 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--cream-100);
+  background: var(--surface-100);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--crimson-800);
+  background: var(--primary-800);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--crimson-700);
+  background: var(--primary-700);
 }
 
 /* ─── Typography Utilities ────────────────────────────────── */
@@ -109,19 +109,19 @@ body {
   font-family: var(--font-tiro), serif;
 }
 
-/* ─── Gold Shimmer Animation ──────────────────────────────── */
+/* ─── Accent Shimmer Animation ────────────────────────────── */
 @keyframes shimmer {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
 
-.shimmer-gold {
+.shimmer-accent {
   background: linear-gradient(
     105deg,
-    var(--gold-500) 0%,
-    var(--gold-300) 40%,
-    var(--gold-500) 60%,
-    var(--gold-400) 100%
+    var(--accent-500) 0%,
+    var(--accent-300) 40%,
+    var(--accent-500) 60%,
+    var(--accent-400) 100%
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
@@ -158,12 +158,12 @@ body {
 
 /* ─── Pulse Ring (CTA button) ─────────────────────────────── */
 @keyframes pulseRing {
-  0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(212,175,55,0.7); }
-  70%  { transform: scale(1.02); box-shadow: 0 0 0 14px rgba(212,175,55,0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+  0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(234,88,12,0.7); }
+  70%  { transform: scale(1.02); box-shadow: 0 0 0 14px rgba(234,88,12,0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234,88,12,0); }
 }
 
-.pulse-gold {
+.pulse-accent {
   animation: pulseRing 2s ease-out infinite;
 }
 
@@ -218,26 +218,26 @@ body {
 
 /* ─── Glass Morphism ──────────────────────────────────────── */
 .glass {
-  background: rgba(255, 253, 231, 0.8);
+  background: rgba(248, 250, 252, 0.8);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  border: 1px solid rgba(234, 88, 12, 0.2);
 }
 
 .glass-dark {
-  background: rgba(26, 26, 46, 0.85);
+  background: rgba(15, 23, 42, 0.85);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(234, 88, 12, 0.15);
 }
 
-/* ─── Gold Border Glow ────────────────────────────────────── */
-.glow-gold {
-  box-shadow: 0 0 20px rgba(212,175,55,0.3), 0 0 40px rgba(212,175,55,0.1);
+/* ─── Accent Border Glow ──────────────────────────────────── */
+.glow-accent {
+  box-shadow: 0 0 20px rgba(234,88,12,0.3), 0 0 40px rgba(234,88,12,0.1);
 }
 
-.glow-crimson {
-  box-shadow: 0 0 20px rgba(139,26,26,0.3), 0 0 40px rgba(139,26,26,0.1);
+.glow-primary {
+  box-shadow: 0 0 20px rgba(49,46,129,0.3), 0 0 40px rgba(49,46,129,0.1);
 }
 
 /* ─── Cultural Pattern Background ────────────────────────── */
@@ -258,45 +258,45 @@ body {
 }
 
 /* ─── Gradient Text Utilities ─────────────────────────────── */
-.text-gradient-crimson {
-  background: linear-gradient(135deg, var(--crimson-800), var(--crimson-600));
+.text-gradient-primary {
+  background: linear-gradient(135deg, var(--primary-800), var(--primary-600));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-gold {
-  background: linear-gradient(135deg, var(--gold-500), var(--gold-300));
+.text-gradient-accent {
+  background: linear-gradient(135deg, var(--accent-500), var(--accent-300));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-navy {
-  background: linear-gradient(135deg, var(--navy-900), var(--navy-700));
+.text-gradient-secondary {
+  background: linear-gradient(135deg, var(--secondary-900), var(--secondary-700));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* ─── Crimson-Gold gradient border ───────────────────────── */
-.border-gradient-gold {
+/* ─── Primary-Accent gradient border ─────────────────────── */
+.border-gradient-accent {
   border: 2px solid transparent;
   background:
-    linear-gradient(var(--cream-50), var(--cream-50)) padding-box,
-    linear-gradient(135deg, var(--gold-500), var(--crimson-800)) border-box;
+    linear-gradient(var(--surface-50), var(--surface-50)) padding-box,
+    linear-gradient(135deg, var(--accent-500), var(--primary-800)) border-box;
 }
 
 /* ─── Focus ring ──────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--gold-400);
+  outline: 2px solid var(--accent-400);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
 /* ─── Selection ───────────────────────────────────────────── */
 ::selection {
-  background: rgba(212, 175, 55, 0.35);
+  background: rgba(234, 88, 12, 0.35);
   color: var(--dark-text);
 }
 
@@ -308,11 +308,10 @@ body {
   padding-inline: clamp(1rem, 5vw, 4rem);
 }
 
-/* ─── Console mode: hide public site chrome ──────────────── */
+/* ─── Console mode: hide public site chrome ────────────────── */
 body[data-shell="console"] .site-chrome {
   display: none !important;
 }
 body[data-shell="console"] main#main-content {
   min-height: 100dvh;
 }
-

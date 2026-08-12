@@ -18,7 +18,7 @@ const BENEFITS_WHY = [
 
 export default function SponsorsClient() {
   return (
-    <div className="bg-[var(--cream-50)] min-h-screen">
+    <div className="bg-[var(--surface-50)] min-h-screen">
 
       {/* Hero */}
       <section className="relative py-24 md:py-28 overflow-hidden">
@@ -26,13 +26,13 @@ export default function SponsorsClient() {
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>Sponsorship</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            Partner with <span className="text-gradient-crimson">APTICON 2026</span>
+            Partner with <span className="text-gradient-primary">APTICON 2026</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
             Gain unparalleled visibility among 1500+ pharmacy professionals. Support India's premier pharmacy education convention and be part of a national movement.
           </p>
           <div className="mt-8">
-            <PulseButton href="mailto:apticon2026@gmail.com" variant="gold" pulse external>
+            <PulseButton href="mailto:apticon2026@gmail.com" variant="accent" pulse external>
               Enquire About Sponsorship
             </PulseButton>
           </div>
@@ -46,7 +46,7 @@ export default function SponsorsClient() {
         <div className="container-site">
           <ScrollReveal className="text-center mb-12">
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-[var(--dark-text)]">
-              Why <span className="text-gradient-gold">Sponsor?</span>
+              Why <span className="text-gradient-accent">Sponsor?</span>
             </h2>
           </ScrollReveal>
           <motion.div
@@ -58,10 +58,10 @@ export default function SponsorsClient() {
               <motion.div
                 key={b.title}
                 variants={fadeUp}
-                className="rounded-2xl bg-white border border-[var(--gold-500)]/15 p-6 hover:border-[var(--gold-500)]/50 hover:shadow-md transition-all duration-300 group"
+                className="rounded-2xl bg-white border border-[var(--accent-500)]/15 p-6 hover:border-[var(--accent-500)]/50 hover:shadow-md transition-all duration-300 group"
               >
                 <span className="text-4xl mb-4 block">{b.icon}</span>
-                <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-2 group-hover:text-[var(--crimson-800)] transition-colors">{b.title}</h3>
+                <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-2 group-hover:text-[var(--primary-800)] transition-colors">{b.title}</h3>
                 <p className="text-sm text-[var(--muted-text)] leading-relaxed">{b.desc}</p>
               </motion.div>
             ))}
@@ -70,11 +70,11 @@ export default function SponsorsClient() {
       </section>
 
       {/* Sponsorship Tiers */}
-      <section className="py-16 md:py-20 bg-[var(--cream-100)]">
+      <section className="py-16 md:py-20 bg-[var(--surface-100)]">
         <div className="container-site">
           <ScrollReveal className="text-center mb-12">
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-[var(--dark-text)]">
-              Sponsorship <span className="text-gradient-crimson">Packages</span>
+              Sponsorship <span className="text-gradient-primary">Packages</span>
             </h2>
           </ScrollReveal>
           <motion.div
@@ -86,7 +86,7 @@ export default function SponsorsClient() {
               <motion.div
                 key={tier.tier}
                 variants={fadeUp}
-                className={`rounded-2xl bg-white border p-6 shadow-sm flex flex-col ${i === 0 ? "border-[#E5E4E2] ring-2 ring-[#E5E4E2]/50 shadow-lg" : "border-[var(--gold-500)]/15"}`}
+                className={`rounded-2xl bg-white border p-6 shadow-sm flex flex-col ${i === 0 ? "border-[#E5E4E2] ring-2 ring-[#E5E4E2]/50 shadow-lg" : "border-[var(--accent-500)]/15"}`}
               >
                 {i === 0 && (
                   <div className="mb-3">
@@ -97,18 +97,18 @@ export default function SponsorsClient() {
                   <div className="w-10 h-10 rounded-full" style={{ backgroundColor: tier.color }} />
                   <h3 className="font-display font-black text-xl text-[var(--dark-text)]">{tier.tier}</h3>
                 </div>
-                <p className="font-black text-3xl text-[var(--crimson-800)] mb-5">{tier.amount}</p>
+                <p className="font-black text-3xl text-[var(--primary-800)] mb-5">{tier.amount}</p>
                 <ul className="space-y-2 flex-1">
                   {tier.benefits.map((b) => (
                     <li key={b} className="flex items-start gap-2 text-sm text-[var(--muted-text)]">
-                      <span className="w-4 h-4 rounded-full bg-[var(--gold-500)]/20 text-[var(--gold-500)] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+                      <span className="w-4 h-4 rounded-full bg-[var(--accent-500)]/20 text-[var(--accent-500)] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
                       {b}
                     </li>
                   ))}
                 </ul>
                 <a
                   href="mailto:apticon2026@gmail.com"
-                  className="mt-6 block text-center py-2.5 rounded-xl border-2 border-[var(--crimson-800)] text-[var(--crimson-800)] font-semibold text-sm hover:bg-[var(--crimson-800)] hover:text-white transition-all duration-200"
+                  className="mt-6 block text-center py-2.5 rounded-xl border-2 border-[var(--primary-800)] text-[var(--primary-800)] font-semibold text-sm hover:bg-[var(--primary-800)] hover:text-white transition-all duration-200"
                 >
                   Express Interest
                 </a>
@@ -122,7 +122,7 @@ export default function SponsorsClient() {
 
       <div className="py-12 text-center">
         <p className="text-[var(--muted-text)] mb-4">For customized packages and sponsorship brochure:</p>
-        <PulseButton href="mailto:apticon2026@gmail.com" variant="crimson" external>
+        <PulseButton href="mailto:apticon2026@gmail.com" variant="primary" external>
           Contact: apticon2026@gmail.com
         </PulseButton>
       </div>

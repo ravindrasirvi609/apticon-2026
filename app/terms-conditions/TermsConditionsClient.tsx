@@ -83,7 +83,7 @@ export default function TermsConditionsClient() {
           <>
             <strong className="text-[var(--dark-text)]">Privacy: </strong>
             We recognize the importance of protecting your privacy. Please read our{" "}
-            <Link href="/privacy-policy" className="text-[var(--crimson-800)] font-semibold hover:underline">
+            <Link href="/privacy-policy" className="text-[var(--primary-800)] font-semibold hover:underline">
               Privacy Policy
             </Link>{" "}
             for more information.
@@ -142,7 +142,7 @@ export default function TermsConditionsClient() {
 
       <LegalP>
         For any questions regarding these Terms, please contact us at{" "}
-        <a href={`mailto:${EVENT.contact}`} className="text-[var(--crimson-800)] font-semibold hover:underline">
+        <a href={`mailto:${EVENT.contact}`} className="text-[var(--primary-800)] font-semibold hover:underline">
           {EVENT.contact}
         </a>
         .

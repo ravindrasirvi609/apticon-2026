@@ -63,7 +63,7 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="flex items-center justify-center gap-6 mb-8"
         >
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--crimson-800)]/20 bg-white/90 p-1.5 shadow-sm md:h-20 md:w-20">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--primary-800)]/20 bg-white/90 p-1.5 shadow-sm md:h-20 md:w-20">
             <Image
               src="/logo/APTI.png"
               alt="Association of Pharmaceutical Teachers of India"
@@ -73,10 +73,10 @@ export default function HeroSection() {
               className="h-full w-full object-contain"
             />
           </div>
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[var(--gold-500)]/20 border border-[var(--gold-500)]/40 flex items-center justify-center">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[var(--accent-500)]/20 border border-[var(--accent-500)]/40 flex items-center justify-center">
             <img src="/cultural/lotus.svg" alt="" className="w-6 h-6" />
           </div>
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--navy-800)]/20 bg-white/90 p-1.5 shadow-sm md:h-20 md:w-20">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--secondary-800)]/20 bg-white/90 p-1.5 shadow-sm md:h-20 md:w-20">
             <Image
               src="/logo/Ravishankar_Shukla_University.png"
               alt="Pt. Ravishankar Shukla University, Raipur"
@@ -123,7 +123,7 @@ export default function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.1 }}
-          className="font-devanagari text-sm md:text-base text-[var(--gold-400)]/90 mb-8"
+          className="font-devanagari text-sm md:text-base text-[var(--accent-400)]/90 mb-8"
         >
           {EVENT.themeHindi}
         </motion.p>
@@ -135,12 +135,12 @@ export default function HeroSection() {
           transition={{ duration: 0.5, delay: 1.2 }}
           className="flex flex-col sm:flex-row items-center gap-3 mb-10"
         >
-          <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--crimson-800)] text-white text-xs sm:text-sm font-medium shadow-md shadow-[var(--crimson-800)]/25">
+          <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--primary-800)] text-white text-xs sm:text-sm font-medium shadow-md shadow-[var(--primary-800)]/25">
             <Calendar size={14} />
             {EVENT.dateDisplay}
           </span>
-          <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-[var(--gold-500)]/30 text-[var(--dark-text)] text-xs sm:text-sm font-medium shadow-sm">
-            <MapPin size={14} className="text-[var(--crimson-800)] flex-shrink-0" />
+          <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-[var(--accent-500)]/30 text-[var(--dark-text)] text-xs sm:text-sm font-medium shadow-sm">
+            <MapPin size={14} className="text-[var(--primary-800)] flex-shrink-0" />
             <span className="truncate max-w-[220px] sm:max-w-none">Raipur, Chhattisgarh</span>
           </span>
         </motion.div>
@@ -152,7 +152,7 @@ export default function HeroSection() {
           transition={{ duration: 0.5, delay: 1.35 }}
           className="flex flex-col sm:flex-row items-center gap-4"
         >
-          <PulseButton href="/registration" variant="gold" pulse className="min-w-[160px]">
+          <PulseButton href="/registration" variant="accent" pulse className="min-w-[160px]">
             Register Now
           </PulseButton>
           <PulseButton href="/schedule" variant="outline-light" className="min-w-[160px]">
@@ -199,7 +199,7 @@ export default function HeroSection() {
               aria-label={`Show background photo ${i + 1}`}
               onClick={() => setSlideIndex(i)}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === slideIndex ? "w-6 bg-[var(--gold-400)]" : "w-1.5 bg-white/40 hover:bg-white/70"
+                i === slideIndex ? "w-6 bg-[var(--accent-400)]" : "w-1.5 bg-white/40 hover:bg-white/70"
               }`}
             />
           ))}

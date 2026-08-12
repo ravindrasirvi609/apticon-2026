@@ -22,7 +22,7 @@ export default function Footer() {
         <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 md:h-16">
           <path
             d="M0,30 C240,55 480,5 720,30 C960,55 1200,5 1440,30 L1440,60 L0,60 Z"
-            fill="#1A1A2E"
+            fill="#0F172A"
           />
         </svg>
       </div>
@@ -50,14 +50,14 @@ export default function Footer() {
             <p className="text-sm text-white/70 leading-relaxed mb-4">
               {EVENT.theme}
             </p>
-            <p className="text-sm font-devanagari text-[var(--gold-400)]/80">
+            <p className="text-sm font-devanagari text-[var(--accent-400)]/80">
               {EVENT.themeHindi}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-bold tracking-widest uppercase text-[var(--gold-500)] mb-5">
+            <h3 className="text-sm font-bold tracking-widest uppercase text-[var(--accent-500)] mb-5">
               Quick Links
             </h3>
             <ul className="space-y-2.5">
@@ -65,9 +65,9 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/65 hover:text-[var(--gold-400)] transition-colors flex items-center gap-1.5 group"
+                    className="text-sm text-white/65 hover:text-[var(--accent-400)] transition-colors flex items-center gap-1.5 group"
                   >
-                    <span className="w-1 h-1 rounded-full bg-[var(--gold-500)]/50 group-hover:bg-[var(--gold-400)] transition-colors" />
+                    <span className="w-1 h-1 rounded-full bg-[var(--accent-500)]/50 group-hover:bg-[var(--accent-400)] transition-colors" />
                     {link.label}
                   </Link>
                 </li>
@@ -77,7 +77,7 @@ export default function Footer() {
 
           {/* Info Links */}
           <div>
-            <h3 className="text-sm font-bold tracking-widest uppercase text-[var(--gold-500)] mb-5">
+            <h3 className="text-sm font-bold tracking-widest uppercase text-[var(--accent-500)] mb-5">
               Information
             </h3>
             <ul className="space-y-2.5">
@@ -85,9 +85,9 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/65 hover:text-[var(--gold-400)] transition-colors flex items-center gap-1.5 group"
+                    className="text-sm text-white/65 hover:text-[var(--accent-400)] transition-colors flex items-center gap-1.5 group"
                   >
-                    <span className="w-1 h-1 rounded-full bg-[var(--gold-500)]/50 group-hover:bg-[var(--gold-400)] transition-colors" />
+                    <span className="w-1 h-1 rounded-full bg-[var(--accent-500)]/50 group-hover:bg-[var(--accent-400)] transition-colors" />
                     {link.label}
                   </Link>
                 </li>
@@ -97,28 +97,28 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-sm font-bold tracking-widest uppercase text-[var(--gold-500)] mb-5">
+            <h3 className="text-sm font-bold tracking-widest uppercase text-[var(--accent-500)] mb-5">
               Contact
             </h3>
             <ul className="space-y-4">
               <li className="flex gap-3">
-                <Calendar size={16} className="mt-0.5 shrink-0 text-[var(--gold-500)]" />
+                <Calendar size={16} className="mt-0.5 shrink-0 text-[var(--accent-500)]" />
                 <div>
                   <p className="text-sm font-semibold text-white">{EVENT.dateDisplay}</p>
                   <p className="text-xs text-white/50 mt-0.5">Conference Dates</p>
                 </div>
               </li>
               <li className="flex gap-3">
-                <MapPin size={16} className="mt-0.5 shrink-0 text-[var(--gold-500)]" />
+                <MapPin size={16} className="mt-0.5 shrink-0 text-[var(--accent-500)]" />
                 <div>
                   <p className="text-sm text-white/70 leading-snug">{EVENT.venue}</p>
                 </div>
               </li>
               <li className="flex gap-3">
-                <Mail size={16} className="mt-0.5 shrink-0 text-[var(--gold-500)]" />
+                <Mail size={16} className="mt-0.5 shrink-0 text-[var(--accent-500)]" />
                 <a
                   href={`mailto:${EVENT.contact}`}
-                  className="text-sm text-[var(--gold-400)] hover:text-[var(--gold-300)] transition-colors"
+                  className="text-sm text-[var(--accent-400)] hover:text-[var(--accent-300)] transition-colors"
                 >
                   {EVENT.contact}
                 </a>
@@ -134,7 +134,7 @@ export default function Footer() {
                 In association with{" "}
                 <span className="text-white/70">{EVENT.partner}</span>
               </p>
-              <span className="inline-block mt-2 text-[10px] font-semibold tracking-widest uppercase px-2 py-0.5 rounded-sm bg-[var(--gold-500)]/20 text-[var(--gold-400)]">
+              <span className="inline-block mt-2 text-[10px] font-semibold tracking-widest uppercase px-2 py-0.5 rounded-sm bg-[var(--accent-500)]/20 text-[var(--accent-400)]">
                 {EVENT.universityAccreditation}
               </span>
             </div>
@@ -144,14 +144,14 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <CulturalDivider variant="bastar" className="opacity-20" />
-      <div className="bg-[var(--crimson-900)]/60 py-4">
+      <div className="bg-[var(--primary-900)]/60 py-4">
         <div className="container-site flex flex-col gap-3">
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5">
             {LEGAL_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-xs text-white/50 hover:text-[var(--gold-400)] transition-colors"
+                className="text-xs text-white/50 hover:text-[var(--accent-400)] transition-colors"
               >
                 {link.label}
               </Link>
@@ -161,7 +161,7 @@ export default function Footer() {
             <p>© 2026 APTICON · APTI Chhattisgarh State Branch. All rights reserved.</p>
             <p>
               Powered by{" "}
-              <span className="text-[var(--gold-500)]/70">
+              <span className="text-[var(--accent-500)]/70">
                 Operant Pharmacy Federation
               </span>
             </p>

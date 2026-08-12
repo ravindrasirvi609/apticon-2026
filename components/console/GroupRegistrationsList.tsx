@@ -111,7 +111,7 @@ export default function GroupRegistrationsList({ detailBase, title = "Group Regi
                   <TableRow key={g._id}>
                     <TableCell className="font-mono text-xs">{g.groupCode}</TableCell>
                     <TableCell>
-                      <Link href={`${detailBase}/${g._id}`} className="text-[var(--crimson-800)] hover:underline font-semibold">
+                      <Link href={`${detailBase}/${g._id}`} className="text-[var(--primary-800)] hover:underline font-semibold">
                         {g.coordinatorName}
                       </Link>
                       <div className="text-xs text-[var(--muted-text)]">{g.coordinatorEmail}</div>

@@ -113,7 +113,7 @@ export default function ReviseClient() {
     <div className="min-h-[80vh] px-4 py-16">
       <div className="max-w-2xl mx-auto text-center mb-8">
         <GoldenBadge>Revise Submission</GoldenBadge>
-        <h1 className="mt-6 font-display text-3xl md:text-4xl font-black text-[var(--crimson-800)]">
+        <h1 className="mt-6 font-display text-3xl md:text-4xl font-black text-[var(--primary-800)]">
           Revise Your Abstract
         </h1>
         <p className="mt-3 text-[var(--muted-text)]">Enter your submission code and email to update and resubmit your abstract.</p>
@@ -154,12 +154,12 @@ export default function ReviseClient() {
             <div className="mx-auto w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
               <CheckCircle className="w-7 h-7 text-emerald-700" />
             </div>
-            <h2 className="font-display text-2xl font-bold text-[var(--crimson-800)] mb-2">Revision Submitted</h2>
+            <h2 className="font-display text-2xl font-bold text-[var(--primary-800)] mb-2">Revision Submitted</h2>
             <p className="text-sm text-[var(--muted-text)]">
               Your revised abstract for <span className="font-mono">{record.submissionCode}</span> has been received and is back under review. A confirmation email has been sent.
             </p>
             <div className="mt-6">
-              <Link href="/abstracts/status" className="text-sm font-semibold text-[var(--crimson-800)] hover:underline">Check submission status →</Link>
+              <Link href="/abstracts/status" className="text-sm font-semibold text-[var(--primary-800)] hover:underline">Check submission status →</Link>
             </div>
           </CardContent>
         </Card>
@@ -172,7 +172,7 @@ export default function ReviseClient() {
               This submission is not currently open for revision (status: <b>{record.status.replace("_", " ")}</b>).
             </p>
             <div className="mt-4">
-              <Link href="/abstracts/status" className="text-sm font-semibold text-[var(--crimson-800)] hover:underline">Check submission status →</Link>
+              <Link href="/abstracts/status" className="text-sm font-semibold text-[var(--primary-800)] hover:underline">Check submission status →</Link>
             </div>
           </CardContent>
         </Card>
@@ -186,7 +186,7 @@ export default function ReviseClient() {
           </CardHeader>
           <CardContent className="space-y-5">
             {record.finalDecisionNote && (
-              <div className="p-4 rounded-lg bg-[var(--cream-100)] border-l-4 border-[var(--gold-500)]">
+              <div className="p-4 rounded-lg bg-[var(--surface-100)] border-l-4 border-[var(--accent-500)]">
                 <div className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)] mb-1">Committee note</div>
                 <div className="whitespace-pre-line text-sm">{record.finalDecisionNote}</div>
               </div>
@@ -213,7 +213,7 @@ export default function ReviseClient() {
                 Graphical Abstract <span className="text-xs font-normal text-[var(--muted-text)]">(optional — leave blank to keep the existing one)</span>
               </Label>
               <div className="mt-2 flex items-center gap-3">
-                <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--gold-500)]/40 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40 transition-colors">
+                <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--accent-500)]/40 bg-white cursor-pointer hover:border-[var(--primary-800)]/40 transition-colors">
                   <Upload className="w-4 h-4 text-[var(--muted-text)]" />
                   <span className="text-sm text-[var(--dark-text)] truncate">
                     {graphicalAbstractFile ? graphicalAbstractFile.name : record.graphicalAbstractName || "No image uploaded yet — choose one..."}
@@ -239,7 +239,7 @@ export default function ReviseClient() {
                 Abstract File <span className="text-xs font-normal text-[var(--muted-text)]">(optional — DOC or DOCX, leave blank to keep the existing one)</span>
               </Label>
               <div className="mt-2 flex items-center gap-3">
-                <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--gold-500)]/40 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40 transition-colors">
+                <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--accent-500)]/40 bg-white cursor-pointer hover:border-[var(--primary-800)]/40 transition-colors">
                   <Upload className="w-4 h-4 text-[var(--muted-text)]" />
                   <span className="text-sm text-[var(--dark-text)] truncate">
                     {file ? file.name : record.fileName || "No file on record"}

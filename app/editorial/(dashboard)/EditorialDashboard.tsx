@@ -100,7 +100,7 @@ export default function EditorialDashboard() {
                   <TableRow key={a._id}>
                     <TableCell className="font-mono text-xs">{a.submissionCode}</TableCell>
                     <TableCell>
-                      <Link href={`/editorial/abstracts/${a._id}`} className="text-[var(--crimson-800)] hover:underline font-semibold">
+                      <Link href={`/editorial/abstracts/${a._id}`} className="text-[var(--primary-800)] hover:underline font-semibold">
                         {a.title.length > 60 ? a.title.slice(0, 60) + "…" : a.title}
                       </Link>
                     </TableCell>
@@ -115,7 +115,7 @@ export default function EditorialDashboard() {
         </CardContent>
       </Card>
 
-      <div className="mb-4 flex items-start gap-2 p-3 rounded-lg bg-[var(--cream-50)] border border-[var(--gold-500)]/25 text-sm">
+      <div className="mb-4 flex items-start gap-2 p-3 rounded-lg bg-[var(--surface-50)] border border-[var(--accent-500)]/25 text-sm">
         <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0 text-emerald-700" />
         <span className="text-[var(--muted-text)]">
           Payments are verified by Razorpay and registrations are approved <b>automatically</b> on capture. The list below
@@ -126,7 +126,7 @@ export default function EditorialDashboard() {
       <Card>
         <CardHeader>
           <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4 text-[var(--crimson-800)]" />
+            <FileText className="w-4 h-4 text-[var(--primary-800)]" />
             <CardTitle>Incomplete payments ({pendingPayments.length})</CardTitle>
           </div>
         </CardHeader>
@@ -152,7 +152,7 @@ export default function EditorialDashboard() {
                   <TableRow key={r._id}>
                     <TableCell className="font-mono text-xs">{r.registrationCode}</TableCell>
                     <TableCell>
-                      <Link href={`/editorial/registrations/${r._id}`} className="text-[var(--crimson-800)] hover:underline font-semibold">
+                      <Link href={`/editorial/registrations/${r._id}`} className="text-[var(--primary-800)] hover:underline font-semibold">
                         {r.fullName}
                       </Link>
                       <div className="text-xs text-[var(--muted-text)]">{r.email}</div>
@@ -173,7 +173,7 @@ export default function EditorialDashboard() {
 }
 
 function StatCard({ label, value, icon: Icon, accent }: { label: string; value: number | string; icon: React.ComponentType<{ className?: string }>; accent?: "amber" | "emerald" }) {
-  const color = accent === "emerald" ? "text-emerald-700" : accent === "amber" ? "text-amber-700" : "text-[var(--crimson-800)]";
+  const color = accent === "emerald" ? "text-emerald-700" : accent === "amber" ? "text-amber-700" : "text-[var(--primary-800)]";
   return (
     <Card>
       <CardContent className="pt-6">
@@ -182,7 +182,7 @@ function StatCard({ label, value, icon: Icon, accent }: { label: string; value: 
             <div className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)]">{label}</div>
             <div className={"mt-1 font-display text-3xl font-black " + color}>{value}</div>
           </div>
-          <div className="w-10 h-10 rounded-lg bg-[var(--cream-100)] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-[var(--surface-100)] flex items-center justify-center">
             <Icon className={"w-5 h-5 " + color} />
           </div>
         </div>

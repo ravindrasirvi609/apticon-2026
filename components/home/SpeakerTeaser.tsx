@@ -6,17 +6,17 @@ import PulseButton from "@/components/ui/PulseButton";
 import { User } from "lucide-react";
 
 const PLACEHOLDERS = [
-  { role: "Chief Guest",         color: "from-[var(--crimson-800)] to-[var(--crimson-900)]" },
-  { role: "Keynote Speaker",     color: "from-[var(--navy-800)] to-[var(--navy-900)]" },
+  { role: "Chief Guest",         color: "from-[var(--primary-800)] to-[var(--primary-900)]" },
+  { role: "Keynote Speaker",     color: "from-[var(--secondary-800)] to-[var(--secondary-900)]" },
   { role: "Invited Speaker",     color: "from-emerald-700 to-emerald-900" },
   { role: "Invited Speaker",     color: "from-purple-700 to-purple-900" },
   { role: "Session Chair",       color: "from-orange-700 to-orange-900" },
-  { role: "Workshop Facilitator",color: "from-[var(--navy-700)] to-[var(--navy-800)]" },
+  { role: "Workshop Facilitator",color: "from-[var(--secondary-700)] to-[var(--secondary-800)]" },
 ];
 
 export default function SpeakerTeaser() {
   return (
-    <section className="py-20 md:py-28 bg-[var(--cream-100)] relative overflow-hidden">
+    <section className="py-20 md:py-28 bg-[var(--surface-100)] relative overflow-hidden">
       {/* Gondi sun right */}
       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-80 h-80 opacity-20 pointer-events-none" aria-hidden>
         <img src="/cultural/gondi-sun.svg" alt="" className="w-full h-full" />
@@ -38,7 +38,7 @@ export default function SpeakerTeaser() {
             className="mt-5 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-[var(--dark-text)]"
           >
             Distinguished{" "}
-            <span className="text-gradient-crimson">Speakers</span>
+            <span className="text-gradient-primary">Speakers</span>
           </motion.h2>
           <motion.p variants={fadeUp} className="mt-4 text-[var(--muted-text)] max-w-xl mx-auto">
             Speaker announcements will be updated soon. Stay tuned for an outstanding lineup of pharmacy educators and industry leaders.
@@ -64,29 +64,29 @@ export default function SpeakerTeaser() {
                   <div className={`h-full rounded-2xl bg-gradient-to-b ${sp.color} flex flex-col items-center justify-center gap-3 p-4 border border-white/10`}>
                     {/* Avatar with rangoli-esque ring */}
                     <div className="relative">
-                      <div className="w-14 h-14 rounded-full bg-white/20 border-2 border-[var(--gold-500)]/50 flex items-center justify-center">
+                      <div className="w-14 h-14 rounded-full bg-white/20 border-2 border-[var(--accent-500)]/50 flex items-center justify-center">
                         <User size={24} className="text-white/60" />
                       </div>
                       {/* Spinning ring */}
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-                        className="absolute -inset-1 rounded-full border border-dashed border-[var(--gold-500)]/30"
+                        className="absolute -inset-1 rounded-full border border-dashed border-[var(--accent-500)]/30"
                       />
                     </div>
                     <p className="text-xs font-semibold text-white/80 text-center leading-snug">
                       {sp.role}
                     </p>
-                    <span className="text-[10px] text-[var(--gold-400)]/70 font-medium tracking-wide">
+                    <span className="text-[10px] text-[var(--accent-400)]/70 font-medium tracking-wide">
                       TBA
                     </span>
                   </div>
                 </div>
                 {/* Back */}
                 <div className="flip-card-back h-full">
-                  <div className="h-full rounded-2xl bg-[var(--dark-text)] flex flex-col items-center justify-center gap-2 p-4 border border-[var(--gold-500)]/20">
+                  <div className="h-full rounded-2xl bg-[var(--dark-text)] flex flex-col items-center justify-center gap-2 p-4 border border-[var(--accent-500)]/20">
                     <img src="/cultural/lotus.svg" alt="" className="w-10 h-10 opacity-60" />
-                    <p className="text-xs text-[var(--gold-400)] font-semibold text-center">
+                    <p className="text-xs text-[var(--accent-400)] font-semibold text-center">
                       Announcement Coming Soon
                     </p>
                   </div>

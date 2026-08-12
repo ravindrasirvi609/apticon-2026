@@ -93,7 +93,7 @@ export default function RegistrationStatusClient() {
     <div className="min-h-[80vh] px-4 py-16">
       <div className="max-w-2xl mx-auto text-center mb-8">
         <GoldenBadge>Registration Status</GoldenBadge>
-        <h1 className="mt-6 font-display text-3xl md:text-4xl font-black text-[var(--crimson-800)]">
+        <h1 className="mt-6 font-display text-3xl md:text-4xl font-black text-[var(--primary-800)]">
           Check Your Registration
         </h1>
         <p className="mt-3 text-[var(--muted-text)]">Enter your registration code and email to view the payment verification status.</p>
@@ -159,27 +159,27 @@ export default function RegistrationStatusClient() {
                 <div className="text-xs font-semibold uppercase tracking-wider text-red-800 mb-1">Reason for rejection</div>
                 <div className="whitespace-pre-line text-red-900">{result.registration.reviewNote}</div>
                 <div className="mt-3">
-                  <Link href="/registration" className="text-sm font-semibold text-[var(--crimson-800)] hover:underline">Resubmit registration →</Link>
+                  <Link href="/registration" className="text-sm font-semibold text-[var(--primary-800)] hover:underline">Resubmit registration →</Link>
                 </div>
               </div>
             )}
 
             {result.registration.qrCode && (
-              <div className="mt-4 p-4 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/20 flex flex-col items-center gap-2">
+              <div className="mt-4 p-4 rounded-lg bg-[var(--surface-100)] border border-[var(--accent-500)]/20 flex flex-col items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={result.registration.qrCode}
                   alt="QR code encoding your registration code"
                   width={160}
                   height={160}
-                  className="rounded-lg border border-[var(--gold-500)]/20 bg-white p-2"
+                  className="rounded-lg border border-[var(--accent-500)]/20 bg-white p-2"
                 />
                 <p className="text-xs text-[var(--muted-text)]">Show this at the registration desk</p>
               </div>
             )}
 
             {/* Linked abstract panel */}
-            <div className="mt-6 p-4 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/20">
+            <div className="mt-6 p-4 rounded-lg bg-[var(--surface-100)] border border-[var(--accent-500)]/20">
               <div className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)] mb-2">Abstract</div>
               {result.linkedAbstract ? (
                 <div>
@@ -192,12 +192,12 @@ export default function RegistrationStatusClient() {
               ) : result.registration.willSubmitAbstract ? (
                 <div className="text-sm">
                   You indicated you&apos;d submit an abstract but we haven&apos;t received one yet.
-                  <Link href="/abstracts" className="ml-1 font-semibold text-[var(--crimson-800)] hover:underline">Submit now →</Link>
+                  <Link href="/abstracts" className="ml-1 font-semibold text-[var(--primary-800)] hover:underline">Submit now →</Link>
                 </div>
               ) : (
                 <div className="text-sm text-[var(--muted-text)]">
                   No abstract linked to this registration.
-                  <Link href="/abstracts" className="ml-1 font-semibold text-[var(--crimson-800)] hover:underline">Submit one →</Link>
+                  <Link href="/abstracts" className="ml-1 font-semibold text-[var(--primary-800)] hover:underline">Submit one →</Link>
                 </div>
               )}
             </div>

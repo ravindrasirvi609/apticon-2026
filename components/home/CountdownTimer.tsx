@@ -45,7 +45,7 @@ function FlipUnit({ value, label }: { value: string; label: string }) {
       <div className="relative w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28">
         {/* Card face */}
         <motion.div
-          className="w-full h-full rounded-xl bg-gradient-to-b from-[var(--crimson-800)] to-[var(--crimson-900)] flex items-center justify-center shadow-xl shadow-[var(--crimson-900)]/40 border border-[var(--gold-500)]/20"
+          className="w-full h-full rounded-xl bg-gradient-to-b from-[var(--primary-800)] to-[var(--primary-900)] flex items-center justify-center shadow-xl shadow-[var(--primary-900)]/40 border border-[var(--accent-500)]/20"
           animate={flipping ? { rotateX: [-90, 0] } : {}}
           transition={{ duration: 0.3, ease: "easeOut" }}
           style={{ transformPerspective: 400 }}
@@ -57,7 +57,7 @@ function FlipUnit({ value, label }: { value: string; label: string }) {
           <div className="absolute inset-x-0 top-1/2 -translate-y-px h-px bg-black/30" />
         </motion.div>
       </div>
-      <span className="text-[10px] sm:text-xs font-semibold tracking-widest uppercase text-[var(--gold-500)]">
+      <span className="text-[10px] sm:text-xs font-semibold tracking-widest uppercase text-[var(--accent-500)]">
         {label}
       </span>
     </div>
@@ -80,20 +80,20 @@ export default function CountdownTimer() {
   if (time === null) {
     return (
       <div className="flex flex-col items-center gap-4 invisible">
-        <p className="text-xs font-semibold tracking-widest uppercase text-[var(--gold-500)]/80">
+        <p className="text-xs font-semibold tracking-widest uppercase text-[var(--accent-500)]/80">
           Conference begins in
         </p>
         <div className="flex items-end gap-3 sm:gap-4 md:gap-5">
           {UNIT_LABELS.map((label, i) => (
             <div key={label} className="flex items-end gap-3 sm:gap-4 md:gap-5">
               <div className="flex flex-col items-center gap-2">
-                <div className="w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 rounded-xl bg-[var(--crimson-800)]" />
-                <span className="text-[10px] sm:text-xs font-semibold tracking-widest uppercase text-[var(--gold-500)]">
+                <div className="w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 rounded-xl bg-[var(--primary-800)]" />
+                <span className="text-[10px] sm:text-xs font-semibold tracking-widest uppercase text-[var(--accent-500)]">
                   {label}
                 </span>
               </div>
               {i < UNIT_LABELS.length - 1 && (
-                <span className="text-2xl sm:text-3xl font-black text-[var(--gold-500)] pb-7 leading-none">:</span>
+                <span className="text-2xl sm:text-3xl font-black text-[var(--accent-500)] pb-7 leading-none">:</span>
               )}
             </div>
           ))}
@@ -111,7 +111,7 @@ export default function CountdownTimer() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <p className="text-xs font-semibold tracking-widest uppercase text-[var(--gold-500)]/80">
+      <p className="text-xs font-semibold tracking-widest uppercase text-[var(--accent-500)]/80">
         Conference begins in
       </p>
       <div className="flex items-end gap-3 sm:gap-4 md:gap-5">
@@ -119,7 +119,7 @@ export default function CountdownTimer() {
           <div key={u.label} className="flex items-end gap-3 sm:gap-4 md:gap-5">
             <FlipUnit value={u.value} label={u.label} />
             {i < units.length - 1 && (
-              <span className="text-2xl sm:text-3xl font-black text-[var(--gold-500)] pb-7 leading-none select-none">
+              <span className="text-2xl sm:text-3xl font-black text-[var(--accent-500)] pb-7 leading-none select-none">
                 :
               </span>
             )}

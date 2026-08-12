@@ -73,10 +73,10 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
   const initial = user.name.charAt(0).toUpperCase();
 
   return (
-    <div className="min-h-dvh bg-[var(--cream-50)]">
+    <div className="min-h-dvh bg-[var(--surface-50)]">
       {/* ─── Sidebar (desktop) ─── */}
-      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-white border-r border-[var(--gold-500)]/20 z-40 print:hidden">
-        <div className="p-6 border-b border-[var(--gold-500)]/20">
+      <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-white border-r border-[var(--accent-500)]/20 z-40 print:hidden">
+        <div className="p-6 border-b border-[var(--accent-500)]/20">
           <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-12 w-auto" />
           <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-1">{brandSub}</div>
         </div>
@@ -91,8 +91,8 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                   active
-                    ? "bg-[var(--crimson-800)] text-white"
-                    : "text-[var(--dark-text)] hover:bg-[var(--cream-100)] hover:text-[var(--crimson-800)]"
+                    ? "bg-[var(--primary-800)] text-white"
+                    : "text-[var(--dark-text)] hover:bg-[var(--surface-100)] hover:text-[var(--primary-800)]"
                 )}
               >
                 <Icon className="w-4 h-4" />
@@ -101,9 +101,9 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
             );
           })}
         </nav>
-        <div className="p-3 border-t border-[var(--gold-500)]/20">
+        <div className="p-3 border-t border-[var(--accent-500)]/20">
           <div className="flex items-center gap-3 px-3 py-2">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--crimson-800)] to-[var(--crimson-900)] text-white flex items-center justify-center font-bold text-sm">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--primary-800)] to-[var(--primary-900)] text-white flex items-center justify-center font-bold text-sm">
               {initial}
             </div>
             <div className="flex-1 min-w-0">
@@ -119,7 +119,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
       </aside>
 
       {/* ─── Mobile top bar ─── */}
-      <div className="lg:hidden sticky top-0 z-40 bg-white border-b border-[var(--gold-500)]/20 px-4 h-14 flex items-center justify-between print:hidden">
+      <div className="lg:hidden sticky top-0 z-40 bg-white border-b border-[var(--accent-500)]/20 px-4 h-14 flex items-center justify-between print:hidden">
         <div>
           <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-9 w-auto" />
           <div className="text-[9px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-0.5">{brandSub}</div>
@@ -133,7 +133,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
       {open && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setOpen(false)}>
           <div className="absolute left-0 top-0 bottom-0 w-72 bg-white flex flex-col" onClick={(e) => e.stopPropagation()}>
-            <div className="p-4 border-b border-[var(--gold-500)]/20 flex items-center justify-between">
+            <div className="p-4 border-b border-[var(--accent-500)]/20 flex items-center justify-between">
               <div>
                 <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-9 w-auto" />
                 <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-0.5">{brandSub}</div>
@@ -154,8 +154,8 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium",
                       active
-                        ? "bg-[var(--crimson-800)] text-white"
-                        : "text-[var(--dark-text)] hover:bg-[var(--cream-100)]"
+                        ? "bg-[var(--primary-800)] text-white"
+                        : "text-[var(--dark-text)] hover:bg-[var(--surface-100)]"
                     )}
                   >
                     <Icon className="w-4 h-4" />
@@ -164,9 +164,9 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
                 );
               })}
             </nav>
-            <div className="p-3 border-t border-[var(--gold-500)]/20">
+            <div className="p-3 border-t border-[var(--accent-500)]/20">
               <div className="flex items-center gap-3 px-3 py-2">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--crimson-800)] to-[var(--crimson-900)] text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--primary-800)] to-[var(--primary-900)] text-white flex items-center justify-center font-bold text-sm">
                   {initial}
                 </div>
                 <div className="flex-1 min-w-0">

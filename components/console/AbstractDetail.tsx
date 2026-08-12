@@ -161,7 +161,7 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
 
   return (
     <div className="p-4 md:p-8 max-w-6xl">
-      <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--crimson-800)] mb-4">
+      <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--primary-800)] mb-4">
         <ArrowLeft className="w-4 h-4" /> Back to list
       </Link>
 
@@ -193,7 +193,7 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
                   <img
                     src={a.graphicalAbstractUrl}
                     alt="Graphical abstract"
-                    className="mt-2 max-w-full rounded-lg border border-[var(--gold-500)]/30"
+                    className="mt-2 max-w-full rounded-lg border border-[var(--accent-500)]/30"
                   />
                 </div>
               )}
@@ -218,7 +218,7 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
               {data.reviews.map((r) => {
                 const rev = typeof r.reviewer === "object" ? r.reviewer : { name: r.reviewer, email: "" };
                 return (
-                  <div key={r._id} className="rounded-lg border border-[var(--gold-500)]/20 p-4">
+                  <div key={r._id} className="rounded-lg border border-[var(--accent-500)]/20 p-4">
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
                         <div className="font-semibold text-sm">{rev.name}</div>
@@ -252,7 +252,7 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
               {data.linkedRegistration && data.linkedRegistration.registrationCode ? (
                 <div className="space-y-2 text-sm">
                   <div>
-                    <Link href={`${registrationDetailBase}/${data.linkedRegistration._id}`} className="font-mono text-xs text-[var(--crimson-800)] hover:underline">
+                    <Link href={`${registrationDetailBase}/${data.linkedRegistration._id}`} className="font-mono text-xs text-[var(--primary-800)] hover:underline">
                       {data.linkedRegistration.registrationCode}
                     </Link>
                   </div>
@@ -318,7 +318,7 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
                   </DialogHeader>
                   <div className="max-h-96 overflow-y-auto space-y-2">
                     {allReviewers.map((r) => (
-                      <label key={r._id} className="flex items-center gap-3 p-3 rounded-lg border border-[var(--gold-500)]/20 cursor-pointer hover:bg-[var(--cream-50)]">
+                      <label key={r._id} className="flex items-center gap-3 p-3 rounded-lg border border-[var(--accent-500)]/20 cursor-pointer hover:bg-[var(--surface-50)]">
                         <Checkbox
                           checked={selected.has(r._id)}
                           onCheckedChange={(v) => {
@@ -372,14 +372,14 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
                   {a.abstractCode && (
                     <div className="text-sm">
                       <span className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Abstract Code ({a.presentationType})</span>
-                      <div className="font-mono font-bold text-[var(--crimson-800)]">{a.abstractCode}</div>
+                      <div className="font-mono font-bold text-[var(--primary-800)]">{a.abstractCode}</div>
                     </div>
                   )}
                   {a.finalDecisionAt && (
                     <div className="text-xs text-[var(--muted-text)]">Recorded {format(new Date(a.finalDecisionAt), "d MMM yyyy, HH:mm")}</div>
                   )}
                   {a.finalDecisionNote && (
-                    <div className="text-sm p-3 rounded bg-[var(--cream-100)] border-l-2 border-[var(--gold-500)] whitespace-pre-line">
+                    <div className="text-sm p-3 rounded bg-[var(--surface-100)] border-l-2 border-[var(--accent-500)] whitespace-pre-line">
                       {a.finalDecisionNote}
                     </div>
                   )}
@@ -442,7 +442,7 @@ export default function AbstractDetail({ id, backHref, registrationDetailBase }:
                       className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
                         presentationType === v
                           ? "bg-emerald-600 text-white border-emerald-600"
-                          : "bg-white border-[var(--gold-500)]/30"
+                          : "bg-white border-[var(--accent-500)]/30"
                       }`}
                     >
                       {v}

@@ -18,7 +18,7 @@ export default function NotFound() {
 
       <div className="relative z-10">
         {/* 404 number */}
-        <p className="font-display font-black text-[8rem] sm:text-[12rem] leading-none text-gradient-crimson select-none">
+        <p className="font-display font-black text-[8rem] sm:text-[12rem] leading-none text-gradient-primary select-none">
           404
         </p>
 
@@ -32,13 +32,13 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/"
-            className="px-8 py-3 rounded-xl bg-[var(--crimson-800)] text-white font-semibold text-sm hover:bg-[var(--crimson-700)] transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)] focus:ring-offset-2"
+            className="px-8 py-3 rounded-xl bg-[var(--primary-800)] text-white font-semibold text-sm hover:bg-[var(--primary-700)] transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)] focus:ring-offset-2"
           >
             Back to Home
           </Link>
           <Link
             href="/contact"
-            className="px-8 py-3 rounded-xl border-2 border-[var(--crimson-800)] text-[var(--crimson-800)] font-semibold text-sm hover:bg-[var(--crimson-800)] hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)] focus:ring-offset-2"
+            className="px-8 py-3 rounded-xl border-2 border-[var(--primary-800)] text-[var(--primary-800)] font-semibold text-sm hover:bg-[var(--primary-800)] hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)] focus:ring-offset-2"
           >
             Contact Us
           </Link>
@@ -55,7 +55,7 @@ export default function NotFound() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-[var(--muted-text)] hover:text-[var(--crimson-800)] transition-colors underline underline-offset-2"
+              className="text-sm text-[var(--muted-text)] hover:text-[var(--primary-800)] transition-colors underline underline-offset-2"
             >
               {link.label}
             </Link>

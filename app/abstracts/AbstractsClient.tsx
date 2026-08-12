@@ -141,7 +141,7 @@ export default function AbstractsClient() {
       <section className="pt-8 pb-12 px-4 text-center">
         <ScrollReveal>
           <GoldenBadge>Call for Abstracts</GoldenBadge>
-          <h1 className="mt-6 font-display text-4xl md:text-6xl font-black text-[var(--crimson-800)]">
+          <h1 className="mt-6 font-display text-4xl md:text-6xl font-black text-[var(--primary-800)]">
             Submit Your Research
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-base md:text-lg text-[var(--muted-text)]">
@@ -153,8 +153,8 @@ export default function AbstractsClient() {
               { icon: Users, label: "1500+ peers" },
               { icon: Sparkles, label: "Ideas that inspire" },
             ].map(({ icon: Icon, label }) => (
-              <div key={label} className="inline-flex items-center gap-2 rounded-full border border-[var(--gold-500)]/30 bg-white/80 px-4 py-2 text-sm font-medium text-[var(--dark-text)] shadow-sm">
-                <Icon className="h-4 w-4 text-[var(--crimson-800)]" aria-hidden />
+              <div key={label} className="inline-flex items-center gap-2 rounded-full border border-[var(--accent-500)]/30 bg-white/80 px-4 py-2 text-sm font-medium text-[var(--dark-text)] shadow-sm">
+                <Icon className="h-4 w-4 text-[var(--primary-800)]" aria-hidden />
                 {label}
               </div>
             ))}
@@ -192,12 +192,12 @@ export default function AbstractsClient() {
               variants={fadeUp}
               className={`flex items-center justify-between p-4 rounded-xl border ${
                 d.done
-                  ? "bg-[var(--cream-100)] border-[var(--gold-500)]/30"
-                  : "bg-white border-[var(--gold-500)]/20"
+                  ? "bg-[var(--surface-100)] border-[var(--accent-500)]/30"
+                  : "bg-white border-[var(--accent-500)]/20"
               }`}
             >
               <span className="text-sm md:text-base text-[var(--dark-text)]">{d.event}</span>
-              <span className="text-sm md:text-base font-semibold text-[var(--crimson-800)]">{d.date}</span>
+              <span className="text-sm md:text-base font-semibold text-[var(--primary-800)]">{d.date}</span>
             </motion.li>
           ))}
         </motion.ol>
@@ -211,7 +211,7 @@ export default function AbstractsClient() {
             <ul className="space-y-2 text-sm text-[var(--muted-text)]">
               {GUIDELINES.map((g) => (
                 <li key={g} className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-[var(--crimson-800)] mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[var(--primary-800)] mt-0.5 flex-shrink-0" />
                   <span>{g}</span>
                 </li>
               ))}
@@ -226,7 +226,7 @@ export default function AbstractsClient() {
           <h3 className="font-display text-xl font-bold text-[var(--dark-text)] mb-4">Areas of Specialization</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {ABSTRACT_THEMES.map((t) => (
-              <div key={t} className="px-4 py-3 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/25 text-sm text-[var(--dark-text)]">
+              <div key={t} className="px-4 py-3 rounded-lg bg-[var(--surface-100)] border border-[var(--accent-500)]/25 text-sm text-[var(--dark-text)]">
                 {t}
               </div>
             ))}
@@ -242,7 +242,7 @@ export default function AbstractsClient() {
             <ul className="space-y-2 text-sm text-[var(--muted-text)]">
               {SUBMISSION_NOTES.map((n) => (
                 <li key={n} className="flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-[var(--crimson-800)] mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[var(--primary-800)] mt-0.5 flex-shrink-0" />
                   <span>{n}</span>
                 </li>
               ))}
@@ -263,7 +263,7 @@ export default function AbstractsClient() {
                 <li key={c}>{c}</li>
               ))}
             </ol>
-            <p className="mt-4 text-sm font-medium text-[var(--crimson-800)]">
+            <p className="mt-4 text-sm font-medium text-[var(--primary-800)]">
               All accepted abstracts will be published in a special issue of IJPER.
             </p>
           </CardContent>
@@ -274,7 +274,7 @@ export default function AbstractsClient() {
       <section className="py-12 px-4 max-w-3xl mx-auto">
         <Card>
           <CardContent className="pt-8">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-[var(--crimson-800)] mb-6 text-center">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[var(--primary-800)] mb-6 text-center">
               Submission Form
             </h2>
 
@@ -312,7 +312,7 @@ export default function AbstractsClient() {
                 </div>
                 <div className="mt-2 space-y-3">
                   {coAuthorFields.map((field, index) => (
-                    <div key={field.id} className="rounded-lg border border-[var(--gold-500)]/30 bg-white p-3">
+                    <div key={field.id} className="rounded-lg border border-[var(--accent-500)]/30 bg-white p-3">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)]">Co-Author #{index + 1}</span>
                         <Button type="button" variant="ghost" size="sm" onClick={() => removeCoAuthor(index)}>
@@ -391,7 +391,7 @@ export default function AbstractsClient() {
                   <Label htmlFor="theme">Theme *</Label>
                   <select
                     id="theme"
-                    className="mt-2 flex h-10 w-full rounded-lg border border-[var(--gold-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)]"
+                    className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
                     {...register("theme", { required: true })}
                     defaultValue=""
                   >
@@ -404,11 +404,11 @@ export default function AbstractsClient() {
                 <div>
                   <Label>Article Type *</Label>
                   <div className="mt-2 flex gap-3">
-                    <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--gold-500)]/30 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40">
+                    <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--accent-500)]/30 bg-white cursor-pointer hover:border-[var(--primary-800)]/40">
                       <input type="radio" value="review" {...register("type", { required: true })} defaultChecked />
                       <span className="text-sm">Review Article</span>
                     </label>
-                    <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--gold-500)]/30 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40">
+                    <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--accent-500)]/30 bg-white cursor-pointer hover:border-[var(--primary-800)]/40">
                       <input type="radio" value="research" {...register("type", { required: true })} />
                       <span className="text-sm">Research Article</span>
                     </label>
@@ -421,11 +421,11 @@ export default function AbstractsClient() {
                   Presentation Type Preference <span className="text-xs font-normal text-[var(--muted-text)]">(optional — editorial confirms this on acceptance)</span>
                 </Label>
                 <div className="mt-2 flex gap-3">
-                  <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--gold-500)]/30 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40">
+                  <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--accent-500)]/30 bg-white cursor-pointer hover:border-[var(--primary-800)]/40">
                     <input type="radio" value="oral" {...register("preferredPresentationType")} />
                     <span className="text-sm">Oral</span>
                   </label>
-                  <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--gold-500)]/30 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40">
+                  <label className="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border border-[var(--accent-500)]/30 bg-white cursor-pointer hover:border-[var(--primary-800)]/40">
                     <input type="radio" value="poster" {...register("preferredPresentationType")} />
                     <span className="text-sm">Poster</span>
                   </label>
@@ -462,7 +462,7 @@ export default function AbstractsClient() {
                   Graphical Abstract <span className="text-xs font-normal text-[var(--muted-text)]">(optional — image, JPG/PNG/WebP, max 5 MB)</span>
                 </Label>
                 <div className="mt-2 flex items-center gap-3">
-                  <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--gold-500)]/40 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40 transition-colors">
+                  <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--accent-500)]/40 bg-white cursor-pointer hover:border-[var(--primary-800)]/40 transition-colors">
                     <Upload className="w-4 h-4 text-[var(--muted-text)]" />
                     <span className="text-sm text-[var(--dark-text)] truncate">
                       {graphicalAbstractFile ? graphicalAbstractFile.name : "Choose image..."}
@@ -486,7 +486,7 @@ export default function AbstractsClient() {
               <div>
                 <Label htmlFor="file">Abstract file * (DOC or DOCX, max 10 MB)</Label>
                 <div className="mt-2 flex items-center gap-3">
-                  <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--gold-500)]/40 bg-white cursor-pointer hover:border-[var(--crimson-800)]/40 transition-colors">
+                  <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--accent-500)]/40 bg-white cursor-pointer hover:border-[var(--primary-800)]/40 transition-colors">
                     <Upload className="w-4 h-4 text-[var(--muted-text)]" />
                     <span className="text-sm text-[var(--dark-text)] truncate">
                       {file ? file.name : "Choose file..."}

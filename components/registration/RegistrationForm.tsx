@@ -184,7 +184,7 @@ export default function RegistrationForm() {
 
       {/* Personal Info */}
       <div>
-        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--gold-500)]/20">
+        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--accent-500)]/20">
           Personal Information
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -210,7 +210,7 @@ export default function RegistrationForm() {
             <Label htmlFor="designation">Designation *</Label>
             <select
               id="designation"
-              className="mt-2 flex h-10 w-full rounded-lg border border-[var(--gold-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)]"
+              className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
               {...register("designation", { required: "Designation is required" })}
               defaultValue=""
             >
@@ -237,7 +237,7 @@ export default function RegistrationForm() {
             <Label htmlFor="state">State</Label>
             <select
               id="state"
-              className="mt-2 flex h-10 w-full rounded-lg border border-[var(--gold-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)]"
+              className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
               {...register("state")}
               defaultValue=""
             >
@@ -250,7 +250,7 @@ export default function RegistrationForm() {
 
       {/* Contact */}
       <div>
-        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--gold-500)]/20">
+        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--accent-500)]/20">
           Contact Details
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -294,7 +294,7 @@ export default function RegistrationForm() {
 
       {/* Category + Fee */}
       <div>
-        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--gold-500)]/20">
+        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--accent-500)]/20">
           Registration Category
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -302,7 +302,7 @@ export default function RegistrationForm() {
             <Label htmlFor="category">Category *</Label>
             <select
               id="category"
-              className="mt-2 flex h-10 w-full rounded-lg border border-[var(--gold-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)]"
+              className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
               {...register("category", { required: "Please select a category" })}
               defaultValue=""
             >
@@ -313,7 +313,7 @@ export default function RegistrationForm() {
           </div>
           <div>
             <Label>Fee Calculator</Label>
-            <div className="mt-2 min-h-10 px-3 py-2.5 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/25">
+            <div className="mt-2 min-h-10 px-3 py-2.5 rounded-lg bg-[var(--surface-100)] border border-[var(--accent-500)]/25">
               {currentFee && feeBreakdown ? (
                 <div className="space-y-1 text-sm">
                   <div className="flex items-center justify-between gap-3">
@@ -324,9 +324,9 @@ export default function RegistrationForm() {
                     <span className="text-[var(--muted-text)]">GST ({GST_RATE * 100}%)</span>
                     <span>{formatRupees(feeBreakdown.gstAmount)}</span>
                   </div>
-                  <div className="flex items-center justify-between gap-3 border-t border-[var(--gold-500)]/25 pt-1 font-semibold">
+                  <div className="flex items-center justify-between gap-3 border-t border-[var(--accent-500)]/25 pt-1 font-semibold">
                     <span className="inline-flex items-center gap-1 text-[var(--dark-text)]"><Calculator className="h-3.5 w-3.5" /> Total payable</span>
-                    <b className="text-[var(--crimson-800)]">{formatRupees(feeBreakdown.totalAmount)}</b>
+                    <b className="text-[var(--primary-800)]">{formatRupees(feeBreakdown.totalAmount)}</b>
                   </div>
                   <span className="block text-[10px] text-[var(--muted-text)] uppercase tracking-wider">{currentFee.tier.replace("_", " ")}</span>
                 </div>
@@ -356,17 +356,17 @@ export default function RegistrationForm() {
             />
           </div>
         )}
-        <div className="mt-4 flex items-start gap-3 p-3 rounded-lg bg-[var(--cream-50)] border border-[var(--gold-500)]/20">
+        <div className="mt-4 flex items-start gap-3 p-3 rounded-lg bg-[var(--surface-50)] border border-[var(--accent-500)]/20">
           <input
             type="checkbox"
             id="abstract"
             {...register("willSubmitAbstract")}
-            className="mt-0.5 w-4 h-4 accent-[var(--crimson-800)] cursor-pointer"
+            className="mt-0.5 w-4 h-4 accent-[var(--primary-800)] cursor-pointer"
           />
           <label htmlFor="abstract" className="text-sm text-[var(--dark-text)] cursor-pointer">
             I intend to submit an abstract (review or research article).
             <span className="block text-xs text-[var(--muted-text)] mt-0.5">
-              You&apos;ll submit the abstract separately on the <a href="/abstracts" className="text-[var(--crimson-800)] hover:underline">Abstracts page</a>. Registration and abstract will be linked automatically by your email.
+              You&apos;ll submit the abstract separately on the <a href="/abstracts" className="text-[var(--primary-800)] hover:underline">Abstracts page</a>. Registration and abstract will be linked automatically by your email.
             </span>
           </label>
         </div>
@@ -374,12 +374,12 @@ export default function RegistrationForm() {
 
       {/* Payment */}
       <div>
-        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--gold-500)]/20">
+        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--accent-500)]/20">
           Secure Online Payment
         </h3>
-        <div className="mb-4 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/20 p-4 text-sm">
+        <div className="mb-4 rounded-lg bg-[var(--surface-100)] border border-[var(--accent-500)]/20 p-4 text-sm">
           <div className="flex items-start gap-2">
-            <ShieldCheck className="w-4 h-4 mt-0.5 text-[var(--crimson-800)] flex-shrink-0" />
+            <ShieldCheck className="w-4 h-4 mt-0.5 text-[var(--primary-800)] flex-shrink-0" />
             <div>
               <p className="font-semibold text-[var(--dark-text)] mb-1">Pay securely with Razorpay</p>
               <p className="text-[var(--muted-text)]">

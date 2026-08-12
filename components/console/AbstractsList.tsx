@@ -101,7 +101,7 @@ export default function AbstractsList({
           <Button
             onClick={downloadWord}
             disabled={downloading || items.length === 0}
-            className="bg-[var(--crimson-800)] hover:bg-[var(--crimson-900)] text-white"
+            className="bg-[var(--primary-800)] hover:bg-[var(--primary-900)] text-white"
           >
             {downloading ? (
               <>
@@ -169,7 +169,7 @@ export default function AbstractsList({
                   <TableRow key={a._id}>
                     <TableCell className="font-mono text-xs">{a.submissionCode}</TableCell>
                     <TableCell>
-                      <Link href={`${detailBase}/${a._id}`} className="text-[var(--crimson-800)] hover:underline">
+                      <Link href={`${detailBase}/${a._id}`} className="text-[var(--primary-800)] hover:underline">
                         {a.title.length > 60 ? a.title.slice(0, 60) + "…" : a.title}
                       </Link>
                     </TableCell>

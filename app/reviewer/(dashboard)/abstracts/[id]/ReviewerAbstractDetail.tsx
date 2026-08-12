@@ -116,7 +116,7 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
 
   return (
     <div className="p-4 md:p-8 max-w-5xl">
-      <Link href="/reviewer" className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--crimson-800)] mb-4">
+      <Link href="/reviewer" className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--primary-800)] mb-4">
         <ArrowLeft className="w-4 h-4" /> Back to dashboard
       </Link>
 
@@ -148,7 +148,7 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
                   <img
                     src={a.graphicalAbstractUrl}
                     alt="Graphical abstract"
-                    className="mt-2 max-w-full rounded-lg border border-[var(--gold-500)]/30"
+                    className="mt-2 max-w-full rounded-lg border border-[var(--accent-500)]/30"
                   />
                 </div>
               )}
@@ -195,7 +195,7 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
                             className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
                               presentationType === v
                                 ? "bg-emerald-600 text-white border-emerald-600"
-                                : "bg-white border-[var(--gold-500)]/30"
+                                : "bg-white border-[var(--accent-500)]/30"
                             }`}
                           >
                             {v}
@@ -216,7 +216,7 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
                             className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
                               verdict === v
                                 ? v === "reject" ? "bg-red-600 text-white border-red-600" : "bg-amber-500 text-white border-amber-500"
-                                : "bg-white border-[var(--gold-500)]/30"
+                                : "bg-white border-[var(--accent-500)]/30"
                             }`}
                           >
                             {v}
@@ -260,7 +260,7 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
                 .map((r) => {
                   const rev = typeof r.reviewer === "object" ? r.reviewer : { name: "Reviewer" };
                   return (
-                    <div key={r._id} className="p-3 rounded-lg border border-[var(--gold-500)]/20 text-sm">
+                    <div key={r._id} className="p-3 rounded-lg border border-[var(--accent-500)]/20 text-sm">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-semibold">{rev.name}</span>
                         <Badge variant={r.verdict === "accept" ? "success" : r.verdict === "reject" ? "danger" : "warning"}>

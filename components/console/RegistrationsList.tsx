@@ -132,7 +132,7 @@ export default function RegistrationsList({ detailBase, title = "Registrations",
                       <div className="flex items-center gap-2.5">
                         <DelegatePhoto url={r.photoUrl} name={r.fullName} size={32} />
                         <div className="min-w-0">
-                          <Link href={`${detailBase}/${r._id}`} className="text-[var(--crimson-800)] hover:underline font-semibold">
+                          <Link href={`${detailBase}/${r._id}`} className="text-[var(--primary-800)] hover:underline font-semibold">
                             {r.fullName}
                           </Link>
                           <div className="text-xs text-[var(--muted-text)]">{r.email}</div>

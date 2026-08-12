@@ -12,7 +12,7 @@ export default function HeroBackgroundSlider({ places, index }: { places: Place[
   const place = places[index];
 
   return (
-    <div aria-hidden className="absolute inset-0 z-0 overflow-hidden bg-[var(--crimson-900)]">
+    <div aria-hidden className="absolute inset-0 z-0 overflow-hidden bg-[var(--primary-900)]">
       <AnimatePresence>
         <motion.div
           key={index}

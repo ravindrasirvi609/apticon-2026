@@ -216,7 +216,7 @@ export default function GroupRegistrationForm() {
 
       {/* Coordinator */}
       <div>
-        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--gold-500)]/20">
+        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--accent-500)]/20">
           Coordinator Details
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -254,7 +254,7 @@ export default function GroupRegistrationForm() {
           </div>
           <div>
             <Label htmlFor="state">State</Label>
-            <select id="state" className="mt-2 flex h-10 w-full rounded-lg border border-[var(--gold-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)]" {...register("state")} defaultValue="">
+            <select id="state" className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]" {...register("state")} defaultValue="">
               <option value="">Select State</option>
               {STATES.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
@@ -264,13 +264,13 @@ export default function GroupRegistrationForm() {
 
       {/* Category + Fee */}
       <div>
-        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--gold-500)]/20">
+        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--accent-500)]/20">
           Group Category &amp; Fee
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="category">Category (applies to whole group) *</Label>
-            <select id="category" className="mt-2 flex h-10 w-full rounded-lg border border-[var(--gold-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gold-400)]" {...register("category", { required: "Please select a category" })} defaultValue="">
+            <select id="category" className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]" {...register("category", { required: "Please select a category" })} defaultValue="">
               <option value="">Select Category</option>
               {REGISTRATION_CATEGORIES.filter((c) => c !== "Accompanying Person" && c !== "APTI Membership + APTICON Registration").map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
@@ -278,7 +278,7 @@ export default function GroupRegistrationForm() {
           </div>
           <div>
             <Label>Fee Calculator</Label>
-            <div className="mt-2 min-h-10 px-3 py-2.5 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/25">
+            <div className="mt-2 min-h-10 px-3 py-2.5 rounded-lg bg-[var(--surface-100)] border border-[var(--accent-500)]/25">
               {groupFee && feeBreakdown ? (
                 <div className="space-y-1 text-sm">
                   <div className="flex items-center justify-between gap-3">
@@ -295,9 +295,9 @@ export default function GroupRegistrationForm() {
                     <span className="text-[var(--muted-text)]">GST ({GST_RATE * 100}%)</span>
                     <span>{formatRupees(feeBreakdown.gstAmount)}</span>
                   </div>
-                  <div className="flex items-center justify-between gap-3 border-t border-[var(--gold-500)]/25 pt-1 font-semibold">
+                  <div className="flex items-center justify-between gap-3 border-t border-[var(--accent-500)]/25 pt-1 font-semibold">
                     <span className="inline-flex items-center gap-1 text-[var(--dark-text)]"><Calculator className="h-3.5 w-3.5" /> Total payable</span>
-                    <b className="text-[var(--crimson-800)]">{formatRupees(feeBreakdown.totalAmount)}</b>
+                    <b className="text-[var(--primary-800)]">{formatRupees(feeBreakdown.totalAmount)}</b>
                   </div>
                   <span className="block text-[10px] text-[var(--muted-text)] uppercase tracking-wider">{groupFee.tier.replace("_", " ")} · {groupFee.paidCount} payable</span>
                 </div>
@@ -318,7 +318,7 @@ export default function GroupRegistrationForm() {
 
       {/* Delegates */}
       <div>
-        <div className="flex items-center justify-between mb-4 pb-2 border-b border-[var(--gold-500)]/20">
+        <div className="flex items-center justify-between mb-4 pb-2 border-b border-[var(--accent-500)]/20">
           <h3 className="font-display font-bold text-lg text-[var(--dark-text)] flex items-center gap-2">
             <Users className="w-4.5 h-4.5" /> Delegates ({delegateCount})
           </h3>
@@ -329,7 +329,7 @@ export default function GroupRegistrationForm() {
 
         <div className="space-y-5">
           {fields.map((field, index) => (
-            <div key={field.id} className="rounded-xl border border-[var(--gold-500)]/20 p-4 bg-[var(--cream-50)]/50">
+            <div key={field.id} className="rounded-xl border border-[var(--accent-500)]/20 p-4 bg-[var(--surface-50)]/50">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-[var(--muted-text)]">
                   Delegate #{index + 1}{index >= delegateCount - (groupFee?.complimentaryCount ?? 0) && (groupFee?.complimentaryCount ?? 0) > 0 ? " · Complimentary" : ""}
@@ -379,12 +379,12 @@ export default function GroupRegistrationForm() {
 
       {/* Payment */}
       <div>
-        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--gold-500)]/20">
+        <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--accent-500)]/20">
           Secure Online Payment
         </h3>
-        <div className="mb-4 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/20 p-4 text-sm">
+        <div className="mb-4 rounded-lg bg-[var(--surface-100)] border border-[var(--accent-500)]/20 p-4 text-sm">
           <div className="flex items-start gap-2">
-            <ShieldCheck className="w-4 h-4 mt-0.5 text-[var(--crimson-800)] flex-shrink-0" />
+            <ShieldCheck className="w-4 h-4 mt-0.5 text-[var(--primary-800)] flex-shrink-0" />
             <div>
               <p className="font-semibold text-[var(--dark-text)] mb-1">One payment for the whole group</p>
               <p className="text-[var(--muted-text)]">

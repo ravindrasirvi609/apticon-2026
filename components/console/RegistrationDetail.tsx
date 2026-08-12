@@ -149,7 +149,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
 
   return (
     <div className="p-4 md:p-8 max-w-6xl">
-      <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--crimson-800)] mb-4">
+      <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--primary-800)] mb-4">
         <ArrowLeft className="w-4 h-4" /> Back
       </Link>
 
@@ -165,12 +165,12 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
           <Card>
             <CardHeader><CardTitle>Delegate Information</CardTitle></CardHeader>
             <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <div className="sm:col-span-2 flex items-center gap-4 pb-3 mb-1 border-b border-[var(--gold-500)]/15">
+              <div className="sm:col-span-2 flex items-center gap-4 pb-3 mb-1 border-b border-[var(--accent-500)]/15">
                 <DelegatePhoto url={r.photoUrl} name={r.fullName} size={72} />
                 <div className="min-w-0">
                   <div className="text-xs uppercase tracking-wider text-[var(--muted-text)]">Profile photo</div>
                   {r.photoUrl ? (
-                    <a href={r.photoUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-[var(--crimson-800)] hover:underline inline-flex items-center gap-1">
+                    <a href={r.photoUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-[var(--primary-800)] hover:underline inline-flex items-center gap-1">
                       View full size <ExternalLink className="w-3 h-3 opacity-70" />
                     </a>
                   ) : (
@@ -196,7 +196,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
               <Field label="Submitted"    value={format(new Date(r.createdAt), "d MMM yyyy, HH:mm")} />
               <Field label="Registration wanted abstract?" value={r.willSubmitAbstract ? "Yes" : "No"} />
               {r.remarks && (
-                <div className="sm:col-span-2 mt-2 p-3 rounded bg-[var(--cream-50)] border border-[var(--gold-500)]/15">
+                <div className="sm:col-span-2 mt-2 p-3 rounded bg-[var(--surface-50)] border border-[var(--accent-500)]/15">
                   <div className="text-xs uppercase tracking-wider text-[var(--muted-text)] mb-1">Delegate remarks</div>
                   <div className="whitespace-pre-line">{r.remarks}</div>
                 </div>
@@ -222,7 +222,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
                           href={`${RAZORPAY_DASHBOARD}/${r.razorpayPaymentId}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm font-mono text-[var(--crimson-800)] hover:underline inline-flex items-center gap-1"
+                          className="text-sm font-mono text-[var(--primary-800)] hover:underline inline-flex items-center gap-1"
                         >
                           {r.razorpayPaymentId} <ExternalLink className="w-3 h-3 opacity-70" />
                         </a>
@@ -254,8 +254,8 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
               )}
 
               {!isRazorpay && r.paymentProofUrl && (
-                <div className="rounded-lg border border-[var(--gold-500)]/25 overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-2 bg-[var(--cream-50)] border-b border-[var(--gold-500)]/20">
+                <div className="rounded-lg border border-[var(--accent-500)]/25 overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-2 bg-[var(--surface-50)] border-b border-[var(--accent-500)]/20">
                     <div className="flex items-center gap-2 text-sm font-semibold text-[var(--dark-text)]">
                       {isImage ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
                       Payment Proof
@@ -334,7 +334,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
                   </p>
                 </>
               ) : (
-                <div className="p-3 rounded bg-[var(--cream-50)] border border-[var(--gold-500)]/25 text-sm">
+                <div className="p-3 rounded bg-[var(--surface-50)] border border-[var(--accent-500)]/25 text-sm">
                   <div className="font-semibold text-[var(--dark-text)]">Legacy manual payment</div>
                   <p className="mt-1 text-[var(--muted-text)]">
                     This record predates online payments and was verified by hand. Manual approval has been retired from
@@ -356,7 +356,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
                     alt="QR code encoding this registration code"
                     width={180}
                     height={180}
-                    className="rounded-lg border border-[var(--gold-500)]/20 bg-white p-2"
+                    className="rounded-lg border border-[var(--accent-500)]/20 bg-white p-2"
                   />
                 ) : (
                   <div className="text-sm text-[var(--muted-text)]">QR unavailable</div>
@@ -383,7 +383,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
                     <Badge variant="secondary" className="text-[10px]">{data.linkedAbstract.theme}</Badge>
                   </div>
                   {abstractDetailBase && (
-                    <Link href={`${abstractDetailBase}/${data.linkedAbstract._id}`} className="mt-3 inline-block text-sm font-semibold text-[var(--crimson-800)] hover:underline">Open abstract →</Link>
+                    <Link href={`${abstractDetailBase}/${data.linkedAbstract._id}`} className="mt-3 inline-block text-sm font-semibold text-[var(--primary-800)] hover:underline">Open abstract →</Link>
                   )}
                 </div>
               ) : r.willSubmitAbstract ? (
@@ -395,7 +395,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
                 <p className="text-sm text-[var(--muted-text)]">This delegate did not indicate they&rsquo;d submit an abstract.</p>
               )}
               {isAdmin && (
-                <div className="mt-4 pt-3 border-t border-[var(--gold-500)]/20">
+                <div className="mt-4 pt-3 border-t border-[var(--accent-500)]/20">
                   <ManualLinkControl id={id} currentAbstractId={data.linkedAbstract?._id ?? null} onLinked={load} />
                 </div>
               )}

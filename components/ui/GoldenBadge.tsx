@@ -16,17 +16,17 @@ export default function GoldenBadge({ children, className = "" }: Props) {
       variants={scaleIn}
       className={`
         inline-flex items-center gap-2 px-4 py-1.5
-        rounded-full border border-[var(--gold-500)]
-        bg-gradient-to-r from-[var(--gold-500)]/10 to-[var(--gold-300)]/20
+        rounded-full border border-[var(--accent-500)]
+        bg-gradient-to-r from-[var(--accent-500)]/10 to-[var(--accent-300)]/20
         text-sm font-semibold tracking-widest uppercase
-        text-[var(--gold-500)]
+        text-[var(--accent-500)]
         ${className}
       `}
     >
       {/* shimmer bar */}
-      <span className="w-4 h-px bg-gradient-to-r from-transparent via-[var(--gold-400)] to-transparent" />
+      <span className="w-4 h-px bg-gradient-to-r from-transparent via-[var(--accent-400)] to-transparent" />
       <span>{children}</span>
-      <span className="w-4 h-px bg-gradient-to-r from-transparent via-[var(--gold-400)] to-transparent" />
+      <span className="w-4 h-px bg-gradient-to-r from-transparent via-[var(--accent-400)] to-transparent" />
     </motion.div>
   );
 }

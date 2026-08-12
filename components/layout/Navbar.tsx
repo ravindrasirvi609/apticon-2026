@@ -44,7 +44,7 @@ export default function Navbar() {
         className="w-full transition-[backdrop-filter] duration-300"
       >
         {/* Top accent bar */}
-        <div className="h-1 w-full bg-gradient-to-r from-[var(--crimson-900)] via-[var(--gold-500)] to-[var(--navy-800)]" />
+        <div className="h-1 w-full bg-gradient-to-r from-[var(--primary-900)] via-[var(--accent-500)] to-[var(--secondary-800)]" />
 
         <div className="container-site">
           <div className="flex items-center justify-between h-16 md:h-20">
@@ -74,8 +74,8 @@ export default function Navbar() {
                       relative px-3 py-2 text-sm font-medium rounded-lg
                       transition-colors duration-200
                       ${active
-                        ? "text-[var(--crimson-800)]"
-                        : "text-[var(--dark-text)]/70 hover:text-[var(--crimson-800)]"
+                        ? "text-[var(--primary-800)]"
+                        : "text-[var(--dark-text)]/70 hover:text-[var(--primary-800)]"
                       }
                     `}
                   >
@@ -83,7 +83,7 @@ export default function Navbar() {
                     {active && (
                       <motion.span
                         layoutId="nav-indicator"
-                        className="absolute inset-x-2 -bottom-0.5 h-0.5 rounded-full bg-[var(--crimson-800)]"
+                        className="absolute inset-x-2 -bottom-0.5 h-0.5 rounded-full bg-[var(--primary-800)]"
                       />
                     )}
                   </Link>
@@ -93,15 +93,15 @@ export default function Navbar() {
               {/* More dropdown for overflow links */}
               {SECONDARY_LINKS.length > 0 && (
                 <div className="relative group">
-                  <button className="px-3 py-2 text-sm font-medium text-[var(--dark-text)]/70 hover:text-[var(--crimson-800)] transition-colors rounded-lg">
+                  <button className="px-3 py-2 text-sm font-medium text-[var(--dark-text)]/70 hover:text-[var(--primary-800)] transition-colors rounded-lg">
                     More ▾
                   </button>
-                  <div className="absolute top-full right-0 mt-2 w-44 bg-white rounded-xl shadow-xl border border-[var(--gold-500)]/20 overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="absolute top-full right-0 mt-2 w-44 bg-white rounded-xl shadow-xl border border-[var(--accent-500)]/20 overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                     {SECONDARY_LINKS.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="block px-4 py-2.5 text-sm text-[var(--dark-text)] hover:bg-[var(--cream-100)] hover:text-[var(--crimson-800)] transition-colors"
+                        className="block px-4 py-2.5 text-sm text-[var(--dark-text)] hover:bg-[var(--surface-100)] hover:text-[var(--primary-800)] transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -117,10 +117,10 @@ export default function Navbar() {
                 href="/registration"
                 className="
                   hidden sm:inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold
-                  bg-[var(--crimson-800)] text-white
-                  hover:bg-[var(--crimson-700)]
+                  bg-[var(--primary-800)] text-white
+                  hover:bg-[var(--primary-700)]
                   transition-colors duration-200
-                  shadow-md shadow-[var(--crimson-800)]/20
+                  shadow-md shadow-[var(--primary-800)]/20
                 "
               >
                 Register
@@ -129,7 +129,7 @@ export default function Navbar() {
               <button
                 onClick={() => setMenuOpen(true)}
                 aria-label="Open navigation menu"
-                className="lg:hidden p-2 rounded-xl text-[var(--dark-text)] hover:bg-[var(--cream-200)] transition-colors"
+                className="lg:hidden p-2 rounded-xl text-[var(--dark-text)] hover:bg-[var(--surface-200)] transition-colors"
               >
                 <Menu size={22} />
               </button>

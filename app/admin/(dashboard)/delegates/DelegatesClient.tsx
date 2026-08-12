@@ -156,7 +156,7 @@ export default function DelegatesClient() {
           </div>
 
           {selected.size > 0 && (
-            <div className="mt-4 flex items-center justify-between gap-2 p-3 rounded-lg bg-[var(--cream-100)] border border-[var(--gold-500)]/25">
+            <div className="mt-4 flex items-center justify-between gap-2 p-3 rounded-lg bg-[var(--surface-100)] border border-[var(--accent-500)]/25">
               <div className="text-sm font-semibold">{selected.size} selected</div>
               <div className="flex items-center gap-2 flex-wrap">
                 <Button size="sm" variant="outline" onClick={() => nudge("register")} disabled={sending}>
@@ -210,7 +210,7 @@ export default function DelegatesClient() {
                     <TableCell>
                       {r.registration ? (
                         <div>
-                          <Link href={`/admin/registrations/${r.registration.id}`} className="text-xs font-mono text-[var(--crimson-800)] hover:underline">
+                          <Link href={`/admin/registrations/${r.registration.id}`} className="text-xs font-mono text-[var(--primary-800)] hover:underline">
                             {r.registration.code}
                           </Link>
                           <div className="mt-1"><RegistrationStatusBadge status={r.registration.status} paymentStatus={r.registration.paymentStatus} /></div>
@@ -227,7 +227,7 @@ export default function DelegatesClient() {
                         <div className="space-y-1">
                           {r.abstracts.map((a) => (
                             <div key={a.id}>
-                              <Link href={`/admin/abstracts/${a.id}`} className="text-xs text-[var(--crimson-800)] hover:underline">
+                              <Link href={`/admin/abstracts/${a.id}`} className="text-xs text-[var(--primary-800)] hover:underline">
                                 {a.submissionCode} — {a.title.length > 40 ? a.title.slice(0, 40) + "…" : a.title}
                               </Link>
                               <div className="mt-0.5"><StatusBadge status={a.status} /></div>
@@ -252,7 +252,7 @@ function MetricCard({ label, value }: { label: string; value: number }) {
     <Card>
       <CardContent className="pt-6">
         <div className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)]">{label}</div>
-        <div className="mt-1 font-display text-3xl font-black text-[var(--crimson-800)]">{value}</div>
+        <div className="mt-1 font-display text-3xl font-black text-[var(--primary-800)]">{value}</div>
       </CardContent>
     </Card>
   );

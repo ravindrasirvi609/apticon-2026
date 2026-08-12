@@ -65,8 +65,8 @@ export default function PhotoUploadField({ file, onChange, error, disabled }: Pr
       <div className="mt-2 flex items-center gap-4">
         <div
           className={
-            "relative h-20 w-20 shrink-0 overflow-hidden rounded-full border bg-[var(--cream-100)] " +
-            (message ? "border-red-400" : "border-[var(--gold-500)]/30")
+            "relative h-20 w-20 shrink-0 overflow-hidden rounded-full border bg-[var(--surface-100)] " +
+            (message ? "border-red-400" : "border-[var(--accent-500)]/30")
           }
         >
           {preview ? (

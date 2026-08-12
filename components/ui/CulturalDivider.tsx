@@ -21,11 +21,11 @@ export default function CulturalDivider({ variant = "bastar", className = "", fl
   if (variant === "lotus-row") {
     return (
       <div className={`flex items-center gap-4 justify-center py-4 ${className}`}>
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--gold-500)]" />
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--accent-500)]" />
         <img src="/cultural/lotus.svg" alt="" aria-hidden className="w-8 h-8" />
         <img src="/cultural/lotus.svg" alt="" aria-hidden className="w-6 h-6 opacity-60" />
         <img src="/cultural/lotus.svg" alt="" aria-hidden className="w-8 h-8" />
-        <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[var(--gold-500)]" />
+        <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[var(--accent-500)]" />
       </div>
     );
   }

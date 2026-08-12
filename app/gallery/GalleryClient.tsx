@@ -8,17 +8,17 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 
 const GALLERY_ITEMS = [
-  { id: 1, caption: "Inaugural Ceremony — APTICON 2024",      category: "Inaugural", color: "bg-[var(--crimson-800)]", span: "col-span-2 row-span-2" },
-  { id: 2, caption: "Keynote Address",                        category: "Academic",   color: "bg-[var(--navy-800)]",   span: "" },
+  { id: 1, caption: "Inaugural Ceremony — APTICON 2024",      category: "Inaugural", color: "bg-[var(--primary-800)]", span: "col-span-2 row-span-2" },
+  { id: 2, caption: "Keynote Address",                        category: "Academic",   color: "bg-[var(--secondary-800)]",   span: "" },
   { id: 3, caption: "Delegates Networking",                   category: "Networking", color: "bg-emerald-700",        span: "" },
   { id: 4, caption: "Poster Presentation Session",            category: "Academic",   color: "bg-purple-700",         span: "" },
   { id: 5, caption: "Cultural Program — Folk Dance",           category: "Cultural",   color: "bg-orange-700",         span: "col-span-2" },
-  { id: 6, caption: "Award Ceremony",                         category: "Awards",     color: "bg-[var(--gold-500)]",  span: "" },
-  { id: 7, caption: "Workshop Session",                       category: "Academic",   color: "bg-[var(--navy-700)]",  span: "" },
-  { id: 8, caption: "Valedictory Function",                   category: "Valedictory",color: "bg-[var(--crimson-900)]",span: "" },
+  { id: 6, caption: "Award Ceremony",                         category: "Awards",     color: "bg-[var(--accent-500)]",  span: "" },
+  { id: 7, caption: "Workshop Session",                       category: "Academic",   color: "bg-[var(--secondary-700)]",  span: "" },
+  { id: 8, caption: "Valedictory Function",                   category: "Valedictory",color: "bg-[var(--primary-900)]",span: "" },
   { id: 9, caption: "Group Photo — Faculty",                  category: "Group",      color: "bg-slate-700",          span: "" },
   { id: 10, caption: "Exhibition Stalls",                     category: "Exhibition", color: "bg-teal-700",           span: "" },
-  { id: 11, caption: "APTI CG State Meeting",                 category: "Meeting",    color: "bg-[var(--crimson-800)]",span: "" },
+  { id: 11, caption: "APTI CG State Meeting",                 category: "Meeting",    color: "bg-[var(--primary-800)]",span: "" },
   { id: 12, caption: "Raipur City — Cultural Heritage",       category: "Raipur",     color: "bg-amber-700",          span: "" },
 ];
 
@@ -56,7 +56,7 @@ export default function GalleryClient() {
   }, [lightbox, prev, next]);
 
   return (
-    <div className="bg-[var(--cream-50)] min-h-screen">
+    <div className="bg-[var(--surface-50)] min-h-screen">
 
       {/* Hero */}
       <section className="relative py-24 md:py-28 overflow-hidden">
@@ -64,7 +64,7 @@ export default function GalleryClient() {
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>Gallery</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            Moments from <span className="text-gradient-crimson">APTICON</span>
+            Moments from <span className="text-gradient-primary">APTICON</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
             A visual journey through the Annual National Convention — keynotes, culture, camaraderie, and celebration.
@@ -75,7 +75,7 @@ export default function GalleryClient() {
       <CulturalDivider variant="bastar" className="opacity-40" />
 
       {/* Filter tabs */}
-      <section className="sticky top-16 md:top-20 z-20 bg-[var(--cream-50)]/95 backdrop-blur-sm border-b border-[var(--gold-500)]/15 py-4">
+      <section className="sticky top-16 md:top-20 z-20 bg-[var(--surface-50)]/95 backdrop-blur-sm border-b border-[var(--accent-500)]/15 py-4">
         <div className="container-site">
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {TABS.map((tab) => (
@@ -84,8 +84,8 @@ export default function GalleryClient() {
                 onClick={() => setActiveTab(tab)}
                 className={`flex-shrink-0 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200
                   ${activeTab === tab
-                    ? "bg-[var(--crimson-800)] text-white shadow-md"
-                    : "bg-white border border-[var(--gold-500)]/25 text-[var(--muted-text)] hover:text-[var(--crimson-800)] hover:border-[var(--gold-500)]/60"
+                    ? "bg-[var(--primary-800)] text-white shadow-md"
+                    : "bg-white border border-[var(--accent-500)]/25 text-[var(--muted-text)] hover:text-[var(--primary-800)] hover:border-[var(--accent-500)]/60"
                   }`}
               >
                 {tab}
@@ -134,7 +134,7 @@ export default function GalleryClient() {
             </motion.div>
           </AnimatePresence>
 
-          <ScrollReveal className="mt-12 rounded-2xl bg-[var(--crimson-800)] p-8 text-center">
+          <ScrollReveal className="mt-12 rounded-2xl bg-[var(--primary-800)] p-8 text-center">
             <p className="font-display font-bold text-2xl text-white mb-2">APTICON 2026 Photos Coming Soon</p>
             <p className="text-white/70 text-sm max-w-md mx-auto">
               Official photographs from APTICON 2026 will be published here after the event. Stay tuned!

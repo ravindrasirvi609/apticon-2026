@@ -34,11 +34,11 @@ export default function ForgotPasswordForm({ loginPath, title }: ForgotFormProps
   }
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-[var(--cream-50)] px-4 py-12">
+    <div className="min-h-dvh flex items-center justify-center bg-[var(--surface-50)] px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-[var(--crimson-800)] to-[var(--crimson-900)] flex items-center justify-center mb-3">
-            <Mail className="w-6 h-6 text-[var(--gold-300)]" />
+          <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-[var(--primary-800)] to-[var(--primary-900)] flex items-center justify-center mb-3">
+            <Mail className="w-6 h-6 text-[var(--accent-300)]" />
           </div>
           <CardTitle>{title}</CardTitle>
           <CardDescription>Enter your email and we'll send you a reset link.</CardDescription>
@@ -47,7 +47,7 @@ export default function ForgotPasswordForm({ loginPath, title }: ForgotFormProps
           {done ? (
             <div className="text-center py-4 space-y-3">
               <p className="text-sm text-[var(--dark-text)]">Check your inbox for a reset link.</p>
-              <Link href={loginPath} className="text-sm text-[var(--crimson-800)] hover:underline">
+              <Link href={loginPath} className="text-sm text-[var(--primary-800)] hover:underline">
                 Return to sign in
               </Link>
             </div>
@@ -68,7 +68,7 @@ export default function ForgotPasswordForm({ loginPath, title }: ForgotFormProps
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send reset link"}
               </Button>
               <div className="text-center">
-                <Link href={loginPath} className="text-xs text-[var(--muted-text)] hover:text-[var(--crimson-800)]">
+                <Link href={loginPath} className="text-xs text-[var(--muted-text)] hover:text-[var(--primary-800)]">
                   Back to sign in
                 </Link>
               </div>

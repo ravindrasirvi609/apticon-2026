@@ -8,18 +8,18 @@ interface Props {
 }
 
 /**
- * Circular delegate avatar. Falls back to the delegate's initial in the same crimson gradient
+ * Circular delegate avatar. Falls back to the delegate's initial in the same primary gradient
  * used for the console account chip, so photo-less legacy rows still look deliberate.
  */
 export default function DelegatePhoto({ url, name, size = 40, className = "" }: Props) {
   const box = { width: size, height: size };
-  const base = `shrink-0 overflow-hidden rounded-full border border-[var(--gold-500)]/30 ${className}`;
+  const base = `shrink-0 overflow-hidden rounded-full border border-[var(--accent-500)]/30 ${className}`;
 
   if (!url) {
     return (
       <div
         style={box}
-        className={`${base} flex items-center justify-center bg-gradient-to-br from-[var(--crimson-800)] to-[var(--crimson-900)] font-bold text-white`}
+        className={`${base} flex items-center justify-center bg-gradient-to-br from-[var(--primary-800)] to-[var(--primary-900)] font-bold text-white`}
         title={`${name} — no photo uploaded`}
         aria-label={`${name}, no photo uploaded`}
       >
@@ -31,7 +31,7 @@ export default function DelegatePhoto({ url, name, size = 40, className = "" }: 
   }
 
   return (
-    <div style={box} className={`${base} bg-[var(--cream-100)]`}>
+    <div style={box} className={`${base} bg-[var(--surface-100)]`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={url} alt={`${name}'s profile photo`} className="h-full w-full object-cover" loading="lazy" />
     </div>

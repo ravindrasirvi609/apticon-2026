@@ -105,8 +105,8 @@ export default function AuditClient() {
                       <TableCell className="text-xs max-w-md">
                         {row.details ? (
                           <details>
-                            <summary className="cursor-pointer text-[var(--crimson-800)] hover:underline">view</summary>
-                            <pre className="mt-2 p-2 bg-[var(--cream-50)] rounded text-[10px] overflow-x-auto whitespace-pre-wrap break-all">
+                            <summary className="cursor-pointer text-[var(--primary-800)] hover:underline">view</summary>
+                            <pre className="mt-2 p-2 bg-[var(--surface-50)] rounded text-[10px] overflow-x-auto whitespace-pre-wrap break-all">
                               {JSON.stringify(row.details, null, 2)}
                             </pre>
                           </details>

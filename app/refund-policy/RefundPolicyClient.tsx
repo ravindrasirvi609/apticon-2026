@@ -15,7 +15,7 @@ export default function RefundPolicyClient() {
       </LegalP>
       <LegalP>
         If you have any questions or concerns, please feel free to contact us at{" "}
-        <a href={`mailto:${EVENT.contact}`} className="text-[var(--crimson-800)] font-semibold hover:underline">
+        <a href={`mailto:${EVENT.contact}`} className="text-[var(--primary-800)] font-semibold hover:underline">
           {EVENT.contact}
         </a>
         .

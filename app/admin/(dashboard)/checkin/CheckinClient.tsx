@@ -182,7 +182,7 @@ export default function CheckinClient() {
 }
 
 function StatCard({ label, value, icon: Icon, accent }: { label: string; value: number | string; icon: React.ComponentType<{ className?: string }>; accent?: "emerald" }) {
-  const color = accent === "emerald" ? "text-emerald-700" : "text-[var(--crimson-800)]";
+  const color = accent === "emerald" ? "text-emerald-700" : "text-[var(--primary-800)]";
   return (
     <Card>
       <CardContent className="pt-6">
@@ -191,7 +191,7 @@ function StatCard({ label, value, icon: Icon, accent }: { label: string; value: 
             <div className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)]">{label}</div>
             <div className={"mt-1 font-display text-3xl font-black " + color}>{value}</div>
           </div>
-          <div className="w-10 h-10 rounded-lg bg-[var(--cream-100)] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-[var(--surface-100)] flex items-center justify-center">
             <Icon className={"w-5 h-5 " + color} />
           </div>
         </div>
@@ -214,9 +214,9 @@ function MealByDayCard({ title, counts, total }: { title: string; counts?: Recor
                 <span className="text-[var(--dark-text)]">Day {d}</span>
                 <span className="font-semibold">{counts?.[d] ?? 0}</span>
               </div>
-              <div className="h-1.5 bg-[var(--cream-100)] rounded-full overflow-hidden">
+              <div className="h-1.5 bg-[var(--surface-100)] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[var(--crimson-800)] rounded-full"
+                  className="h-full bg-[var(--primary-800)] rounded-full"
                   style={{ width: `${Math.min(100, ((counts?.[d] ?? 0) / max) * 100)}%` }}
                 />
               </div>

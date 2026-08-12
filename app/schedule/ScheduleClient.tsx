@@ -20,7 +20,7 @@ export default function ScheduleClient() {
   const currentDay = DAYS.find((d) => d.key === activeDay)!;
 
   return (
-    <div className="bg-[var(--cream-50)] min-h-screen">
+    <div className="bg-[var(--surface-50)] min-h-screen">
 
       {/* Hero */}
       <section className="relative py-24 md:py-28 overflow-hidden">
@@ -28,7 +28,7 @@ export default function ScheduleClient() {
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>Program</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            Conference <span className="text-gradient-crimson">Schedule</span>
+            Conference <span className="text-gradient-primary">Schedule</span>
           </h1>
           <p className="mt-4 text-[var(--muted-text)] max-w-xl mx-auto">
             Two days of keynotes, scientific sessions, workshops and cultural experiences in the heart of Raipur.
@@ -39,7 +39,7 @@ export default function ScheduleClient() {
       <CulturalDivider variant="bastar" className="opacity-40" />
 
       {/* Day tabs */}
-      <section className="sticky top-16 md:top-20 z-20 bg-[var(--cream-50)]/95 backdrop-blur-sm border-b border-[var(--gold-500)]/15 py-4">
+      <section className="sticky top-16 md:top-20 z-20 bg-[var(--surface-50)]/95 backdrop-blur-sm border-b border-[var(--accent-500)]/15 py-4">
         <div className="container-site flex items-center justify-between gap-4 flex-wrap">
           <div className="flex gap-3">
             {DAYS.map((d) => (
@@ -48,15 +48,15 @@ export default function ScheduleClient() {
                 onClick={() => setActiveDay(d.key)}
                 className={`px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-200
                   ${activeDay === d.key
-                    ? "bg-[var(--crimson-800)] text-white shadow-md"
-                    : "bg-white border border-[var(--gold-500)]/25 text-[var(--muted-text)] hover:text-[var(--crimson-800)] hover:border-[var(--gold-500)]/60"
+                    ? "bg-[var(--primary-800)] text-white shadow-md"
+                    : "bg-white border border-[var(--accent-500)]/25 text-[var(--muted-text)] hover:text-[var(--primary-800)] hover:border-[var(--accent-500)]/60"
                   }`}
               >
                 <span className="hidden sm:inline">{d.label} — </span>{d.date}
               </button>
             ))}
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--gold-500)]/30 text-xs font-semibold text-[var(--muted-text)] hover:border-[var(--gold-500)] hover:text-[var(--crimson-800)] transition-colors">
+          <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--accent-500)]/30 text-xs font-semibold text-[var(--muted-text)] hover:border-[var(--accent-500)] hover:text-[var(--primary-800)] transition-colors">
             <Download size={14} /> Program Book
           </button>
         </div>
@@ -89,8 +89,8 @@ export default function ScheduleClient() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Day summary */}
-              <div className="rounded-2xl bg-[var(--crimson-800)] p-6 text-white">
-                <p className="text-xs font-bold tracking-widest uppercase text-[var(--gold-400)] mb-2">{currentDay.label}</p>
+              <div className="rounded-2xl bg-[var(--primary-800)] p-6 text-white">
+                <p className="text-xs font-bold tracking-widest uppercase text-[var(--accent-400)] mb-2">{currentDay.label}</p>
                 <p className="font-display font-bold text-xl">{currentDay.date}</p>
                 <p className="text-sm text-white/70 mt-1">
                   {currentDay.sessions.length} sessions planned
@@ -98,7 +98,7 @@ export default function ScheduleClient() {
                 <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5">
                   {["Inauguration","Keynotes","Scientific Sessions","Workshops","Networking"].map((item) => (
                     <div key={item} className="flex items-center gap-2 text-xs text-white/70">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold-500)]" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-500)]" />
                       {item}
                     </div>
                   ))}
@@ -106,7 +106,7 @@ export default function ScheduleClient() {
               </div>
 
               {/* Legend */}
-              <div className="rounded-2xl bg-white border border-[var(--gold-500)]/15 p-5">
+              <div className="rounded-2xl bg-white border border-[var(--accent-500)]/15 p-5">
                 <p className="text-xs font-bold tracking-widest uppercase text-[var(--muted-text)] mb-4">Session Types</p>
                 <div className="space-y-2">
                   {LEGEND.map(({ key, cls }) => (
@@ -120,8 +120,8 @@ export default function ScheduleClient() {
               </div>
 
               {/* Venue reminder */}
-              <div className="rounded-2xl bg-[var(--cream-100)] border border-[var(--gold-500)]/15 p-5">
-                <p className="text-xs font-bold tracking-widest uppercase text-[var(--gold-500)] mb-2">Venue</p>
+              <div className="rounded-2xl bg-[var(--surface-100)] border border-[var(--accent-500)]/15 p-5">
+                <p className="text-xs font-bold tracking-widest uppercase text-[var(--accent-500)] mb-2">Venue</p>
                 <p className="text-sm font-semibold text-[var(--dark-text)] leading-snug">Pt. Deendayal Upadhyay Auditorium</p>
                 <p className="text-xs text-[var(--muted-text)] mt-1">G.E. Road, Raipur, C.G.</p>
               </div>

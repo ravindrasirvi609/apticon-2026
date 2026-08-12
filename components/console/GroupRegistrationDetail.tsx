@@ -100,7 +100,7 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
 
   return (
     <div className="p-4 md:p-8 max-w-6xl">
-      <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--crimson-800)] mb-4">
+      <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--primary-800)] mb-4">
         <ArrowLeft className="w-4 h-4" /> Back
       </Link>
 
@@ -171,7 +171,7 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
                 {registrationDetailBase && (
                   <div className="flex flex-wrap gap-2">
                     {group.createdRegistrations.map((rid) => (
-                      <Link key={rid} href={`${registrationDetailBase}/${rid}`} className="text-xs font-mono text-[var(--crimson-800)] hover:underline">
+                      <Link key={rid} href={`${registrationDetailBase}/${rid}`} className="text-xs font-mono text-[var(--primary-800)] hover:underline">
                         {rid.slice(-8)} →
                       </Link>
                     ))}

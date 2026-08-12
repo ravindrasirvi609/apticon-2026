@@ -46,11 +46,11 @@ export default function ResetPasswordForm({ loginPath, title }: ResetFormProps) 
   }
 
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-[var(--cream-50)] px-4 py-12">
+    <div className="min-h-dvh flex items-center justify-center bg-[var(--surface-50)] px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-[var(--crimson-800)] to-[var(--crimson-900)] flex items-center justify-center mb-3">
-            <Lock className="w-6 h-6 text-[var(--gold-300)]" />
+          <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-[var(--primary-800)] to-[var(--primary-900)] flex items-center justify-center mb-3">
+            <Lock className="w-6 h-6 text-[var(--accent-300)]" />
           </div>
           <CardTitle>{title}</CardTitle>
           <CardDescription>Choose a new password. Minimum 8 characters.</CardDescription>
