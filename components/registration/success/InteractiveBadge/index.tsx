@@ -39,7 +39,7 @@ export default function InteractiveBadge({ badge, onFirstInteract }: Props) {
   }`;
 
   return (
-    <figure className="relative mx-auto" aria-label={srSummary}>
+    <figure className="relative mx-auto w-full max-w-lg" aria-label={srSummary}>
       <span className="sr-only">{srSummary}</span>
 
       {showStaticFallback ? (

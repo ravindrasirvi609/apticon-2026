@@ -15,7 +15,7 @@ interface Props {
 export default function BadgeScene({ badge, onDragStart }: Props) {
   return (
     <div
-      className="mx-auto h-[420px] w-[280px] touch-none sm:h-[480px] sm:w-[320px] md:h-[540px] md:w-[360px]"
+      className="h-[75vh] min-h-[560px] w-full touch-none sm:h-[82vh] md:h-[90vh]"
       style={{ touchAction: "none" }}
     >
       <Canvas
