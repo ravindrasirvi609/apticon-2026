@@ -1,117 +1,137 @@
 "use client";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { GraduationCap, FlaskConical, Factory, Sprout, ArrowRight, Target } from "lucide-react";
 import { staggerContainer, fadeUp, scaleIn } from "@/lib/animations";
-import CulturalDivider from "@/components/ui/CulturalDivider";
-import PulseButton from "@/components/ui/PulseButton";
 import { EVENT } from "@/lib/constants";
 
 const PILLARS = [
-  { icon: "🎓", title: "Pharma Education", desc: "Innovative, outcome-based curriculum aligned with national health goals." },
-  { icon: "🔬", title: "Research Excellence", desc: "Advancing drug discovery, indigenous medicine and translational research." },
-  { icon: "🇮🇳", title: "Atmanirbhar Bharat", desc: "Self-reliant pharmaceutical ecosystem supporting India's health sovereignty." },
-  { icon: "🌿", title: "Viksit Bharat 2047", desc: "Building a developed India through skilled, ethical pharmacy professionals." },
+  {
+    icon: GraduationCap,
+    title: "Pharma Education",
+    desc: "Innovative, outcome-based curriculum aligned with national health goals.",
+  },
+  {
+    icon: FlaskConical,
+    title: "Research Excellence",
+    desc: "Advancing drug discovery, indigenous medicine and translational research.",
+  },
+  {
+    icon: Factory,
+    title: "Atmanirbhar Bharat",
+    desc: "Self-reliant pharmaceutical ecosystem supporting India's health sovereignty.",
+  },
+  {
+    icon: Sprout,
+    title: "Viksit Bharat 2047",
+    desc: "Building a developed India through skilled, ethical pharmacy professionals.",
+  },
 ];
 
 export default function ThemeSection() {
   return (
-    <section className="relative overflow-hidden">
-      {/* Wave top */}
-      <CulturalDivider variant="wave" />
-
-      <div className="bg-[var(--primary-800)] relative">
-        {/* Tribal pattern overlay */}
-        <div
-          aria-hidden
-          className="absolute inset-0 tribal-pattern-bg opacity-[0.06] pointer-events-none"
-        />
-        {/* Gold shimmer lines */}
-        <div aria-hidden className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--accent-500)]/60 to-transparent" />
-        <div aria-hidden className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--accent-500)]/60 to-transparent" />
-
-        <div className="container-site py-20 md:py-28 relative z-10">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
-            variants={staggerContainer}
-            className="text-center"
-          >
-            {/* Theme badge */}
-            <motion.div variants={scaleIn} className="flex justify-center mb-6">
-              <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-[var(--accent-500)]/40 bg-[var(--accent-500)]/10 text-[var(--accent-400)] text-xs font-bold tracking-widest uppercase">
-                <span className="w-4 h-px bg-[var(--accent-500)]/50" />
-                Conference Theme
-                <span className="w-4 h-px bg-[var(--accent-500)]/50" />
-              </span>
-            </motion.div>
-
-            {/* Main theme */}
-            <motion.h2
-              variants={fadeUp}
-              className="font-display font-black text-white leading-tight mx-auto max-w-4xl"
-              style={{ fontSize: "clamp(1.5rem, 4vw, 3rem)" }}
-            >
-              {EVENT.theme}
-            </motion.h2>
-
-            {/* Hindi */}
-            <motion.p variants={fadeUp} className="mt-4 font-devanagari text-lg md:text-xl text-[var(--accent-400)]/80">
-              {EVENT.themeHindi}
-            </motion.p>
-
-            {/* Vision badge */}
-            <motion.div variants={scaleIn} className="mt-8 flex justify-center">
-              <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 border border-white/20">
-                <span className="text-2xl">🚀</span>
-                <div className="text-left">
-                  <p className="text-xs text-white/60 font-semibold tracking-widest uppercase">Sub-Vision</p>
-                  <p className="text-sm font-bold text-[var(--accent-400)]">{EVENT.vision}</p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Lotus divider */}
-            <motion.div variants={fadeUp} className="mt-12">
-              <CulturalDivider variant="lotus-row" className="[&>div]:bg-[var(--accent-500)]/20 [&_span]:border-[var(--accent-500)]/20" />
-            </motion.div>
-
-            {/* Pillars grid */}
-            <motion.div
-              variants={staggerContainer}
-              className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
-            >
-              {PILLARS.map((p) => (
-                <motion.div
-                  key={p.title}
-                  variants={fadeUp}
-                  className="
-                    group rounded-2xl p-6 text-left
-                    bg-white/8 border border-white/10
-                    hover:bg-white/15 hover:border-[var(--accent-500)]/30
-                    transition-all duration-300
-                  "
-                >
-                  <span className="text-3xl mb-4 block">{p.icon}</span>
-                  <h3 className="font-display font-bold text-white text-lg mb-2 group-hover:text-[var(--accent-400)] transition-colors">
-                    {p.title}
-                  </h3>
-                  <p className="text-sm text-white/65 leading-relaxed">{p.desc}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* CTA */}
-            <motion.div variants={fadeUp} className="mt-12">
-              <PulseButton href="/about" variant="accent">
-                Know More About 28th APTICON
-              </PulseButton>
-            </motion.div>
-          </motion.div>
-        </div>
+    <section className="relative overflow-hidden bg-[var(--primary-900)]">
+      {/* Gradient field */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-gradient-to-br from-[var(--primary-900)] via-[var(--primary-800)] to-[var(--secondary-900)]"
+      />
+      {/* Ambient glows */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-32 top-0 h-96 w-96 rounded-full bg-[var(--accent-500)]/15 blur-[110px]" />
+        <div className="absolute -bottom-32 right-0 h-96 w-96 rounded-full bg-[var(--primary-600)]/25 blur-[110px]" />
       </div>
+      {/* Texture */}
+      <div
+        aria-hidden
+        className="tribal-pattern-bg pointer-events-none absolute inset-0 opacity-[0.04]"
+      />
 
-      {/* Wave bottom (flipped) */}
-      <CulturalDivider variant="wave" flip />
+      <div className="container-site relative z-10 py-16 sm:py-20 md:py-28">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={staggerContainer}
+          className="text-center"
+        >
+          {/* Section label */}
+          <motion.div variants={scaleIn} className="flex justify-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--accent-400)]/35 bg-[var(--accent-500)]/10 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--accent-300)] backdrop-blur-sm sm:text-[11px]">
+              <Target size={12} />
+              Conference Theme
+            </span>
+          </motion.div>
+
+          {/* Theme headline */}
+          <motion.h2
+            variants={fadeUp}
+            className="mx-auto mt-6 max-w-4xl font-display font-black leading-tight text-white"
+            style={{ fontSize: "clamp(1.5rem, 4vw, 3rem)" }}
+          >
+            {EVENT.theme}
+          </motion.h2>
+
+          {/* Hindi */}
+          <motion.p
+            variants={fadeUp}
+            className="mt-4 font-devanagari text-base text-[var(--accent-200)] sm:text-lg md:text-xl"
+          >
+            {EVENT.themeHindi}
+          </motion.p>
+
+          {/* Vision chip */}
+          <motion.div variants={scaleIn} className="mt-8 flex justify-center">
+            <div className="inline-flex items-center gap-3 rounded-2xl border border-white/15 bg-white/[0.08] px-5 py-3 backdrop-blur-md">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--accent-500)]/20 text-[var(--accent-300)]">
+                <Target size={17} />
+              </span>
+              <div className="text-left">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">
+                  Sub-Vision
+                </p>
+                <p className="text-sm font-bold text-[var(--accent-300)]">{EVENT.vision}</p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Pillars */}
+          <motion.div
+            variants={staggerContainer}
+            className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:mt-14"
+          >
+            {PILLARS.map(({ icon: Icon, title, desc }) => (
+              <motion.div
+                key={title}
+                variants={fadeUp}
+                className="group rounded-2xl border border-white/10 bg-white/[0.06] p-5 text-left backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-400)]/40 hover:bg-white/[0.11] sm:p-6"
+              >
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--accent-500)]/15 text-[var(--accent-300)] transition-colors duration-300 group-hover:bg-[var(--accent-500)] group-hover:text-white">
+                  <Icon size={20} />
+                </span>
+                <h3 className="mt-4 font-display text-lg font-bold text-white transition-colors duration-300 group-hover:text-[var(--accent-300)]">
+                  {title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/65">{desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* CTA */}
+          <motion.div variants={fadeUp} className="mt-12">
+            <Link
+              href="/about"
+              className="group inline-flex items-center justify-center gap-2 rounded-full bg-[var(--accent-500)] px-7 py-3.5 text-sm font-bold text-white shadow-xl shadow-black/25 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-400)] sm:text-base"
+            >
+              Know More About 28th APTICON
+              <ArrowRight
+                size={17}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+          </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 }

@@ -1,18 +1,22 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, ChevronDown } from "lucide-react";
-import FloatingParticles from "@/components/ui/FloatingParticles";
-import GoldenBadge from "@/components/ui/GoldenBadge";
-import PulseButton from "@/components/ui/PulseButton";
+import { Calendar, MapPin, ArrowRight, CalendarDays } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
-import HeroConceptStrip from "./HeroConceptStrip";
 import HeroBackgroundSlider from "./HeroBackgroundSlider";
-import { fadeUp, scaleIn } from "@/lib/animations";
 import { EVENT, RAIPUR_PLACES } from "@/lib/constants";
 
-const SLIDE_INTERVAL_MS = 5000;
+const SLIDE_INTERVAL_MS = 6000;
+
+/* Shared entrance transition — soft, modern easing */
+const ease = [0.22, 1, 0.36, 1] as const;
+const rise = (delay: number) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay, ease },
+});
 
 export default function HeroSection() {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -26,44 +30,34 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col overflow-hidden pt-4 md:pt-6">
+    /* Header (announcement bar + navbar) sits above in normal flow, so the hero
+       subtracts it to keep the whole composition inside the first screen. */
+    <section className="relative flex min-h-[calc(100svh-6.5rem)] flex-col overflow-hidden md:min-h-[calc(100svh-7.5rem)]">
 
-      {/* ── Background layers ─────────────────────────────── */}
-      {/* Rotating photo background */}
+      {/* ── Background ─────────────────────────────────────── */}
       <HeroBackgroundSlider places={RAIPUR_PLACES} index={slideIndex} />
 
-      {/* Gondi sun watermark */}
-      <div
-        aria-hidden
-        className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none"
-      >
-        <img
-          src="/cultural/gondi-sun.svg"
-          alt=""
-          className="w-[600px] md:w-[900px] max-w-none opacity-100"
-        />
+      {/* Ambient colour glows — soft, modern depth */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute -top-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-[var(--primary-600)]/25 blur-[120px]" />
+        <div className="absolute -bottom-40 -right-24 h-[32rem] w-[32rem] rounded-full bg-[var(--accent-500)]/20 blur-[130px]" />
       </div>
 
-      {/* Tribal tile pattern */}
+      {/* Very subtle texture */}
       <div
         aria-hidden
-        className="absolute inset-0 z-0 tribal-pattern-bg opacity-40 pointer-events-none"
+        className="tribal-pattern-bg pointer-events-none absolute inset-0 z-0 opacity-[0.05]"
       />
 
-      {/* Lotus floating particles */}
-      <FloatingParticles count={10} />
+      {/* ── Content ────────────────────────────────────────── */}
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-5 text-center sm:px-6 md:py-7">
 
-      {/* ── Main content ──────────────────────────────────── */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-2 pb-6 md:pb-8">
-
-        {/* Logos row */}
+        {/* Institution logos */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex items-center justify-center gap-6 mb-4 md:mb-5"
+          {...rise(0.05)}
+          className="mb-4 flex items-center justify-center gap-3 sm:gap-4"
         >
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--primary-800)]/20 bg-white/90 p-1.5 shadow-sm md:h-20 md:w-20">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/25 bg-white/95 p-2 shadow-lg shadow-black/20 backdrop-blur-sm sm:h-16 sm:w-16 md:h-18 md:w-18">
             <Image
               src="/logo/APTI.png"
               alt="Association of Pharmaceutical Teachers of India"
@@ -73,10 +67,8 @@ export default function HeroSection() {
               className="h-full w-full object-contain"
             />
           </div>
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[var(--accent-500)]/20 border border-[var(--accent-500)]/40 flex items-center justify-center">
-            <img src="/cultural/lotus.svg" alt="" className="w-6 h-6" />
-          </div>
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--secondary-800)]/20 bg-white/90 p-1.5 shadow-sm md:h-20 md:w-20">
+          <span aria-hidden className="h-8 w-px bg-white/25 sm:h-10" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/25 bg-white/95 p-2 shadow-lg shadow-black/20 backdrop-blur-sm sm:h-16 sm:w-16 md:h-18 md:w-18">
             <Image
               src="/logo/Ravishankar_Shukla_University.png"
               alt="Pt. Ravishankar Shukla University, Raipur"
@@ -88,126 +80,114 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        {/* Badge */}
-        <GoldenBadge>{EVENT.edition}</GoldenBadge>
+        {/* Edition badge */}
+        <motion.div {...rise(0.15)}>
+          <span className="inline-flex items-center gap-2 rounded-full border border-[var(--accent-400)]/40 bg-[var(--accent-500)]/15 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--accent-200)] backdrop-blur-md sm:px-4 sm:text-[11px]">
+            <span className="relative flex h-1.5 w-1.5 shrink-0">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--accent-400)] opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--accent-400)]" />
+            </span>
+            {EVENT.edition}
+          </span>
+        </motion.div>
 
-        {/* APTICON logo */}
+        {/* APTICON wordmark — height-capped so the hero always fits the viewport */}
         <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.9 }}
+          initial={{ opacity: 0, y: 28, scale: 0.94 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-3 mb-3 w-full max-w-sm sm:max-w-lg md:max-w-xl px-4"
+          transition={{ duration: 0.8, delay: 0.25, ease }}
+          className="relative mt-3 w-full max-w-lg sm:mt-4 md:max-w-xl lg:max-w-2xl"
+          style={{ height: "clamp(5.5rem, 17vh, 10rem)" }}
         >
           <Image
             src="/logo/APTICON_LOGO.png"
-            alt="APTICON 2026 — Annual National Convention"
-            width={1536}
-            height={1024}
+            alt="APTICON 2026 — 28th Annual National Convention"
+            fill
             priority
-            className="w-full h-auto"
+            sizes="(max-width: 640px) 90vw, (max-width: 1024px) 60vw, 42rem"
+            className="object-contain drop-shadow-2xl"
           />
         </motion.div>
 
-        {/* Theme — typewriter effect via Framer */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.85 }}
-          className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg font-semibold text-white/90 leading-relaxed mb-2 px-2"
+        {/* Theme */}
+        <motion.h1
+          {...rise(0.45)}
+          className="mx-auto mt-3 max-w-3xl font-display font-bold leading-snug text-white drop-shadow-md sm:mt-4"
+          style={{ fontSize: "clamp(1rem, 2.4vw, 1.75rem)" }}
         >
           {EVENT.theme}
-        </motion.p>
+        </motion.h1>
 
         {/* Hindi tagline */}
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1.1 }}
-          className="font-devanagari text-sm md:text-base text-[var(--accent-400)]/90 mb-4"
+          {...rise(0.55)}
+          className="mt-2.5 font-devanagari text-sm text-[var(--accent-200)] sm:text-base md:text-lg"
         >
           {EVENT.themeHindi}
         </motion.p>
 
-        {/* Date + Venue pills */}
+        {/* Date + venue chips */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1.2 }}
-          className="flex flex-col sm:flex-row items-center gap-3 mb-5"
+          {...rise(0.65)}
+          className="mt-5 flex flex-col items-center gap-2.5 sm:flex-row sm:justify-center sm:gap-3"
         >
-          <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--primary-800)] text-white text-xs sm:text-sm font-medium shadow-md shadow-[var(--primary-800)]/25">
-            <Calendar size={14} />
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md sm:text-sm">
+            <Calendar size={14} className="shrink-0 text-[var(--accent-300)]" />
             {EVENT.dateDisplay}
           </span>
-          <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-[var(--accent-500)]/30 text-[var(--dark-text)] text-xs sm:text-sm font-medium shadow-sm">
-            <MapPin size={14} className="text-[var(--primary-800)] flex-shrink-0" />
-            <span className="truncate max-w-[220px] sm:max-w-none">Raipur, Chhattisgarh</span>
+          <span className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md sm:text-sm">
+            <MapPin size={14} className="shrink-0 text-[var(--accent-300)]" />
+            <span className="truncate">Raipur, Chhattisgarh</span>
           </span>
         </motion.div>
 
-        {/* CTA buttons */}
+        {/* CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1.35 }}
-          className="flex flex-col sm:flex-row items-center gap-4"
+          {...rise(0.75)}
+          className="mt-6 flex w-full max-w-xs flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:items-center sm:justify-center"
         >
-          <PulseButton href="/registration" variant="accent" pulse className="min-w-[160px]">
+          <Link
+            href="/registration"
+            className="group inline-flex items-center justify-center gap-2 rounded-full bg-[var(--accent-500)] px-7 py-3.5 text-sm font-bold text-white shadow-xl shadow-[var(--accent-500)]/30 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent-400)] hover:shadow-2xl hover:shadow-[var(--accent-500)]/40 sm:text-base"
+          >
             Register Now
-          </PulseButton>
-          <PulseButton href="/schedule" variant="outline-light" className="min-w-[160px]">
+            <ArrowRight
+              size={17}
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            />
+          </Link>
+          <Link
+            href="/schedule"
+            className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/35 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/20 sm:text-base"
+          >
+            <CalendarDays size={17} className="shrink-0" />
             View Program
-          </PulseButton>
+          </Link>
         </motion.div>
 
         {/* Countdown */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.55 }}
-          className="mt-6 md:mt-8"
-        >
+        <motion.div {...rise(0.9)} className="mt-6">
           <CountdownTimer />
         </motion.div>
       </div>
 
-      {/* Scroll cue — overlaid, doesn't add to hero height */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.2 }}
-        className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 hidden md:block"
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-          className="flex flex-col items-center gap-1 text-white/70"
-        >
-          <span className="text-[10px] tracking-widest uppercase font-medium">Scroll</span>
-          <ChevronDown size={18} />
-        </motion.div>
-      </motion.div>
-
-      {/* ── Concept strip from flyer ── */}
-      <div className="relative z-10 mt-auto w-full pb-4 md:pb-6 flex flex-col items-center gap-2">
-        {/* Background photo slide indicators */}
-        <div className="flex justify-center gap-2">
-          {RAIPUR_PLACES.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              aria-label={`Show background photo ${i + 1}`}
-              onClick={() => setSlideIndex(i)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === slideIndex ? "w-6 bg-[var(--accent-400)]" : "w-1.5 bg-white/40 hover:bg-white/70"
-              }`}
-            />
-          ))}
-        </div>
-
-        <HeroConceptStrip />
+      {/* ── Bottom rail: background slide indicators ───────── */}
+      <div className="relative z-10 flex w-full justify-center gap-1.5 pb-4">
+        {RAIPUR_PLACES.map((place, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`Show ${place.name}`}
+            aria-current={i === slideIndex}
+            onClick={() => setSlideIndex(i)}
+            className={`h-1.5 rounded-full transition-all duration-500 ${
+              i === slideIndex
+                ? "w-7 bg-[var(--accent-400)]"
+                : "w-1.5 bg-white/40 hover:bg-white/70"
+            }`}
+          />
+        ))}
       </div>
-
     </section>
   );
 }

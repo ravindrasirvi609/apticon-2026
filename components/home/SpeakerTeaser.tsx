@@ -1,111 +1,105 @@
 "use client";
+import Link from "next/link";
 import { motion } from "framer-motion";
+import { UserRound, ArrowRight, Sparkles } from "lucide-react";
 import { staggerContainer, fadeUp, scaleIn } from "@/lib/animations";
-import GoldenBadge from "@/components/ui/GoldenBadge";
-import PulseButton from "@/components/ui/PulseButton";
-import { User } from "lucide-react";
 
 const PLACEHOLDERS = [
-  { role: "Chief Guest",         color: "from-[var(--primary-800)] to-[var(--primary-900)]" },
-  { role: "Keynote Speaker",     color: "from-[var(--secondary-800)] to-[var(--secondary-900)]" },
-  { role: "Invited Speaker",     color: "from-emerald-700 to-emerald-900" },
-  { role: "Invited Speaker",     color: "from-purple-700 to-purple-900" },
-  { role: "Session Chair",       color: "from-orange-700 to-orange-900" },
-  { role: "Workshop Facilitator",color: "from-[var(--secondary-700)] to-[var(--secondary-800)]" },
+  { role: "Chief Guest" },
+  { role: "Keynote Speaker" },
+  { role: "Invited Speaker" },
+  { role: "Invited Speaker" },
+  { role: "Session Chair" },
+  { role: "Workshop Facilitator" },
 ];
 
 export default function SpeakerTeaser() {
   return (
-    <section className="py-20 md:py-28 bg-[var(--surface-100)] relative overflow-hidden">
-      {/* Gondi sun right */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-80 h-80 opacity-20 pointer-events-none" aria-hidden>
-        <img src="/cultural/gondi-sun.svg" alt="" className="w-full h-full" />
-      </div>
+    <section className="relative overflow-hidden bg-[var(--surface-100)] py-16 sm:py-20 md:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -left-24 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-[var(--accent-500)]/[0.06] blur-3xl"
+      />
 
-      <div className="container-site relative z-10">
+      <div className="container-site relative">
+        {/* Header */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
           variants={staggerContainer}
-          className="text-center mb-14"
+          className="mb-10 text-center md:mb-14"
         >
           <motion.div variants={scaleIn} className="flex justify-center">
-            <GoldenBadge>Speakers</GoldenBadge>
+            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--accent-500)]/30 bg-[var(--accent-500)]/10 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--accent-500)] sm:text-[11px]">
+              <Sparkles size={12} />
+              Speakers
+            </span>
           </motion.div>
           <motion.h2
             variants={fadeUp}
-            className="mt-5 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-[var(--dark-text)]"
+            className="mt-5 font-display text-3xl font-bold text-[var(--dark-text)] sm:text-4xl md:text-5xl"
           >
-            Distinguished{" "}
-            <span className="text-gradient-primary">Speakers</span>
+            Distinguished <span className="text-gradient-primary">Speakers</span>
           </motion.h2>
-          <motion.p variants={fadeUp} className="mt-4 text-[var(--muted-text)] max-w-xl mx-auto">
-            Speaker announcements will be updated soon. Stay tuned for an outstanding lineup of pharmacy educators and industry leaders.
+          <motion.p
+            variants={fadeUp}
+            className="mx-auto mt-4 max-w-xl text-sm text-[var(--muted-text)] sm:text-base"
+          >
+            Speaker announcements will be updated soon. Stay tuned for an outstanding
+            lineup of pharmacy educators and industry leaders.
           </motion.p>
         </motion.div>
 
+        {/* Placeholder grid */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
           variants={staggerContainer}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4"
+          className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6"
         >
           {PLACEHOLDERS.map((sp, i) => (
             <motion.div
               key={i}
               variants={fadeUp}
-              className="flip-card group"
+              className="group flex flex-col items-center gap-3 rounded-2xl border border-[var(--surface-200)] bg-white p-4 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-500)]/40 hover:shadow-lg sm:p-5"
             >
-              <div className="flip-card-inner h-44">
-                {/* Front */}
-                <div className="flip-card-front h-full">
-                  <div className={`h-full rounded-2xl bg-gradient-to-b ${sp.color} flex flex-col items-center justify-center gap-3 p-4 border border-white/10`}>
-                    {/* Avatar with rangoli-esque ring */}
-                    <div className="relative">
-                      <div className="w-14 h-14 rounded-full bg-white/20 border-2 border-[var(--accent-500)]/50 flex items-center justify-center">
-                        <User size={24} className="text-white/60" />
-                      </div>
-                      {/* Spinning ring */}
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-                        className="absolute -inset-1 rounded-full border border-dashed border-[var(--accent-500)]/30"
-                      />
-                    </div>
-                    <p className="text-xs font-semibold text-white/80 text-center leading-snug">
-                      {sp.role}
-                    </p>
-                    <span className="text-[10px] text-[var(--accent-400)]/70 font-medium tracking-wide">
-                      TBA
-                    </span>
-                  </div>
-                </div>
-                {/* Back */}
-                <div className="flip-card-back h-full">
-                  <div className="h-full rounded-2xl bg-[var(--dark-text)] flex flex-col items-center justify-center gap-2 p-4 border border-[var(--accent-500)]/20">
-                    <img src="/cultural/lotus.svg" alt="" className="w-10 h-10 opacity-60" />
-                    <p className="text-xs text-[var(--accent-400)] font-semibold text-center">
-                      Announcement Coming Soon
-                    </p>
-                  </div>
-                </div>
+              {/* Avatar slot */}
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-800)]/10 to-[var(--accent-500)]/10 text-[var(--primary-800)]/45 ring-1 ring-[var(--surface-200)] transition-colors duration-300 group-hover:text-[var(--primary-800)] sm:h-18 sm:w-18">
+                <UserRound size={26} />
+              </div>
+
+              <div className="flex flex-col items-center gap-1.5">
+                <p className="text-[11px] font-semibold leading-snug text-[var(--dark-text)] sm:text-xs">
+                  {sp.role}
+                </p>
+                <span className="rounded-full bg-[var(--accent-500)]/12 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--accent-500)]">
+                  To be announced
+                </span>
               </div>
             </motion.div>
           ))}
         </motion.div>
 
+        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-          className="mt-12 flex justify-center"
+          transition={{ delay: 0.25, duration: 0.5 }}
+          className="mt-10 flex justify-center md:mt-12"
         >
-          <PulseButton href="/speakers" variant="outline">
+          <Link
+            href="/speakers"
+            className="group inline-flex items-center gap-2 rounded-full border-2 border-[var(--primary-800)] px-7 py-3 text-sm font-bold text-[var(--primary-800)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--primary-800)] hover:text-white sm:text-base"
+          >
             View All Speakers
-          </PulseButton>
+            <ArrowRight
+              size={16}
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            />
+          </Link>
         </motion.div>
       </div>
     </section>

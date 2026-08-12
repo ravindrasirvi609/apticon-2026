@@ -46,7 +46,7 @@ export default function ScheduleTeaser() {
             <motion.div
               key={day.day}
               variants={fadeUp}
-              className="rounded-2xl bg-white border border-[var(--accent-500)]/15 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
+              className="overflow-hidden rounded-2xl border border-[var(--surface-200)] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-500)]/30 hover:shadow-lg"
             >
               {/* Day header */}
               <div className={`bg-gradient-to-r ${day.color} p-5`}>

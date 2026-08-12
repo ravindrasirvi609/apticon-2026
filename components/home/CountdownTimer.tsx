@@ -25,46 +25,34 @@ function getTimeLeft(): TimeLeft {
   };
 }
 
-function FlipUnit({ value, label }: { value: string; label: string }) {
-  const [prev, setPrev] = useState(value);
-  const [flipping, setFlipping] = useState(false);
+const UNIT_LABELS = ["Days", "Hours", "Mins", "Secs"] as const;
 
-  useEffect(() => {
-    if (value !== prev) {
-      setFlipping(true);
-      const t = setTimeout(() => {
-        setPrev(value);
-        setFlipping(false);
-      }, 300);
-      return () => clearTimeout(t);
-    }
-  }, [value, prev]);
-
+/* Glassmorphic unit tile */
+function Unit({ value, label }: { value: string; label: string }) {
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="relative w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28">
-        {/* Card face */}
-        <motion.div
-          className="w-full h-full rounded-xl bg-gradient-to-b from-[var(--primary-800)] to-[var(--primary-900)] flex items-center justify-center shadow-xl shadow-[var(--primary-900)]/40 border border-[var(--accent-500)]/20"
-          animate={flipping ? { rotateX: [-90, 0] } : {}}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          style={{ transformPerspective: 400 }}
+    <div className="flex flex-col items-center gap-1.5">
+      <div className="relative w-[3.75rem] overflow-hidden rounded-2xl border border-white/20 bg-white/10 px-1 py-2.5 backdrop-blur-md sm:w-[4.5rem] sm:py-3 md:w-20">
+        {/* top sheen */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent"
+        />
+        <motion.span
+          key={value}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="relative block text-center font-display text-2xl font-black leading-none tabular-nums text-white sm:text-3xl md:text-4xl"
         >
-          <span className="font-display font-black text-3xl sm:text-4xl md:text-5xl text-white tabular-nums leading-none">
-            {flipping ? prev : value}
-          </span>
-          {/* Mid-line divider */}
-          <div className="absolute inset-x-0 top-1/2 -translate-y-px h-px bg-black/30" />
-        </motion.div>
+          {value}
+        </motion.span>
       </div>
-      <span className="text-[10px] sm:text-xs font-semibold tracking-widest uppercase text-[var(--accent-500)]">
+      <span className="text-[9px] font-semibold uppercase tracking-[0.15em] text-white/60 sm:text-[10px]">
         {label}
       </span>
     </div>
   );
 }
-
-const UNIT_LABELS = ["Days", "Hours", "Minutes", "Seconds"] as const;
 
 export default function CountdownTimer() {
   // null on server — avoids Date.now() hydration mismatch
@@ -76,54 +64,22 @@ export default function CountdownTimer() {
     return () => clearInterval(id);
   }, []);
 
-  // Invisible skeleton preserves layout space during SSR / first paint
-  if (time === null) {
-    return (
-      <div className="flex flex-col items-center gap-4 invisible">
-        <p className="text-xs font-semibold tracking-widest uppercase text-[var(--accent-500)]/80">
-          Conference begins in
-        </p>
-        <div className="flex items-end gap-3 sm:gap-4 md:gap-5">
-          {UNIT_LABELS.map((label, i) => (
-            <div key={label} className="flex items-end gap-3 sm:gap-4 md:gap-5">
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 rounded-xl bg-[var(--primary-800)]" />
-                <span className="text-[10px] sm:text-xs font-semibold tracking-widest uppercase text-[var(--accent-500)]">
-                  {label}
-                </span>
-              </div>
-              {i < UNIT_LABELS.length - 1 && (
-                <span className="text-2xl sm:text-3xl font-black text-[var(--accent-500)] pb-7 leading-none">:</span>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  const units = [
-    { value: String(time.days),  label: "Days" },
-    { value: pad(time.hours),    label: "Hours" },
-    { value: pad(time.minutes),  label: "Minutes" },
-    { value: pad(time.seconds),  label: "Seconds" },
-  ] as const;
+  const values = time
+    ? [String(time.days), pad(time.hours), pad(time.minutes), pad(time.seconds)]
+    : ["--", "--", "--", "--"];
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <p className="text-xs font-semibold tracking-widest uppercase text-[var(--accent-500)]/80">
+    <div
+      className={`flex flex-col items-center gap-3 transition-opacity duration-500 ${
+        time ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--accent-300)] sm:text-xs">
         Conference begins in
       </p>
-      <div className="flex items-end gap-3 sm:gap-4 md:gap-5">
-        {units.map((u, i) => (
-          <div key={u.label} className="flex items-end gap-3 sm:gap-4 md:gap-5">
-            <FlipUnit value={u.value} label={u.label} />
-            {i < units.length - 1 && (
-              <span className="text-2xl sm:text-3xl font-black text-[var(--accent-500)] pb-7 leading-none select-none">
-                :
-              </span>
-            )}
-          </div>
+      <div className="flex items-start gap-2 sm:gap-3">
+        {UNIT_LABELS.map((label, i) => (
+          <Unit key={label} value={values[i]} label={label} />
         ))}
       </div>
     </div>

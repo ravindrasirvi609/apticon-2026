@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import HeroSection      from "@/components/home/HeroSection";
+import HeroConceptStrip from "@/components/home/HeroConceptStrip";
 import HighlightsBar    from "@/components/home/HighlightsBar";
 import AboutPreview     from "@/components/home/AboutPreview";
 import ThemeSection     from "@/components/home/ThemeSection";
@@ -61,7 +62,10 @@ export default function HomePage() {
       {/* 1. Full-viewport hero */}
       <HeroSection />
 
-      {/* 2. Scrolling highlights marquee */}
+      {/* 2. Convention concept graphic band */}
+      <HeroConceptStrip />
+
+      {/* 3. Scrolling highlights marquee */}
       <HighlightsBar />
 
       {/* 3. About preview + animated stats */}

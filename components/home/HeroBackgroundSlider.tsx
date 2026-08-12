@@ -12,22 +12,22 @@ export default function HeroBackgroundSlider({ places, index }: { places: Place[
   const place = places[index];
 
   return (
-    <div aria-hidden className="absolute inset-0 z-0 overflow-hidden bg-[var(--primary-900)]">
+    <div aria-hidden className="absolute inset-0 z-0 overflow-hidden bg-[var(--secondary-900)]">
       <AnimatePresence>
         <motion.div
           key={index}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
+          transition={{ duration: 1.4, ease: "easeInOut" }}
           className="absolute inset-0"
         >
           {/* Ken Burns slow zoom */}
           <motion.div
             className="absolute inset-0"
             initial={{ scale: 1 }}
-            animate={{ scale: 1.12 }}
-            transition={{ duration: 6.5, ease: "linear" }}
+            animate={{ scale: 1.1 }}
+            transition={{ duration: 7.5, ease: "linear" }}
           >
             <Image
               src={place.image.src}
@@ -41,28 +41,31 @@ export default function HeroBackgroundSlider({ places, index }: { places: Place[
         </motion.div>
       </AnimatePresence>
 
-      {/* Dark scrim for text contrast */}
+      {/* Scrim — deep indigo/slate for text contrast */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(15,6,6,0.72) 0%, rgba(60,13,13,0.58) 45%, rgba(15,6,6,0.82) 100%)",
+            "linear-gradient(180deg, rgba(15,23,42,0.82) 0%, rgba(30,27,75,0.68) 45%, rgba(15,23,42,0.90) 100%)",
         }}
       />
 
-      {/* Current destination caption — hidden on narrow phones where it would collide with the centered logo row */}
-      <div className="hidden sm:block absolute top-24 left-6 z-10">
+      {/* Bottom fade into the page below */}
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--secondary-900)] to-transparent" />
+
+      {/* Current destination caption */}
+      <div className="absolute left-4 top-20 z-10 hidden sm:block md:left-6 md:top-24">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
-            initial={{ opacity: 0, x: -10 }}
+            initial={{ opacity: 0, x: -12 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
+            exit={{ opacity: 0, x: -12 }}
             transition={{ duration: 0.5 }}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/35 border border-white/15 backdrop-blur-sm"
+            className="flex items-center gap-2 rounded-full border border-white/15 bg-black/30 px-3 py-1.5 backdrop-blur-md"
           >
             <span className="text-sm">{place.icon}</span>
-            <span className="text-[11px] sm:text-xs font-semibold tracking-wide text-white/90 whitespace-nowrap">
+            <span className="whitespace-nowrap text-[11px] font-semibold tracking-wide text-white/90 sm:text-xs">
               {place.name}
             </span>
           </motion.div>
