@@ -20,12 +20,12 @@ export default function Navbar() {
   const navBg = useTransform(
     scrollY,
     [0, 80],
-    ["rgba(255,253,231,0)", "rgba(255,253,231,0.96)"]
+    ["rgba(248,250,252,0)", "rgba(248,250,252,0.96)"]
   );
   const navShadow = useTransform(
     scrollY,
     [0, 80],
-    ["0 0 0 rgba(139,26,26,0)", "0 2px 24px rgba(139,26,26,0.12)"]
+    ["0 0 0 rgba(49,46,129,0)", "0 2px 24px rgba(49,46,129,0.12)"]
   );
 
   useEffect(() => {

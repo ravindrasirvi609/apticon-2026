@@ -3,8 +3,8 @@
  *
  *   All templates funnel through `renderEmail({ title, preheader, blocks })`
  *   so every delegate/reviewer/admin message has an identical visual identity
- *   matching the APTICON 2026 website — crimson header, gold accent bar,
- *   Playfair display-like typography, cream section backgrounds, gold divider
+ *   matching the APTICON 2026 website — indigo header, orange accent bar,
+ *   Playfair display-like typography, slate section backgrounds, orange divider
  *   footer.
  *
  *   User-controlled fields ALWAYS pass through `esc()` before interpolation.
@@ -34,18 +34,18 @@ function nl2br(input: string): string {
 
 // ─── Brand tokens (email-safe hex values) ──────────────────
 const BRAND = {
-  crimson900: "#6B0F0F",
-  crimson800: "#8B1A1A",
-  crimson700: "#A52020",
-  gold500:    "#D4AF37",
-  gold400:    "#F5C842",
-  gold300:    "#FFD95A",
-  navy800:    "#1A237E",
-  cream50:    "#FFFDE7",
-  cream100:   "#FFF8E1",
-  cream200:   "#FFECB3",
-  dark:       "#1A1A2E",
-  muted:      "#5D4037",
+  primary900: "#1E1B4B",
+  primary800: "#312E81",
+  primary700: "#4338CA",
+  accent500:  "#EA580C",
+  accent400:  "#F97316",
+  accent300:  "#FB923C",
+  secondary800: "#1E293B",
+  surface50:  "#F8FAFC",
+  surface100: "#F1F5F9",
+  surface200: "#E2E8F0",
+  dark:       "#0F172A",
+  muted:      "#475569",
   emerald:    "#059669",
   emerald50:  "#ECFDF5",
   amber:      "#D97706",
@@ -72,18 +72,18 @@ function renderBlock(b: EmailBlock): string {
       return `<p style="margin:0 0 14px 0;font-size:14px;line-height:1.65;color:${BRAND.dark};">${b.html}</p>`;
 
     case "heading":
-      return `<h2 style="margin:24px 0 12px 0;font-size:18px;font-weight:800;color:${BRAND.crimson800};">${esc(b.text)}</h2>`;
+      return `<h2 style="margin:24px 0 12px 0;font-size:18px;font-weight:800;color:${BRAND.primary800};">${esc(b.text)}</h2>`;
 
     case "code":
       return `
-        <div style="background:${BRAND.cream100};border-left:4px solid ${BRAND.gold500};padding:16px 20px;margin:20px 0;border-radius:4px;">
+        <div style="background:${BRAND.surface100};border-left:4px solid ${BRAND.accent500};padding:16px 20px;margin:20px 0;border-radius:4px;">
           <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:${BRAND.muted};font-weight:700;">${esc(b.label)}</div>
-          <div style="font-size:22px;font-weight:900;color:${BRAND.crimson800};margin-top:6px;font-family:'Courier New',monospace;letter-spacing:1px;">${esc(b.value)}</div>
+          <div style="font-size:22px;font-weight:900;color:${BRAND.primary800};margin-top:6px;font-family:'Courier New',monospace;letter-spacing:1px;">${esc(b.value)}</div>
         </div>`;
 
     case "qr":
       return `
-        <div style="background:${BRAND.cream100};border-left:4px solid ${BRAND.gold500};padding:16px 20px;margin:20px 0;border-radius:4px;text-align:center;">
+        <div style="background:${BRAND.surface100};border-left:4px solid ${BRAND.accent500};padding:16px 20px;margin:20px 0;border-radius:4px;text-align:center;">
           <img src="cid:${esc(b.cid)}" width="160" height="160" alt="QR code for registration"
                style="display:inline-block;border-radius:4px;background:#fff;padding:8px;" />
           ${b.caption ? `<div style="margin-top:10px;font-size:12px;color:${BRAND.muted};">${esc(b.caption)}</div>` : ""}
@@ -103,11 +103,11 @@ function renderBlock(b: EmailBlock): string {
       const bg = b.variant === "success" ? BRAND.emerald50
               : b.variant === "warning" ? BRAND.amber50
               : b.variant === "danger"  ? BRAND.red50
-              : BRAND.cream100;
+              : BRAND.surface100;
       const bar = b.variant === "success" ? BRAND.emerald
               : b.variant === "warning" ? BRAND.amber
               : b.variant === "danger"  ? BRAND.red
-              : BRAND.gold500;
+              : BRAND.accent500;
       const titleHtml = b.title
         ? `<div style="font-weight:800;color:${bar};margin-bottom:6px;font-size:14px;">${esc(b.title)}</div>` : "";
       return `
@@ -118,9 +118,9 @@ function renderBlock(b: EmailBlock): string {
     }
 
     case "button": {
-      const bg = b.variant === "secondary" ? "transparent" : BRAND.crimson800;
-      const color = b.variant === "secondary" ? BRAND.crimson800 : "#ffffff";
-      const border = b.variant === "secondary" ? `1px solid ${BRAND.crimson800}` : "none";
+      const bg = b.variant === "secondary" ? "transparent" : BRAND.primary800;
+      const color = b.variant === "secondary" ? BRAND.primary800 : "#ffffff";
+      const border = b.variant === "secondary" ? `1px solid ${BRAND.primary800}` : "none";
       return `
         <div style="margin:20px 0;">
           <a href="${esc(b.href)}" style="display:inline-block;background:${bg};color:${color};padding:12px 22px;border-radius:8px;font-weight:700;text-decoration:none;font-size:14px;border:${border};">
@@ -130,7 +130,7 @@ function renderBlock(b: EmailBlock): string {
     }
 
     case "divider":
-      return `<div style="height:1px;background:${BRAND.gold500};opacity:.25;margin:18px 0;"></div>`;
+      return `<div style="height:1px;background:${BRAND.accent500};opacity:.25;margin:18px 0;"></div>`;
 
     case "signoff":
       return `<p style="margin:24px 0 0 0;font-size:14px;color:${BRAND.dark};line-height:1.6;">${b.text ?? "Warm regards,"}<br/><b>APTICON 2026 Organising Committee</b></p>`;
@@ -148,18 +148,18 @@ export function renderEmail({ title, preheader, blocks }: RenderOpts): string {
   const body = blocks.map(renderBlock).join("\n");
   return `<!doctype html>
 <html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${esc(title)}</title></head>
-<body style="margin:0;padding:0;background:${BRAND.cream50};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:${BRAND.dark};">
+<body style="margin:0;padding:0;background:${BRAND.surface50};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:${BRAND.dark};">
   ${preheader ? `<div style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0;">${esc(preheader)}</div>` : ""}
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.cream50};padding:24px 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BRAND.surface50};padding:24px 0;">
     <tr>
       <td align="center">
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 6px 24px rgba(139,26,26,0.08);">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 6px 24px rgba(49,46,129,0.08);">
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,${BRAND.crimson800},${BRAND.crimson900});padding:28px 32px;color:#fff;position:relative;">
-              <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:${BRAND.gold400};font-weight:700;">APTICON 2026</div>
+            <td style="background:linear-gradient(135deg,${BRAND.primary800},${BRAND.primary900});padding:28px 32px;color:#fff;position:relative;">
+              <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:${BRAND.accent400};font-weight:700;">APTICON 2026</div>
               <div style="font-size:22px;font-weight:900;margin-top:6px;font-family:Georgia,serif;">${esc(title)}</div>
-              <div style="height:3px;width:60px;background:${BRAND.gold500};margin-top:14px;border-radius:2px;"></div>
+              <div style="height:3px;width:60px;background:${BRAND.accent500};margin-top:14px;border-radius:2px;"></div>
             </td>
           </tr>
           <!-- Body -->
@@ -170,8 +170,8 @@ export function renderEmail({ title, preheader, blocks }: RenderOpts): string {
           </tr>
           <!-- Footer -->
           <tr>
-            <td style="background:${BRAND.cream100};padding:20px 32px;font-size:12px;color:${BRAND.muted};border-top:2px solid ${BRAND.gold500};">
-              <div style="font-weight:700;color:${BRAND.crimson800};margin-bottom:4px;">APTICON 2026 · 28th Annual National Convention</div>
+            <td style="background:${BRAND.surface100};padding:20px 32px;font-size:12px;color:${BRAND.muted};border-top:2px solid ${BRAND.accent500};">
+              <div style="font-weight:700;color:${BRAND.primary800};margin-bottom:4px;">APTICON 2026 · 28th Annual National Convention</div>
               <div>24–25 October 2026 · Pt. Deendayal Upadhyay Auditorium, G.E. Road, Raipur (C.G.)</div>
               <div>Hosted by APTI Chhattisgarh · Pt. Ravishankar Shukla University</div>
               <div style="margin-top:10px;font-size:11px;opacity:.75;">This is an automated message. Please do not reply directly to this email.</div>
@@ -212,7 +212,7 @@ export function abstractSubmittedEmail(name: string, code: string, title: string
         { type: "kv", rows: [{ label: "Abstract Title", value: title }] },
         { type: "text", html: `You can check the review status any time using your submission code and email.` },
         { type: "button", label: "Check Submission Status", href: `${BASE_URL}/abstracts/status` },
-        { type: "callout", variant: "info", title: "Next step", body: `If you plan to present, please also complete your <a href="${BASE_URL}/registration" style="color:${BRAND.crimson800};font-weight:700;">registration</a>. Presenting authors must be registered delegates.` },
+        { type: "callout", variant: "info", title: "Next step", body: `If you plan to present, please also complete your <a href="${BASE_URL}/registration" style="color:${BRAND.primary800};font-weight:700;">registration</a>. Presenting authors must be registered delegates.` },
         { type: "signoff" },
       ],
     }),
@@ -247,7 +247,7 @@ export function abstractDecisionEmail(name: string, code: string, title: string,
         decision === "revision_requested"
           ? { type: "button" as const, label: "Revise & Resubmit Abstract", href: `${BASE_URL}/abstracts/revise?code=${encodeURIComponent(code)}` }
           : { type: "button" as const, label: "View full details", href: `${BASE_URL}/abstracts/status` },
-        ...(decision === "accepted" ? [{ type: "callout" as const, variant: "info" as const, title: "Reminder", body: `Presenting authors must be registered delegates. Please ensure your <a href="${BASE_URL}/registration" style="color:${BRAND.crimson800};font-weight:700;">registration</a> is complete.` }] : []),
+        ...(decision === "accepted" ? [{ type: "callout" as const, variant: "info" as const, title: "Reminder", body: `Presenting authors must be registered delegates. Please ensure your <a href="${BASE_URL}/registration" style="color:${BRAND.primary800};font-weight:700;">registration</a> is complete.` }] : []),
         { type: "signoff" },
       ],
     }),

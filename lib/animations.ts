@@ -43,8 +43,8 @@ export const letterVariant: Variants = {
 };
 
 export const cardHover = {
-  rest:  { scale: 1,    y: 0,  boxShadow: "0 4px 20px rgba(139,26,26,0.1)" },
-  hover: { scale: 1.02, y: -6, boxShadow: "0 20px 40px rgba(139,26,26,0.25)" },
+  rest:  { scale: 1,    y: 0,  boxShadow: "0 4px 20px rgba(49,46,129,0.1)" },
+  hover: { scale: 1.02, y: -6, boxShadow: "0 20px 40px rgba(49,46,129,0.25)" },
 };
 
 export const mobileMenuVariants: Variants = {

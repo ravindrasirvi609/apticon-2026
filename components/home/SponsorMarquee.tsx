@@ -4,11 +4,11 @@ import PulseButton from "@/components/ui/PulseButton";
 
 const TIERS = [
   { label: "Platinum Sponsor",   color: "#E5E4E2" },
-  { label: "Gold Sponsor",       color: "#D4AF37" },
+  { label: "Gold Sponsor",       color: "#EA580C" },
   { label: "Silver Sponsor",     color: "#C0C0C0" },
-  { label: "Knowledge Partner",  color: "#1A237E" },
+  { label: "Knowledge Partner",  color: "#1E293B" },
   { label: "Bronze Sponsor",     color: "#CD7F32" },
-  { label: "Hospitality Partner",color: "#8B1A1A" },
+  { label: "Hospitality Partner",color: "#312E81" },
 ];
 
 function SponsorPlaceholder({ label, color }: { label: string; color: string }) {

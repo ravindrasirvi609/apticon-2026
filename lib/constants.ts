@@ -72,13 +72,13 @@ export const SCHEDULE_DAY2 = [
 ];
 
 export const SESSION_COLORS: Record<string, string> = {
-  inaugural: "bg-[#8B1A1A] text-white",
-  keynote: "bg-[#1A237E] text-white",
+  inaugural: "bg-[#312E81] text-white",
+  keynote: "bg-[#1E293B] text-white",
   scientific: "bg-emerald-700 text-white",
   workshop: "bg-purple-700 text-white",
   panel: "bg-orange-700 text-white",
   cultural: "bg-pink-700 text-white",
-  valedictory: "bg-[#D4AF37] text-[#1A1A2E]",
+  valedictory: "bg-[#EA580C] text-[#0F172A]",
   break: "bg-gray-200 text-gray-700",
   logistics: "bg-gray-100 text-gray-600",
 };
@@ -124,8 +124,8 @@ export const RAIPUR_PLACES = [
 
 export const SPONSORSHIP_TIERS = [
   { tier: "Platinum", amount: "₹5,00,000", color: "#E5E4E2", benefits: ["Prime logo placement", "Full-page souvenir ad", "Exhibition stall", "5 delegate passes", "Banner display"] },
-  { tier: "Gold", amount: "₹3,00,000", color: "#D4AF37", benefits: ["Logo on all materials", "Half-page souvenir ad", "Exhibition stall", "3 delegate passes", "Banner display"] },
+  { tier: "Gold", amount: "₹3,00,000", color: "#EA580C", benefits: ["Logo on all materials", "Half-page souvenir ad", "Exhibition stall", "3 delegate passes", "Banner display"] },
   { tier: "Silver", amount: "₹1,50,000", color: "#C0C0C0", benefits: ["Logo on website & backdrop", "Quarter-page souvenir ad", "2 delegate passes"] },
   { tier: "Bronze", amount: "₹75,000", color: "#CD7F32", benefits: ["Logo on website", "Mention in proceedings", "1 delegate pass"] },
-  { tier: "Knowledge Partner", amount: "₹2,00,000", color: "#1A237E", benefits: ["Session branding", "Logo on all materials", "2 delegate passes", "Exhibitor stall"] },
+  { tier: "Knowledge Partner", amount: "₹2,00,000", color: "#1E293B", benefits: ["Session branding", "Logo on all materials", "2 delegate passes", "Exhibitor stall"] },
 ];

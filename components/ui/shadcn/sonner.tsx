@@ -8,8 +8,8 @@ export function Toaster() {
       toastOptions={{
         style: {
           background: "#ffffff",
-          border: "1px solid rgba(212,175,55,0.3)",
-          color: "#1A1A2E",
+          border: "1px solid rgba(234,88,12,0.3)",
+          color: "#0F172A",
           fontFamily: "var(--font-inter), system-ui, sans-serif",
         },
       }}
