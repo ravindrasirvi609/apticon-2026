@@ -26,7 +26,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col overflow-hidden pt-6 md:pt-10">
+    <section className="relative min-h-[100svh] flex flex-col overflow-hidden pt-4 md:pt-6">
 
       {/* ── Background layers ─────────────────────────────── */}
       {/* Rotating photo background */}
@@ -54,14 +54,14 @@ export default function HeroSection() {
       <FloatingParticles count={10} />
 
       {/* ── Main content ──────────────────────────────────── */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-4 pb-12 md:pb-16">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 pt-2 pb-6 md:pb-8">
 
         {/* Logos row */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex items-center justify-center gap-6 mb-8"
+          className="flex items-center justify-center gap-6 mb-4 md:mb-5"
         >
           <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--primary-800)]/20 bg-white/90 p-1.5 shadow-sm md:h-20 md:w-20">
             <Image
@@ -96,7 +96,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 mb-6 w-full max-w-md sm:max-w-xl md:max-w-2xl px-4"
+          className="mt-3 mb-3 w-full max-w-sm sm:max-w-lg md:max-w-xl px-4"
         >
           <Image
             src="/logo/APTICON_LOGO.png"
@@ -123,7 +123,7 @@ export default function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.1 }}
-          className="font-devanagari text-sm md:text-base text-[var(--accent-400)]/90 mb-8"
+          className="font-devanagari text-sm md:text-base text-[var(--accent-400)]/90 mb-4"
         >
           {EVENT.themeHindi}
         </motion.p>
@@ -133,7 +133,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 1.2 }}
-          className="flex flex-col sm:flex-row items-center gap-3 mb-10"
+          className="flex flex-col sm:flex-row items-center gap-3 mb-5"
         >
           <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--primary-800)] text-white text-xs sm:text-sm font-medium shadow-md shadow-[var(--primary-800)]/25">
             <Calendar size={14} />
@@ -165,31 +165,31 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.55 }}
-          className="mt-12 md:mt-14"
+          className="mt-6 md:mt-8"
         >
           <CountdownTimer />
         </motion.div>
-
-        {/* Scroll cue */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.2 }}
-          className="mt-8"
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-            className="flex flex-col items-center gap-1 text-white/70"
-          >
-            <span className="text-[10px] tracking-widest uppercase font-medium">Scroll</span>
-            <ChevronDown size={18} />
-          </motion.div>
-        </motion.div>
       </div>
 
+      {/* Scroll cue — overlaid, doesn't add to hero height */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2.2 }}
+        className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 hidden md:block"
+      >
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+          className="flex flex-col items-center gap-1 text-white/70"
+        >
+          <span className="text-[10px] tracking-widest uppercase font-medium">Scroll</span>
+          <ChevronDown size={18} />
+        </motion.div>
+      </motion.div>
+
       {/* ── Concept strip from flyer ── */}
-      <div className="relative z-10 mt-auto w-full pb-6 md:pb-8 flex flex-col items-center gap-4">
+      <div className="relative z-10 mt-auto w-full pb-4 md:pb-6 flex flex-col items-center gap-2">
         {/* Background photo slide indicators */}
         <div className="flex justify-center gap-2">
           {RAIPUR_PLACES.map((_, i) => (
