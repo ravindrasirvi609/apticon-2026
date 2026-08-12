@@ -30,9 +30,9 @@ export const NAV_LINKS = [
 
 export const STATS = [
   { value: 28, suffix: "th", label: "Annual Convention" },
-  { value: 500, suffix: "+", label: "Expected Delegates" },
+  { value: 1500, suffix: "+", label: "Expected Delegates" },
   { value: 20, suffix: "+", label: "Expert Speakers" },
-  { value: 1000, suffix: "+", label: "APTI Members Network" },
+  { value: 10000, suffix: "+", label: "APTI Members Network" },
 ];
 
 export const ABSTRACT_THEMES = [
