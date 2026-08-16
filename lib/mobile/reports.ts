@@ -43,13 +43,15 @@ export async function getActionReport(actionType: MobileActionType, opts: Report
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate<{ registration: ReportRegistration }>("registration", "registrationCode fullName email phone institution")
+      .populate<{ registration: ReportRegistration | null }>("registration", "registrationCode fullName email phone institution")
       .populate<{ staff: ReportStaff }>("staff", "name")
       .lean(),
   ]);
 
   const items = logs.map((log) => ({
-    registration: log.registration,
+    // A registration may have been removed after the action was recorded.
+    // Mongoose returns null for an unresolvable populated reference.
+    registration: log.registration ?? null,
     day: log.day,
     device: log.device,
     at: log.createdAt,

@@ -22,7 +22,7 @@ interface DashboardStats {
 }
 
 interface ReportItem {
-  registration: { registrationCode: string; fullName: string; email: string; phone: string; institution: string };
+  registration: { registrationCode: string; fullName: string; email: string; phone: string; institution: string } | null;
   day: number;
   device: string;
   at: string;
@@ -146,13 +146,21 @@ export default function CheckinClient() {
                     <TableRow><TableCell colSpan={6} className="text-center py-8 text-sm text-[var(--muted-text)]">No records yet.</TableCell></TableRow>
                   ) : (
                     report.items.map((item, i) => (
-                      <TableRow key={`${item.registration.registrationCode}-${i}`}>
-                        <TableCell className="font-mono text-xs">{item.registration.registrationCode}</TableCell>
-                        <TableCell>
-                          <div className="text-sm font-medium">{item.registration.fullName}</div>
-                          <div className="text-xs text-[var(--muted-text)]">{item.registration.email}</div>
+                      <TableRow key={`${item.registration?.registrationCode ?? "deleted-registration"}-${i}`}>
+                        <TableCell className="font-mono text-xs">
+                          {item.registration?.registrationCode ?? "Deleted registration"}
                         </TableCell>
-                        <TableCell className="text-sm">{item.registration.institution}</TableCell>
+                        <TableCell>
+                          {item.registration ? (
+                            <>
+                              <div className="text-sm font-medium">{item.registration.fullName}</div>
+                              <div className="text-xs text-[var(--muted-text)]">{item.registration.email}</div>
+                            </>
+                          ) : (
+                            <div className="text-sm text-[var(--muted-text)]">Registration record unavailable</div>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-sm">{item.registration?.institution ?? "—"}</TableCell>
                         {activeTabDef.dayScoped && <TableCell className="text-sm">{item.day}</TableCell>}
                         <TableCell className="text-xs text-[var(--muted-text)]">{format(new Date(item.at), "d MMM, HH:mm")}</TableCell>
                         <TableCell className="text-sm">{item.by}</TableCell>
