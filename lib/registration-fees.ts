@@ -51,12 +51,12 @@ export function calculateFeeWithGst(baseAmount: number): { gstAmount: number; to
 
 export const GROUP_MIN_SIZE = 10;
 
-/** Total headcount (paid + complimentary) at which the first free seat is granted. */
-export const GROUP_COMPLIMENTARY_AT = GROUP_MIN_SIZE;
+/** Total headcount (10 paid + 1 complimentary) at which the first free seat is granted. */
+export const GROUP_COMPLIMENTARY_AT = GROUP_MIN_SIZE + 1;
 
-/** One complimentary seat for every ten delegates in the group. */
+/** One complimentary seat for every ten paid delegates (11 total for the first free seat). */
 export function groupComplimentaryCount(delegateCount: number): number {
-  return Math.floor(delegateCount / GROUP_MIN_SIZE);
+  return Math.floor(delegateCount / GROUP_COMPLIMENTARY_AT);
 }
 
 export function currentGroupFeeAmount(category: RegistrationCategory, delegateCount: number, now: Date = new Date()) {

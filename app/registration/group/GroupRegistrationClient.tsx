@@ -21,7 +21,7 @@ export default function GroupRegistrationClient() {
             Register Your <span className="text-gradient-primary">Whole Group</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
-            Bring {GROUP_MIN_DELEGATES} or more delegates from your institution to APTICON 2026 — get 1 complimentary seat for every {GROUP_MIN_DELEGATES} delegates — one form, one payment.
+            Bring {GROUP_MIN_DELEGATES} paid delegates from your institution to APTICON 2026 and add 1 complimentary seat for every {GROUP_MIN_DELEGATES} paid delegates — one form, one payment.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Link href="/registration">
