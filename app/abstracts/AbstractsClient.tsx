@@ -95,6 +95,10 @@ export default function AbstractsClient() {
       toast.error("Please attach your abstract file (DOC or DOCX).");
       return;
     }
+    if (!graphicalAbstractFile) {
+      toast.error("Please attach your graphical abstract (JPG, PNG or WebP).");
+      return;
+    }
 
     setUploading(true);
     const result = await uploadPublicFile(file, "abstract", ABSTRACT_FILE_MIME, 10 * 1024 * 1024);
@@ -103,17 +107,13 @@ export default function AbstractsClient() {
       return;
     }
 
-    let graphicalAbstractKey: string | undefined;
-    let graphicalAbstractName: string | undefined;
-    if (graphicalAbstractFile) {
-      const gaResult = await uploadPublicFile(graphicalAbstractFile, "graphicalAbstract", IMAGE_MIME, 5 * 1024 * 1024);
-      if (!gaResult) {
-        setUploading(false);
-        return;
-      }
-      graphicalAbstractKey = gaResult.key;
-      graphicalAbstractName = graphicalAbstractFile.name;
+    const gaResult = await uploadPublicFile(graphicalAbstractFile, "graphicalAbstract", IMAGE_MIME, 5 * 1024 * 1024);
+    if (!gaResult) {
+      setUploading(false);
+      return;
     }
+    const uploadedGraphicalAbstractKey = gaResult.key;
+    const uploadedGraphicalAbstractName = graphicalAbstractFile.name;
     setUploading(false);
 
     const fileKey = result.key;
@@ -122,7 +122,7 @@ export default function AbstractsClient() {
     const res = await fetch("/api/abstracts", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ ...data, fileKey, fileName, graphicalAbstractKey, graphicalAbstractName }),
+      body: JSON.stringify({ ...data, fileKey, fileName, graphicalAbstractKey: uploadedGraphicalAbstractKey, graphicalAbstractName: uploadedGraphicalAbstractName }),
     });
     const body = await res.json();
     if (!res.ok) {
@@ -459,7 +459,7 @@ export default function AbstractsClient() {
 
               <div>
                 <Label htmlFor="graphicalAbstract">
-                  Graphical Abstract <span className="text-xs font-normal text-[var(--muted-text)]">(optional — image, JPG/PNG/WebP, max 5 MB)</span>
+                  Graphical Abstract * <span className="text-xs font-normal text-[var(--muted-text)]">(JPG/PNG/WebP, max 5 MB)</span>
                 </Label>
                 <div className="mt-2 flex items-center gap-3">
                   <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--accent-500)]/40 bg-white cursor-pointer hover:border-[var(--primary-800)]/40 transition-colors">
@@ -471,6 +471,7 @@ export default function AbstractsClient() {
                       id="graphicalAbstract"
                       type="file"
                       accept=".jpg,.jpeg,.png,.webp"
+                      required
                       className="hidden"
                       onChange={(e) => setGraphicalAbstractFile(e.target.files?.[0] ?? null)}
                     />

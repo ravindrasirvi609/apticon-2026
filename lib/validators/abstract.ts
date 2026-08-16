@@ -34,8 +34,8 @@ export const abstractSubmitSchema = z.object({
     .refine((arr) => arr.length >= 1 && arr.length <= 8, "Provide 1–8 keywords"),
   fileKey: z.string().min(1, "Please attach your abstract file"),
   fileName: z.string().min(1),
-  graphicalAbstractKey: z.string().optional(),
-  graphicalAbstractName: z.string().optional(),
+  graphicalAbstractKey: z.string().min(1, "Please attach your graphical abstract"),
+  graphicalAbstractName: z.string().min(1, "Please provide the graphical abstract filename"),
 });
 
 export const abstractStatusLookupSchema = z.object({

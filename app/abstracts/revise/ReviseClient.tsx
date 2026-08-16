@@ -67,6 +67,10 @@ export default function ReviseClient() {
       toast.error("Abstract must be at least 100 characters.");
       return;
     }
+    if (!graphicalAbstractFile && !record.graphicalAbstractName) {
+      toast.error("Please attach your graphical abstract (JPG, PNG or WebP).");
+      return;
+    }
     setSubmitting(true);
     try {
       let fileKey: string | undefined;
@@ -210,7 +214,7 @@ export default function ReviseClient() {
 
             <div>
               <Label htmlFor="graphicalAbstractFile">
-                Graphical Abstract <span className="text-xs font-normal text-[var(--muted-text)]">(optional — leave blank to keep the existing one)</span>
+                Graphical Abstract * <span className="text-xs font-normal text-[var(--muted-text)]">(required unless an existing one is kept; JPG/PNG/WebP, max 5 MB)</span>
               </Label>
               <div className="mt-2 flex items-center gap-3">
                 <label className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-[var(--accent-500)]/40 bg-white cursor-pointer hover:border-[var(--primary-800)]/40 transition-colors">

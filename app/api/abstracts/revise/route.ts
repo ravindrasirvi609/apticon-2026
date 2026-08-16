@@ -35,6 +35,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "This abstract is not open for revision." }, { status: 409 });
   }
 
+  if (!abs.graphicalAbstractKey && !data.graphicalAbstractKey) {
+    return NextResponse.json({ error: "A graphical abstract is required for resubmission." }, { status: 400 });
+  }
+
   const before = { status: abs.status };
 
   abs.abstract = data.abstract;
