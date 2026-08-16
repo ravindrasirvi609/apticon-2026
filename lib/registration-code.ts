@@ -15,9 +15,9 @@ const CATEGORY_PREFIX: Record<RegistrationCategory, string> = {
 /** First number issued for each prefix. Accompanying persons run a lower/separate range. */
 const PREFIX_START: Record<string, number> = {
   AM: 1001,
-  AN: 1001,
-  AU: 1001,
-  AP: 1001,
+  AN: 1701,
+  AU: 3001,
+  AP: 2001,
   AMR: 1001,
   AA: 501,
 };
