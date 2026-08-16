@@ -7,7 +7,6 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/shadcn/button";
 import GroupRegistrationForm from "@/components/registration/GroupRegistrationForm";
 import { GROUP_MIN_DELEGATES } from "@/lib/validators/group-registration";
-import { GROUP_COMPLIMENTARY_AT } from "@/lib/registration-fees";
 
 export default function GroupRegistrationClient() {
   return (
@@ -22,7 +21,7 @@ export default function GroupRegistrationClient() {
             Register Your <span className="text-gradient-primary">Whole Group</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
-            Bring {GROUP_MIN_DELEGATES} or more delegates from your institution to APTICON 2026 — groups of {GROUP_COMPLIMENTARY_AT} or more get 1 seat free — one form, one payment.
+            Bring {GROUP_MIN_DELEGATES} or more delegates from your institution to APTICON 2026 — get 1 complimentary seat for every {GROUP_MIN_DELEGATES} delegates — one form, one payment.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Link href="/registration">

@@ -310,7 +310,7 @@ export default function GroupRegistrationForm() {
         <div className="mt-3 flex items-start gap-2 text-xs text-[var(--muted-text)]">
           <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
           <span>
-            Groups of {GROUP_COMPLIMENTARY_AT} or more get 1 complimentary seat automatically — the total above already
+            Groups of {GROUP_COMPLIMENTARY_AT} or more get 1 complimentary seat for every {GROUP_MIN_DELEGATES} delegates — the total above already
             reflects it. All delegates in a group share one fee category.
           </span>
         </div>
