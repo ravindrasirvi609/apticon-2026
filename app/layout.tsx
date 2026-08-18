@@ -54,11 +54,20 @@ export const metadata: Metadata = {
     locale: "en_IN",
     siteName: "APTICON 2026",
     url: "https://apticon2026.org",
+    images: [
+      {
+        url: "/apticon-icon.png",
+        width: 512,
+        height: 512,
+        alt: "APTICON 2026",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "APTICON 2026 — 28th Annual National Convention",
     description: "Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat. 24–25 Oct 2026, Raipur, CG.",
+    images: ["/apticon-icon.png"],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: "https://apticon2026.org" },
