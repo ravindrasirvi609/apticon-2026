@@ -18,13 +18,13 @@ export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
     { label: "Committee", href: "/committee" },
+      { label: "Sponsors", href: "/sponsors" },
   // { label: "Speakers", href: "/speakers" },
   // { label: "Schedule", href: "/schedule" },
   { label: "Venue", href: "/venue" },
   { label: "Registration", href: "/registration" },
   { label: "Abstracts", href: "/abstracts" },
   { label: "Gallery", href: "/gallery" },
-  { label: "Sponsors", href: "/sponsors" },
   { label: "Contact", href: "/contact" },
 ];
 
