@@ -1,25 +1,37 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 
 const GALLERY_ITEMS = [
-  { id: 1, caption: "Inaugural Ceremony — APTICON 2024",      category: "Inaugural", color: "bg-[var(--primary-800)]", span: "col-span-2 row-span-2" },
-  { id: 2, caption: "Keynote Address",                        category: "Academic",   color: "bg-[var(--secondary-800)]",   span: "" },
-  { id: 3, caption: "Delegates Networking",                   category: "Networking", color: "bg-emerald-700",        span: "" },
-  { id: 4, caption: "Poster Presentation Session",            category: "Academic",   color: "bg-purple-700",         span: "" },
-  { id: 5, caption: "Cultural Program — Folk Dance",           category: "Cultural",   color: "bg-orange-700",         span: "col-span-2" },
-  { id: 6, caption: "Award Ceremony",                         category: "Awards",     color: "bg-[var(--accent-500)]",  span: "" },
-  { id: 7, caption: "Workshop Session",                       category: "Academic",   color: "bg-[var(--secondary-700)]",  span: "" },
-  { id: 8, caption: "Valedictory Function",                   category: "Valedictory",color: "bg-[var(--primary-900)]",span: "" },
-  { id: 9, caption: "Group Photo — Faculty",                  category: "Group",      color: "bg-slate-700",          span: "" },
-  { id: 10, caption: "Exhibition Stalls",                     category: "Exhibition", color: "bg-teal-700",           span: "" },
-  { id: 11, caption: "APTI CG State Meeting",                 category: "Meeting",    color: "bg-[var(--primary-800)]",span: "" },
-  { id: 12, caption: "Raipur City — Cultural Heritage",       category: "Raipur",     color: "bg-amber-700",          span: "" },
+  { id: 1, src: "/last-apticon/_NZ60977.JPG", caption: "APTICON — Conference Moments", category: "Inaugural", color: "bg-[var(--primary-800)]", span: "col-span-2 row-span-2" },
+  { id: 2, src: "/last-apticon/_NZ61117.JPG", caption: "APTICON — Conference Moments", category: "Academic", color: "bg-[var(--secondary-800)]", span: "" },
+  { id: 3, src: "/last-apticon/_8105394.JPG", caption: "APTICON — Conference Moments", category: "Cultural", color: "bg-orange-700", span: "" },
+  { id: 4, src: "/last-apticon/_NZ60369.JPG", caption: "APTICON — Conference Moments", category: "Academic", color: "bg-purple-700", span: "" },
+  { id: 5, src: "/last-apticon/_NZ60143.JPG", caption: "APTICON — Conference Moments", category: "Cultural", color: "bg-orange-700", span: "col-span-2" },
+  { id: 6, src: "/last-apticon/_NZ61501.JPG", caption: "APTICON — Conference Moments", category: "Awards", color: "bg-[var(--accent-500)]", span: "" },
+  { id: 7, src: "/last-apticon/_NZ60230.JPG", caption: "APTICON — Conference Moments", category: "Academic", color: "bg-[var(--secondary-700)]", span: "" },
+  { id: 8, src: "/last-apticon/_NZ60135.JPG", caption: "APTICON — Conference Moments", category: "Inaugural", color: "bg-[var(--primary-900)]", span: "" },
+  { id: 9, src: "/last-apticon/_NZ61002.JPG", caption: "APTICON — Conference Moments", category: "Awards", color: "bg-slate-700", span: "" },
+  { id: 10, src: "/last-apticon/_NZ60254.JPG", caption: "APTICON — Conference Moments", category: "Academic", color: "bg-teal-700", span: "" },
+  { id: 11, src: "/last-apticon/_8105685.JPG", caption: "APTICON — Conference Moments", category: "Cultural", color: "bg-[var(--primary-800)]", span: "" },
+  { id: 12, src: "/last-apticon/_8105337.JPG", caption: "APTICON — Conference Moments", category: "Raipur", color: "bg-amber-700", span: "" },
+  { id: 13, src: "/last-apticon/_NZ60309.JPG", caption: "APTICON — Conference Moments", category: "Inaugural", color: "bg-[var(--primary-800)]", span: "" },
+  { id: 14, src: "/last-apticon/_NZ60114.JPG", caption: "APTICON — Conference Moments", category: "Academic", color: "bg-[var(--secondary-800)]", span: "" },
+  { id: 15, src: "/last-apticon/_NZ60894.JPG", caption: "APTICON — Conference Moments", category: "Cultural", color: "bg-orange-700", span: "" },
+  { id: 16, src: "/last-apticon/_NZ60853.JPG", caption: "APTICON — Conference Moments", category: "Academic", color: "bg-purple-700", span: "" },
+  { id: 17, src: "/last-apticon/_NZ61581.JPG", caption: "APTICON — Conference Moments", category: "Awards", color: "bg-[var(--accent-500)]", span: "" },
+  { id: 18, src: "/last-apticon/_NZ61030.JPG", caption: "APTICON — Conference Moments", category: "Academic", color: "bg-[var(--secondary-700)]", span: "" },
+  { id: 19, src: "/last-apticon/_NZ60163.JPG", caption: "APTICON — Conference Moments", category: "Inaugural", color: "bg-[var(--primary-900)]", span: "" },
+  { id: 20, src: "/last-apticon/_NZ61479.JPG", caption: "APTICON — Conference Moments", category: "Awards", color: "bg-slate-700", span: "" },
+  { id: 21, src: "/last-apticon/_NZ60175.JPG", caption: "APTICON — Conference Moments", category: "Academic", color: "bg-teal-700", span: "" },
+  { id: 22, src: "/last-apticon/_NZ60213.JPG", caption: "APTICON — Conference Moments", category: "Cultural", color: "bg-[var(--primary-800)]", span: "" },
+  { id: 23, src: "/last-apticon/_NZ60826.JPG", caption: "APTICON — Conference Moments", category: "Raipur", color: "bg-amber-700", span: "" },
+  { id: 24, src: "/last-apticon/_NZ61044.JPG", caption: "APTICON — Conference Moments", category: "Inaugural", color: "bg-[var(--primary-800)]", span: "" },
 ];
 
 const TABS = ["All", "Inaugural", "Academic", "Cultural", "Awards", "Raipur"];
@@ -115,15 +127,13 @@ export default function GalleryClient() {
                     ${item.span}
                   `}
                 >
-                  {/* Placeholder colored tile */}
-                  <div className={`absolute inset-0 ${item.color} opacity-80 group-hover:opacity-100 transition-opacity duration-300`} />
-                  {/* Pattern overlay */}
-                  <div className="absolute inset-0 tribal-pattern-bg opacity-10" />
-                  {/* Center icon */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/40 group-hover:text-white/60 transition-colors">
-                    <ImageIcon size={32} />
-                    <span className="text-[10px] font-semibold uppercase tracking-widest">Photo</span>
-                  </div>
+                  <img
+                    src={item.src}
+                    alt={item.caption}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className={`absolute inset-0 ${item.color} opacity-10 group-hover:opacity-20 transition-opacity duration-300`} />
                   {/* Caption */}
                   <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <p className="text-white text-xs font-semibold text-left leading-snug">{item.caption}</p>
@@ -169,12 +179,11 @@ export default function GalleryClient() {
               onClick={(e) => e.stopPropagation()}
               className="max-w-2xl w-full"
             >
-              <div className={`aspect-[4/3] rounded-2xl ${currentLightboxItem.color} flex items-center justify-center`}>
-                <div className="text-center text-white/50">
-                  <ImageIcon size={64} className="mx-auto mb-2" />
-                  <p className="text-sm">Photo Placeholder</p>
-                </div>
-              </div>
+              <img
+                src={currentLightboxItem.src}
+                alt={currentLightboxItem.caption}
+                className="max-h-[75vh] w-full rounded-2xl object-contain"
+              />
               <p className="text-white font-semibold text-center mt-4">{currentLightboxItem.caption}</p>
               <p className="text-white/50 text-xs text-center mt-1">{currentIndex + 1} / {filtered.length}</p>
             </motion.div>
