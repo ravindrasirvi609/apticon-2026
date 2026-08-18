@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import { Download } from "lucide-react";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 import ScrollReveal from "@/components/ui/ScrollReveal";
@@ -115,9 +116,17 @@ export default function SponsorsClient() {
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
             Gain unparalleled visibility among 1500+ pharmacy professionals. Support India&apos;s premier pharmacy education convention and be part of a national movement.
           </p>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <PulseButton href="mailto:apticon2026@gmail.com" variant="accent" pulse external>
               Enquire About Sponsorship
+            </PulseButton>
+            <PulseButton
+              href="/downloads/APTICON-2026-Sponsorship-Opportunities.docx"
+              variant="outline"
+              download="APTICON-2026-Sponsorship-Opportunities.docx"
+            >
+              <Download size={16} />
+              Download Brochure
             </PulseButton>
           </div>
         </div>
@@ -260,9 +269,19 @@ export default function SponsorsClient() {
 
       <div className="py-12 text-center">
         <p className="text-[var(--muted-text)] mb-4">For customized packages and sponsorship brochure:</p>
-        <PulseButton href="mailto:apticon2026@gmail.com" variant="primary" external>
-          Contact: apticon2026@gmail.com
-        </PulseButton>
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <PulseButton href="mailto:apticon2026@gmail.com" variant="primary" external>
+            Contact: apticon2026@gmail.com
+          </PulseButton>
+          <PulseButton
+            href="/downloads/APTICON-2026-Sponsorship-Opportunities.docx"
+            variant="outline"
+            download="APTICON-2026-Sponsorship-Opportunities.docx"
+          >
+            <Download size={16} />
+            Download Full Brochure
+          </PulseButton>
+        </div>
       </div>
     </div>
   );

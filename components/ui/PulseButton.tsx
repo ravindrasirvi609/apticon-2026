@@ -9,6 +9,7 @@ interface Props {
   pulse?: boolean;
   className?: string;
   external?: boolean;
+  download?: boolean | string;
 }
 
 const variantStyles = {
@@ -25,6 +26,7 @@ export default function PulseButton({
   pulse = false,
   className = "",
   external = false,
+  download,
 }: Props) {
   const classes = `
     inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full
@@ -39,8 +41,9 @@ export default function PulseButton({
     return (
       <motion.a
         href={href}
-        target="_blank"
+        target={download ? undefined : "_blank"}
         rel="noopener noreferrer"
+        download={download}
         className={classes}
         whileHover={{ y: -2 }}
         whileTap={{ scale: 0.97 }}
