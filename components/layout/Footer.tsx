@@ -161,9 +161,14 @@ export default function Footer() {
             <p>© 2026 APTICON · APTI Chhattisgarh State Branch. All rights reserved.</p>
             <p>
               Powered by{" "}
-              <span className="text-[var(--accent-500)]/70">
+              <a
+                href="https://opf.org.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[var(--accent-500)]/70 hover:text-[var(--accent-400)] transition-colors"
+              >
                 Operant Pharmacy Federation
-              </span>
+              </a>
             </p>
           </div>
         </div>

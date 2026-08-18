@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import AnnouncementBanner from "@/components/ui/AnnouncementBanner";
 import ScrollProgressBar  from "@/components/ui/ScrollProgressBar";
 import BackToTop          from "@/components/ui/BackToTop";
+import OpfBadge           from "@/components/ui/OpfBadge";
 import { Toaster }        from "@/components/ui/shadcn/sonner";
 
 const inter = Inter({
@@ -102,6 +103,7 @@ export default function RootLayout({
           {/* Floating back-to-top */}
           <BackToTop />
         </div>
+        <OpfBadge />
         {/* Global toast notifications */}
         <Toaster />
       </body>
