@@ -56,43 +56,47 @@ function MemberCard({ member }: { member: (typeof NATIONAL_BODY)[number] }) {
   return (
     <motion.div
       variants={fadeUp}
-      className="rounded-2xl bg-white border border-[var(--accent-500)]/15 overflow-hidden shadow-sm hover:shadow-md hover:border-[var(--accent-500)]/40 transition-all duration-300 group"
+      className="relative rounded-2xl bg-white border border-[var(--accent-500)]/15 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-[var(--accent-500)]/40 transition-all duration-300 group"
     >
-      <div className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />
-      <div className="p-5 flex gap-4 items-start">
+      <div className={`h-20 w-full bg-gradient-to-r ${gradient}`} />
+      <div className="px-5 pb-5 flex flex-col items-center text-center">
+        <div className="-mt-14 mb-3">
         {member.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={member.image}
             alt={member.name}
-            className="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-black/5"
+            className="w-28 h-28 rounded-full object-cover ring-4 ring-white shadow-md"
           />
         ) : (
-          <div className={`w-12 h-12 rounded-full bg-gradient-to-b ${gradient} flex items-center justify-center flex-shrink-0`}>
-            <User size={20} className="text-white/80" />
+          <div className={`w-28 h-28 rounded-full bg-gradient-to-br ${gradient} ring-4 ring-white shadow-md flex items-center justify-center`}>
+            <User size={36} className="text-white/90" />
           </div>
         )}
-        <div className="min-w-0">
+        </div>
           {member.role && (
-            <span className={`inline-block mb-1 text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-sm bg-gradient-to-r ${gradient} text-white`}>
+            <span className={`inline-block mb-2 text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full bg-gradient-to-r ${gradient} text-white`}>
               {member.role}
             </span>
           )}
-          <p className="font-semibold text-sm text-[var(--dark-text)] leading-snug truncate group-hover:text-[var(--primary-800)] transition-colors">
+          <p className="font-semibold text-sm text-[var(--dark-text)] leading-snug group-hover:text-[var(--primary-800)] transition-colors">
             {member.name}
           </p>
-          <p className="text-xs text-[var(--muted-text)] mt-0.5 leading-snug">{member.designation}</p>
-          <p className="text-xs text-[var(--muted-text)] leading-snug">{member.institution}</p>
+          {member.designation && (
+            <p className="text-xs text-[var(--muted-text)] mt-1 leading-snug">{member.designation}</p>
+          )}
+          {member.institution && (
+            <p className="text-xs text-[var(--muted-text)] leading-snug line-clamp-2">{member.institution}</p>
+          )}
           {member.email && (
             <a
               href={`mailto:${member.email}`}
-              className="mt-1 inline-flex items-center gap-1 text-xs text-[var(--primary-800)] hover:underline truncate"
+              className="mt-2 inline-flex items-center gap-1.5 text-xs text-[var(--primary-800)] hover:underline max-w-full"
             >
               <Mail size={11} className="flex-shrink-0" />
               <span className="truncate">{member.email}</span>
             </a>
           )}
-        </div>
       </div>
     </motion.div>
   );

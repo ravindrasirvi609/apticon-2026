@@ -14,8 +14,8 @@ interface Patron {
 
 const PATRONS: Patron[] = [
   { name: "Hon'ble Governor / Chief Minister", designation: "Chhattisgarh State", role: "Chief Patron" },
-  { name: "Prof. S.N. Shukla", designation: "Hon. Vice Chancellor", institution: "Pt. Ravishankar Shukla University, Raipur (C.G.)", role: "Co-Chief Patron" },
-  { name: "Dr. Montu K. Patel", designation: "Hon. President", institution: "Pharmacy Council of India", role: "Co-Chief Patron" },
+  { name: "Prof. S.N. Shukla", designation: "Hon. Vice Chancellor", institution: "Pt. Ravishankar Shukla University, Raipur (C.G.)", role: "Co-Chief Patron", image: "/committee/national/vice_chancler.png" },
+  { name: "Dr. Montu K. Patel", designation: "Hon. President", institution: "Pharmacy Council of India", role: "Co-Chief Patron", image: "/committee/national/montu_patel.png" },
 ];
 
 export default function PatronsSection() {
@@ -76,11 +76,11 @@ export default function PatronsSection() {
                   <img
                     src={patron.image}
                     alt={patron.name}
-                    className="h-20 w-20 rounded-full object-cover ring-4 ring-white shadow-md"
+                    className="h-28 w-28 rounded-full object-cover ring-4 ring-white shadow-md"
                   />
                 ) : (
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-800)] to-[var(--accent-500)] ring-4 ring-white shadow-md">
-                    <User size={30} className="text-white/90" />
+                  <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-800)] to-[var(--accent-500)] ring-4 ring-white shadow-md">
+                    <User size={36} className="text-white/90" />
                   </div>
                 )}
               </div>

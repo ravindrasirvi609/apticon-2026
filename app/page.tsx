@@ -82,19 +82,19 @@ export default function HomePage() {
       <ThemeSection />
 
       {/* 6. Speakers teaser */}
-      <SpeakerTeaser />
+      {/* <SpeakerTeaser /> */}
 
       {/* 7. Lotus row separator */}
       <CulturalDivider variant="lotus-row" className="py-2 container-site" />
 
       {/* 8. Two-day schedule overview */}
-      <ScheduleTeaser />
+      {/* <ScheduleTeaser /> */}
 
       {/* 9. Venue + Raipur tourism */}
       <VenuePreview />
 
       {/* 10. Sponsors marquee */}
-      <SponsorMarquee />
+      {/* <SponsorMarquee /> */}
     </>
   );
 }

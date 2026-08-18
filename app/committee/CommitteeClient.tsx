@@ -34,8 +34,8 @@ const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
     color: "from-[var(--accent-500)] to-amber-600",
     members: [
       { name: "Hon'ble Governor / Chief Minister", designation: "Chhattisgarh State", institution: "", role: "Chief Patron" },
-      { name: "Prof. S.N. Shukla", designation: "Hon. Vice Chancellor", institution: "Pt. Ravishankar Shukla University, Raipur (C.G.)", role: "Co-Chief Patron" },
-      { name: "Dr. Montu K. Patel", designation: "Hon. President", institution: "Pharmacy Council of India", role: "Co-Chief Patron" },
+      { name: "Prof. S.N. Shukla", designation: "Hon. Vice Chancellor", institution: "Pt. Ravishankar Shukla University, Raipur (C.G.)", role: "Co-Chief Patron", image: "/committee/national/vice_chancler.png" },
+      { name: "Dr. Montu K. Patel", designation: "Hon. President", institution: "Pharmacy Council of India", role: "Co-Chief Patron", image: "/committee/national/montu_patel.png" },
     ],
   },
   {
