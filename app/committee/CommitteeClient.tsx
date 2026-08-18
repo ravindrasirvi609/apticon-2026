@@ -33,57 +33,50 @@ const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
     group: "Patrons",
     color: "from-[var(--accent-500)] to-amber-600",
     members: [
-      { name: "Vice Chancellor", designation: "Vice Chancellor", institution: "Pt. Ravishankar Shukla University, Raipur", role: "Chief Patron" },
-      { name: "APTI National President", designation: "National President, APTI", institution: "To Be Announced", role: "Patron" },
+      { name: "Hon'ble Governor / Chief Minister", designation: "Chhattisgarh State", institution: "", role: "Chief Patron" },
+      { name: "Prof. S.N. Shukla", designation: "Hon. Vice Chancellor", institution: "Pt. Ravishankar Shukla University, Raipur (C.G.)", role: "Co-Chief Patron" },
+      { name: "Dr. Montu K. Patel", designation: "Hon. President", institution: "Pharmacy Council of India", role: "Co-Chief Patron" },
     ],
   },
   {
-    group: "Organizing Leadership",
+    group: "Local Organizing Committee",
     color: "from-[var(--primary-800)] to-[var(--primary-900)]",
     members: [
-      { name: "Organizing Chairman", designation: "Professor & Head", institution: "University Institute of Pharmacy, Pt. RSU, Raipur", role: "Chairman" },
-      { name: "Organizing Secretary", designation: "Associate Professor", institution: "University Institute of Pharmacy, Pt. RSU, Raipur", role: "Secretary" },
-      { name: "Joint Secretary", designation: "Assistant Professor", institution: "University Institute of Pharmacy, Pt. RSU, Raipur", role: "Jt. Secretary" },
-      { name: "Treasurer", designation: "Professor", institution: "Raipur College of Pharmacy", role: "Treasurer" },
+      { name: "Prof. Deependra Singh", designation: "Professor", institution: "University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur, Chhattisgarh 492010", email: "deependraiop@gmail.com", image: "/committee/national/deependra-singh.jpg?v=2", role: "Chairman, LOC" },
+      { name: "Dr. Nirmal Dongre", designation: "Professor & Head", institution: "Institute of Pharmaceutical Sciences, SAGE University, Indore, Madhya Pradesh 452020", email: "dongrenirmal@gmail.com", image: "https://aptiindia.org/images/committee/MP/NIRMAL.png", role: "Co-Chairman, LOC" },
+      { name: "Prof. Shekhar Verma", designation: "Professor", institution: "University College of Pharmacy, Pt. Deendayal Upadhyay Memorial Health Sciences and Ayush University of Raipur, Chhattisgarh 492001", email: "shekharpharma@gmail.com", image: "https://aptiindia.org/images/committee/CG/shekhars.png", role: "Co-Chairman, LOC" },
+      { name: "Dr. Ajazuddin", designation: "Principal and Professor", institution: "Rungta College of Pharmaceutical Sciences and Research, Rungta Educational Campus, Bhilai, Chhattisgarh 490024", email: "write2ajaz@gmail.com", image: "https://aptiindia.org/images/committee/CG/azad.png", role: "Co-Chairman, LOC" },
+      { name: "Prof. Shailesh Jain", designation: "Dean, Faculty of Pharmacy", institution: "SAM College of Pharmacy, SAM Global University, Bhopal, Madhya Pradesh", email: "shailesh2210@gmail.com", image: "https://aptiindia.org/images/committee/MP/shailesh.png", role: "Co-Chairman, LOC" },
     ],
   },
   {
-    group: "Scientific Committee",
+    group: "Organizing Secretariat",
     color: "from-[var(--secondary-800)] to-[var(--secondary-900)]",
     members: [
-      { name: "Scientific Chairperson", designation: "Professor", institution: "To Be Announced" },
-      { name: "Scientific Co-Chair", designation: "Associate Professor", institution: "To Be Announced" },
-      { name: "Member", designation: "Professor", institution: "To Be Announced" },
-      { name: "Member", designation: "Professor", institution: "To Be Announced" },
-      { name: "Member", designation: "Professor", institution: "To Be Announced" },
-      { name: "Member", designation: "Associate Professor", institution: "To Be Announced" },
+      { name: "Prof. Amber Vyas", designation: "Assistant Professor", institution: "University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur, Chhattisgarh 492010", email: "ambervyas@gmail.com", image: "https://aptiindia.org/images/committee/CG/amber.png", role: "Organizing Secretary" },
+      { name: "Prof. Shivshankar Shukla", designation: "Professor", institution: "Columbia Institute of Pharmacy, Tekari, Raipur (C.G.)", email: "shivpharma007@gmail.com", image: "https://aptiindia.org/images/committee/CG/shukla.png", role: "Joint Organizing Secretary" },
+      { name: "Dr. Rakesh Patel", designation: "Principal", institution: "School of Pharmacy, Dr. APJ Abdul Kalam University, Indore, Madhya Pradesh", email: "secretaryaptimp2022@gmail.com", image: "https://aptiindia.org/images/committee/MP/rakesh.png", role: "Joint Organizing Secretary" },
+      { name: "Dr. Satyendra Shrivastav", designation: "", institution: "", role: "Associate Secretary" },
+      { name: "Dr. Ravindra Pandey", designation: "", institution: "", role: "Associate Secretary" },
+      { name: "Dr. Dheeraj Ahirwar", designation: "", institution: "", role: "Associate Secretary" },
+      { name: "Dr. Sudhir Bharadwaj", designation: "", institution: "", role: "Associate Secretary" },
+      { name: "Dr. Mukesh Sharma", designation: "", institution: "", role: "Associate Secretary" },
+      { name: "Dr. Vishal Jain", designation: "", institution: "", role: "Treasurer" },
     ],
   },
   {
     group: "Registration Committee",
     color: "from-emerald-700 to-emerald-900",
     members: [
-      { name: "Registration Chair", designation: "Assistant Professor", institution: "To Be Announced" },
-      { name: "Member", designation: "Assistant Professor", institution: "To Be Announced" },
-      { name: "Member", designation: "Assistant Professor", institution: "To Be Announced" },
+      { name: "Dr. Ravindra Pandey", designation: "", institution: "", role: "Chairman" },
+      { name: "Dr. Vishwanath Gupta", designation: "", institution: "", role: "Co-Chairman" },
     ],
   },
   {
-    group: "Cultural Committee",
+    group: "Scientific Committee",
     color: "from-pink-700 to-pink-900",
     members: [
-      { name: "Cultural Chair", designation: "Professor", institution: "To Be Announced" },
-      { name: "Member", designation: "Lecturer", institution: "To Be Announced" },
-      { name: "Member", designation: "Lecturer", institution: "To Be Announced" },
-    ],
-  },
-  {
-    group: "Hospitality & Transport",
-    color: "from-orange-700 to-orange-900",
-    members: [
-      { name: "Hospitality Chair", designation: "Professor", institution: "To Be Announced" },
-      { name: "Member", designation: "Assistant Professor", institution: "To Be Announced" },
-      { name: "Member", designation: "Lecturer", institution: "To Be Announced" },
+      { name: "Dr. Manju Singh", designation: "", institution: "", role: "Chairman" },
     ],
   },
 ];
@@ -122,8 +115,12 @@ function MemberCard({ member, gradient }: { member: Member; gradient: string }) 
         <p className="font-semibold text-sm text-[var(--dark-text)] leading-snug group-hover:text-[var(--primary-800)] transition-colors">
           {member.name}
         </p>
-        <p className="text-xs text-[var(--muted-text)] mt-1 leading-snug">{member.designation}</p>
-        <p className="text-xs text-[var(--muted-text)] leading-snug line-clamp-2">{member.institution}</p>
+        {member.designation && (
+          <p className="text-xs text-[var(--muted-text)] mt-1 leading-snug">{member.designation}</p>
+        )}
+        {member.institution && (
+          <p className="text-xs text-[var(--muted-text)] leading-snug line-clamp-2">{member.institution}</p>
+        )}
         {member.email && (
           <a
             href={`mailto:${member.email}`}

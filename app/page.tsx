@@ -3,6 +3,7 @@ import HeroSection      from "@/components/home/HeroSection";
 import HeroConceptStrip from "@/components/home/HeroConceptStrip";
 import HighlightsBar    from "@/components/home/HighlightsBar";
 import AboutPreview     from "@/components/home/AboutPreview";
+import PatronsSection   from "@/components/home/PatronsSection";
 import ThemeSection     from "@/components/home/ThemeSection";
 import SpeakerTeaser    from "@/components/home/SpeakerTeaser";
 import ScheduleTeaser   from "@/components/home/ScheduleTeaser";
@@ -73,6 +74,9 @@ export default function HomePage() {
 
       {/* 4. Bastar border separator */}
       <CulturalDivider variant="bastar" className="opacity-40" />
+
+      {/* 4b. Patrons */}
+      <PatronsSection />
 
       {/* 5. Conference theme — primary full-width */}
       <ThemeSection />
