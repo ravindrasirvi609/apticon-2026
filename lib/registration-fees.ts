@@ -19,13 +19,13 @@ export type RegistrationCategory = (typeof REGISTRATION_CATEGORIES)[number];
 
 // INR
 export const FEE_TABLE: Record<RegistrationCategory, Record<FeeTier, number>> = {
-  "APTI Life Member":            { early_bird: 1, regular: 3500, on_spot: 4000 },
-  "APTI Annual Member":          { early_bird: 1, regular: 4000, on_spot: 4500 },
-  "Non-Member":                  { early_bird: 1, regular: 5500, on_spot: 6000 },
-  "PG Student / Research Scholar": { early_bird: 1, regular: 3000, on_spot: 3500 },
-  "UG Student":                  { early_bird: 1, regular: 2500, on_spot: 3000 },
-  "Accompanying Person":         { early_bird: 1, regular: 1500, on_spot: 2000 },
-  // TODO: confirm final pricing — placeholder amount for now.
+  "APTI Life Member":            { early_bird: 3000, regular: 3500, on_spot: 4000 },
+  "APTI Annual Member":          { early_bird: 3500, regular: 4000, on_spot: 4500 },
+  "Non-Member":                  { early_bird: 5000, regular: 5500, on_spot: 6000 },
+  "PG Student / Research Scholar": { early_bird: 2500, regular: 3000, on_spot: 3500 },
+  "UG Student":                  { early_bird: 2000, regular: 2500, on_spot: 3000 },
+  "Accompanying Person":         { early_bird: 1000, regular: 1500, on_spot: 2000 },
+    // TODO: confirm final pricing — placeholder amount for now.
   "APTI Membership + APTICON Registration": { early_bird: 6000, regular: 6000, on_spot: 6000 },
 };
 
