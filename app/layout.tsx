@@ -8,7 +8,8 @@ import ScrollProgressBar  from "@/components/ui/ScrollProgressBar";
 import BackToTop          from "@/components/ui/BackToTop";
 import OpfBadge           from "@/components/ui/OpfBadge";
 import { Toaster }        from "@/components/ui/shadcn/sonner";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -109,6 +110,7 @@ export default function RootLayout({
         </div>
         <main id="main-content" className="flex-1">{children}
           <Analytics />
+          <SpeedInsights />
         </main>
         <div className="site-chrome">
           <Footer />
