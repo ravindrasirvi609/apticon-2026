@@ -272,7 +272,7 @@ export default function GroupRegistrationForm() {
             <Label htmlFor="category">Category (applies to whole group) *</Label>
             <select id="category" className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]" {...register("category", { required: "Please select a category" })} defaultValue="">
               <option value="">Select Category</option>
-              {REGISTRATION_CATEGORIES.filter((c) => c !== "Accompanying Person" && c !== "APTI Membership + APTICON Registration").map((c) => <option key={c} value={c}>{c}</option>)}
+              {REGISTRATION_CATEGORIES.filter((c) => c !== "Accompanying Person").map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
             {errors.category && <p className={errCls}>{errors.category.message}</p>}
           </div>

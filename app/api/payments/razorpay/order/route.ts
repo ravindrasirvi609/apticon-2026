@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     feeTier: tier,
     feeAmount: totalAmount,
     willSubmitAbstract: data.willSubmitAbstract,
-    includesAptiMembership: data.category === "APTI Membership + APTICON Registration",
+    includesAptiMembership: false,
     aptiMemberId: data.aptiMemberId,
     paymentMode: "razorpay",
     paymentStatus: "pending",

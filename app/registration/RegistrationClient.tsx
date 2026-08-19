@@ -9,6 +9,10 @@ import FeeTable from "@/components/registration/FeeTable";
 import RegistrationForm from "@/components/registration/RegistrationForm";
 
 export default function RegistrationClient() {
+  const scrollToRegistrationForm = () => {
+    document.getElementById("registration-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="bg-[var(--surface-50)] min-h-screen">
 
@@ -24,10 +28,15 @@ export default function RegistrationClient() {
             Join 1500+ pharmacy educators and researchers at India's premier pharmaceutical education convention.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold">
+            <button
+              type="button"
+              onClick={scrollToRegistrationForm}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
+              aria-label="Scroll to registration form"
+            >
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Registration Open
-            </div>
+            </button>
             <Link href="/registration/status">
               <Button variant="outline" size="sm">
                 <Search className="w-4 h-4" />
@@ -61,7 +70,7 @@ export default function RegistrationClient() {
       <CulturalDivider variant="lotus-row" className="container-site" />
 
       {/* Form */}
-      <section className="py-16 md:py-20">
+      <section id="registration-form" className="py-16 md:py-20 scroll-mt-24">
         <div className="container-site">
           <div className="max-w-3xl mx-auto">
             <ScrollReveal className="mb-10">

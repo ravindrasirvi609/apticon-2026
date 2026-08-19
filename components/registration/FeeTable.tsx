@@ -5,7 +5,6 @@ const FEES = [
   { category: "PG Student / Research Scholar", early: "₹2,500", regular: "₹3,000", spot: "₹3,500" },
   { category: "UG Student",               early: "₹2,000", regular: "₹2,500", spot: "₹3,000" },
   { category: "Accompanying Person",      early: "₹1,000", regular: "₹1,500", spot: "₹2,000" },
-  { category: "APTI Membership + APTICON Registration", early: "₹6,000", regular: "₹6,000", spot: "₹6,000" },
 ];
 
 const DATES = [
