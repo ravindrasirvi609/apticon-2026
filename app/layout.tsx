@@ -8,6 +8,7 @@ import ScrollProgressBar  from "@/components/ui/ScrollProgressBar";
 import BackToTop          from "@/components/ui/BackToTop";
 import OpfBadge           from "@/components/ui/OpfBadge";
 import { Toaster }        from "@/components/ui/shadcn/sonner";
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -106,7 +107,9 @@ export default function RootLayout({
           <AnnouncementBanner />
           <Navbar />
         </div>
-        <main id="main-content" className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1">{children}
+          <Analytics />
+        </main>
         <div className="site-chrome">
           <Footer />
           {/* Floating back-to-top */}
