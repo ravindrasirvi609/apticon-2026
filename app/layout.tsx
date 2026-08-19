@@ -107,9 +107,7 @@ export default function RootLayout({
           <AnnouncementBanner />
           <Navbar />
         </div>
-        <main id="main-content" className="flex-1">{children}
-          <Analytics />
-        </main>
+        <main id="main-content" className="flex-1">{children}</main>
         <div className="site-chrome">
           <Footer />
           {/* Floating back-to-top */}
@@ -118,6 +116,7 @@ export default function RootLayout({
         <OpfBadge />
         {/* Global toast notifications */}
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
