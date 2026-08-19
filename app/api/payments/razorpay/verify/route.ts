@@ -26,13 +26,14 @@ export async function POST(request: NextRequest) {
     }
     if (payment.status === "captured") {
       await recordCapturedRazorpayPayment(payment, request);
-      return NextResponse.json({ ok: true, captured: true, registrationCode: registration.registrationCode });
+      const confirmed = await Registration.findById(registration._id).select("registrationCode").lean();
+      return NextResponse.json({ ok: true, captured: true, registrationCode: confirmed?.registrationCode ?? null });
     }
     await Registration.updateOne(
       { _id: registration._id, status: { $ne: "approved" } },
       { $set: { razorpayPaymentId: payment.id, transactionNumber: payment.id, paymentMethod: payment.method, paymentStatus: payment.status } }
     );
-    return NextResponse.json({ ok: true, captured: false, registrationCode: registration.registrationCode });
+    return NextResponse.json({ ok: true, captured: false, registrationCode: null });
   } catch (error) {
     console.error("[razorpay] payment verification failed:", error);
     return NextResponse.json({ error: "We could not verify the payment yet. Your payment status will update automatically." }, { status: 502 });

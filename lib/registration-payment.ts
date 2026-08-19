@@ -2,6 +2,7 @@ import Registration, { type IRegistration } from "@/models/Registration";
 import { logAudit } from "@/lib/audit";
 import { sendMail, registrationApprovedEmail } from "@/lib/email";
 import { getRazorpayOrderPayments, type RazorpayPayment } from "@/lib/razorpay";
+import { generateRegistrationCode } from "@/lib/registration-code";
 
 /** Who triggered a payment update — the gateway itself, or a console user re-checking it. */
 export interface PaymentActor {
@@ -17,8 +18,11 @@ export async function recordCapturedRazorpayPayment(
   request: Request,
   actor: PaymentActor = SYSTEM_ACTOR
 ) {
+  const pendingRegistration = await Registration.findOne({ razorpayOrderId: payment.order_id }).select("category").lean();
+  if (!pendingRegistration) return null;
+  const registrationCode = await generateRegistrationCode(pendingRegistration.category);
   const reg = await Registration.findOneAndUpdate(
-    { razorpayOrderId: payment.order_id, status: { $ne: "approved" } },
+    { razorpayOrderId: payment.order_id, status: { $ne: "approved" }, registrationCode: { $exists: false } },
     {
       $set: {
         status: "approved",
@@ -28,6 +32,7 @@ export async function recordCapturedRazorpayPayment(
         paymentMethod: payment.method,
         paidAt: new Date(),
         approvedAt: new Date(),
+        registrationCode,
       },
       $unset: { rejectedBy: 1, rejectedAt: 1, reviewNote: 1, paymentError: 1 },
     },

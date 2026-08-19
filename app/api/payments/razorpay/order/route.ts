@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
-import { generateRegistrationCode } from "@/lib/registration-code";
 import { calculateFeeWithGst, currentFeeAmount } from "@/lib/registration-fees";
 import { createRazorpayOrder } from "@/lib/razorpay";
 import { publicUrl } from "@/lib/r2";
@@ -43,10 +42,7 @@ export async function POST(request: NextRequest) {
   const { gstAmount, totalAmount } = calculateFeeWithGst(baseAmount);
 
   await connectDB();
-  const registrationCode = await generateRegistrationCode(data.category);
-
   const registration = await Registration.create({
-    registrationCode,
     fullName: data.fullName,
     designation: data.designation,
     institution: data.institution,
@@ -72,8 +68,8 @@ export async function POST(request: NextRequest) {
   try {
     const order = await createRazorpayOrder({
       amount: totalAmount * 100,
-      receipt: registrationCode,
-      notes: { registrationId: registration._id.toString(), registrationCode, email: data.email },
+      receipt: `registration-${registration._id.toString()}`,
+      notes: { registrationId: registration._id.toString(), email: data.email },
     });
     registration.razorpayOrderId = order.id;
     await registration.save();
@@ -84,13 +80,13 @@ export async function POST(request: NextRequest) {
       action: "payment.razorpay.order_created",
       resourceType: "registration",
       resourceId: registration._id.toString(),
-      details: { registrationCode, razorpayOrderId: order.id, category: data.category, feeTier: tier, feeAmount: totalAmount, baseAmount, gstAmount, linkedAbstract: linkResult.abstractId ?? null },
+      details: { razorpayOrderId: order.id, category: data.category, feeTier: tier, feeAmount: totalAmount, baseAmount, gstAmount, linkedAbstract: linkResult.abstractId ?? null },
       request,
     });
 
     return NextResponse.json({
       registrationId: registration._id.toString(),
-      registrationCode,
+      registrationCode: null,
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,

@@ -76,7 +76,9 @@ export interface IRegistration {
 
 const RegistrationSchema = new Schema<IRegistration>(
   {
-    registrationCode: { type: String, required: true, unique: true, index: true },
+    // Assigned only after Razorpay confirms capture. Sparse keeps pending registrations
+    // without a code out of the unique index.
+    registrationCode: { type: String, sparse: true, unique: true, index: true },
 
     fullName:     { type: String, required: true, trim: true },
     designation:  { type: String, required: true, trim: true },

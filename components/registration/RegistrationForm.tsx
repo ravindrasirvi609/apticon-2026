@@ -146,7 +146,7 @@ export default function RegistrationForm() {
         amount: body.amount,
         currency: body.currency,
         name: "APTICON 2026",
-        description: `Registration ${body.registrationCode}`,
+        description: "APTICON 2026 Registration",
         order_id: body.orderId,
         prefill: { name: data.fullName, email: data.email, contact: data.phone },
         theme: { color: "#8f1737" },
@@ -161,10 +161,10 @@ export default function RegistrationForm() {
             const result = await verify.json();
             if (!verify.ok) throw new Error(result.error ?? "Payment verification failed");
             toast.success(result.captured ? "Payment confirmed. Your registration is complete." : "Payment verified and is being confirmed.");
-            router.push(`/registration/success/${result.registrationCode}?payment=${result.captured ? "confirmed" : "processing"}`);
+            router.push(`/registration/success/${result.registrationCode ?? "pending"}?payment=${result.captured ? "confirmed" : "processing"}`);
           } catch (error) {
             toast.error(error instanceof Error ? error.message : "Payment verification failed. It will be checked automatically.");
-            router.push(`/registration/success/${body.registrationCode}?payment=processing`);
+            router.push(`/registration/success/pending?payment=processing`);
           } finally { setPaying(false); }
         },
       });
