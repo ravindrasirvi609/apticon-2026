@@ -38,7 +38,7 @@ interface FormData {
 
 const STATES = ["Andhra Pradesh","Assam","Bihar","Chhattisgarh","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu & Kashmir","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Odisha","Punjab","Rajasthan","Tamil Nadu","Telangana","Uttar Pradesh","Uttarakhand","West Bengal","Other"];
 
-const DESIGNATIONS = ["Professor","Principal","Vice Principal","Consultant","PG Student / Research Scholar","UG Student","Intern","Other"];
+const DESIGNATIONS = ["Professor","Principal","Vice Chancellor","Vice Principal","Consultant","PG Student / Research Scholar","UG Student","Intern","Other"];
 
 type RazorpayResponse = { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string };
 type RazorpayOptions = {
