@@ -56,19 +56,19 @@ const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
       { name: "Prof. Amber Vyas", designation: "Assistant Professor", institution: "University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur, Chhattisgarh 492010", email: "ambervyas@gmail.com", image: "https://aptiindia.org/images/committee/CG/amber.png", role: "Organizing Secretary" },
       { name: "Prof. Shivshankar Shukla", designation: "Professor", institution: "Columbia Institute of Pharmacy, Tekari, Raipur (C.G.)", email: "shivpharma007@gmail.com", image: "https://aptiindia.org/images/committee/CG/shukla.png", role: "Joint Organizing Secretary" },
       { name: "Dr. Rakesh Patel", designation: "Principal", institution: "School of Pharmacy, Dr. APJ Abdul Kalam University, Indore, Madhya Pradesh", email: "secretaryaptimp2022@gmail.com", image: "https://aptiindia.org/images/committee/MP/rakesh.png", role: "Joint Organizing Secretary" },
-      { name: "Dr. Satyendra Shrivastav", designation: "", institution: "", role: "Associate Secretary" },
-      { name: "Dr. Ravindra Pandey", designation: "", institution: "", role: "Associate Secretary" },
+      { name: "Dr. Satyendra Shrivastav", designation: "", institution: "", role: "Associate Secretary", image: "/committee/satyendra-shrivastav.png" },
+      { name: "Dr. Ravindra Pandey", designation: "", institution: "", role: "Associate Secretary", image: "/committee/ravindra-pandey.jpg" },
       { name: "Dr. Dheeraj Ahirwar", designation: "", institution: "", role: "Associate Secretary" },
       { name: "Dr. Sudhir Bharadwaj", designation: "", institution: "", role: "Associate Secretary" },
       { name: "Dr. Mukesh Sharma", designation: "", institution: "", role: "Associate Secretary" },
-      { name: "Dr. Vishal Jain", designation: "", institution: "", role: "Treasurer" },
+      { name: "Dr. Vishal Jain", designation: "", institution: "", role: "Treasurer", image: "/committee/vishal-jain.jpg" },
     ],
   },
   {
     group: "Registration Committee",
     color: "from-emerald-700 to-emerald-900",
     members: [
-      { name: "Dr. Ravindra Pandey", designation: "", institution: "", role: "Chairman" },
+      { name: "Dr. Ravindra Pandey", designation: "", institution: "", role: "Chairman", image: "/committee/ravindra-pandey.jpg" },
       { name: "Dr. Vishwanath Gupta", designation: "", institution: "", role: "Co-Chairman" },
     ],
   },
@@ -76,7 +76,7 @@ const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
     group: "Scientific Committee",
     color: "from-pink-700 to-pink-900",
     members: [
-      { name: "Dr. Manju Singh", designation: "", institution: "", role: "Chairman" },
+      { name: "Dr. Manju Singh", designation: "", institution: "", role: "Chairman", image: "/committee/manju-singh.jpg" },
     ],
   },
 ];
