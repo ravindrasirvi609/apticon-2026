@@ -11,6 +11,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/auth";
 import { linkFromAbstract } from "@/lib/sync";
 import { verifyAptiMember } from "@/lib/apti-membership";
+import { sendWhatsAppNotification } from "@/lib/whatsapp";
 
 // POST /api/abstracts — public abstract submission
 export async function POST(request: NextRequest) {
@@ -75,6 +76,7 @@ export async function POST(request: NextRequest) {
 
   const { subject, html } = abstractSubmittedEmail(data.presentingAuthor, submissionCode, data.title);
   await sendMail({ to: data.email, subject, html });
+  await sendWhatsAppNotification(data.phone, "abstract_submitted", [data.presentingAuthor, submissionCode], created._id.toString());
 
   await logAudit({
     actorRole: "public",

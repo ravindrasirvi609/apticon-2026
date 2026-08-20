@@ -7,6 +7,7 @@ import { requireAnyRole, authErrorResponse } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { sendMail, abstractDecisionEmail } from "@/lib/email";
 import { generateAbstractCode } from "@/lib/abstract-code";
+import { sendWhatsAppNotification } from "@/lib/whatsapp";
 
 export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   try {
@@ -63,6 +64,7 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
       abs.presentationType
     );
     await sendMail({ to: abs.email, subject, html });
+    await sendWhatsAppNotification(abs.phone, "abstract_decision", [abs.presentingAuthor, parsed.data.decision, abs.submissionCode], abs._id.toString());
 
     return NextResponse.json({ ok: true });
   } catch (err) {

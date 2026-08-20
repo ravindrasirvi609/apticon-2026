@@ -8,6 +8,7 @@ import { sendMail, abstractResubmittedEmail, abstractResubmissionNoticeEmail } f
 import { logAudit } from "@/lib/audit";
 import { rateLimit } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/auth";
+import { sendWhatsAppNotification } from "@/lib/whatsapp";
 
 // POST /api/abstracts/revise — public resubmission of a revision-requested abstract
 export async function POST(request: NextRequest) {
@@ -66,6 +67,7 @@ export async function POST(request: NextRequest) {
 
   const authorEmail = abstractResubmittedEmail(abs.presentingAuthor, abs.submissionCode, abs.title);
   await sendMail({ to: abs.email, subject: authorEmail.subject, html: authorEmail.html });
+  await sendWhatsAppNotification(abs.phone, "abstract_resubmitted", [abs.presentingAuthor, abs.submissionCode], abs._id.toString());
 
   const recipients = await User.find(
     { role: { $in: ["super_admin", "editorial"] }, isActive: true },
