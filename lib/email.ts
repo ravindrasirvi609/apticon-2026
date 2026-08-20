@@ -174,6 +174,7 @@ export function renderEmail({ title, preheader, blocks }: RenderOpts): string {
               <div style="font-weight:700;color:${BRAND.primary800};margin-bottom:4px;">APTICON 2026 · 28th Annual National Convention</div>
               <div>24–25 October 2026 · Pt. Deendayal Upadhyay Auditorium, G.E. Road, Raipur (C.G.)</div>
               <div>Hosted by APTI Chhattisgarh · Pt. Ravishankar Shukla University</div>
+              <div style="margin-top:10px;">Powered by <a href="https://opf.org.in/" style="color:${BRAND.primary800};font-weight:700;text-decoration:none;">Operant Pharmacy Federation</a></div>
               <div style="margin-top:10px;font-size:11px;opacity:.75;">This is an automated message. Please do not reply directly to this email.</div>
             </td>
           </tr>
