@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
         });
         const { subject, html } = groupRegistrationSubmittedEmail(updated.coordinatorName, updated.groupCode, updated.delegateCount, updated.complimentaryCount, updated.feeAmount);
         await sendMail({ to: updated.coordinatorEmail, subject, html });
-        await sendWhatsAppNotification(updated.coordinatorPhone, "group_registration_submitted", [updated.coordinatorName, updated.groupCode], updated._id.toString());
+        // await sendWhatsAppNotification(updated.coordinatorPhone, "group_registration_submitted", [updated.coordinatorName, updated.groupCode], updated._id.toString());
       }
       return NextResponse.json({ ok: true, captured: true, groupCode: group.groupCode });
     }

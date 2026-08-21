@@ -65,7 +65,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
       });
       const { subject, html } = groupRegistrationRejectedEmail(group.coordinatorName, group.groupCode, reviewNote ?? "");
       await sendMail({ to: group.coordinatorEmail, subject, html });
-      await sendWhatsAppNotification(group.coordinatorPhone, "group_registration_rejected", [group.coordinatorName, group.groupCode], group._id.toString());
+      // await sendWhatsAppNotification(group.coordinatorPhone, "group_registration_rejected", [group.coordinatorName, group.groupCode], group._id.toString());
       return NextResponse.json({ ok: true, status: "rejected" });
     }
 
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
 
       const { subject, html, attachments } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, false);
       await sendMail({ to: reg.email, subject, html, attachments });
-      await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], reg._id.toString());
+      // await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], reg._id.toString());
     }
 
     await GroupRegistration.updateOne({ _id: group._id }, { $set: { createdRegistrations: createdIds } });
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
 
     const { subject, html } = groupRegistrationApprovedEmail(group.coordinatorName, group.groupCode, group.delegateCount);
     await sendMail({ to: group.coordinatorEmail, subject, html });
-    await sendWhatsAppNotification(group.coordinatorPhone, "group_registration_approved", [group.coordinatorName, group.groupCode], group._id.toString());
+      // await sendWhatsAppNotification(group.coordinatorPhone, "group_registration_approved", [group.coordinatorName, group.groupCode], group._id.toString());
 
     return NextResponse.json({ ok: true, status: "approved", createdCount: createdIds.length });
   } catch (err) {
