@@ -139,7 +139,7 @@ export default function RegistrationForm() {
         remarks: data.remarks || undefined,
       }),
     });
-    const body = await res.json();
+    const body = await res.json().catch(() => ({}));
     if (!res.ok) {
       toast.error(body.error ?? "Registration failed. Please try again.");
       setPaying(false);

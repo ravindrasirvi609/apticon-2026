@@ -42,28 +42,34 @@ export async function POST(request: NextRequest) {
   const { gstAmount, totalAmount } = calculateFeeWithGst(baseAmount);
 
   await connectDB();
-  const registration = await Registration.create({
-    fullName: data.fullName,
-    designation: data.designation,
-    institution: data.institution,
-    city: data.city,
-    state: data.state,
-    email: data.email,
-    phone: data.phone,
-    photoKey: data.photoKey,
-    photoUrl: publicUrl(data.photoKey),
-    photoName: data.photoName,
-    category: data.category,
-    feeTier: tier,
-    feeAmount: totalAmount,
-    willSubmitAbstract: data.willSubmitAbstract,
-    includesAptiMembership: false,
-    aptiMemberId: data.aptiMemberId,
-    paymentMode: "razorpay",
-    paymentStatus: "pending",
-    status: "submitted",
-    remarks: data.remarks,
-  });
+  let registration;
+  try {
+    registration = await Registration.create({
+      fullName: data.fullName,
+      designation: data.designation,
+      institution: data.institution,
+      city: data.city,
+      state: data.state,
+      email: data.email,
+      phone: data.phone,
+      photoKey: data.photoKey,
+      photoUrl: publicUrl(data.photoKey),
+      photoName: data.photoName,
+      category: data.category,
+      feeTier: tier,
+      feeAmount: totalAmount,
+      willSubmitAbstract: data.willSubmitAbstract,
+      includesAptiMembership: false,
+      aptiMemberId: data.aptiMemberId,
+      paymentMode: "razorpay",
+      paymentStatus: "pending",
+      status: "submitted",
+      remarks: data.remarks,
+    });
+  } catch (error) {
+    console.error("[razorpay] registration creation failed:", error);
+    return NextResponse.json({ error: "We could not create your registration. Please try again." }, { status: 503 });
+  }
 
   try {
     const order = await createRazorpayOrder({
