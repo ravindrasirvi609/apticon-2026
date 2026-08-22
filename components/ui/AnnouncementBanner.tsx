@@ -34,7 +34,7 @@ export default function AnnouncementBanner() {
               <Sparkles size={14} className="flex-shrink-0 text-[var(--primary-800)]" aria-hidden />
               <p className="text-xs sm:text-sm font-semibold text-center">
                 <span className="font-black text-[var(--primary-800)]">APTICON 2026</span>
-                {" "}— 24 & 25 Oct, Raipur ✦ Registration &amp; Abstract submission opening soon!{" "}
+                {" "}— 24 & 25 Oct, Raipur ✦ Registration &amp; Abstract submission opened!{" "}
                 <Link
                   href="/registration"
                   className="underline underline-offset-2 hover:text-[var(--primary-800)] transition-colors font-bold ml-1"

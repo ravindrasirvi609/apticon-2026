@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, ArrowRight, CalendarDays } from "lucide-react";
+import { Calendar, MapPin, ArrowRight, FileText } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
 import HeroBackgroundSlider from "./HeroBackgroundSlider";
 import { EVENT, RAIPUR_PLACES } from "@/lib/constants";
@@ -157,11 +157,11 @@ export default function HeroSection() {
             />
           </Link>
           <Link
-            href="/schedule"
+            href="/abstracts"
             className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/35 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/20 sm:text-base"
           >
-            <CalendarDays size={17} className="shrink-0" />
-            View Program
+            <FileText size={17} className="shrink-0" />
+            Submit Abstract
           </Link>
         </motion.div>
 
