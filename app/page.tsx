@@ -93,6 +93,8 @@ export default function HomePage() {
       {/* 9. Venue + Raipur tourism */}
       <VenuePreview />
 
+      
+
       {/* 10. Sponsors marquee */}
       {/* <SponsorMarquee /> */}
     </>
