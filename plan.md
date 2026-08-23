@@ -1125,3 +1125,12 @@ Existing abstract templates refactored to the new builder for visual consistency
 
 *Plan version: 3.0 — Extended 2026-07-26 with Registration Management & Abstract Sync*
 *Build this plan in order, phase by phase. Each phase must be fully working before the next begins.*
+
+Dear sir 
+Good morning , on apticon.in/committee page, under state APTI branches, the following branches are missing
+UT of DNH and DD
+Jammu and Kashmir 
+Requesting you to do the needful 
+Regards
+Dr chandrakant Bonde
+Principal , SSR College of pharmacy Silvassa
