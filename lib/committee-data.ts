@@ -92,6 +92,15 @@ export const STATE_BRANCHES: StateBranch[] = [
     ],
   },
   {
+    state: "Jammu and Kashmir",
+    members: [
+      { name: "Mohammad Ishaq Geer", role: "President", designation: "Professor", institution: "Dept. of Pharmaceutical Sciences, University of Kashmir", email: "ishaqgeer@gmail.com", image: "https://aptiindia.org/images/committee/JK/MOHAMMAD-ISHAQ-GEER.png" },
+      { name: "Dr. Gazanfar Ahmad", role: "Vice President", designation: "Assistant Professor", institution: "Prabha Harjilal College of Pharmacy, Jammu", email: "gazanfarahmads@gmail.com", image: "https://aptiindia.org/images/committee/JK/Gazanfar-Ahmad.png" },
+      { name: "Junaid Tantray", role: "Vice President", designation: "Associate Professor", institution: "NIMS Institute of Pharmacy, NIMS University Jaipur", email: "junaidtantray22@gmail.com", image: "https://aptiindia.org/images/committee/JK/Junaid-Tantray.png" },
+      { name: "Shahid-ud-Din Wani", role: "Secretary", designation: "Assistant Professor (Contractual)", institution: "Dept. of Pharmaceutical Sciences, University of Kashmir", email: "shahidpharma2013@gmail.com", image: "https://aptiindia.org/images/committee/JK/Shahid-ud-Din-Wani.png" },
+    ],
+  },
+  {
     state: "Jharkhand",
     members: [
       { name: "Dr.Niranjan Sutar", role: "President", designation: "Professor & Head", institution: "H.G.E.A.College of Pharmacy, Bokaro Steel City, Jharkhand - 827010", email: "niranjansutar77@rediffmail.com", image: "https://aptiindia.org/images/committee/sutur.png" },
@@ -188,6 +197,15 @@ export const STATE_BRANCHES: StateBranch[] = [
       { name: "Dr Raj Kumar Venisetty", role: "Vice President", designation: "Professor & Principal", institution: "Pratishta Institute Of Pharmaceutical Sciences, Suryapet, Telangana", email: "vrk10@hotmail.com", image: "https://aptiindia.org/images/committee/TL/venishetty.png" },
       { name: "Dr. Kantlam Chamakuri", role: "Vice President", designation: "Principal", institution: "Brilliant Grammar School Educational Society's Group Of Institutions Hyderabad", email: "kantlam3@gmail.com", image: "https://aptiindia.org/images/committee/TL/kantlam.png" },
       { name: "Dr. Narsimha Reddy Yellu", role: "Secretary", designation: "Professor", institution: "University College of Pharmaceutical Sciences, Kakatiya University, Warangal, Telangana", email: "ynrku@yahoo.co.in", image: "https://aptiindia.org/images/committee/TL/reddy.png" },
+    ],
+  },
+  {
+    state: "UT of DNH and DD",
+    members: [
+      { name: "Dr. Chandrakant Bonde", role: "President", designation: "Professor & Principal", institution: "S S R College of Pharmacy, Silvassa", email: "chandrakant.bonde@ssrpharmacy.edu.in", image: "https://aptiindia.org/images/committee/UT/Chandrakant_Bonde.png" },
+      { name: "Dr. Smita Bonde", role: "Vice President", designation: "Professor, HOD (Pharmaceutics)", institution: "S S R College of Pharmacy, Silvassa", email: "smita.bonde@ssrpharmacy.edu.in", image: "https://aptiindia.org/images/committee/UT/Smita_Bonde.png" },
+      { name: "Dr. Sonal Desai", role: "Secretary", designation: "Professor, HOD (Pharmaceutical Quality Assurance)", institution: "S S R College of Pharmacy, Silvassa", email: "sonal.desai@ssrpharmacy.edu.in", image: "https://aptiindia.org/images/committee/UT/Sonal_Desai.png" },
+      { name: "Dr. Himanshu Solanki", role: "Treasurer", designation: "Associate Professor, Chairperson (Academics)", institution: "S S R College of Pharmacy, Silvassa", email: "himanshu.solanki@ssrpharmacy.edu.in", image: "https://aptiindia.org/images/committee/UT/Himanshu_Solanki.png" },
     ],
   },
   {
