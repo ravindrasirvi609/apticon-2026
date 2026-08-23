@@ -47,7 +47,7 @@ export default function Navbar() {
         <div className="h-1 w-full bg-gradient-to-r from-[var(--primary-900)] via-[var(--accent-500)] to-[var(--secondary-800)]" />
 
         <div className="container-site">
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center justify-between h-20 md:h-24">
             {/* Logo / Brand */}
             <Link href="/" className="flex items-center gap-3 group" aria-label="APTICON 2026 Home">
               <div className="flex flex-col leading-none">
@@ -57,7 +57,7 @@ export default function Navbar() {
                   width={1536}
                   height={1024}
                   priority
-                  className="h-12 md:h-16 w-auto"
+                  className="h-16 md:h-20 w-auto"
                 />
               </div>
             </Link>
