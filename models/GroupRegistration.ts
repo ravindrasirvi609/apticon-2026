@@ -9,6 +9,9 @@ export interface IGroupDelegate {
   designation: string;
   email: string;
   phone: string;
+  affiliation: string;
+  isAptiMember: boolean;
+  aptiMemberId?: string;
   photoKey: string;
   photoUrl: string;
   photoName: string;
@@ -22,6 +25,11 @@ export interface IGroupRegistration {
   coordinatorName: string;
   coordinatorEmail: string;
   coordinatorPhone: string;
+  coordinatorPhotoKey: string;
+  coordinatorPhotoUrl: string;
+  coordinatorPhotoName: string;
+  coordinatorAffiliation: string;
+  coordinatorAptiMemberId?: string;
   institution: string;
   city?: string;
   state?: string;
@@ -59,6 +67,9 @@ const GroupDelegateSchema = new Schema<IGroupDelegate>(
     designation: { type: String, required: true, trim: true },
     email: { type: String, required: true, lowercase: true, trim: true },
     phone: { type: String, required: true, trim: true },
+    affiliation: { type: String, required: true, trim: true },
+    isAptiMember: { type: Boolean, default: false },
+    aptiMemberId: { type: String, trim: true, uppercase: true },
     photoKey: { type: String, default: "" },
     photoUrl: { type: String, default: "" },
     photoName: { type: String, default: "" },
@@ -74,6 +85,11 @@ const GroupRegistrationSchema = new Schema<IGroupRegistration>(
     coordinatorName: { type: String, required: true, trim: true },
     coordinatorEmail: { type: String, required: true, lowercase: true, trim: true, index: true },
     coordinatorPhone: { type: String, required: true, trim: true },
+    coordinatorPhotoKey: { type: String, required: true },
+    coordinatorPhotoUrl: { type: String, default: "" },
+    coordinatorPhotoName: { type: String, required: true },
+    coordinatorAffiliation: { type: String, required: true, trim: true },
+    coordinatorAptiMemberId: { type: String, trim: true, uppercase: true },
     institution: { type: String, required: true, trim: true },
     city: { type: String, trim: true },
     state: { type: String, trim: true },

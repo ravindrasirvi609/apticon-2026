@@ -19,18 +19,24 @@ import {
 } from "@/lib/registration-fees";
 import { GROUP_MIN_DELEGATES, GROUP_MAX_DELEGATES } from "@/lib/validators/group-registration";
 import PaymentRedirectDialog from "@/components/registration/PaymentRedirectDialog";
+import AptiMembershipIdField from "@/components/ui/AptiMembershipIdField";
+import { APTI_MEMBER_CATEGORIES } from "@/lib/validators/registration";
 
 interface DelegateRow {
   name: string;
   designation: string;
   email: string;
   phone: string;
+  affiliation: string;
+  aptiMemberId: string;
 }
 
 interface FormData {
   coordinatorName: string;
   coordinatorEmail: string;
   coordinatorPhone: string;
+  coordinatorAffiliation: string;
+  coordinatorAptiMemberId: string;
   institution: string;
   city: string;
   state: string;
@@ -40,7 +46,7 @@ interface FormData {
 
 const STATES = ["Andhra Pradesh","Assam","Bihar","Chhattisgarh","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu & Kashmir","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Odisha","Punjab","Rajasthan","Tamil Nadu","Telangana","Uttar Pradesh","Uttarakhand","West Bengal","Other"];
 
-const EMPTY_DELEGATE: DelegateRow = { name: "", designation: "", email: "", phone: "" };
+const EMPTY_DELEGATE: DelegateRow = { name: "", designation: "", email: "", phone: "", affiliation: "", aptiMemberId: "" };
 
 type RazorpayResponse = { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string };
 type RazorpayOptions = {
@@ -74,6 +80,8 @@ export default function GroupRegistrationForm() {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null);
   const [photos, setPhotos] = useState<(File | null)[]>(Array.from({ length: GROUP_MIN_DELEGATES }, () => null));
+  const [coordinatorPhoto, setCoordinatorPhoto] = useState<File | null>(null);
+  const [coordinatorPhotoError, setCoordinatorPhotoError] = useState<string | null>(null);
   const [photoErrors, setPhotoErrors] = useState<Record<number, string>>({});
 
   const { register, handleSubmit, control, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
@@ -82,6 +90,7 @@ export default function GroupRegistrationForm() {
   const { fields, append, remove } = useFieldArray({ control, name: "delegates" });
 
   const category = watch("category");
+  const requiresMembershipId = !!category && APTI_MEMBER_CATEGORIES.includes(category as (typeof APTI_MEMBER_CATEGORIES)[number]);
   const chosenCategory: RegistrationCategory | null = category && REGISTRATION_CATEGORIES.includes(category as RegistrationCategory)
     ? (category as RegistrationCategory)
     : null;
@@ -121,6 +130,12 @@ export default function GroupRegistrationForm() {
   }
 
   const onSubmit = async (data: FormData) => {
+    if (!coordinatorPhoto) {
+      setCoordinatorPhotoError("A coordinator profile photo is required.");
+      toast.error("Please upload the coordinator profile photo.");
+      return;
+    }
+    setCoordinatorPhotoError(null);
     const missingPhoto = photos.findIndex((p) => !p);
     if (missingPhoto !== -1) {
       setPhotoErrors({ [missingPhoto]: "A profile photo is required." });
@@ -130,7 +145,10 @@ export default function GroupRegistrationForm() {
     setPhotoErrors({});
 
     setUploading(true);
-    setUploadProgress({ done: 0, total: photos.length });
+    setUploadProgress({ done: 0, total: photos.length + 1 });
+    const coordinatorPhotoKey = await uploadPhoto(coordinatorPhoto);
+    if (!coordinatorPhotoKey) { setUploading(false); setUploadProgress(null); return; }
+    setUploadProgress({ done: 1, total: photos.length + 1 });
     const uploaded: { key: string; name: string }[] = [];
     for (let i = 0; i < photos.length; i++) {
       const key = await uploadPhoto(photos[i]!);
@@ -149,6 +167,10 @@ export default function GroupRegistrationForm() {
         coordinatorName: data.coordinatorName,
         coordinatorEmail: data.coordinatorEmail,
         coordinatorPhone: data.coordinatorPhone,
+        coordinatorPhotoKey,
+        coordinatorPhotoName: coordinatorPhoto.name,
+        coordinatorAffiliation: data.coordinatorAffiliation,
+        coordinatorAptiMemberId: requiresMembershipId ? data.coordinatorAptiMemberId : undefined,
         institution: data.institution,
         city: data.city || undefined,
         state: data.state || undefined,
@@ -160,6 +182,8 @@ export default function GroupRegistrationForm() {
           phone: d.phone,
           photoKey: uploaded[i].key,
           photoName: uploaded[i].name,
+          affiliation: d.affiliation,
+          aptiMemberId: requiresMembershipId ? d.aptiMemberId : undefined,
         })),
       }),
     });
@@ -243,6 +267,15 @@ export default function GroupRegistrationForm() {
             {errors.coordinatorEmail && <p className={errCls}>{errors.coordinatorEmail.message}</p>}
             <p className="mt-1 text-xs text-[var(--muted-text)]">Payment receipt and group confirmation are sent here.</p>
           </div>
+          <div className="sm:col-span-2">
+            <Label htmlFor="coordinatorAffiliation">Coordinator Affiliation *</Label>
+            <Input id="coordinatorAffiliation" className="mt-2" placeholder="Department / organisation / institution" {...register("coordinatorAffiliation", { required: "Affiliation is required", minLength: 2 })} />
+            {errors.coordinatorAffiliation && <p className={errCls}>Affiliation is required.</p>}
+          </div>
+          <div className="sm:col-span-2">
+            <PhotoUploadField file={coordinatorPhoto} onChange={(f) => { setCoordinatorPhoto(f); if (f) setCoordinatorPhotoError(null); }} error={coordinatorPhotoError ?? undefined} disabled={busy} />
+          </div>
+          {requiresMembershipId && <div className="sm:col-span-2"><AptiMembershipIdField registerProps={register("coordinatorAptiMemberId", { validate: (v) => !requiresMembershipId || (v?.trim().length ?? 0) >= 3 || "APTI Membership ID is required" })} error={errors.coordinatorAptiMemberId?.message} helperText="This category requires an APTI Membership ID for the coordinator. We will verify it against the APTI registry." /></div>}
           <div className="sm:col-span-2">
             <Label htmlFor="institution">Institution / College *</Label>
             <Input id="institution" className="mt-2" placeholder="Full name of institution" {...register("institution", { required: "Institution is required" })} />
@@ -344,6 +377,12 @@ export default function GroupRegistrationForm() {
                   <Input id={`delegates.${index}.name`} className="mt-1.5" {...register(`delegates.${index}.name`, { required: true, minLength: 2 })} />
                   {errors.delegates?.[index]?.name && <p className={errCls}>Required.</p>}
                 </div>
+                <div className="sm:col-span-2">
+                  <Label htmlFor={`delegates.${index}.affiliation`}>Affiliation *</Label>
+                  <Input id={`delegates.${index}.affiliation`} className="mt-1.5" placeholder="Department / organisation / institution" {...register(`delegates.${index}.affiliation`, { required: true, minLength: 2 })} />
+                  {errors.delegates?.[index]?.affiliation && <p className={errCls}>Affiliation is required.</p>}
+                </div>
+                {requiresMembershipId && <div className="sm:col-span-2"><AptiMembershipIdField registerProps={register(`delegates.${index}.aptiMemberId`, { validate: (v) => !requiresMembershipId || (v?.trim().length ?? 0) >= 3 || "APTI Membership ID is required" })} error={errors.delegates?.[index]?.aptiMemberId?.message} helperText="This category requires an APTI Membership ID for every delegate. We will verify it against the APTI registry." /></div>}
                 <div>
                   <Label htmlFor={`delegates.${index}.designation`}>Designation *</Label>
                   <Input id={`delegates.${index}.designation`} className="mt-1.5" {...register(`delegates.${index}.designation`, { required: true, minLength: 2 })} />
