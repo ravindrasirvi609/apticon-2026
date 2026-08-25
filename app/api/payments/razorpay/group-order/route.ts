@@ -9,6 +9,8 @@ import GroupRegistration from "@/models/GroupRegistration";
 import { getClientIp } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { logAudit } from "@/lib/audit";
+import { verifyAptiMember } from "@/lib/apti-membership";
+import { APTI_MEMBER_CATEGORIES } from "@/lib/validators/registration";
 
 // Creates the GroupRegistration and its Razorpay order. The amount is always derived
 // server-side from delegateCount + category, same discipline as the individual-order route.
@@ -25,6 +27,19 @@ export async function POST(request: NextRequest) {
   const parsed = groupRazorpayOrderSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
   const data = parsed.data;
+  const requiresMembershipId = APTI_MEMBER_CATEGORIES.includes(data.category as (typeof APTI_MEMBER_CATEGORIES)[number]);
+  if (requiresMembershipId) {
+    if (!data.coordinatorAptiMemberId) return NextResponse.json({ error: "APTI Membership ID is required for the coordinator." }, { status: 400 });
+    const coordinatorCheck = await verifyAptiMember(data.coordinatorAptiMemberId, data.coordinatorEmail);
+    if (!coordinatorCheck.valid) return NextResponse.json({ error: `We couldn't verify the coordinator's APTI Membership ID "${data.coordinatorAptiMemberId}".` }, { status: 400 });
+  }
+  for (const delegate of data.delegates) {
+    if (requiresMembershipId) {
+      if (!delegate.aptiMemberId) return NextResponse.json({ error: `APTI Membership ID is required for ${delegate.name}.` }, { status: 400 });
+      const check = await verifyAptiMember(delegate.aptiMemberId, delegate.email);
+      if (!check.valid) return NextResponse.json({ error: `We couldn't verify APTI Membership ID "${delegate.aptiMemberId}" for ${delegate.name}.` }, { status: 400 });
+    }
+  }
 
   const delegateCount = data.delegates.length;
   const { tier, complimentaryCount, baseAmount } = currentGroupFeeAmount(data.category, delegateCount);
@@ -44,6 +59,9 @@ export async function POST(request: NextRequest) {
     designation: d.designation,
     email: d.email,
     phone: d.phone,
+    affiliation: d.affiliation,
+    isAptiMember: requiresMembershipId,
+    aptiMemberId: d.aptiMemberId,
     photoKey: d.photoKey,
     photoUrl: publicUrl(d.photoKey),
     photoName: d.photoName,
@@ -55,6 +73,10 @@ export async function POST(request: NextRequest) {
     coordinatorName: data.coordinatorName,
     coordinatorEmail: data.coordinatorEmail,
     coordinatorPhone: data.coordinatorPhone,
+    coordinatorPhotoKey: data.coordinatorPhotoKey,
+    coordinatorPhotoUrl: publicUrl(data.coordinatorPhotoKey),
+    coordinatorPhotoName: data.coordinatorPhotoName,
+    coordinatorAffiliation: data.coordinatorAffiliation,
     institution: data.institution,
     city: data.city,
     state: data.state,

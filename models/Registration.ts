@@ -19,6 +19,7 @@ export interface IRegistration {
   fullName: string;
   designation: string;
   institution: string;
+  affiliation: string;
   city?: string;
   state?: string;
 
@@ -83,6 +84,7 @@ const RegistrationSchema = new Schema<IRegistration>(
     fullName:     { type: String, required: true, trim: true },
     designation:  { type: String, required: true, trim: true },
     institution:  { type: String, required: true, trim: true },
+    affiliation:   { type: String, default: "", trim: true },
     city:         { type: String, trim: true },
     state:        { type: String, trim: true },
 

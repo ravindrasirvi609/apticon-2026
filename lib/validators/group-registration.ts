@@ -11,12 +11,18 @@ const delegateSchema = z.object({
   phone: z.string().trim().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
   photoKey: z.string().max(300).regex(/^delegate-photos\/\d{4}\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp)$/, "Invalid photo reference"),
   photoName: z.string().min(1).max(300),
+  affiliation: z.string().min(2).max(300).trim(),
+  aptiMemberId: z.string().max(100).trim().optional(),
 });
 
 export const groupRazorpayOrderSchema = z.object({
   coordinatorName: z.string().min(2).max(200).trim(),
   coordinatorEmail: z.string().email().toLowerCase().trim(),
   coordinatorPhone: z.string().trim().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
+  coordinatorPhotoKey: z.string().max(300).regex(/^delegate-photos\/\d{4}\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp)$/),
+  coordinatorPhotoName: z.string().min(1).max(300),
+  coordinatorAffiliation: z.string().min(2).max(300).trim(),
+  coordinatorAptiMemberId: z.string().max(100).trim().optional(),
   institution: z.string().min(2).max(300).trim(),
   city: z.string().max(120).trim().optional(),
   state: z.string().max(120).trim().optional(),
