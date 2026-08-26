@@ -5,6 +5,7 @@ import { sendMail, registrationApprovedEmail, groupRegistrationApprovedEmail } f
 import { getRazorpayOrderPayments, type RazorpayPayment } from "@/lib/razorpay";
 import { generateRegistrationCode } from "@/lib/registration-code";
 import { sendWhatsAppNotification } from "@/lib/whatsapp";
+import { sendRegistrationWebhook } from "@/lib/registration-webhook";
 
 /** Who triggered a payment update — the gateway itself, or a console user re-checking it. */
 export interface PaymentActor {
@@ -50,6 +51,7 @@ export async function recordCapturedRazorpayPayment(
   if (!reg) return null;
   console.info("[registration] payment capture handled", { registrationId: reg._id.toString(), newlyApproved: !!justApproved, registrationCode: reg.registrationCode });
 
+<<<<<<< HEAD
   if (justApproved) {
     await logAudit({
       actor: actor.uid ?? null,
@@ -68,7 +70,19 @@ export async function recordCapturedRazorpayPayment(
     await Registration.updateOne({ _id: reg._id }, { $set: { confirmationEmailSentAt: new Date() } });
     await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], `registration-approved-${reg._id.toString()}`);
   }
-  await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName], `registration-approved-${reg._id.toString()}`);
+  await logAudit({
+    actor: actor.uid ?? null,
+    actorRole: actor.role,
+    action: "payment.razorpay.captured",
+    resourceType: "registration",
+    resourceId: reg._id.toString(),
+    details: { registrationCode: reg.registrationCode, razorpayOrderId: payment.order_id, razorpayPaymentId: payment.id, amount: payment.amount },
+    request,
+  });
+  const { subject, html, attachments } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, !!reg.linkedAbstract);
+  await sendMail({ to: reg.email, subject, html, attachments });
+  await sendRegistrationWebhook(reg.fullName, reg.phone);
+  await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], reg._id.toString());
   return reg;
 }
 
