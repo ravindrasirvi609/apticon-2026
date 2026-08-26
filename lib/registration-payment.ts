@@ -5,6 +5,7 @@ import { sendMail, registrationApprovedEmail, groupRegistrationApprovedEmail } f
 import { getRazorpayOrderPayments, type RazorpayPayment } from "@/lib/razorpay";
 import { generateRegistrationCode } from "@/lib/registration-code";
 import { sendWhatsAppNotification } from "@/lib/whatsapp";
+import { sendRegistrationWebhook } from "@/lib/registration-webhook";
 
 /** Who triggered a payment update — the gateway itself, or a console user re-checking it. */
 export interface PaymentActor {
