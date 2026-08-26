@@ -4,6 +4,7 @@ import { sendMail, registrationApprovedEmail } from "@/lib/email";
 import { getRazorpayOrderPayments, type RazorpayPayment } from "@/lib/razorpay";
 import { generateRegistrationCode } from "@/lib/registration-code";
 import { sendWhatsAppNotification } from "@/lib/whatsapp";
+import { sendRegistrationWebhook } from "@/lib/registration-webhook";
 
 /** Who triggered a payment update — the gateway itself, or a console user re-checking it. */
 export interface PaymentActor {
@@ -52,6 +53,7 @@ export async function recordCapturedRazorpayPayment(
   });
   const { subject, html, attachments } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, !!reg.linkedAbstract);
   await sendMail({ to: reg.email, subject, html, attachments });
+  await sendRegistrationWebhook(reg.fullName, reg.phone);
   // await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], reg._id.toString());
   return reg;
 }

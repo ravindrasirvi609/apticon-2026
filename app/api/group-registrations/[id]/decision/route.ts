@@ -9,6 +9,7 @@ import { requireAnyRole, authErrorResponse } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { sendMail, registrationApprovedEmail, groupRegistrationApprovedEmail, groupRegistrationRejectedEmail } from "@/lib/email";
 import { sendWhatsAppNotification } from "@/lib/whatsapp";
+import { sendRegistrationWebhook } from "@/lib/registration-webhook";
 
 /**
  * Approves or rejects a group registration that's finished paying (status "payment_review").
@@ -112,6 +113,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
 
       const { subject, html, attachments } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, false);
       await sendMail({ to: reg.email, subject, html, attachments });
+      await sendRegistrationWebhook(reg.fullName, reg.phone);
       // await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], reg._id.toString());
     }
 
