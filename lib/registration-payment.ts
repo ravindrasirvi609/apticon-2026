@@ -53,7 +53,12 @@ export async function recordCapturedRazorpayPayment(
   });
   const { subject, html, attachments } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, !!reg.linkedAbstract);
   await sendMail({ to: reg.email, subject, html, attachments });
+<<<<<<< HEAD
   // await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], `registration-approved-${reg._id.toString()}`);
+=======
+  await sendRegistrationWebhook(reg.fullName, reg.phone);
+  // await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], reg._id.toString());
+>>>>>>> db9785f (feat: add registration webhook functionality to notify CampaignPlus on registration approval)
   return reg;
 }
 
