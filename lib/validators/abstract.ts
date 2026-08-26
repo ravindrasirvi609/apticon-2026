@@ -2,6 +2,10 @@ import { z } from "zod";
 import { ABSTRACT_THEMES } from "@/lib/constants";
 
 export const MAX_CO_AUTHORS = 10;
+export const MAX_ABSTRACT_WORDS = 300;
+
+const withinAbstractWordLimit = (value: string) =>
+  value.trim().split(/\s+/).filter(Boolean).length <= MAX_ABSTRACT_WORDS;
 
 export const abstractSubmitSchema = z.object({
   title: z.string().min(5).max(300).trim(),
@@ -24,7 +28,12 @@ export const abstractSubmitSchema = z.object({
   aptiMemberId: z.string().trim().min(3, "APTI Membership ID is required to submit an abstract"),
   theme: z.string().refine((v) => ABSTRACT_THEMES.includes(v), "Invalid theme"),
   type: z.enum(["review", "research"]),
-  abstract: z.string().min(100).max(3800).trim(),
+  abstract: z
+    .string()
+    .min(100)
+    .max(3800)
+    .trim()
+    .refine(withinAbstractWordLimit, `Abstract must not exceed ${MAX_ABSTRACT_WORDS} words`),
   preferredPresentationType: z.enum(["oral", "poster"]).optional(),
   keywords: z
     .string()
@@ -46,7 +55,12 @@ export const abstractStatusLookupSchema = z.object({
 export const abstractResubmitSchema = z.object({
   code: z.string().min(4).max(50).trim(),
   email: z.string().email().toLowerCase().trim(),
-  abstract: z.string().min(100).max(3800).trim(),
+  abstract: z
+    .string()
+    .min(100)
+    .max(3800)
+    .trim()
+    .refine(withinAbstractWordLimit, `Abstract must not exceed ${MAX_ABSTRACT_WORDS} words`),
   fileKey: z.string().optional(),
   fileName: z.string().optional(),
   graphicalAbstractKey: z.string().optional(),

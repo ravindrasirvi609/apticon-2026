@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/shadcn/textarea";
 import { Label } from "@/components/ui/shadcn/label";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { ABSTRACT_THEMES, EVENT } from "@/lib/constants";
-import { MAX_CO_AUTHORS } from "@/lib/validators/abstract";
+import { MAX_ABSTRACT_WORDS, MAX_CO_AUTHORS } from "@/lib/validators/abstract";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 import AptiMembershipIdField from "@/components/ui/AptiMembershipIdField";
 import { ABSTRACT_FILE_MIME, IMAGE_MIME, uploadPublicFile } from "@/lib/upload-client";
@@ -441,17 +441,24 @@ export default function AbstractsClient() {
               <div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="abstract">Abstract Body *</Label>
-                  <span className={`text-xs ${wordCount > 300 ? "text-red-600" : "text-[var(--muted-text)]"}`}>
-                    {wordCount} / 300 words
+                  <span className={`text-xs ${wordCount > MAX_ABSTRACT_WORDS ? "text-red-600" : "text-[var(--muted-text)]"}`}>
+                    {wordCount} / {MAX_ABSTRACT_WORDS} words
                   </span>
                 </div>
                 <Textarea
                   id="abstract"
                   className="mt-2 min-h-[220px]"
-                  {...register("abstract", { required: true, minLength: 100, maxLength: 3800 })}
+                  {...register("abstract", {
+                    required: true,
+                    minLength: 100,
+                    maxLength: 3800,
+                    validate: (value) =>
+                      value.trim().split(/\s+/).filter(Boolean).length <= MAX_ABSTRACT_WORDS ||
+                      `Abstract must not exceed ${MAX_ABSTRACT_WORDS} words`,
+                  })}
                   aria-invalid={!!errors.abstract}
                 />
-                {errors.abstract && <p className={errCls}>Abstract is required (100–3800 characters).</p>}
+                {errors.abstract && <p className={errCls}>{errors.abstract.message ?? "Abstract is required (100–3800 characters)."}</p>}
                 <p className="mt-2 text-xs text-[var(--muted-text)]">
                   Note: Your abstract should clearly cover the Objectives, Methods, Results, and Conclusion of your work.
                 </p>
