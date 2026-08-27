@@ -215,7 +215,7 @@ export default function GroupRegistrationForm() {
             });
             const result = await verify.json();
             if (!verify.ok) throw new Error(result.error ?? "Payment verification failed");
-            toast.success("Payment confirmed. Your group registration is pending confirmation.");
+            toast.success("Payment confirmed. Your group registration is confirmed. Confirmation emails are on the way.");
             router.push(`/registration/group/success/${result.groupCode}?payment=${result.captured ? "confirmed" : "processing"}`);
           } catch (error) {
             toast.error(error instanceof Error ? error.message : "Payment verification failed. It will be checked automatically.");
@@ -428,7 +428,7 @@ export default function GroupRegistrationForm() {
               <p className="font-semibold text-[var(--dark-text)] mb-1">One payment for the whole group</p>
               <p className="text-[var(--muted-text)]">
                 After you submit, Razorpay will open its secure checkout for the discounted group total. Your group
-                will be reviewed by our team and confirmed shortly after payment — each delegate receives their own
+                confirmed automatically after payment — each delegate receives their own
                 registration code and QR badge by email once confirmed.
               </p>
             </div>
@@ -448,7 +448,7 @@ export default function GroupRegistrationForm() {
           ) : "Continue to Secure Group Payment"}
         </Button>
         <p className="mt-3 text-center text-xs text-[var(--muted-text)]">
-          Your group registration will be confirmed after payment and a quick review by our team.
+          Your group registration is confirmed automatically after successful payment.
         </p>
       </div>
     </form>

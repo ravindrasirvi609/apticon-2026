@@ -381,7 +381,7 @@ export function groupRegistrationSubmittedEmail(coordinatorName: string, groupCo
     subject: `Group Registration Payment Received — ${groupCode}`,
     html: renderEmail({
       title: "Group Payment Received",
-      preheader: `Your group registration ${groupCode} is now pending confirmation.`,
+      preheader: `Payment received for group registration ${groupCode}.`,
       blocks: [
         { type: "text", html: `Dear ${esc(coordinatorName)},` },
         { type: "text", html: `Thank you for registering your group of <b>${delegateCount}</b> delegates for <b>APTICON 2026</b>. Your payment has been received.` },
@@ -391,7 +391,7 @@ export function groupRegistrationSubmittedEmail(coordinatorName: string, groupCo
           { label: "Complimentary", value: String(complimentaryCount) },
           { label: "Amount paid",   value: `₹${feeAmount.toLocaleString("en-IN")}` },
         ]},
-        { type: "callout", variant: "warning", title: "Pending confirmation", body: `Our team will review your delegate list before the group is confirmed. You and each delegate will receive an email with individual registration codes once approved — usually within 2 working days.` },
+        { type: "callout", variant: "info", title: "Payment received", body: `Your group registration is being processed automatically. Confirmation emails with individual registration codes and QR badges will follow shortly.` },
         { type: "signoff" },
       ],
     }),
