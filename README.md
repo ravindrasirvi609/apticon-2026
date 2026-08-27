@@ -4,6 +4,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## WhatsApp notifications
 
+Registration webhook notifications use Sendrix. Configure these server-only environment variables:
+
+```bash
+SENDRIX_CALLBACK_URL=https://sendrixbackend.exebee.com/webhook/wa/BjuMKmyATxnYiUk9pGEUXUAq
+SENDRIX_VERIFY_TOKEN=your-sendrix-verify-token
+```
+
 WhatsApp notifications use Interakt's approved template API. Configure these server-only environment variables:
 
 ```bash
