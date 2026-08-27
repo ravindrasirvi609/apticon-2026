@@ -1,9 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
+import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { getRazorpayPayment, verifyRazorpayPaymentSignature } from "@/lib/razorpay";
 import { groupRazorpayVerifySchema } from "@/lib/validators/group-registration";
 import GroupRegistration from "@/models/GroupRegistration";
-import { sendMail, groupRegistrationSubmittedEmail } from "@/lib/email";
+import Registration from "@/models/Registration";
+import { generateRegistrationCode } from "@/lib/registration-code";
+import { sendMail, registrationApprovedEmail, groupRegistrationApprovedEmail } from "@/lib/email";
 import { logAudit } from "@/lib/audit";
 import { sendWhatsAppNotification } from "@/lib/whatsapp";
 
@@ -32,7 +35,7 @@ export async function POST(request: NextRequest) {
         { _id: group._id, status: "submitted" },
         {
           $set: {
-            status: "payment_review",
+            status: "approved",
             paymentStatus: "captured",
             razorpayPaymentId: payment.id,
             paymentMethod: payment.method,
@@ -42,6 +45,46 @@ export async function POST(request: NextRequest) {
         { new: true }
       );
       if (updated) {
+        const paidCount = updated.delegateCount - updated.complimentaryCount;
+        const perHeadShare = paidCount > 0 ? Math.round(updated.feeAmount / paidCount) : 0;
+        const createdIds: mongoose.Types.ObjectId[] = [];
+
+        for (const delegate of updated.delegates) {
+          const registrationCode = await generateRegistrationCode(updated.category);
+          const reg = await Registration.create({
+            registrationCode,
+            fullName: delegate.name,
+            designation: delegate.designation,
+            institution: updated.institution,
+            affiliation: delegate.affiliation,
+            city: updated.city,
+            state: updated.state,
+            email: delegate.email,
+            phone: delegate.phone,
+            photoKey: delegate.photoKey,
+            photoUrl: delegate.photoUrl,
+            photoName: delegate.photoName,
+            aptiMemberId: delegate.isAptiMember ? delegate.aptiMemberId : undefined,
+            includesAptiMembership: delegate.isAptiMember,
+            category: updated.category,
+            feeTier: updated.feeTier,
+            feeAmount: delegate.isComplimentary ? 0 : perHeadShare,
+            willSubmitAbstract: false,
+            paymentMode: "razorpay",
+            paymentStatus: "captured",
+            razorpayOrderId: updated.razorpayOrderId,
+            razorpayPaymentId: updated.razorpayPaymentId,
+            paymentMethod: updated.paymentMethod,
+            paidAt: updated.paidAt,
+            status: "approved",
+            approvedAt: new Date(),
+            groupRegistration: updated._id,
+          });
+          createdIds.push(reg._id);
+          const email = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, false);
+          await sendMail({ to: reg.email, subject: email.subject, html: email.html, attachments: email.attachments });
+        }
+        await GroupRegistration.updateOne({ _id: updated._id }, { $set: { createdRegistrations: createdIds } });
         await logAudit({
           actorRole: "public",
           action: "group_registration.payment_captured",
@@ -50,7 +93,7 @@ export async function POST(request: NextRequest) {
           details: { groupCode: group.groupCode, razorpayOrderId: group.razorpayOrderId, razorpayPaymentId: payment.id, amount: payment.amount },
           request,
         });
-        const { subject, html } = groupRegistrationSubmittedEmail(updated.coordinatorName, updated.groupCode, updated.delegateCount, updated.complimentaryCount, updated.feeAmount);
+        const { subject, html } = groupRegistrationApprovedEmail(updated.coordinatorName, updated.groupCode, updated.delegateCount);
         await sendMail({ to: updated.coordinatorEmail, subject, html });
         // await sendWhatsAppNotification(updated.coordinatorPhone, "group_registration_submitted", [updated.coordinatorName, updated.groupCode], updated._id.toString());
       }

@@ -1,16 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Loader2, CheckCircle2, XCircle } from "lucide-react";
-import { toast } from "sonner";
+import { ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
 import DelegatePhoto from "@/components/ui/DelegatePhoto";
-import { Button } from "@/components/ui/shadcn/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/shadcn/card";
 import { Badge } from "@/components/ui/shadcn/badge";
-import { Textarea } from "@/components/ui/shadcn/textarea";
-import { Label } from "@/components/ui/shadcn/label";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
 
 interface GroupDelegateDoc {
@@ -61,8 +57,6 @@ interface Props {
 
 export default function GroupRegistrationDetail({ id, backHref, registrationDetailBase }: Props) {
   const [group, setGroup] = useState<GroupDoc | null>(null);
-  const [reviewNote, setReviewNote] = useState("");
-  const [deciding, setDeciding] = useState<"approved" | "rejected" | null>(null);
 
   async function load() {
     const res = await fetch(`/api/group-registrations/${id}`);
@@ -72,29 +66,6 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
     }
   }
   useEffect(() => { load(); }, [id]);
-
-  async function decide(decision: "approved" | "rejected") {
-    if (decision === "rejected" && !reviewNote.trim()) {
-      toast.error("A note is required when rejecting a group registration.");
-      return;
-    }
-    setDeciding(decision);
-    try {
-      const res = await fetch(`/api/group-registrations/${id}/decision`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ decision, reviewNote: reviewNote.trim() || undefined }),
-      });
-      const body = await res.json();
-      if (!res.ok) throw new Error(body.error);
-      toast.success(decision === "approved" ? `Approved — ${body.createdCount} delegate registrations created.` : "Group registration rejected.");
-      await load();
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Action failed");
-    } finally {
-      setDeciding(null);
-    }
-  }
 
   if (!group) return <div className="p-8 text-sm text-[var(--muted-text)]">Loading…</div>;
   const statusInfo = STATUS_LABEL[group.status] ?? { label: group.status, variant: "secondary" as const };
@@ -200,7 +171,7 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
           </Card>
 
           <Card>
-            <CardHeader><CardTitle>Review Decision</CardTitle></CardHeader>
+            <CardHeader><CardTitle>Registration Status</CardTitle></CardHeader>
             <CardContent className="space-y-3">
               {group.status === "approved" && (
                 <div className="p-3 rounded bg-emerald-50 border border-emerald-200 text-sm">
@@ -219,23 +190,7 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
               {group.status === "submitted" && (
                 <p className="text-sm text-[var(--muted-text)]">Awaiting payment — nothing to review yet.</p>
               )}
-              {group.status === "payment_review" && (
-                <>
-                  <Label htmlFor="reviewNote">Review note {"(required if rejecting)"}</Label>
-                  <Textarea id="reviewNote" className="mt-2" rows={3} value={reviewNote} onChange={(e) => setReviewNote(e.target.value)} placeholder="Verify the institution and delegate list before approving…" />
-                  <div className="flex gap-2 pt-2">
-                    <Button className="flex-1" onClick={() => decide("approved")} disabled={!!deciding}>
-                      {deciding === "approved" ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />} Approve
-                    </Button>
-                    <Button variant="outline" className="flex-1" onClick={() => decide("rejected")} disabled={!!deciding}>
-                      {deciding === "rejected" ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />} Reject
-                    </Button>
-                  </div>
-                  <p className="text-xs text-[var(--muted-text)]">
-                    Approving creates a normal registration (with QR + confirmation email) for every delegate.
-                  </p>
-                </>
-              )}
+              {group.status === "payment_review" && <p className="text-sm text-[var(--muted-text)]">Legacy payment-review record. New group registrations are confirmed automatically after successful payment.</p>}
             </CardContent>
           </Card>
         </div>

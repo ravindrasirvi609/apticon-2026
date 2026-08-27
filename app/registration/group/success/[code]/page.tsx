@@ -21,10 +21,10 @@ export default async function GroupRegistrationSuccessPage({
             <CheckCircle className="w-8 h-8 text-emerald-700" />
           </div>
           <h1 className="font-display text-3xl font-bold text-[var(--primary-800)] mb-2">
-            {confirmed ? "Group Payment Received" : "Payment Processing"}
+            {confirmed ? "Group Registration Confirmed" : "Payment Processing"}
           </h1>
           <p className="text-[var(--muted-text)]">
-            {confirmed ? "Your Razorpay payment for the group has been confirmed." : "Your payment is being confirmed automatically by Razorpay."}
+            {confirmed ? "Your payment and group registration have been confirmed." : "Your payment is being confirmed automatically by Razorpay."}
           </p>
 
           <div className="mt-6 rounded-xl border border-[var(--accent-500)]/30 bg-[var(--surface-100)] p-5">
@@ -35,8 +35,8 @@ export default async function GroupRegistrationSuccessPage({
           <div className="mt-6 p-4 rounded-lg text-sm text-left bg-amber-50 border border-amber-200 text-amber-900">
             <b>What happens next?</b>
             <ol className="mt-2 space-y-1 list-decimal list-inside">
-              <li>Our team will review your delegate list — this usually takes up to 2 working days.</li>
-              <li>Once confirmed, every delegate (and you as coordinator) will receive an email with their own registration code and QR badge.</li>
+              <li>Your payment has been verified automatically.</li>
+              <li>Every delegate (and you as coordinator) will receive an email with their own registration code and QR badge.</li>
               <li>Keep this group code for your records when following up with the organiser.</li>
             </ol>
           </div>
