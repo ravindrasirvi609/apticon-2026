@@ -145,7 +145,16 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
                       <TableCell>
                         <div className="flex items-center gap-2.5">
                           <DelegatePhoto url={d.photoUrl} name={d.name} size={28} />
-                          <span className="font-medium">{d.name}</span>
+                          {registrationDetailBase && group.createdRegistrations[i] ? (
+                            <Link
+                              href={`${registrationDetailBase}/${group.createdRegistrations[i]}`}
+                              className="font-medium text-[var(--primary-800)] hover:underline"
+                            >
+                              {d.name}
+                            </Link>
+                          ) : (
+                            <span className="font-medium">{d.name}</span>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell className="text-xs">{d.designation}</TableCell>
