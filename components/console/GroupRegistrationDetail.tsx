@@ -14,7 +14,8 @@ import { Label } from "@/components/ui/shadcn/label";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
 
 interface GroupDelegateDoc {
-  name: string; designation: string; email: string; phone: string;
+  name: string; designation: string; email: string; phone: string; affiliation: string;
+  aptiMemberId?: string; isAptiMember?: boolean;
   photoUrl?: string; isComplimentary: boolean;
 }
 
@@ -146,10 +147,7 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
                         <div className="flex items-center gap-2.5">
                           <DelegatePhoto url={d.photoUrl} name={d.name} size={28} />
                           {registrationDetailBase && group.createdRegistrations[i] ? (
-                            <Link
-                              href={`${registrationDetailBase}/${group.createdRegistrations[i]}`}
-                              className="font-medium text-[var(--primary-800)] hover:underline"
-                            >
+                            <Link href={`${registrationDetailBase}/${group.createdRegistrations[i]}`} className="font-medium text-[var(--primary-800)] hover:underline">
                               {d.name}
                             </Link>
                           ) : (
@@ -242,6 +240,7 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
           </Card>
         </div>
       </div>
+
     </div>
   );
 }

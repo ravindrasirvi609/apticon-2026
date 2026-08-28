@@ -34,7 +34,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
     // Atomically claim the group so a double-click (or two staff acting at once) can't
     // double-create delegate registrations. `new: false` returns the pre-update doc, which is
     // what we need to iterate delegates from.
-    const group = await GroupRegistration.findOneAndUpdate(
+    let group = await GroupRegistration.findOneAndUpdate(
       { _id: id, status: "payment_review" },
       {
         $set: {
@@ -46,6 +46,12 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
       },
       { new: false }
     );
+
+    // An approved group may be retried when an earlier deployment created only
+    // part of its delegates before failing. The loop below is idempotent.
+    if (!group && decision === "approved") {
+      group = await GroupRegistration.findOne({ _id: id, status: "approved" });
+    }
 
     if (!group) {
       return NextResponse.json(
@@ -78,6 +84,14 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
 
     const createdIds: mongoose.Types.ObjectId[] = [];
     for (const delegate of group.delegates) {
+      const existing = await Registration.findOne({ groupRegistration: group._id, email: delegate.email })
+        .select("_id")
+        .lean();
+      if (existing) {
+        createdIds.push(existing._id);
+        continue;
+      }
+
       const registrationCode = await generateRegistrationCode(group.category);
 
       const reg = await Registration.create({
@@ -101,9 +115,6 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
         willSubmitAbstract: false,
         paymentMode: "razorpay",
         paymentStatus: "captured",
-        razorpayOrderId: group.razorpayOrderId,
-        razorpayPaymentId: group.razorpayPaymentId,
-        paymentMethod: group.paymentMethod,
         paidAt: group.paidAt,
         status: "approved",
         approvedAt: new Date(),
