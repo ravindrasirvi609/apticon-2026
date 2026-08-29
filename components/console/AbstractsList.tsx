@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/shadcn/input";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
 import { Button } from "@/components/ui/shadcn/button";
 import { toast } from "sonner";
+import ExportButtons from "@/components/console/ExportButtons";
 
 interface AbstractItem {
   _id: string;
@@ -98,11 +99,7 @@ export default function AbstractsList({
         title={title}
         description={description}
         actions={
-          <Button
-            onClick={downloadWord}
-            disabled={downloading || items.length === 0}
-            className="bg-[var(--primary-800)] hover:bg-[var(--primary-900)] text-white"
-          >
+          <div className="flex items-center gap-2"><ExportButtons endpoint="/api/abstracts/export" query={new URLSearchParams({ ...(q ? { q } : {}), ...(status ? { status } : {}) }).toString()} label="Abstracts" /><Button onClick={downloadWord} disabled={downloading || items.length === 0} className="bg-[var(--primary-800)] hover:bg-[var(--primary-900)] text-white">
             {downloading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -114,7 +111,7 @@ export default function AbstractsList({
                 Download Word
               </>
             )}
-          </Button>
+          </Button></div>
         }
       />
 

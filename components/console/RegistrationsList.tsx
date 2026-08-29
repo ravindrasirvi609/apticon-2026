@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/shadcn/input";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
 import { Button } from "@/components/ui/shadcn/button";
 import { Badge } from "@/components/ui/shadcn/badge";
+import ExportButtons from "@/components/console/ExportButtons";
 
 interface RegItem {
   _id: string;
@@ -77,7 +78,7 @@ export default function RegistrationsList({ detailBase, title = "Registrations",
 
   return (
     <div className="p-4 md:p-8">
-      <PageHeader title={title} description={description} />
+      <PageHeader title={title} description={description} actions={<ExportButtons endpoint="/api/registrations/export" query={new URLSearchParams({ ...(q ? { q } : {}), ...(status ? { status } : {}) }).toString()} label="Registrations" />} />
 
       <Card className="mb-6">
         <CardContent className="pt-6">
