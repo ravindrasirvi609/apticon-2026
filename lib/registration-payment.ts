@@ -53,12 +53,7 @@ export async function recordCapturedRazorpayPayment(
   });
   const { subject, html, attachments } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, !!reg.linkedAbstract);
   await sendMail({ to: reg.email, subject, html, attachments });
-<<<<<<< HEAD
-  await sendRegistrationWebhook(reg.fullName, reg.phone);
-  // await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], reg._id.toString());
-=======
   // await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], `registration-approved-${reg._id.toString()}`);
->>>>>>> 6c53e88 (feat: update WhatsApp notification integration to use Sendrix API and improve phone number normalization)
   return reg;
 }
 
