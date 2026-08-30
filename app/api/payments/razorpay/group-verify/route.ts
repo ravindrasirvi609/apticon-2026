@@ -109,6 +109,7 @@ export async function POST(request: NextRequest) {
           createdIds.push(reg._id);
           const email = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, false);
           await sendMail({ to: reg.email, subject: email.subject, html: email.html, attachments: email.attachments });
+          // await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], reg._id.toString());
         }
         await GroupRegistration.updateOne({ _id: updated._id }, { $set: { createdRegistrations: createdIds } });
         await logAudit({
@@ -121,7 +122,6 @@ export async function POST(request: NextRequest) {
         });
         const { subject, html } = groupRegistrationApprovedEmail(updated.coordinatorName, updated.groupCode, updated.delegateCount);
         await sendMail({ to: updated.coordinatorEmail, subject, html });
-        // await sendWhatsAppNotification(updated.coordinatorPhone, "group_registration_submitted", [updated.coordinatorName, updated.groupCode], updated._id.toString());
       }
       return NextResponse.json({ ok: true, captured: true, groupCode: group.groupCode });
 >>>>>>> e4c3eea (feat: streamline group registration process by automating payment confirmation and updating related notifications)
