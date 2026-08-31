@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
     await connectDB();
     if (webhook.event === "payment.captured") {
       const registration = await Registration.findOne({ razorpayOrderId: payment.order_id });
+<<<<<<< HEAD
       if (registration) {
         // Only an actual shortfall is refused — a gateway surcharge on top of the expected fee still confirms.
         if (payment.amount < registration.feeAmount * 100 || payment.currency !== "INR") {
@@ -64,6 +65,26 @@ export async function POST(request: NextRequest) {
           { $set: { razorpayPaymentId: payment.id, paymentMethod: payment.method, paymentStatus: status } }
         );
       }
+=======
+      if (!registration || payment.amount !== registration.feeAmount * 100 || payment.currency !== "INR") {
+        console.error("[razorpay] webhook payment does not match a registration:", {
+          orderId: payment.order_id,
+          paymentId: payment.id,
+          receivedAmount: payment.amount,
+          receivedCurrency: payment.currency,
+          expectedAmount: registration ? registration.feeAmount * 100 : null,
+          registrationId: registration?._id.toString() ?? null,
+        });
+        return NextResponse.json({ error: "Payment does not match a registration" }, { status: 400 });
+      }
+      await recordCapturedRazorpayPayment(payment, request);
+    } else if (webhook.event === "payment.authorized" || webhook.event === "payment.failed" || webhook.event === "payment.refunded") {
+      const status = webhook.event === "payment.authorized" ? "authorized" : webhook.event === "payment.failed" ? "failed" : "refunded";
+      await Registration.updateOne(
+        { razorpayOrderId: payment.order_id, status: { $ne: "approved" } },
+        { $set: { razorpayPaymentId: payment.id, transactionNumber: payment.id, paymentMethod: payment.method, paymentStatus: status } }
+      );
+>>>>>>> e4fbbe2 (feat: add manual confirmation functionality for individual registrations)
     }
     return NextResponse.json({ ok: true });
   } catch (error) {

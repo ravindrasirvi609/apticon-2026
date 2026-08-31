@@ -21,7 +21,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const payment = await getRazorpayPayment(data.razorpay_payment_id);
+<<<<<<< HEAD
     if (payment.order_id !== registration.razorpayOrderId || payment.currency !== "INR" || payment.amount < registration.feeAmount * 100) {
+=======
+    if (payment.order_id !== registration.razorpayOrderId || payment.currency !== "INR" || payment.amount !== registration.feeAmount * 100) {
+>>>>>>> e4fbbe2 (feat: add manual confirmation functionality for individual registrations)
       console.error("[razorpay] verify amount/currency mismatch:", {
         registrationId: registration._id.toString(),
         orderId: registration.razorpayOrderId,

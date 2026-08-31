@@ -30,8 +30,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const payment = await getRazorpayPayment(data.razorpay_payment_id);
+<<<<<<< HEAD
     // Only an actual shortfall is refused — a gateway surcharge on top of the expected fee still confirms.
     if (payment.order_id !== group.razorpayOrderId || payment.currency !== "INR" || payment.amount < group.feeAmount * 100) {
+=======
+    if (payment.order_id !== group.razorpayOrderId || payment.currency !== "INR" || payment.amount !== group.feeAmount * 100) {
+>>>>>>> e4fbbe2 (feat: add manual confirmation functionality for individual registrations)
       console.error("[razorpay] group verify amount/currency mismatch:", {
         groupRegistrationId: group._id.toString(),
         orderId: group.razorpayOrderId,
@@ -41,6 +45,7 @@ export async function POST(request: NextRequest) {
         receivedCurrency: payment.currency,
         expectedAmount: group.feeAmount * 100,
       });
+<<<<<<< HEAD
       await GroupRegistration.updateOne(
         { _id: group._id, status: { $ne: "approved" } },
         {
@@ -49,6 +54,8 @@ export async function POST(request: NextRequest) {
           },
         }
       );
+=======
+>>>>>>> e4fbbe2 (feat: add manual confirmation functionality for individual registrations)
       return NextResponse.json({ error: "Payment details do not match this group registration" }, { status: 400 });
     }
 
