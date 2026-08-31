@@ -16,6 +16,7 @@ const ADMIN_NAV: NavItem[] = [
   { href: "/admin/registrations", label: "Registrations", icon: "registrations" },
   { href: "/admin/group-registrations", label: "Group Registrations", icon: "groups" },
   { href: "/admin/abstracts",     label: "Abstracts",     icon: "abstracts" },
+  { href: "/admin/apti-members",  label: "APTI Members",  icon: "aptiMembers" },
   { href: "/admin/users",         label: "Users",         icon: "users" },
   { href: "/admin/audit",         label: "Audit Log",     icon: "audit" },
   { href: "/admin/settings",      label: "Settings",      icon: "settings" },
