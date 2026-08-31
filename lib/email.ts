@@ -450,7 +450,7 @@ export function nudgeRegisterEmail(name: string, abstractCode: string) {
         { type: "text", html: `We see you have submitted an abstract (<b>${esc(abstractCode)}</b>) for APTICON 2026 — thank you!` },
         { type: "callout", variant: "warning", title: "Registration still pending", body: `Only registered delegates may present at the convention. To confirm your slot, please complete registration.` },
         { type: "button", label: "Register Now", href: `${BASE_URL}/registration` },
-        { type: "text", html: `Early-bird rates end <b>31 August 2026</b>.` },
+        { type: "text", html: `Early-bird rates end <b>15 September 2026</b>.` },
         { type: "signoff" },
       ],
     }),

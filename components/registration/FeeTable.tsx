@@ -8,8 +8,8 @@ const FEES = [
 ];
 
 const DATES = [
-  { label: "Early Bird Deadline",  date: "31 August 2026",     color: "text-emerald-600" },
-  { label: "Regular Registration", date: "1 Sep – 10 Oct 2026", color: "text-[var(--secondary-800)]" },
+  { label: "Early Bird Deadline",  date: "15 September 2026",  color: "text-emerald-600" },
+  { label: "Regular Registration", date: "16 Sep – 10 Oct 2026", color: "text-[var(--secondary-800)]" },
   { label: "On-Spot Registration", date: "24–25 October 2026", color: "text-[var(--primary-800)]" },
 ];
 
@@ -34,7 +34,7 @@ export default function FeeTable() {
               <th className="text-left px-5 py-4 font-semibold text-xs uppercase tracking-wide">Category</th>
               <th className="text-center px-4 py-4 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
                 Early Bird<br/>
-                <span className="text-[var(--accent-400)] normal-case text-[10px]">Till 31 Aug</span>
+                <span className="text-[var(--accent-400)] normal-case text-[10px]">Till 15 Sep</span>
               </th>
               <th className="text-center px-4 py-4 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
                 Regular<br/>
