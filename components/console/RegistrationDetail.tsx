@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, FileText, Loader2, Image as ImageIcon, RotateCcw, ShieldCheck, Info, Printer } from "lucide-react";
+import { ArrowLeft, ExternalLink, FileText, Loader2, Image as ImageIcon, RotateCcw, ShieldCheck, Info, Printer, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
@@ -86,6 +86,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
   const [internalNote, setInternalNote] = useState("");
   const [savingNote, setSavingNote] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   async function load() {
     const res = await fetch(`/api/registrations/${id}`);
@@ -140,6 +141,13 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
     } finally {
       setSavingNote(false);
     }
+  }
+
+  async function manualConfirm() {
+    if (!window.confirm("Manually confirm this individual registration and send the confirmation email?")) return;
+    setConfirming(true);
+    try { const res = await fetch(`/api/registrations/${id}/manual-confirm`, { method: "POST" }); const body = await res.json(); if (!res.ok) throw new Error(body.error); toast.success(`Confirmed. Registration code: ${body.registrationCode}`); await load(); }
+    catch (e) { toast.error(e instanceof Error ? e.message : "Manual confirmation failed"); } finally { setConfirming(false); }
   }
 
   if (!data) return <div className="p-8 text-sm text-[var(--muted-text)]">Loading…</div>;
@@ -332,6 +340,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
                     Use this if a delegate says they paid but the status here hasn&rsquo;t caught up — a missed webhook or a
                     closed browser mid-checkout. It re-reads the payment from Razorpay and applies the real result.
                   </p>
+                  {isAdmin && r.status !== "approved" && <Button className="w-full" onClick={manualConfirm} disabled={confirming}>{confirming ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />} Manually Confirm Registration</Button>}
                 </>
               ) : (
                 <div className="p-3 rounded bg-[var(--surface-50)] border border-[var(--accent-500)]/25 text-sm">
@@ -340,6 +349,7 @@ export default function RegistrationDetail({ id, backHref, isAdmin, abstractDeta
                     This record predates online payments and was verified by hand. Manual approval has been retired from
                     the console — registrations are now approved automatically by Razorpay.
                   </p>
+                  {isAdmin && r.status !== "approved" && <Button className="mt-3 w-full" onClick={manualConfirm} disabled={confirming}>{confirming ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />} Manually Confirm Registration</Button>}
                 </div>
               )}
             </CardContent>

@@ -9,25 +9,39 @@ type RazorpayWebhook = { event?: string; payload?: { payment?: { entity?: Razorp
 export async function POST(request: NextRequest) {
   const rawBody = await request.text();
   if (!verifyRazorpayWebhookSignature(rawBody, request.headers.get("x-razorpay-signature"))) {
+    console.error("[razorpay] webhook signature invalid");
     return NextResponse.json({ error: "Invalid webhook signature" }, { status: 400 });
   }
   const webhook = JSON.parse(rawBody) as RazorpayWebhook;
   const payment = webhook.payload?.payment?.entity;
   if (!payment?.order_id || !payment.id) return NextResponse.json({ ok: true });
 
-  await connectDB();
-  if (webhook.event === "payment.captured") {
-    const registration = await Registration.findOne({ razorpayOrderId: payment.order_id });
-    if (!registration || payment.amount !== registration.feeAmount * 100 || payment.currency !== "INR") {
-      return NextResponse.json({ error: "Payment does not match a registration" }, { status: 400 });
+  try {
+    await connectDB();
+    if (webhook.event === "payment.captured") {
+      const registration = await Registration.findOne({ razorpayOrderId: payment.order_id });
+      if (!registration || payment.amount !== registration.feeAmount * 100 || payment.currency !== "INR") {
+        console.error("[razorpay] webhook payment does not match a registration:", {
+          orderId: payment.order_id,
+          paymentId: payment.id,
+          receivedAmount: payment.amount,
+          receivedCurrency: payment.currency,
+          expectedAmount: registration ? registration.feeAmount * 100 : null,
+          registrationId: registration?._id.toString() ?? null,
+        });
+        return NextResponse.json({ error: "Payment does not match a registration" }, { status: 400 });
+      }
+      await recordCapturedRazorpayPayment(payment, request);
+    } else if (webhook.event === "payment.authorized" || webhook.event === "payment.failed" || webhook.event === "payment.refunded") {
+      const status = webhook.event === "payment.authorized" ? "authorized" : webhook.event === "payment.failed" ? "failed" : "refunded";
+      await Registration.updateOne(
+        { razorpayOrderId: payment.order_id, status: { $ne: "approved" } },
+        { $set: { razorpayPaymentId: payment.id, transactionNumber: payment.id, paymentMethod: payment.method, paymentStatus: status } }
+      );
     }
-    await recordCapturedRazorpayPayment(payment, request);
-  } else if (webhook.event === "payment.authorized" || webhook.event === "payment.failed" || webhook.event === "payment.refunded") {
-    const status = webhook.event === "payment.authorized" ? "authorized" : webhook.event === "payment.failed" ? "failed" : "refunded";
-    await Registration.updateOne(
-      { razorpayOrderId: payment.order_id, status: { $ne: "approved" } },
-      { $set: { razorpayPaymentId: payment.id, transactionNumber: payment.id, paymentMethod: payment.method, paymentStatus: status } }
-    );
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("[razorpay] webhook processing failed:", { event: webhook.event, orderId: payment.order_id, paymentId: payment.id }, error);
+    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
   }
-  return NextResponse.json({ ok: true });
 }
