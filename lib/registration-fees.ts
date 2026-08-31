@@ -27,7 +27,7 @@ export const FEE_TABLE: Record<RegistrationCategory, Record<FeeTier, number>> = 
 };
 
 // Same dates as the public FeeTable UI copy
-const EARLY_BIRD_CUTOFF = new Date("2026-09-01T00:00:00+05:30"); // "Till 31 Aug" (inclusive of Aug)
+const EARLY_BIRD_CUTOFF = new Date("2026-09-16T00:00:00+05:30"); // "Till 15 Sep" (inclusive of Sep 15)
 const ON_SPOT_START     = new Date("2026-10-24T00:00:00+05:30"); // conference start
 
 export function currentFeeTier(now: Date = new Date()): FeeTier {
