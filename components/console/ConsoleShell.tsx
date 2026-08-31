@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  BadgeCheck,
   ClipboardCheck,
   ClipboardList,
   FileText,
@@ -24,7 +25,7 @@ import { Button } from "@/components/ui/shadcn/button";
 export interface NavItem {
   href: string;
   label: string;
-  icon: "dashboard" | "delegates" | "registrations" | "groups" | "abstracts" | "users" | "audit" | "settings" | "checkin";
+  icon: "dashboard" | "delegates" | "registrations" | "groups" | "abstracts" | "users" | "audit" | "settings" | "checkin" | "aptiMembers";
 }
 
 interface Props {
@@ -56,6 +57,7 @@ const NAV_ICONS = {
   audit: ClipboardList,
   settings: Settings,
   checkin: UserCheck,
+  aptiMembers: BadgeCheck,
 };
 
 export default function ConsoleShell({ role, brand, brandSub, nav, user, children }: Props) {
