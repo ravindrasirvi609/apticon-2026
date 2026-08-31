@@ -4,15 +4,11 @@ import { connectDB } from "@/lib/db";
 import { getRazorpayPayment, verifyRazorpayPaymentSignature } from "@/lib/razorpay";
 import { groupRazorpayVerifySchema } from "@/lib/validators/group-registration";
 import GroupRegistration from "@/models/GroupRegistration";
-<<<<<<< HEAD
-import { recordCapturedGroupRazorpayPayment } from "@/lib/registration-payment";
-=======
 import Registration from "@/models/Registration";
 import { generateRegistrationCode } from "@/lib/registration-code";
 import { sendMail, registrationApprovedEmail, groupRegistrationApprovedEmail } from "@/lib/email";
 import { logAudit } from "@/lib/audit";
 import { sendWhatsAppNotification } from "@/lib/whatsapp";
->>>>>>> e4c3eea (feat: streamline group registration process by automating payment confirmation and updating related notifications)
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -30,12 +26,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const payment = await getRazorpayPayment(data.razorpay_payment_id);
-<<<<<<< HEAD
-    // Only an actual shortfall is refused — a gateway surcharge on top of the expected fee still confirms.
     if (payment.order_id !== group.razorpayOrderId || payment.currency !== "INR" || payment.amount < group.feeAmount * 100) {
-=======
-    if (payment.order_id !== group.razorpayOrderId || payment.currency !== "INR" || payment.amount !== group.feeAmount * 100) {
->>>>>>> e4fbbe2 (feat: add manual confirmation functionality for individual registrations)
       console.error("[razorpay] group verify amount/currency mismatch:", {
         groupRegistrationId: group._id.toString(),
         orderId: group.razorpayOrderId,
@@ -45,25 +36,10 @@ export async function POST(request: NextRequest) {
         receivedCurrency: payment.currency,
         expectedAmount: group.feeAmount * 100,
       });
-<<<<<<< HEAD
-      await GroupRegistration.updateOne(
-        { _id: group._id, status: { $ne: "approved" } },
-        {
-          $set: {
-            paymentError: `Payment ${payment.id} does not match this group registration (received ${payment.amount / 100} ${payment.currency}, expected ${group.feeAmount} INR). Not approved automatically.`,
-          },
-        }
-      );
-=======
->>>>>>> e4fbbe2 (feat: add manual confirmation functionality for individual registrations)
       return NextResponse.json({ error: "Payment details do not match this group registration" }, { status: 400 });
     }
 
     if (payment.status === "captured") {
-<<<<<<< HEAD
-      const updated = await recordCapturedGroupRazorpayPayment(payment, request);
-      return NextResponse.json({ ok: true, captured: !!updated, groupCode: group.groupCode });
-=======
       const updated = await GroupRegistration.findOneAndUpdate(
         { _id: group._id, status: "submitted" },
         {
@@ -131,11 +107,10 @@ export async function POST(request: NextRequest) {
         await sendMail({ to: updated.coordinatorEmail, subject, html });
       }
       return NextResponse.json({ ok: true, captured: true, groupCode: group.groupCode });
->>>>>>> e4c3eea (feat: streamline group registration process by automating payment confirmation and updating related notifications)
     }
 
     await GroupRegistration.updateOne(
-      { _id: group._id, status: { $ne: "approved" } },
+      { _id: group._id, status: "submitted" },
       { $set: { razorpayPaymentId: payment.id, paymentMethod: payment.method, paymentStatus: payment.status } }
     );
     return NextResponse.json({ ok: true, captured: false, groupCode: group.groupCode });
