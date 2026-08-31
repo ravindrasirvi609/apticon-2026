@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
     await connectDB();
     if (webhook.event === "payment.captured") {
       const registration = await Registration.findOne({ razorpayOrderId: payment.order_id });
-      if (!registration || payment.amount !== registration.feeAmount * 100 || payment.currency !== "INR") {
+      // Only an actual shortfall is refused — a gateway surcharge on top of the expected fee still confirms.
+      if (!registration || payment.amount < registration.feeAmount * 100 || payment.currency !== "INR") {
         console.error("[razorpay] webhook payment does not match a registration:", {
           orderId: payment.order_id,
           paymentId: payment.id,

@@ -48,7 +48,7 @@ export async function recordCapturedRazorpayPayment(
     action: "payment.razorpay.captured",
     resourceType: "registration",
     resourceId: reg._id.toString(),
-    details: { registrationCode: reg.registrationCode, razorpayOrderId: payment.order_id, razorpayPaymentId: payment.id, amount: payment.amount },
+    details: { registrationCode: reg.registrationCode, razorpayOrderId: payment.order_id, razorpayPaymentId: payment.id, amount: payment.amount, expectedAmount: reg.feeAmount * 100 },
     request,
   });
   const { subject, html, attachments } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, !!reg.linkedAbstract);
@@ -102,7 +102,9 @@ export async function syncRazorpayRegistration(
     result = { outcome: "no_payments" };
   } else {
     const captured = items.find((p) => p.status === "captured");
-    const matches = captured && captured.currency === "INR" && captured.amount === expectedAmount;
+    // A delegate who paid more than expected (e.g. a gateway surcharge Razorpay added on top)
+    // should still be confirmed — only an actual shortfall is refused automatic approval.
+    const matches = captured && captured.currency === "INR" && captured.amount >= expectedAmount;
 
     if (captured && matches) {
       const reg = await recordCapturedRazorpayPayment(captured, request, actor);
