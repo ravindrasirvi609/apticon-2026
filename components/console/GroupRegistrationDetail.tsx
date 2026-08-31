@@ -1,17 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Info, Loader2, RotateCcw } from "lucide-react";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
 import DelegatePhoto from "@/components/ui/DelegatePhoto";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/shadcn/card";
 import { Badge } from "@/components/ui/shadcn/badge";
+import { Button } from "@/components/ui/shadcn/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
 
 interface GroupDelegateDoc {
-  name: string; designation: string; email: string; phone: string; affiliation: string;
-  aptiMemberId?: string; isAptiMember?: boolean;
+  name: string; designation: string; email: string; phone: string;
   photoUrl?: string; isComplimentary: boolean;
 }
 
@@ -34,6 +35,7 @@ interface GroupDoc {
   paymentStatus?: string;
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
+  paymentError?: string;
   paidAt?: string;
   status: string;
   reviewedAt?: string;
@@ -49,6 +51,13 @@ const STATUS_LABEL: Record<string, { label: string; variant: "info" | "warning" 
   rejected:       { label: "Rejected", variant: "danger" },
 };
 
+interface SyncResponse {
+  outcome: "captured" | "already_approved" | "updated" | "no_payments";
+  paymentStatus?: string;
+  paymentError?: string | null;
+  delegatesProcessed?: number;
+}
+
 interface Props {
   id: string;
   backHref: string;
@@ -57,6 +66,7 @@ interface Props {
 
 export default function GroupRegistrationDetail({ id, backHref, registrationDetailBase }: Props) {
   const [group, setGroup] = useState<GroupDoc | null>(null);
+  const [syncing, setSyncing] = useState(false);
 
   async function load() {
     const res = await fetch(`/api/group-registrations/${id}`);
@@ -67,8 +77,40 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
   }
   useEffect(() => { load(); }, [id]);
 
+  /** Re-reads the payment from Razorpay. Also retries any delegate who missed their email/code/QR last time. */
+  async function syncPayment() {
+    setSyncing(true);
+    try {
+      const res = await fetch(`/api/group-registrations/${id}/sync-payment`, { method: "POST" });
+      const body = (await res.json()) as SyncResponse & { error?: string };
+      if (!res.ok) throw new Error(body.error);
+
+      if (body.outcome === "captured") {
+        toast.success(
+          body.delegatesProcessed
+            ? `Payment confirmed. ${body.delegatesProcessed} delegate(s) emailed their registration code and QR.`
+            : "Payment confirmed by Razorpay. Delegates have been emailed."
+        );
+      } else if (body.outcome === "already_approved") {
+        toast.info("Already approved — every delegate already has their registration.");
+      } else if (body.outcome === "no_payments") {
+        toast.info("Razorpay has no payment attempt for this order yet.");
+      } else if (body.paymentError) {
+        toast.warning(body.paymentError);
+      } else {
+        toast.info(`Razorpay reports this payment as "${body.paymentStatus ?? "pending"}". Not approved.`);
+      }
+      await load();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  }
+
   if (!group) return <div className="p-8 text-sm text-[var(--muted-text)]">Loading…</div>;
   const statusInfo = STATUS_LABEL[group.status] ?? { label: group.status, variant: "secondary" as const };
+  const missingDelegates = group.status === "approved" && group.createdRegistrations.length < group.delegateCount;
 
   return (
     <div className="p-4 md:p-8 max-w-6xl">
@@ -118,7 +160,10 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
                         <div className="flex items-center gap-2.5">
                           <DelegatePhoto url={d.photoUrl} name={d.name} size={28} />
                           {registrationDetailBase && group.createdRegistrations[i] ? (
-                            <Link href={`${registrationDetailBase}/${group.createdRegistrations[i]}`} className="font-medium text-[var(--primary-800)] hover:underline">
+                            <Link
+                              href={`${registrationDetailBase}/${group.createdRegistrations[i]}`}
+                              className="font-medium text-[var(--primary-800)] hover:underline"
+                            >
                               {d.name}
                             </Link>
                           ) : (
@@ -167,6 +212,33 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
               <Field label="Payment status" value={group.paymentStatus ?? "pending"} />
               <Field label="Razorpay Order ID" value={group.razorpayOrderId ?? "—"} />
               <Field label="Paid at" value={group.paidAt ? format(new Date(group.paidAt), "d MMM yyyy, HH:mm") : "—"} />
+              {group.paymentError && (
+                <div className="p-3 rounded bg-amber-50 border border-amber-200 text-sm">
+                  <div className="font-semibold text-amber-800 flex items-center gap-1.5">
+                    <Info className="w-4 h-4" /> Gateway note
+                  </div>
+                  <div className="mt-1 text-amber-900 whitespace-pre-line">{group.paymentError}</div>
+                </div>
+              )}
+              {missingDelegates && (
+                <div className="p-3 rounded bg-amber-50 border border-amber-200 text-sm">
+                  <div className="font-semibold text-amber-800">
+                    {group.createdRegistrations.length} of {group.delegateCount} delegates have a registration
+                  </div>
+                  <div className="mt-1 text-amber-900">
+                    The rest are missing their confirmation email, code and QR — click Sync to retry them.
+                  </div>
+                </div>
+              )}
+              <Button variant="outline" className="w-full" onClick={syncPayment} disabled={syncing}>
+                {syncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RotateCcw className="w-4 h-4" />}
+                Sync from Razorpay
+              </Button>
+              <p className="text-xs text-[var(--muted-text)]">
+                Use this if the coordinator says they paid but the status here hasn&rsquo;t caught up, or if some
+                delegates never received their email. It re-reads the payment from Razorpay and retries any
+                delegate still missing a registration.
+              </p>
             </CardContent>
           </Card>
 
@@ -195,7 +267,6 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
           </Card>
         </div>
       </div>
-
     </div>
   );
 }

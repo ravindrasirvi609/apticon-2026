@@ -54,6 +54,8 @@ export interface IRegistration {
   /** Why the last attempt did not result in an approval (gateway error or amount mismatch). */
   paymentError?: string;
   paidAt?: Date;
+  /** Set only once the approval email actually sends — lets a retry tell "approved" apart from "delivered". */
+  confirmationEmailSentAt?: Date;
 
   // Workflow
   status: RegistrationStatus;
@@ -114,6 +116,7 @@ const RegistrationSchema = new Schema<IRegistration>(
     paymentMethod:     { type: String },
     paymentError:      { type: String },
     paidAt:            { type: Date },
+    confirmationEmailSentAt: { type: Date },
 
     // "payment_review", "rejected" and "resubmitted" are retained for legacy manual-payment
     // documents only — nothing sets them now that Razorpay drives approval.
