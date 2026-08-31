@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const payment = await getRazorpayPayment(data.razorpay_payment_id);
-    if (payment.order_id !== group.razorpayOrderId || payment.currency !== "INR" || payment.amount !== group.feeAmount * 100) {
+    if (payment.order_id !== group.razorpayOrderId || payment.currency !== "INR" || payment.amount < group.feeAmount * 100) {
       console.error("[razorpay] group verify amount/currency mismatch:", {
         groupRegistrationId: group._id.toString(),
         orderId: group.razorpayOrderId,
