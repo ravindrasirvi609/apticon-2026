@@ -3,7 +3,6 @@ import { connectDB } from "@/lib/db";
 import { verifyRazorpayWebhookSignature, type RazorpayPayment } from "@/lib/razorpay";
 import Registration from "@/models/Registration";
 import { recordCapturedRazorpayPayment } from "@/lib/registration-payment";
-
 type RazorpayWebhook = { event?: string; payload?: { payment?: { entity?: RazorpayPayment } } };
 
 export async function POST(request: NextRequest) {
@@ -20,8 +19,7 @@ export async function POST(request: NextRequest) {
     await connectDB();
     if (webhook.event === "payment.captured") {
       const registration = await Registration.findOne({ razorpayOrderId: payment.order_id });
-      // Only an actual shortfall is refused — a gateway surcharge on top of the expected fee still confirms.
-      if (!registration || payment.amount < registration.feeAmount * 100 || payment.currency !== "INR") {
+      if (!registration || payment.amount !== registration.feeAmount * 100 || payment.currency !== "INR") {
         console.error("[razorpay] webhook payment does not match a registration:", {
           orderId: payment.order_id,
           paymentId: payment.id,
