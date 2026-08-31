@@ -48,7 +48,11 @@ export interface IGroupRegistration {
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
   paymentMethod?: string;
+  /** Why the last attempt did not result in an approval (gateway error or amount mismatch). */
+  paymentError?: string;
   paidAt?: Date;
+  /** Set only once the coordinator's group-confirmed summary email actually sends. */
+  coordinatorEmailSentAt?: Date;
 
   status: GroupRegistrationStatus;
   reviewedBy?: mongoose.Types.ObjectId;
@@ -108,7 +112,9 @@ const GroupRegistrationSchema = new Schema<IGroupRegistration>(
     razorpayOrderId: { type: String, sparse: true, unique: true, index: true },
     razorpayPaymentId: { type: String, sparse: true, unique: true, index: true },
     paymentMethod: { type: String },
+    paymentError: { type: String },
     paidAt: { type: Date },
+    coordinatorEmailSentAt: { type: Date },
 
     status: {
       type: String,

@@ -193,7 +193,12 @@ export async function sendMail({ to, subject, html, attachments }: SendOpts) {
     console.warn("[email] RESEND_API_KEY missing — skipping send to", to);
     return { skipped: true as const };
   }
-  return resend.emails.send({ from: FROM, to, subject, html, attachments });
+  // Resend never throws for an API-level failure (invalid address, quota, rate limit) — it
+  // resolves with { error } instead, so callers must check it or a failed send looks identical
+  // to a successful one.
+  const { data, error } = await resend.emails.send({ from: FROM, to, subject, html, attachments });
+  if (error) throw new Error(`Resend rejected email to ${to} (${error.name}): ${error.message}`);
+  return { data };
 }
 
 // ─── Templates ──────────────────────────────────────────────

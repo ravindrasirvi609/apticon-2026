@@ -1,14 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
-import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { getRazorpayPayment, verifyRazorpayPaymentSignature } from "@/lib/razorpay";
 import { groupRazorpayVerifySchema } from "@/lib/validators/group-registration";
 import GroupRegistration from "@/models/GroupRegistration";
-import Registration from "@/models/Registration";
-import { generateRegistrationCode } from "@/lib/registration-code";
-import { sendMail, registrationApprovedEmail, groupRegistrationApprovedEmail } from "@/lib/email";
-import { logAudit } from "@/lib/audit";
-import { sendWhatsAppNotification } from "@/lib/whatsapp";
+import { recordCapturedGroupRazorpayPayment } from "@/lib/registration-payment";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -26,6 +21,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const payment = await getRazorpayPayment(data.razorpay_payment_id);
+    // Only an actual shortfall is refused — a gateway surcharge on top of the expected fee still confirms.
     if (payment.order_id !== group.razorpayOrderId || payment.currency !== "INR" || payment.amount < group.feeAmount * 100) {
       console.error("[razorpay] group verify amount/currency mismatch:", {
         groupRegistrationId: group._id.toString(),
@@ -36,81 +32,24 @@ export async function POST(request: NextRequest) {
         receivedCurrency: payment.currency,
         expectedAmount: group.feeAmount * 100,
       });
+      await GroupRegistration.updateOne(
+        { _id: group._id, status: { $ne: "approved" } },
+        {
+          $set: {
+            paymentError: `Payment ${payment.id} does not match this group registration (received ${payment.amount / 100} ${payment.currency}, expected ${group.feeAmount} INR). Not approved automatically.`,
+          },
+        }
+      );
       return NextResponse.json({ error: "Payment details do not match this group registration" }, { status: 400 });
     }
 
     if (payment.status === "captured") {
-      const updated = await GroupRegistration.findOneAndUpdate(
-        { _id: group._id, status: "submitted" },
-        {
-          $set: {
-            status: "approved",
-            paymentStatus: "captured",
-            razorpayPaymentId: payment.id,
-            paymentMethod: payment.method,
-            paidAt: new Date(),
-          },
-        },
-        { new: true }
-      );
-      if (updated) {
-        const paidCount = updated.delegateCount - updated.complimentaryCount;
-        const perHeadShare = paidCount > 0 ? Math.round(updated.feeAmount / paidCount) : 0;
-        const createdIds: mongoose.Types.ObjectId[] = [];
-
-        for (const delegate of updated.delegates) {
-          const registrationCode = await generateRegistrationCode(updated.category);
-          const reg = await Registration.create({
-            registrationCode,
-            fullName: delegate.name,
-            designation: delegate.designation,
-            institution: updated.institution,
-            affiliation: delegate.affiliation,
-            city: updated.city,
-            state: updated.state,
-            email: delegate.email,
-            phone: delegate.phone,
-            photoKey: delegate.photoKey,
-            photoUrl: delegate.photoUrl,
-            photoName: delegate.photoName,
-            aptiMemberId: delegate.isAptiMember ? delegate.aptiMemberId : undefined,
-            includesAptiMembership: delegate.isAptiMember,
-            category: updated.category,
-            feeTier: updated.feeTier,
-            feeAmount: delegate.isComplimentary ? 0 : perHeadShare,
-            willSubmitAbstract: false,
-            paymentMode: "razorpay",
-            paymentStatus: "captured",
-            razorpayOrderId: updated.razorpayOrderId,
-            razorpayPaymentId: updated.razorpayPaymentId,
-            paymentMethod: updated.paymentMethod,
-            paidAt: updated.paidAt,
-            status: "approved",
-            approvedAt: new Date(),
-            groupRegistration: updated._id,
-          });
-          createdIds.push(reg._id);
-          const email = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, false);
-          await sendMail({ to: reg.email, subject: email.subject, html: email.html, attachments: email.attachments });
-          // await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], reg._id.toString());
-        }
-        await GroupRegistration.updateOne({ _id: updated._id }, { $set: { createdRegistrations: createdIds } });
-        await logAudit({
-          actorRole: "public",
-          action: "group_registration.payment_captured",
-          resourceType: "group_registration",
-          resourceId: group._id.toString(),
-          details: { groupCode: group.groupCode, razorpayOrderId: group.razorpayOrderId, razorpayPaymentId: payment.id, amount: payment.amount },
-          request,
-        });
-        const { subject, html } = groupRegistrationApprovedEmail(updated.coordinatorName, updated.groupCode, updated.delegateCount);
-        await sendMail({ to: updated.coordinatorEmail, subject, html });
-      }
-      return NextResponse.json({ ok: true, captured: true, groupCode: group.groupCode });
+      const updated = await recordCapturedGroupRazorpayPayment(payment, request);
+      return NextResponse.json({ ok: true, captured: !!updated, groupCode: group.groupCode });
     }
 
     await GroupRegistration.updateOne(
-      { _id: group._id, status: "submitted" },
+      { _id: group._id, status: { $ne: "approved" } },
       { $set: { razorpayPaymentId: payment.id, paymentMethod: payment.method, paymentStatus: payment.status } }
     );
     return NextResponse.json({ ok: true, captured: false, groupCode: group.groupCode });
