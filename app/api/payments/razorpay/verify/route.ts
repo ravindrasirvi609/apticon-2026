@@ -22,6 +22,15 @@ export async function POST(request: NextRequest) {
   try {
     const payment = await getRazorpayPayment(data.razorpay_payment_id);
     if (payment.order_id !== registration.razorpayOrderId || payment.currency !== "INR" || payment.amount !== registration.feeAmount * 100) {
+      console.error("[razorpay] verify amount/currency mismatch:", {
+        registrationId: registration._id.toString(),
+        orderId: registration.razorpayOrderId,
+        paymentId: payment.id,
+        receivedOrderId: payment.order_id,
+        receivedAmount: payment.amount,
+        receivedCurrency: payment.currency,
+        expectedAmount: registration.feeAmount * 100,
+      });
       return NextResponse.json({ error: "Payment details do not match this registration" }, { status: 400 });
     }
     if (payment.status === "captured") {
