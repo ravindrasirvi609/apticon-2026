@@ -190,14 +190,16 @@ export interface EmailAttachment { filename: string; content: Buffer; contentId:
 interface SendOpts { to: string; subject: string; html: string; attachments?: EmailAttachment[] }
 export async function sendMail({ to, subject, html, attachments }: SendOpts) {
   if (!KEY) {
-    console.warn("[email] RESEND_API_KEY missing — skipping send to", to);
+    console.warn("[email] skipped", { reason: "missing_api_key", subject });
     return { skipped: true as const };
   }
+  console.info("[email] sending", { subject, attachmentCount: attachments?.length ?? 0 });
   // Resend never throws for an API-level failure (invalid address, quota, rate limit) — it
   // resolves with { error } instead, so callers must check it or a failed send looks identical
   // to a successful one.
   const { data, error } = await resend.emails.send({ from: FROM, to, subject, html, attachments });
-  if (error) throw new Error(`Resend rejected email to ${to} (${error.name}): ${error.message}`);
+  if (error) { console.error("[email] failed", { subject, error: error.message }); throw new Error(`Resend rejected email to ${to} (${error.name}): ${error.message}`); }
+  console.info("[email] sent", { subject, messageId: data?.id ?? null });
   return { data };
 }
 

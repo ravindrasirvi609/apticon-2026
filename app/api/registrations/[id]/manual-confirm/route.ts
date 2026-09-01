@@ -5,6 +5,7 @@ import Registration from "@/models/Registration";
 import { requireRole, authErrorResponse } from "@/lib/auth";
 import { generateRegistrationCode } from "@/lib/registration-code";
 import { registrationApprovedEmail, sendMail } from "@/lib/email";
+import { sendWhatsAppNotification } from "@/lib/whatsapp";
 import { logAudit } from "@/lib/audit";
 
 export async function POST(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
@@ -47,6 +48,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
       const email = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, !!reg.linkedAbstract);
       await sendMail({ to: reg.email, subject: email.subject, html: email.html, attachments: email.attachments });
       await Registration.updateOne({ _id: reg._id }, { $set: { confirmationEmailSentAt: new Date() } });
+      await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName], `registration-approved-${reg._id.toString()}`);
       emailSent = true;
     }
 

@@ -11,23 +11,23 @@ SENDRIX_CALLBACK_URL=https://sendrixbackend.exebee.com/webhook/wa/BjuMKmyATxnYiU
 SENDRIX_VERIFY_TOKEN=your-sendrix-verify-token
 ```
 
-WhatsApp notifications use Interakt's approved template API. Configure these server-only environment variables:
+WhatsApp notifications use Sendrix's approved template API. Configure these server-only environment variables:
 
 ```bash
-INTERAKT_API_KEY=your-interakt-api-key
-INTERAKT_TEMPLATE_LANGUAGE=en
-INTERAKT_TEMPLATE_REGISTRATION_APPROVED=your_approved_template_name
-INTERAKT_TEMPLATE_ABSTRACT_SUBMITTED=your_submitted_template_name
-INTERAKT_TEMPLATE_ABSTRACT_DECISION=your_decision_template_name
-INTERAKT_TEMPLATE_ABSTRACT_RESUBMITTED=your_resubmitted_template_name
-INTERAKT_TEMPLATE_GROUP_REGISTRATION_SUBMITTED=your_group_submitted_template_name
-INTERAKT_TEMPLATE_GROUP_REGISTRATION_APPROVED=your_group_approved_template_name
-INTERAKT_TEMPLATE_GROUP_REGISTRATION_REJECTED=your_group_rejected_template_name
-INTERAKT_TEMPLATE_NUDGE_ABSTRACT=your_abstract_nudge_template_name
-INTERAKT_TEMPLATE_NUDGE_REGISTER=your_registration_nudge_template_name
+SENDRIX_API_KEY=your-sendrix-api-key
+SENDRIX_TEMPLATE_LANGUAGE=en
+SENDRIX_TEMPLATE_REGISTRATION_APPROVED=test
+SENDRIX_TEMPLATE_ABSTRACT_SUBMITTED=your_submitted_template_name
+SENDRIX_TEMPLATE_ABSTRACT_DECISION=your_decision_template_name
+SENDRIX_TEMPLATE_ABSTRACT_RESUBMITTED=your_resubmitted_template_name
+SENDRIX_TEMPLATE_GROUP_REGISTRATION_SUBMITTED=your_group_submitted_template_name
+SENDRIX_TEMPLATE_GROUP_REGISTRATION_APPROVED=your_group_approved_template_name
+SENDRIX_TEMPLATE_GROUP_REGISTRATION_REJECTED=your_group_rejected_template_name
+SENDRIX_TEMPLATE_NUDGE_ABSTRACT=your_abstract_nudge_template_name
+SENDRIX_TEMPLATE_NUDGE_REGISTER=your_registration_nudge_template_name
 ```
 
-Each template must be approved in Interakt and its body variables must match the notification. An unset template disables only that WhatsApp notification; email and the underlying operation continue normally.
+Each template must be approved in Sendrix and its body variables must match the notification. The `registration_approved` test template receives only `{{1}}` = full name. An unset template disables only that WhatsApp notification; email and the underlying operation continue normally.
 
 ## Razorpay payment setup
 
