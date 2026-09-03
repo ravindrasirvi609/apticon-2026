@@ -66,6 +66,7 @@ export async function recordCapturedRazorpayPayment(
     const { subject, html, attachments } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, !!reg.linkedAbstract);
     await sendMail({ to: reg.email, subject, html, attachments });
     await Registration.updateOne({ _id: reg._id }, { $set: { confirmationEmailSentAt: new Date() } });
+    await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], `registration-approved-${reg._id.toString()}`);
   }
   await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName], `registration-approved-${reg._id.toString()}`);
   return reg;
@@ -153,6 +154,12 @@ export async function recordCapturedGroupRazorpayPayment(
       // either way, re-send with its own (never regenerated) code.
       const email = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, false);
       await sendMail({ to: delegate.email, subject: email.subject, html: email.html, attachments: email.attachments });
+      await sendWhatsAppNotification(
+        reg.phone,
+        "registration_approved",
+        [reg.fullName, reg.registrationCode],
+        `registration-approved-${reg._id.toString()}`
+      );
       await Registration.updateOne({ _id: reg._id }, { $set: { confirmationEmailSentAt: new Date() } });
       await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName], `registration-approved-${reg._id.toString()}`);
       delegatesProcessed++;
