@@ -1,21 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-<<<<<<< HEAD
 import { ArrowLeft, Info, Loader2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
-=======
 import { ArrowLeft } from "lucide-react";
->>>>>>> e4c3eea (feat: streamline group registration process by automating payment confirmation and updating related notifications)
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
 import DelegatePhoto from "@/components/ui/DelegatePhoto";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/shadcn/card";
 import { Badge } from "@/components/ui/shadcn/badge";
-<<<<<<< HEAD
 import { Button } from "@/components/ui/shadcn/button";
-=======
->>>>>>> e4c3eea (feat: streamline group registration process by automating payment confirmation and updating related notifications)
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
 
 interface GroupDelegateDoc {
@@ -73,10 +67,7 @@ interface Props {
 
 export default function GroupRegistrationDetail({ id, backHref, registrationDetailBase }: Props) {
   const [group, setGroup] = useState<GroupDoc | null>(null);
-<<<<<<< HEAD
   const [syncing, setSyncing] = useState(false);
-=======
->>>>>>> e4c3eea (feat: streamline group registration process by automating payment confirmation and updating related notifications)
 
   async function load() {
     const res = await fetch(`/api/group-registrations/${id}`);
@@ -87,7 +78,6 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
   }
   useEffect(() => { load(); }, [id]);
 
-<<<<<<< HEAD
   /** Re-reads the payment from Razorpay. Also retries any delegate who missed their email/code/QR last time. */
   async function syncPayment() {
     setSyncing(true);
@@ -119,8 +109,6 @@ export default function GroupRegistrationDetail({ id, backHref, registrationDeta
     }
   }
 
-=======
->>>>>>> e4c3eea (feat: streamline group registration process by automating payment confirmation and updating related notifications)
   if (!group) return <div className="p-8 text-sm text-[var(--muted-text)]">Loading…</div>;
   const statusInfo = STATUS_LABEL[group.status] ?? { label: group.status, variant: "secondary" as const };
   const missingDelegates = group.status === "approved" && group.createdRegistrations.length < group.delegateCount;
