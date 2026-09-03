@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
         if (hasAbstract) { skipped++; skipReasons[email] = "already_has_abstract"; continue; }
         const { subject, html } = nudgeAbstractEmail(reg.fullName, reg.registrationCode);
         await sendMail({ to: email, subject, html });
-        // await sendWhatsAppNotification(reg.phone, "nudge_abstract", [reg.fullName, reg.registrationCode], reg._id.toString());
+        await sendWhatsAppNotification(reg.phone, "nudge_abstract", [reg.fullName, reg.registrationCode], reg._id.toString());
         sent++;
       } else {
         // Nudge someone who submitted an abstract but hasn't registered
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         if (hasReg) { skipped++; skipReasons[email] = "already_registered"; continue; }
         const { subject, html } = nudgeRegisterEmail(abs.presentingAuthor, abs.submissionCode);
         await sendMail({ to: email, subject, html });
-        // await sendWhatsAppNotification(abs.phone, "nudge_register", [abs.presentingAuthor, abs.submissionCode], abs._id.toString());
+        await sendWhatsAppNotification(abs.phone, "nudge_register", [abs.presentingAuthor, abs.submissionCode], abs._id.toString());
         sent++;
       }
     }
