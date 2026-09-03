@@ -88,12 +88,7 @@ export async function POST(request: NextRequest) {
     data.title,
   );
   await sendMail({ to: data.email, subject, html });
-  await sendWhatsAppNotification(
-    data.phone,
-    "abstract_submitted",
-    [data.presentingAuthor, submissionCode],
-    created._id.toString(),
-  );
+  await sendWhatsAppNotification(data.phone, "abstract_submitted", [data.presentingAuthor, submissionCode], created._id.toString());
 
   await logAudit({
     actorRole: "public",

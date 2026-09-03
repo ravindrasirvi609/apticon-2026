@@ -86,17 +86,7 @@ export async function PATCH(
       abs.presentationType,
     );
     await sendMail({ to: abs.email, subject, html });
-    await sendWhatsAppNotification(
-      abs.phone,
-      "abstract_decision",
-      [
-        abs.presentingAuthor,
-        parsed.data.decision,
-        abs.submissionCode,
-        `${process.env.NEXT_PUBLIC_BASE_URL ?? "https://apticon-2026.vercel.app"}/abstracts/status`,
-      ],
-      abs._id.toString(),
-    );
+    await sendWhatsAppNotification(abs.phone, "abstract_decision", [abs.presentingAuthor, parsed.data.decision, abs.submissionCode, `${process.env.NEXT_PUBLIC_BASE_URL ?? "https://apticon-2026.vercel.app"}/abstracts/status`], abs._id.toString());
 
     return NextResponse.json({ ok: true });
   } catch (err) {

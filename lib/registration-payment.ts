@@ -109,16 +109,8 @@ export async function recordCapturedRazorpayPayment(
       !!reg.linkedAbstract,
     );
     await sendMail({ to: reg.email, subject, html, attachments });
-    await Registration.updateOne(
-      { _id: reg._id },
-      { $set: { confirmationEmailSentAt: new Date() } },
-    );
-    await sendWhatsAppNotification(
-      reg.phone,
-      "registration_approved",
-      [reg.fullName, reg.registrationCode],
-      `registration-approved-${reg._id.toString()}`,
-    );
+    await Registration.updateOne({ _id: reg._id }, { $set: { confirmationEmailSentAt: new Date() } });
+    await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], `registration-approved-${reg._id.toString()}`);
   }
   await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName], `registration-approved-${reg._id.toString()}`);
   return reg;
@@ -218,28 +210,15 @@ export async function recordCapturedGroupRazorpayPayment(
       }
       // reg is either the freshly-created doc above, or an existing one whose earlier email attempt failed —
       // either way, re-send with its own (never regenerated) code.
-      const email = await registrationApprovedEmail(
-        reg.fullName,
-        reg.registrationCode,
-        reg.feeAmount,
-        false,
-      );
-      await sendMail({
-        to: delegate.email,
-        subject: email.subject,
-        html: email.html,
-        attachments: email.attachments,
-      });
+      const email = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, false);
+      await sendMail({ to: delegate.email, subject: email.subject, html: email.html, attachments: email.attachments });
       await sendWhatsAppNotification(
         reg.phone,
         "registration_approved",
         [reg.fullName, reg.registrationCode],
-        `registration-approved-${reg._id.toString()}`,
+        `registration-approved-${reg._id.toString()}`
       );
-      await Registration.updateOne(
-        { _id: reg._id },
-        { $set: { confirmationEmailSentAt: new Date() } },
-      );
+      await Registration.updateOne({ _id: reg._id }, { $set: { confirmationEmailSentAt: new Date() } });
       delegatesProcessed++;
       console.info("[group-registration] participant processed", { groupCode: group.groupCode, registrationId: reg._id.toString(), registrationCode: reg.registrationCode });
     } catch (error) {
