@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Info, Loader2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
 import DelegatePhoto from "@/components/ui/DelegatePhoto";
