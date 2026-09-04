@@ -48,7 +48,12 @@ export async function POST(request: NextRequest) {
           reg.registrationCode,
         );
         await sendMail({ to: email, subject, html });
-        await sendWhatsAppNotification(reg.phone, "nudge_abstract", [reg.fullName, reg.registrationCode], reg._id.toString());
+        await sendWhatsAppNotification(
+          reg.phone,
+          "nudge_abstract",
+          [reg.fullName, reg.registrationCode],
+          reg._id.toString(),
+        );
         sent++;
       } else {
         // Nudge someone who submitted an abstract but hasn't registered
@@ -71,7 +76,12 @@ export async function POST(request: NextRequest) {
           abs.submissionCode,
         );
         await sendMail({ to: email, subject, html });
-        await sendWhatsAppNotification(abs.phone, "nudge_register", [abs.presentingAuthor, abs.submissionCode], abs._id.toString());
+        await sendWhatsAppNotification(
+          abs.phone,
+          "nudge_register",
+          [abs.presentingAuthor, abs.submissionCode],
+          abs._id.toString(),
+        );
         sent++;
       }
     }
