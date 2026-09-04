@@ -1,5 +1,7 @@
 import { connectDB } from "@/lib/db";
-import MobileActionLog, { type MobileActionType } from "@/models/MobileActionLog";
+import MobileActionLog, {
+  type MobileActionType,
+} from "@/models/MobileActionLog";
 
 export const REPORT_TYPE_MAP: Record<string, MobileActionType> = {
   "checked-in": "check_in",
@@ -29,7 +31,10 @@ interface ReportStaff {
   name: string;
 }
 
-export async function getActionReport(actionType: MobileActionType, opts: ReportOptions) {
+export async function getActionReport(
+  actionType: MobileActionType,
+  opts: ReportOptions,
+) {
   await connectDB();
   const page = Math.max(1, opts.page ?? 1);
   const limit = Math.min(100, Math.max(1, opts.limit ?? 25));
@@ -43,7 +48,10 @@ export async function getActionReport(actionType: MobileActionType, opts: Report
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate<{ registration: ReportRegistration | null }>("registration", "registrationCode fullName email phone institution")
+      .populate<{ registration: ReportRegistration | null }>(
+        "registration",
+        "registrationCode fullName email phone institution",
+      )
       .populate<{ staff: ReportStaff }>("staff", "name")
       .lean(),
   ]);

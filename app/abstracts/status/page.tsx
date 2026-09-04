@@ -3,7 +3,8 @@ import StatusClient from "./StatusClient";
 
 export const metadata: Metadata = {
   title: "Check Submission Status",
-  description: "Look up the review status of your APTICON 2026 abstract submission.",
+  description:
+    "Look up the review status of your APTICON 2026 abstract submission.",
 };
 
 export default function StatusPage() {

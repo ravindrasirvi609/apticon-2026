@@ -10,10 +10,14 @@ export async function GET(request: NextRequest) {
   const ip = getClientIp(request);
   const limit = rateLimit(`apti-verify:${ip}`, 30, 60_000);
   if (!limit.ok) {
-    return NextResponse.json({ error: "Too many checks. Please wait a moment." }, { status: 429 });
+    return NextResponse.json(
+      { error: "Too many checks. Please wait a moment." },
+      { status: 429 },
+    );
   }
 
-  const memberId = new URL(request.url).searchParams.get("memberId")?.trim() ?? "";
+  const memberId =
+    new URL(request.url).searchParams.get("memberId")?.trim() ?? "";
   if (memberId.length < 3) {
     return NextResponse.json({ valid: false });
   }

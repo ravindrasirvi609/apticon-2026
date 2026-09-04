@@ -1,7 +1,11 @@
 import { z } from "zod";
 
 export const aptiMemberCreateSchema = z.object({
-  memberId: z.string().min(1, "Member ID is required").trim().transform((val) => val.toUpperCase()),
+  memberId: z
+    .string()
+    .min(1, "Member ID is required")
+    .trim()
+    .transform((val) => val.toUpperCase()),
   serialNo: z.number().optional().nullable(),
   stateCode: z.string().trim().optional().nullable(),
   name: z.string().min(1, "Name is required").trim(),
@@ -19,10 +23,14 @@ export const aptiMemberCreateSchema = z.object({
   pincode: z.string().trim().optional().nullable(),
 });
 
-export const aptiMemberUpdateSchema = aptiMemberCreateSchema.partial().omit({ memberId: true });
+export const aptiMemberUpdateSchema = aptiMemberCreateSchema
+  .partial()
+  .omit({ memberId: true });
 
 export const aptiMemberImportSchema = z.object({
-  members: z.array(aptiMemberCreateSchema).min(1, "At least one member is required for import"),
+  members: z
+    .array(aptiMemberCreateSchema)
+    .min(1, "At least one member is required for import"),
 });
 
 export type AptiMemberCreateInput = z.infer<typeof aptiMemberCreateSchema>;

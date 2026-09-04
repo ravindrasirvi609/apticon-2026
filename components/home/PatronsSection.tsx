@@ -13,9 +13,25 @@ interface Patron {
 }
 
 const PATRONS: Patron[] = [
-  { name: "Hon'ble Governor / Chief Minister", designation: "Chhattisgarh State", role: "Chief Patron" },
-  { name: "Prof. S.N. Shukla", designation: "Hon. Vice Chancellor", institution: "Pt. Ravishankar Shukla University, Raipur (C.G.)", role: "Co-Chief Patron", image: "/committee/national/vice_chancler.png" },
-  { name: "Dr. Montu K. Patel", designation: "Hon. President", institution: "Pharmacy Council of India", role: "Co-Chief Patron", image: "/committee/national/montu_patel.png" },
+  {
+    name: "Hon'ble Governor / Chief Minister",
+    designation: "Chhattisgarh State",
+    role: "Chief Patron",
+  },
+  {
+    name: "Prof. S.N. Shukla",
+    designation: "Hon. Vice Chancellor",
+    institution: "Pt. Ravishankar Shukla University, Raipur (C.G.)",
+    role: "Co-Chief Patron",
+    image: "/committee/national/vice_chancler.png",
+  },
+  {
+    name: "Dr. Montu K. Patel",
+    designation: "Hon. President",
+    institution: "Pharmacy Council of India",
+    role: "Co-Chief Patron",
+    image: "/committee/national/montu_patel.png",
+  },
 ];
 
 export default function PatronsSection() {
@@ -45,13 +61,17 @@ export default function PatronsSection() {
             variants={fadeUp}
             className="mt-5 font-display text-3xl font-bold text-[var(--dark-text)] sm:text-4xl md:text-5xl"
           >
-            Guided by <span className="text-gradient-primary">Distinguished Patronage</span>
+            Guided by{" "}
+            <span className="text-gradient-primary">
+              Distinguished Patronage
+            </span>
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="mx-auto mt-4 max-w-xl text-sm text-[var(--muted-text)] sm:text-base"
           >
-            APTICON 2026 is held under the esteemed patronage of the following dignitaries.
+            APTICON 2026 is held under the esteemed patronage of the following
+            dignitaries.
           </motion.p>
         </motion.div>
 

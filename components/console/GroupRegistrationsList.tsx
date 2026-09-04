@@ -6,7 +6,14 @@ import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { Input } from "@/components/ui/shadcn/input";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/shadcn/table";
 import { Button } from "@/components/ui/shadcn/button";
 import { Badge } from "@/components/ui/shadcn/badge";
 
@@ -26,14 +33,26 @@ interface GroupItem {
   createdAt: string;
 }
 
-const STATUSES = ["", "submitted", "payment_review", "approved", "rejected"] as const;
+const STATUSES = [
+  "",
+  "submitted",
+  "payment_review",
+  "approved",
+  "rejected",
+] as const;
 
-const STATUS_LABEL: Record<string, { label: string; variant: "info" | "warning" | "success" | "danger" | "secondary" }> = {
-  "":              { label: "All", variant: "secondary" },
-  submitted:       { label: "Awaiting Payment", variant: "info" },
-  payment_review:  { label: "Pending Review", variant: "warning" },
-  approved:        { label: "Approved", variant: "success" },
-  rejected:        { label: "Rejected", variant: "danger" },
+const STATUS_LABEL: Record<
+  string,
+  {
+    label: string;
+    variant: "info" | "warning" | "success" | "danger" | "secondary";
+  }
+> = {
+  "": { label: "All", variant: "secondary" },
+  submitted: { label: "Awaiting Payment", variant: "info" },
+  payment_review: { label: "Pending Review", variant: "warning" },
+  approved: { label: "Approved", variant: "success" },
+  rejected: { label: "Rejected", variant: "danger" },
 };
 
 interface Props {
@@ -42,7 +61,11 @@ interface Props {
   description?: string;
 }
 
-export default function GroupRegistrationsList({ detailBase, title = "Group Registrations", description = "Bulk institutional bookings awaiting review or already decided." }: Props) {
+export default function GroupRegistrationsList({
+  detailBase,
+  title = "Group Registrations",
+  description = "Bulk institutional bookings awaiting review or already decided.",
+}: Props) {
   const [items, setItems] = useState<GroupItem[]>([]);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("");
@@ -72,13 +95,25 @@ export default function GroupRegistrationsList({ detailBase, title = "Group Regi
           <div className="flex flex-col md:flex-row md:items-center gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted-text)]" />
-              <Input placeholder="Search coordinator, group code, email, institution…" className="pl-9" value={q} onChange={(e) => setQ(e.target.value)} />
+              <Input
+                placeholder="Search coordinator, group code, email, institution…"
+                className="pl-9"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+              />
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               {STATUSES.map((s) => (
-                <Button key={s || "all"} variant={status === s ? "default" : "outline"} size="sm" onClick={() => setStatus(s)}>
+                <Button
+                  key={s || "all"}
+                  variant={status === s ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setStatus(s)}
+                >
                   {STATUS_LABEL[s]?.label ?? s}
-                  <span className="ml-1 text-xs opacity-70">({counts[s] ?? 0})</span>
+                  <span className="ml-1 text-xs opacity-70">
+                    ({counts[s] ?? 0})
+                  </span>
                 </Button>
               ))}
             </div>
@@ -103,32 +138,64 @@ export default function GroupRegistrationsList({ detailBase, title = "Group Regi
             </TableHeader>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={8} className="text-center text-sm py-8 text-[var(--muted-text)]">Loading…</TableCell></TableRow>
+                <TableRow>
+                  <TableCell
+                    colSpan={8}
+                    className="text-center text-sm py-8 text-[var(--muted-text)]"
+                  >
+                    Loading…
+                  </TableCell>
+                </TableRow>
               ) : items.length === 0 ? (
-                <TableRow><TableCell colSpan={8} className="text-center text-sm py-8 text-[var(--muted-text)]">No group registrations match your filters.</TableCell></TableRow>
+                <TableRow>
+                  <TableCell
+                    colSpan={8}
+                    className="text-center text-sm py-8 text-[var(--muted-text)]"
+                  >
+                    No group registrations match your filters.
+                  </TableCell>
+                </TableRow>
               ) : (
                 items.map((g) => (
                   <TableRow key={g._id}>
-                    <TableCell className="font-mono text-xs">{g.groupCode}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {g.groupCode}
+                    </TableCell>
                     <TableCell>
-                      <Link href={`${detailBase}/${g._id}`} className="text-[var(--primary-800)] hover:underline font-semibold">
+                      <Link
+                        href={`${detailBase}/${g._id}`}
+                        className="text-[var(--primary-800)] hover:underline font-semibold"
+                      >
                         {g.coordinatorName}
                       </Link>
-                      <div className="text-xs text-[var(--muted-text)]">{g.coordinatorEmail}</div>
+                      <div className="text-xs text-[var(--muted-text)]">
+                        {g.coordinatorEmail}
+                      </div>
                     </TableCell>
                     <TableCell className="text-xs">{g.institution}</TableCell>
                     <TableCell className="text-xs">{g.category}</TableCell>
                     <TableCell className="text-xs">
-                      {g.delegateCount} <span className="text-[var(--muted-text)]">({g.complimentaryCount} free)</span>
+                      {g.delegateCount}{" "}
+                      <span className="text-[var(--muted-text)]">
+                        ({g.complimentaryCount} free)
+                      </span>
                     </TableCell>
                     <TableCell className="text-xs">
                       <div>₹{g.feeAmount.toLocaleString("en-IN")}</div>
-                      <div className="text-[10px] uppercase tracking-wider text-[var(--muted-text)]">{g.feeTier.replace("_", " ")}</div>
+                      <div className="text-[10px] uppercase tracking-wider text-[var(--muted-text)]">
+                        {g.feeTier.replace("_", " ")}
+                      </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={STATUS_LABEL[g.status]?.variant ?? "secondary"}>{STATUS_LABEL[g.status]?.label ?? g.status}</Badge>
+                      <Badge
+                        variant={STATUS_LABEL[g.status]?.variant ?? "secondary"}
+                      >
+                        {STATUS_LABEL[g.status]?.label ?? g.status}
+                      </Badge>
                     </TableCell>
-                    <TableCell className="text-xs text-[var(--muted-text)]">{format(new Date(g.createdAt), "d MMM, HH:mm")}</TableCell>
+                    <TableCell className="text-xs text-[var(--muted-text)]">
+                      {format(new Date(g.createdAt), "d MMM, HH:mm")}
+                    </TableCell>
                   </TableRow>
                 ))
               )}

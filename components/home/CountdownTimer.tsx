@@ -67,7 +67,11 @@ function Unit({ value, label }: { value: string; label: string }) {
 }
 
 export default function CountdownTimer() {
-  const remaining = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const remaining = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
   const ready = remaining >= 0;
 
   const values = ready

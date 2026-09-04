@@ -11,11 +11,20 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export function LegalPageLayout({ badge, title, subtitle, updated, children }: LayoutProps) {
+export function LegalPageLayout({
+  badge,
+  title,
+  subtitle,
+  updated,
+  children,
+}: LayoutProps) {
   return (
     <div className="bg-[var(--surface-50)] min-h-screen">
       <section className="relative py-20 md:py-24 overflow-hidden">
-        <div className="absolute inset-0 tribal-pattern-bg opacity-30" aria-hidden />
+        <div
+          className="absolute inset-0 tribal-pattern-bg opacity-30"
+          aria-hidden
+        />
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>{badge}</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
@@ -69,7 +78,10 @@ export function LegalList({ items }: { items: React.ReactNode[] }) {
   return (
     <ul className="space-y-3 mb-4">
       {items.map((item, i) => (
-        <li key={i} className="flex gap-3 text-sm md:text-base text-[var(--muted-text)] leading-relaxed">
+        <li
+          key={i}
+          className="flex gap-3 text-sm md:text-base text-[var(--muted-text)] leading-relaxed"
+        >
           <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--accent-500)] shrink-0" />
           <span>{item}</span>
         </li>

@@ -10,19 +10,31 @@ export const metadata: Metadata = {
 };
 
 const ADMIN_NAV: NavItem[] = [
-  { href: "/admin",               label: "Dashboard",     icon: "dashboard" },
-  { href: "/admin/delegates",     label: "Delegates",     icon: "delegates" },
-  { href: "/admin/checkin",       label: "Check-in Activity", icon: "checkin" },
-  { href: "/admin/registrations", label: "Registrations", icon: "registrations" },
-  { href: "/admin/group-registrations", label: "Group Registrations", icon: "groups" },
-  { href: "/admin/abstracts",     label: "Abstracts",     icon: "abstracts" },
-  { href: "/admin/apti-members",  label: "APTI Members",  icon: "aptiMembers" },
-  { href: "/admin/users",         label: "Users",         icon: "users" },
-  { href: "/admin/audit",         label: "Audit Log",     icon: "audit" },
-  { href: "/admin/settings",      label: "Settings",      icon: "settings" },
+  { href: "/admin", label: "Dashboard", icon: "dashboard" },
+  { href: "/admin/delegates", label: "Delegates", icon: "delegates" },
+  { href: "/admin/checkin", label: "Check-in Activity", icon: "checkin" },
+  {
+    href: "/admin/registrations",
+    label: "Registrations",
+    icon: "registrations",
+  },
+  {
+    href: "/admin/group-registrations",
+    label: "Group Registrations",
+    icon: "groups",
+  },
+  { href: "/admin/abstracts", label: "Abstracts", icon: "abstracts" },
+  { href: "/admin/apti-members", label: "APTI Members", icon: "aptiMembers" },
+  { href: "/admin/users", label: "Users", icon: "users" },
+  { href: "/admin/audit", label: "Audit Log", icon: "audit" },
+  { href: "/admin/settings", label: "Settings", icon: "settings" },
 ];
 
-export default async function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminDashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const session = await getSessionFromCookies();
   if (!session || session.role !== "super_admin") {
     redirect("/admin/login");

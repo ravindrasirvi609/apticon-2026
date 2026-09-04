@@ -20,12 +20,12 @@ export default function Navbar() {
   const navBg = useTransform(
     scrollY,
     [0, 80],
-    ["rgba(248,250,252,0)", "rgba(248,250,252,0.96)"]
+    ["rgba(248,250,252,0)", "rgba(248,250,252,0.96)"],
   );
   const navShadow = useTransform(
     scrollY,
     [0, 80],
-    ["0 0 0 rgba(49,46,129,0)", "0 2px 24px rgba(49,46,129,0.12)"]
+    ["0 0 0 rgba(49,46,129,0)", "0 2px 24px rgba(49,46,129,0.12)"],
   );
 
   useEffect(() => {
@@ -49,7 +49,11 @@ export default function Navbar() {
         <div className="container-site">
           <div className="flex items-center justify-between h-20 md:h-24">
             {/* Logo / Brand */}
-            <Link href="/" className="flex items-center gap-3 group" aria-label="APTICON 2026 Home">
+            <Link
+              href="/"
+              className="flex items-center gap-3 group"
+              aria-label="APTICON 2026 Home"
+            >
               <div className="flex flex-col leading-none">
                 <Image
                   src="/logo/APTICON_LOGO.png"
@@ -63,7 +67,10 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop nav */}
-            <nav className="hidden lg:flex items-center gap-1" aria-label="Primary navigation">
+            <nav
+              className="hidden lg:flex items-center gap-1"
+              aria-label="Primary navigation"
+            >
               {PRIMARY_LINKS.map((link) => {
                 const active = pathname === link.href;
                 return (
@@ -73,9 +80,10 @@ export default function Navbar() {
                     className={`
                       relative px-3 py-2 text-sm font-medium rounded-lg
                       transition-colors duration-200
-                      ${active
-                        ? "text-[var(--primary-800)]"
-                        : "text-[var(--dark-text)]/70 hover:text-[var(--primary-800)]"
+                      ${
+                        active
+                          ? "text-[var(--primary-800)]"
+                          : "text-[var(--dark-text)]/70 hover:text-[var(--primary-800)]"
                       }
                     `}
                   >

@@ -3,7 +3,13 @@ import { cookies } from "next/headers";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { loginSchema } from "@/lib/validators/auth";
-import { signSession, verifyPassword, SESSION_COOKIE, SESSION_MAX_AGE, getClientIp } from "@/lib/auth";
+import {
+  signSession,
+  verifyPassword,
+  SESSION_COOKIE,
+  SESSION_MAX_AGE,
+  getClientIp,
+} from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { rateLimit } from "@/lib/rate-limit";
 
@@ -11,7 +17,10 @@ export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
   const limit = rateLimit(`login:${ip}`, 8, 15 * 60_000);
   if (!limit.ok) {
-    return NextResponse.json({ error: "Too many attempts. Try again later." }, { status: 429 });
+    return NextResponse.json(
+      { error: "Too many attempts. Try again later." },
+      { status: 429 },
+    );
   }
 
   let body: unknown;
@@ -28,7 +37,9 @@ export async function POST(request: NextRequest) {
   const { email, password } = parsed.data;
 
   await connectDB();
-  const user = await User.findOne({ email, isActive: true }).select("+passwordHash");
+  const user = await User.findOne({ email, isActive: true }).select(
+    "+passwordHash",
+  );
 
   if (!user) {
     await logAudit({

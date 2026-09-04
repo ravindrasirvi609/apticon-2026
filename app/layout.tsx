@@ -1,15 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, Tiro_Devanagari_Hindi } from "next/font/google";
+import {
+  Inter,
+  Playfair_Display,
+  Tiro_Devanagari_Hindi,
+} from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AnnouncementBanner from "@/components/ui/AnnouncementBanner";
-import ScrollProgressBar  from "@/components/ui/ScrollProgressBar";
-import BackToTop          from "@/components/ui/BackToTop";
-import OpfBadge           from "@/components/ui/OpfBadge";
-import { Toaster }        from "@/components/ui/shadcn/sonner";
+import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
+import BackToTop from "@/components/ui/BackToTop";
+import OpfBadge from "@/components/ui/OpfBadge";
+import { Toaster } from "@/components/ui/shadcn/sonner";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -68,7 +72,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "APTICON 2026 — 28th Annual National Convention",
-    description: "Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat. 24–25 Oct 2026, Raipur, CG.",
+    description:
+      "Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat. 24–25 Oct 2026, Raipur, CG.",
     images: ["/apticon-icon.png"],
   },
   robots: { index: true, follow: true },
@@ -108,7 +113,8 @@ export default function RootLayout({
           <AnnouncementBanner />
           <Navbar />
         </div>
-        <main id="main-content" className="flex-1">{children}
+        <main id="main-content" className="flex-1">
+          {children}
           <Analytics />
           <SpeedInsights />
         </main>

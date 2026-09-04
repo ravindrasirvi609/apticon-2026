@@ -13,7 +13,10 @@ export interface AptiMembershipCheck {
  * match — the registry's email column is stale for many rows, so an email mismatch doesn't
  * invalidate an otherwise-real Member ID; it's only surfaced for callers that want to flag it.
  */
-export async function verifyAptiMember(memberId: string, email?: string): Promise<AptiMembershipCheck> {
+export async function verifyAptiMember(
+  memberId: string,
+  email?: string,
+): Promise<AptiMembershipCheck> {
   const normalized = memberId.trim().toUpperCase();
   if (!normalized) return { valid: false };
 
@@ -21,7 +24,10 @@ export async function verifyAptiMember(memberId: string, email?: string): Promis
   const record = await AptiMember.findOne({ memberId: normalized }).lean();
   if (!record) return { valid: false };
 
-  const emailMatches = record.email && email ? record.email.toLowerCase() === email.toLowerCase() : undefined;
+  const emailMatches =
+    record.email && email
+      ? record.email.toLowerCase() === email.toLowerCase()
+      : undefined;
 
   return {
     valid: true,

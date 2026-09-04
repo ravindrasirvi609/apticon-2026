@@ -16,16 +16,19 @@ export async function GET(request: NextRequest) {
   const status = url.searchParams.get("status") ?? undefined;
   const q = url.searchParams.get("q") ?? "";
   const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
-  const limit = Math.min(100, parseInt(url.searchParams.get("limit") ?? "25", 10));
+  const limit = Math.min(
+    100,
+    parseInt(url.searchParams.get("limit") ?? "25", 10),
+  );
 
   const scope: Record<string, unknown> = {};
   if (q) {
     const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     scope.$or = [
-      { coordinatorName:  { $regex: safe, $options: "i" } },
+      { coordinatorName: { $regex: safe, $options: "i" } },
       { coordinatorEmail: { $regex: safe, $options: "i" } },
-      { groupCode:        { $regex: safe, $options: "i" } },
-      { institution:      { $regex: safe, $options: "i" } },
+      { groupCode: { $regex: safe, $options: "i" } },
+      { institution: { $regex: safe, $options: "i" } },
     ];
   }
   const filter = status ? { ...scope, status } : scope;
@@ -36,7 +39,9 @@ export async function GET(request: NextRequest) {
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .select("groupCode coordinatorName coordinatorEmail institution category delegateCount complimentaryCount feeAmount feeTier status paymentStatus createdAt")
+      .select(
+        "groupCode coordinatorName coordinatorEmail institution category delegateCount complimentaryCount feeAmount feeTier status paymentStatus createdAt",
+      )
       .lean(),
     GroupRegistration.aggregate<{ _id: string; count: number }>([
       { $match: scope },

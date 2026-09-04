@@ -9,10 +9,16 @@ export default function NotFound() {
   return (
     <div className="relative min-h-[70dvh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
       {/* Background tribal pattern */}
-      <div className="absolute inset-0 tribal-pattern-bg opacity-20" aria-hidden />
+      <div
+        className="absolute inset-0 tribal-pattern-bg opacity-20"
+        aria-hidden
+      />
 
       {/* Decorative Gondi sun watermark */}
-      <div className="absolute opacity-5 w-96 h-96 pointer-events-none" aria-hidden>
+      <div
+        className="absolute opacity-5 w-96 h-96 pointer-events-none"
+        aria-hidden
+      >
         <img src="/cultural/gondi-sun.svg" alt="" className="w-full h-full" />
       </div>
 
@@ -26,7 +32,8 @@ export default function NotFound() {
           Page Not Found
         </h1>
         <p className="text-[var(--muted-text)] max-w-sm mx-auto mb-8 text-sm sm:text-base">
-          The page you are looking for does not exist or has been moved. Let's get you back to APTICON 2026.
+          The page you are looking for does not exist or has been moved. Let's
+          get you back to APTICON 2026.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">

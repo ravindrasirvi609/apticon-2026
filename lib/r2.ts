@@ -1,4 +1,8 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import { nanoid } from "nanoid";
 
 const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID ?? "";
@@ -39,7 +43,9 @@ export function buildGraphicalAbstractKey(originalName: string): string {
 
 export function buildPaymentProofKey(originalName: string): string {
   const ext = originalName.split(".").pop()?.toLowerCase() ?? "bin";
-  const safeExt = ["pdf", "jpg", "jpeg", "png", "webp"].includes(ext) ? ext : "bin";
+  const safeExt = ["pdf", "jpg", "jpeg", "png", "webp"].includes(ext)
+    ? ext
+    : "bin";
   return `payment-proofs/${new Date().getUTCFullYear()}/${nanoid(16)}.${safeExt}`;
 }
 
@@ -47,8 +53,19 @@ export function publicUrl(key: string): string {
   return `${PUBLIC_URL.replace(/\/$/, "")}/${key}`;
 }
 
-export async function uploadBuffer(key: string, body: Buffer, contentType: string): Promise<string> {
-  await r2.send(new PutObjectCommand({ Bucket: BUCKET, Key: key, Body: body, ContentType: contentType }));
+export async function uploadBuffer(
+  key: string,
+  body: Buffer,
+  contentType: string,
+): Promise<string> {
+  await r2.send(
+    new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      Body: body,
+      ContentType: contentType,
+    }),
+  );
   return publicUrl(key);
 }
 

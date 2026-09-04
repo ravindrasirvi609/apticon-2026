@@ -8,15 +8,20 @@ import { ok, fail, failFromError } from "@/lib/mobile/response";
 // Single endpoint for every attendee action (check-in, ID card, breakfast/lunch/dinner, kit,
 // certificate) — the "record an action" rule (validate -> write -> reject duplicates -> audit)
 // is identical across all seven, so one route + one service function replaces seven near-copies.
-export async function POST(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+export async function POST(
+  request: NextRequest,
+  ctx: { params: Promise<{ id: string }> },
+) {
   try {
     const session = await requireStaff(request);
     const { id } = await ctx.params;
-    if (!mongoose.isValidObjectId(id)) return fail("Invalid attendee id", [], 400);
+    if (!mongoose.isValidObjectId(id))
+      return fail("Invalid attendee id", [], 400);
 
     const body = await request.json().catch(() => null);
     const parsed = mobileActionSchema.safeParse(body);
-    if (!parsed.success) return fail("Invalid input", parsed.error.flatten().formErrors, 400);
+    if (!parsed.success)
+      return fail("Invalid input", parsed.error.flatten().formErrors, 400);
 
     const status = await performAction({
       registrationId: id,
@@ -30,7 +35,8 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
 
     return ok({ status }, "Action recorded");
   } catch (err) {
-    if (err instanceof MobileActionError) return fail(err.message, [], err.status);
+    if (err instanceof MobileActionError)
+      return fail(err.message, [], err.status);
     return failFromError(err, "/attendees/[id]/actions");
   }
 }

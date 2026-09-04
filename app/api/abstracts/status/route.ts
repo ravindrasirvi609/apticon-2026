@@ -16,11 +16,16 @@ export async function POST(request: NextRequest) {
     submissionCode: parsed.data.code.toUpperCase(),
     email: parsed.data.email,
   })
-    .select("submissionCode title presentingAuthor status theme type keywords createdAt finalDecision finalDecisionAt finalDecisionNote abstractCode presentationType abstract fileUrl fileName graphicalAbstractUrl graphicalAbstractName")
+    .select(
+      "submissionCode title presentingAuthor status theme type keywords createdAt finalDecision finalDecisionAt finalDecisionNote abstractCode presentationType abstract fileUrl fileName graphicalAbstractUrl graphicalAbstractName",
+    )
     .lean();
 
   if (!abs) {
-    return NextResponse.json({ error: "No submission found with that code and email." }, { status: 404 });
+    return NextResponse.json(
+      { error: "No submission found with that code and email." },
+      { status: 404 },
+    );
   }
 
   return NextResponse.json({ abstract: abs });

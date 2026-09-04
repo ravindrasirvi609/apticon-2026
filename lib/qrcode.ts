@@ -11,7 +11,9 @@ import QRCode from "qrcode";
  * mode capacity of a small QR version even at the highest error correction level, so we get the
  * strongest damage/print tolerance for free.
  */
-export async function generateRegistrationQrDataUrl(registrationCode: string): Promise<string> {
+export async function generateRegistrationQrDataUrl(
+  registrationCode: string,
+): Promise<string> {
   return QRCode.toDataURL(registrationCode, {
     errorCorrectionLevel: "H",
     margin: 2,
@@ -25,7 +27,9 @@ export async function generateRegistrationQrDataUrl(registrationCode: string): P
  * images out of HTML emails, so confirmation emails must attach the PNG and reference it via
  * `cid:` rather than inlining base64 in the `<img src>`.
  */
-export async function generateRegistrationQrPngBuffer(registrationCode: string): Promise<Buffer> {
+export async function generateRegistrationQrPngBuffer(
+  registrationCode: string,
+): Promise<Buffer> {
   return QRCode.toBuffer(registrationCode, {
     errorCorrectionLevel: "H",
     margin: 2,

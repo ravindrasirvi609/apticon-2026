@@ -11,16 +11,12 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-[var(--primary-800)] text-white hover:bg-[var(--primary-700)] shadow-sm shadow-[var(--primary-900)]/20",
-        gold:
-          "bg-[var(--accent-500)] text-[var(--dark-text)] hover:bg-[var(--accent-400)] shadow-sm shadow-[var(--accent-500)]/30",
+        gold: "bg-[var(--accent-500)] text-[var(--dark-text)] hover:bg-[var(--accent-400)] shadow-sm shadow-[var(--accent-500)]/30",
         outline:
           "border border-[var(--accent-500)]/40 bg-white/70 text-[var(--dark-text)] hover:bg-[var(--surface-100)] hover:border-[var(--primary-800)]/40",
-        ghost:
-          "text-[var(--dark-text)] hover:bg-[var(--surface-100)]",
-        destructive:
-          "bg-red-600 text-white hover:bg-red-700 shadow-sm",
-        link:
-          "text-[var(--primary-800)] underline-offset-4 hover:underline",
+        ghost: "text-[var(--dark-text)] hover:bg-[var(--surface-100)]",
+        destructive: "bg-red-600 text-white hover:bg-red-700 shadow-sm",
+        link: "text-[var(--primary-800)] underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -30,7 +26,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: { variant: "default", size: "default" },
-  }
+  },
 );
 
 export interface ButtonProps
@@ -42,8 +38,14 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
-  }
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
+  },
 );
 Button.displayName = "Button";
 

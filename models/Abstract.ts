@@ -58,7 +58,7 @@ const CoAuthorSchema = new Schema<ICoAuthor>(
     name: { type: String, required: true, trim: true },
     institution: { type: String, required: true, trim: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const AbstractSchema = new Schema<IAbstract>(
@@ -68,7 +68,13 @@ const AbstractSchema = new Schema<IAbstract>(
     coAuthors: { type: [CoAuthorSchema], default: [] },
     presentingAuthor: { type: String, required: true, trim: true },
     institution: { type: String, required: true, trim: true },
-    email: { type: String, required: true, lowercase: true, trim: true, index: true },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+      index: true,
+    },
     phone: { type: String, required: true },
     // Enforced at the API layer, not here, so legacy submissions without a membership ID still save.
     aptiMemberId: { type: String, default: "", trim: true, uppercase: true },
@@ -91,25 +97,40 @@ const AbstractSchema = new Schema<IAbstract>(
     graphicalAbstractName: { type: String },
     status: {
       type: String,
-      enum: ["submitted", "under_review", "accepted", "rejected", "revision_requested", "resubmitted"],
+      enum: [
+        "submitted",
+        "under_review",
+        "accepted",
+        "rejected",
+        "revision_requested",
+        "resubmitted",
+      ],
       default: "submitted",
       index: true,
     },
     assignedReviewers: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    finalDecision: { type: String, enum: ["accepted", "rejected", "revision_requested"] },
+    finalDecision: {
+      type: String,
+      enum: ["accepted", "rejected", "revision_requested"],
+    },
     finalDecisionBy: { type: Schema.Types.ObjectId, ref: "User" },
     finalDecisionAt: { type: Date },
     finalDecisionNote: { type: String },
     presentationType: { type: String, enum: ["oral", "poster"] },
     abstractCode: { type: String, sparse: true, unique: true, index: true },
-    linkedRegistration: { type: Schema.Types.ObjectId, ref: "Registration", index: true },
+    linkedRegistration: {
+      type: Schema.Types.ObjectId,
+      ref: "Registration",
+      index: true,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 AbstractSchema.index({ createdAt: -1 });
 AbstractSchema.index({ assignedReviewers: 1, status: 1 });
 
 const Abstract: Model<IAbstract> =
-  (mongoose.models.Abstract as Model<IAbstract>) ?? mongoose.model<IAbstract>("Abstract", AbstractSchema);
+  (mongoose.models.Abstract as Model<IAbstract>) ??
+  mongoose.model<IAbstract>("Abstract", AbstractSchema);
 export default Abstract;

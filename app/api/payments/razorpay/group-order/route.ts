@@ -1,7 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
 import { generateGroupRegistrationCode } from "@/lib/submission-code";
-import { calculateFeeWithGst, currentGroupFeeAmount } from "@/lib/registration-fees";
+import {
+  calculateFeeWithGst,
+  currentGroupFeeAmount,
+} from "@/lib/registration-fees";
 import { createRazorpayOrder } from "@/lib/razorpay";
 import { publicUrl } from "@/lib/r2";
 import { groupRazorpayOrderSchema } from "@/lib/validators/group-registration";
@@ -17,32 +20,79 @@ import { APTI_MEMBER_CATEGORIES } from "@/lib/validators/registration";
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
   const limit = rateLimit(`razorpay-group-order:${ip}`, 3, 60 * 60_000);
-  if (!limit.ok) return NextResponse.json({ error: "Too many group registration attempts. Please retry in an hour." }, { status: 429 });
+  if (!limit.ok)
+    return NextResponse.json(
+      {
+        error: "Too many group registration attempts. Please retry in an hour.",
+      },
+      { status: 429 },
+    );
 
   if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-    return NextResponse.json({ error: "Online payments are not configured yet. Please contact the organiser." }, { status: 503 });
+    return NextResponse.json(
+      {
+        error:
+          "Online payments are not configured yet. Please contact the organiser.",
+      },
+      { status: 503 },
+    );
   }
 
   const body = await request.json().catch(() => null);
   const parsed = groupRazorpayOrderSchema.safeParse(body);
-  if (!parsed.success) return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+  if (!parsed.success)
+    return NextResponse.json(
+      { error: "Invalid input", details: parsed.error.flatten() },
+      { status: 400 },
+    );
   const data = parsed.data;
-  const requiresMembershipId = APTI_MEMBER_CATEGORIES.includes(data.category as (typeof APTI_MEMBER_CATEGORIES)[number]);
+  const requiresMembershipId = APTI_MEMBER_CATEGORIES.includes(
+    data.category as (typeof APTI_MEMBER_CATEGORIES)[number],
+  );
   if (requiresMembershipId) {
-    if (!data.coordinatorAptiMemberId) return NextResponse.json({ error: "APTI Membership ID is required for the coordinator." }, { status: 400 });
-    const coordinatorCheck = await verifyAptiMember(data.coordinatorAptiMemberId, data.coordinatorEmail);
-    if (!coordinatorCheck.valid) return NextResponse.json({ error: `We couldn't verify the coordinator's APTI Membership ID "${data.coordinatorAptiMemberId}".` }, { status: 400 });
+    if (!data.coordinatorAptiMemberId)
+      return NextResponse.json(
+        { error: "APTI Membership ID is required for the coordinator." },
+        { status: 400 },
+      );
+    const coordinatorCheck = await verifyAptiMember(
+      data.coordinatorAptiMemberId,
+      data.coordinatorEmail,
+    );
+    if (!coordinatorCheck.valid)
+      return NextResponse.json(
+        {
+          error: `We couldn't verify the coordinator's APTI Membership ID "${data.coordinatorAptiMemberId}".`,
+        },
+        { status: 400 },
+      );
   }
   for (const delegate of data.delegates) {
     if (requiresMembershipId) {
-      if (!delegate.aptiMemberId) return NextResponse.json({ error: `APTI Membership ID is required for ${delegate.name}.` }, { status: 400 });
-      const check = await verifyAptiMember(delegate.aptiMemberId, delegate.email);
-      if (!check.valid) return NextResponse.json({ error: `We couldn't verify APTI Membership ID "${delegate.aptiMemberId}" for ${delegate.name}.` }, { status: 400 });
+      if (!delegate.aptiMemberId)
+        return NextResponse.json(
+          { error: `APTI Membership ID is required for ${delegate.name}.` },
+          { status: 400 },
+        );
+      const check = await verifyAptiMember(
+        delegate.aptiMemberId,
+        delegate.email,
+      );
+      if (!check.valid)
+        return NextResponse.json(
+          {
+            error: `We couldn't verify APTI Membership ID "${delegate.aptiMemberId}" for ${delegate.name}.`,
+          },
+          { status: 400 },
+        );
     }
   }
 
   const delegateCount = data.delegates.length;
-  const { tier, complimentaryCount, baseAmount } = currentGroupFeeAmount(data.category, delegateCount);
+  const { tier, complimentaryCount, baseAmount } = currentGroupFeeAmount(
+    data.category,
+    delegateCount,
+  );
   const { totalAmount } = calculateFeeWithGst(baseAmount);
 
   await connectDB();
@@ -96,7 +146,12 @@ export async function POST(request: NextRequest) {
     const order = await createRazorpayOrder({
       amount: totalAmount * 100,
       receipt: groupCode,
-      notes: { groupRegistrationId: group._id.toString(), groupCode, delegateCount: String(delegateCount), email: data.coordinatorEmail },
+      notes: {
+        groupRegistrationId: group._id.toString(),
+        groupCode,
+        delegateCount: String(delegateCount),
+        email: data.coordinatorEmail,
+      },
     });
     group.razorpayOrderId = order.id;
     await group.save();
@@ -106,7 +161,15 @@ export async function POST(request: NextRequest) {
       action: "group_registration.order_created",
       resourceType: "group_registration",
       resourceId: group._id.toString(),
-      details: { groupCode, delegateCount, complimentaryCount, category: data.category, feeTier: tier, feeAmount: totalAmount, razorpayOrderId: order.id },
+      details: {
+        groupCode,
+        delegateCount,
+        complimentaryCount,
+        category: data.category,
+        feeTier: tier,
+        feeAmount: totalAmount,
+        razorpayOrderId: order.id,
+      },
       request,
     });
 
@@ -120,8 +183,14 @@ export async function POST(request: NextRequest) {
       feeAmount: totalAmount,
     });
   } catch (error) {
-    await GroupRegistration.deleteOne({ _id: group._id, razorpayOrderId: { $exists: false } });
+    await GroupRegistration.deleteOne({
+      _id: group._id,
+      razorpayOrderId: { $exists: false },
+    });
     console.error("[razorpay] group order creation failed:", error);
-    return NextResponse.json({ error: "Unable to start payment. Please try again." }, { status: 502 });
+    return NextResponse.json(
+      { error: "Unable to start payment. Please try again." },
+      { status: 502 },
+    );
   }
 }

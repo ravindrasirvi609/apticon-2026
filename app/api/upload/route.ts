@@ -1,6 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { uploadRequestSchema, UPLOAD_RULES } from "@/lib/validators/upload";
-import { buildAbstractKey, buildGraphicalAbstractKey, buildPhotoKey, uploadBuffer } from "@/lib/r2";
+import {
+  buildAbstractKey,
+  buildGraphicalAbstractKey,
+  buildPhotoKey,
+  uploadBuffer,
+} from "@/lib/r2";
 import { getClientIp } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 
@@ -11,7 +16,10 @@ export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
   const limit = rateLimit(`upload:${ip}`, 150, 60 * 60_000);
   if (!limit.ok) {
-    return NextResponse.json({ error: "Too many uploads. Please retry in an hour." }, { status: 429 });
+    return NextResponse.json(
+      { error: "Too many uploads. Please retry in an hour." },
+      { status: 429 },
+    );
   }
 
   const formData = await request.formData().catch(() => null);
@@ -19,20 +27,31 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid upload form" }, { status: 400 });
   }
 
-  const parsed = uploadRequestSchema.safeParse({ purpose: formData.get("purpose") ?? undefined });
+  const parsed = uploadRequestSchema.safeParse({
+    purpose: formData.get("purpose") ?? undefined,
+  });
   const file = formData.get("file");
   if (!parsed.success || !(file instanceof File)) {
-    return NextResponse.json({ error: "A file and valid upload purpose are required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "A file and valid upload purpose are required" },
+      { status: 400 },
+    );
   }
 
   const { purpose } = parsed.data;
   const rules = UPLOAD_RULES[purpose];
 
   if (!rules.types.includes(file.type)) {
-    return NextResponse.json({ error: `Only ${rules.label} files are allowed` }, { status: 400 });
+    return NextResponse.json(
+      { error: `Only ${rules.label} files are allowed` },
+      { status: 400 },
+    );
   }
   if (file.size === 0 || file.size > rules.maxBytes) {
-    return NextResponse.json({ error: `File must be ${rules.maxBytes / 1024 / 1024} MB or smaller` }, { status: 400 });
+    return NextResponse.json(
+      { error: `File must be ${rules.maxBytes / 1024 / 1024} MB or smaller` },
+      { status: 400 },
+    );
   }
 
   try {
@@ -42,7 +61,11 @@ export async function POST(request: NextRequest) {
         : purpose === "graphicalAbstract"
           ? buildGraphicalAbstractKey(file.name)
           : buildAbstractKey(file.name);
-    const url = await uploadBuffer(key, Buffer.from(await file.arrayBuffer()), file.type);
+    const url = await uploadBuffer(
+      key,
+      Buffer.from(await file.arrayBuffer()),
+      file.type,
+    );
     return NextResponse.json({ key, url });
   } catch (error) {
     console.error("[upload] failed:", error);

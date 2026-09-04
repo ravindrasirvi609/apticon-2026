@@ -24,7 +24,7 @@ export default function HeroSection() {
   useEffect(() => {
     const id = setInterval(
       () => setSlideIndex((i) => (i + 1) % RAIPUR_PLACES.length),
-      SLIDE_INTERVAL_MS
+      SLIDE_INTERVAL_MS,
     );
     return () => clearInterval(id);
   }, []);
@@ -33,12 +33,14 @@ export default function HeroSection() {
     /* Header (announcement bar + navbar) sits above in normal flow, so the hero
        subtracts it to keep the whole composition inside the first screen. */
     <section className="relative flex min-h-[calc(100svh-6.5rem)] flex-col overflow-hidden md:min-h-[calc(100svh-7.5rem)]">
-
       {/* ── Background ─────────────────────────────────────── */}
       <HeroBackgroundSlider places={RAIPUR_PLACES} index={slideIndex} />
 
       {/* Ambient colour glows — soft, modern depth */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      >
         <div className="absolute -top-32 -left-24 h-[28rem] w-[28rem] rounded-full bg-[var(--primary-600)]/25 blur-[120px]" />
         <div className="absolute -bottom-40 -right-24 h-[32rem] w-[32rem] rounded-full bg-[var(--accent-500)]/20 blur-[130px]" />
       </div>
@@ -51,7 +53,6 @@ export default function HeroSection() {
 
       {/* ── Content ────────────────────────────────────────── */}
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-5 text-center sm:px-6 md:py-7">
-
         {/* Institution logos */}
         <motion.div
           {...rise(0.05)}

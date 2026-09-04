@@ -18,13 +18,19 @@ export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
   const limit = rateLimit(`submit:${ip}`, 5, 60 * 60_000);
   if (!limit.ok) {
-    return NextResponse.json({ error: "Too many submissions. Please retry in an hour." }, { status: 429 });
+    return NextResponse.json(
+      { error: "Too many submissions. Please retry in an hour." },
+      { status: 429 },
+    );
   }
 
   const body = await request.json().catch(() => null);
   const parsed = abstractSubmitSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid input", details: parsed.error.flatten() },
+      { status: 400 },
+    );
   }
 
   const data = parsed.data;
@@ -36,7 +42,7 @@ export async function POST(request: NextRequest) {
       {
         error: `Only verified APTI members can submit an abstract. We couldn't verify Membership ID "${data.aptiMemberId}". Please double-check it, or contact APTI to confirm your membership.`,
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -67,23 +73,40 @@ export async function POST(request: NextRequest) {
     fileUrl: data.fileKey ? publicUrl(data.fileKey) : undefined,
     graphicalAbstractKey: data.graphicalAbstractKey,
     graphicalAbstractName: data.graphicalAbstractName,
-    graphicalAbstractUrl: data.graphicalAbstractKey ? publicUrl(data.graphicalAbstractKey) : undefined,
+    graphicalAbstractUrl: data.graphicalAbstractKey
+      ? publicUrl(data.graphicalAbstractKey)
+      : undefined,
     status: "submitted",
   });
 
   // Sync with any existing registration for this email
   const linkResult = await linkFromAbstract(created._id, data.email, request);
 
-  const { subject, html } = abstractSubmittedEmail(data.presentingAuthor, submissionCode, data.title);
+  const { subject, html } = abstractSubmittedEmail(
+    data.presentingAuthor,
+    submissionCode,
+    data.title,
+  );
   await sendMail({ to: data.email, subject, html });
-  await sendWhatsAppNotification(data.phone, "abstract_submitted", [data.presentingAuthor, submissionCode], created._id.toString());
+  await sendWhatsAppNotification(
+    data.phone,
+    "abstract_submitted",
+    [data.presentingAuthor, submissionCode],
+    created._id.toString(),
+  );
 
   await logAudit({
     actorRole: "public",
     action: "abstract.submit",
     resourceType: "abstract",
     resourceId: created._id.toString(),
-    details: { submissionCode, email: data.email, theme: data.theme, type: data.type, linkedRegistration: linkResult.registrationId ?? null },
+    details: {
+      submissionCode,
+      email: data.email,
+      theme: data.theme,
+      type: data.type,
+      linkedRegistration: linkResult.registrationId ?? null,
+    },
     request,
   });
 
@@ -104,7 +127,10 @@ export async function GET(request: NextRequest) {
   const status = url.searchParams.get("status") ?? undefined;
   const q = url.searchParams.get("q") ?? "";
   const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
-  const limit = Math.min(100, parseInt(url.searchParams.get("limit") ?? "25", 10));
+  const limit = Math.min(
+    100,
+    parseInt(url.searchParams.get("limit") ?? "25", 10),
+  );
 
   const filter: Record<string, unknown> = {};
   if (status) filter.status = status;

@@ -17,31 +17,44 @@ export const REGISTRATION_CATEGORIES = [
 export type RegistrationCategory = (typeof REGISTRATION_CATEGORIES)[number];
 
 // INR
-export const FEE_TABLE: Record<RegistrationCategory, Record<FeeTier, number>> = {
-  "APTI Life Member":            { early_bird: 3000, regular: 3500, on_spot: 4000 },
-  "APTI Annual Member":          { early_bird: 3500, regular: 4000, on_spot: 4500 },
-  "Non-Member":                  { early_bird: 5000, regular: 5500, on_spot: 6000 },
-  "PG Student / Research Scholar": { early_bird: 2500, regular: 3000, on_spot: 3500 },
-  "UG Student":                  { early_bird: 2000, regular: 2500, on_spot: 3000 },
-  "Accompanying Person":         { early_bird: 1000, regular: 1500, on_spot: 2000 },
+export const FEE_TABLE: Record<
+  RegistrationCategory,
+  Record<FeeTier, number>
+> = {
+  "APTI Life Member": { early_bird: 3000, regular: 3500, on_spot: 4000 },
+  "APTI Annual Member": { early_bird: 3500, regular: 4000, on_spot: 4500 },
+  "Non-Member": { early_bird: 5000, regular: 5500, on_spot: 6000 },
+  "PG Student / Research Scholar": {
+    early_bird: 2500,
+    regular: 3000,
+    on_spot: 3500,
+  },
+  "UG Student": { early_bird: 2000, regular: 2500, on_spot: 3000 },
+  "Accompanying Person": { early_bird: 1000, regular: 1500, on_spot: 2000 },
 };
 
 // Same dates as the public FeeTable UI copy
 const EARLY_BIRD_CUTOFF = new Date("2026-09-16T00:00:00+05:30"); // "Till 15 Sep" (inclusive of Sep 15)
-const ON_SPOT_START     = new Date("2026-10-24T00:00:00+05:30"); // conference start
+const ON_SPOT_START = new Date("2026-10-24T00:00:00+05:30"); // conference start
 
 export function currentFeeTier(now: Date = new Date()): FeeTier {
   if (now < EARLY_BIRD_CUTOFF) return "early_bird";
-  if (now < ON_SPOT_START)     return "regular";
+  if (now < ON_SPOT_START) return "regular";
   return "on_spot";
 }
 
-export function currentFeeAmount(category: RegistrationCategory, now: Date = new Date()): { tier: FeeTier; amount: number } {
+export function currentFeeAmount(
+  category: RegistrationCategory,
+  now: Date = new Date(),
+): { tier: FeeTier; amount: number } {
   const tier = currentFeeTier(now);
   return { tier, amount: FEE_TABLE[category][tier] };
 }
 
-export function calculateFeeWithGst(baseAmount: number): { gstAmount: number; totalAmount: number } {
+export function calculateFeeWithGst(baseAmount: number): {
+  gstAmount: number;
+  totalAmount: number;
+} {
   const gstAmount = Math.round(baseAmount * GST_RATE);
   return { gstAmount, totalAmount: baseAmount + gstAmount };
 }
@@ -56,11 +69,21 @@ export function groupComplimentaryCount(delegateCount: number): number {
   return Math.floor(delegateCount / GROUP_COMPLIMENTARY_AT);
 }
 
-export function currentGroupFeeAmount(category: RegistrationCategory, delegateCount: number, now: Date = new Date()) {
+export function currentGroupFeeAmount(
+  category: RegistrationCategory,
+  delegateCount: number,
+  now: Date = new Date(),
+) {
   const { tier, amount: perHead } = currentFeeAmount(category, now);
   const complimentaryCount = groupComplimentaryCount(delegateCount);
   const paidCount = delegateCount - complimentaryCount;
-  return { tier, perHead, paidCount, complimentaryCount, baseAmount: perHead * paidCount };
+  return {
+    tier,
+    perHead,
+    paidCount,
+    complimentaryCount,
+    baseAmount: perHead * paidCount,
+  };
 }
 
 export function formatRupees(amount: number): string {

@@ -31,15 +31,20 @@ export default function RegistrationBadge({ id, detailHref }: Props) {
       .catch(() => setData(null));
   }, [id]);
 
-  if (!data) return <div className="p-8 text-sm text-[var(--muted-text)]">Loading…</div>;
+  if (!data)
+    return <div className="p-8 text-sm text-[var(--muted-text)]">Loading…</div>;
 
   if (data.status !== "approved") {
     return (
       <div className="p-8 flex flex-col items-center gap-3 text-center">
         <div className="text-sm text-[var(--muted-text)]">
-          The badge is only available once payment is confirmed. This registration&rsquo;s payment is not complete yet.
+          The badge is only available once payment is confirmed. This
+          registration&rsquo;s payment is not complete yet.
         </div>
-        <Link href={detailHref} className="inline-flex items-center gap-1 text-sm text-[var(--primary-800)] hover:underline">
+        <Link
+          href={detailHref}
+          className="inline-flex items-center gap-1 text-sm text-[var(--primary-800)] hover:underline"
+        >
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
       </div>
@@ -52,7 +57,10 @@ export default function RegistrationBadge({ id, detailHref }: Props) {
       <style>{"@page { margin: 0.5in; }"}</style>
 
       <div className="w-full max-w-md flex items-center justify-between mb-6 print:hidden">
-        <Link href={detailHref} className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--primary-800)]">
+        <Link
+          href={detailHref}
+          className="inline-flex items-center gap-1 text-sm text-[var(--muted-text)] hover:text-[var(--primary-800)]"
+        >
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
         <Button onClick={() => window.print()}>
@@ -61,17 +69,29 @@ export default function RegistrationBadge({ id, detailHref }: Props) {
       </div>
 
       <div className="w-full max-w-md rounded-2xl border-2 border-[var(--accent-500)]/40 bg-white p-8 text-center shadow-sm">
-        <div className="text-xs font-semibold tracking-widest uppercase text-[var(--primary-800)]">APTICON 2026</div>
-        <div className="text-[10px] text-[var(--muted-text)] mt-0.5">28th Annual National Convention · Raipur (C.G.)</div>
+        <div className="text-xs font-semibold tracking-widest uppercase text-[var(--primary-800)]">
+          APTICON 2026
+        </div>
+        <div className="text-[10px] text-[var(--muted-text)] mt-0.5">
+          28th Annual National Convention · Raipur (C.G.)
+        </div>
 
         <div className="mt-5 flex justify-center">
           <DelegatePhoto url={data.photoUrl} name={data.fullName} size={96} />
         </div>
 
-        <div className="mt-4 font-display text-xl font-bold text-[var(--dark-text)]">{data.fullName}</div>
-        <div className="text-sm text-[var(--muted-text)] mt-1">{data.designation}</div>
-        <div className="text-sm text-[var(--muted-text)]">{data.institution}</div>
-        <div className="text-xs uppercase tracking-wider text-[var(--primary-800)] font-semibold mt-2">{data.category}</div>
+        <div className="mt-4 font-display text-xl font-bold text-[var(--dark-text)]">
+          {data.fullName}
+        </div>
+        <div className="text-sm text-[var(--muted-text)] mt-1">
+          {data.designation}
+        </div>
+        <div className="text-sm text-[var(--muted-text)]">
+          {data.institution}
+        </div>
+        <div className="text-xs uppercase tracking-wider text-[var(--primary-800)] font-semibold mt-2">
+          {data.category}
+        </div>
 
         {data.qrCode && (
           <div className="mt-5 flex justify-center">
@@ -86,7 +106,9 @@ export default function RegistrationBadge({ id, detailHref }: Props) {
           </div>
         )}
 
-        <div className="mt-4 font-mono text-lg font-black text-[var(--primary-800)]">{data.registrationCode}</div>
+        <div className="mt-4 font-mono text-lg font-black text-[var(--primary-800)]">
+          {data.registrationCode}
+        </div>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import { logAudit } from "@/lib/audit";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     await requireRole("super_admin");
@@ -16,7 +16,10 @@ export async function GET(
 
     const member = await AptiMember.findById(id).lean();
     if (!member) {
-      return NextResponse.json({ error: "APTI member not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "APTI member not found" },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json({
@@ -43,7 +46,7 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const admin = await requireRole("super_admin");
@@ -51,26 +54,37 @@ export async function PATCH(
     const body = await request.json().catch(() => null);
     const parsed = aptiMemberUpdateSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid input", details: parsed.error.flatten() },
+        { status: 400 },
+      );
     }
 
     await connectDB();
 
     const member = await AptiMember.findById(id);
     if (!member) {
-      return NextResponse.json({ error: "APTI member not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "APTI member not found" },
+        { status: 404 },
+      );
     }
 
     const updates = parsed.data;
     if (updates.name !== undefined) member.name = updates.name;
-    if (updates.serialNo !== undefined) member.serialNo = updates.serialNo || undefined;
-    if (updates.stateCode !== undefined) member.stateCode = updates.stateCode || undefined;
+    if (updates.serialNo !== undefined)
+      member.serialNo = updates.serialNo || undefined;
+    if (updates.stateCode !== undefined)
+      member.stateCode = updates.stateCode || undefined;
     if (updates.email !== undefined) member.email = updates.email || undefined;
-    if (updates.mobile !== undefined) member.mobile = updates.mobile || undefined;
-    if (updates.officeAddress !== undefined) member.officeAddress = updates.officeAddress || undefined;
+    if (updates.mobile !== undefined)
+      member.mobile = updates.mobile || undefined;
+    if (updates.officeAddress !== undefined)
+      member.officeAddress = updates.officeAddress || undefined;
     if (updates.city !== undefined) member.city = updates.city || undefined;
     if (updates.state !== undefined) member.state = updates.state || undefined;
-    if (updates.pincode !== undefined) member.pincode = updates.pincode || undefined;
+    if (updates.pincode !== undefined)
+      member.pincode = updates.pincode || undefined;
 
     await member.save();
 
@@ -109,7 +123,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const admin = await requireRole("super_admin");
@@ -118,7 +132,10 @@ export async function DELETE(
 
     const member = await AptiMember.findByIdAndDelete(id);
     if (!member) {
-      return NextResponse.json({ error: "APTI member not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "APTI member not found" },
+        { status: 404 },
+      );
     }
 
     await logAudit({

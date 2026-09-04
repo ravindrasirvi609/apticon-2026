@@ -6,30 +6,48 @@ import { userUpdateSchema } from "@/lib/validators/user";
 import { requireRole, authErrorResponse } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 
-export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+export async function PATCH(
+  request: NextRequest,
+  ctx: { params: Promise<{ id: string }> },
+) {
   try {
     const admin = await requireRole("super_admin");
     const { id } = await ctx.params;
-    if (!mongoose.isValidObjectId(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    if (!mongoose.isValidObjectId(id))
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
     const body = await request.json().catch(() => null);
     const parsed = userUpdateSchema.safeParse(body);
-    if (!parsed.success) return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+    if (!parsed.success)
+      return NextResponse.json(
+        { error: "Invalid input", details: parsed.error.flatten() },
+        { status: 400 },
+      );
 
     await connectDB();
     const user = await User.findById(id);
-    if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!user)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
 
     // Prevent deactivating self
     if (user._id.toString() === admin.uid && parsed.data.isActive === false) {
-      return NextResponse.json({ error: "You cannot deactivate yourself." }, { status: 400 });
+      return NextResponse.json(
+        { error: "You cannot deactivate yourself." },
+        { status: 400 },
+      );
     }
 
-    const before = { name: user.name, expertise: user.expertise, isActive: user.isActive };
+    const before = {
+      name: user.name,
+      expertise: user.expertise,
+      isActive: user.isActive,
+    };
 
     if (parsed.data.name !== undefined) user.name = parsed.data.name;
-    if (parsed.data.expertise !== undefined) user.expertise = parsed.data.expertise;
-    if (parsed.data.isActive !== undefined) user.isActive = parsed.data.isActive;
+    if (parsed.data.expertise !== undefined)
+      user.expertise = parsed.data.expertise;
+    if (parsed.data.isActive !== undefined)
+      user.isActive = parsed.data.isActive;
     await user.save();
 
     await logAudit({

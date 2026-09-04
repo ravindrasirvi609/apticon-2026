@@ -2,7 +2,13 @@ import { NextResponse, type NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import { userCreateSchema } from "@/lib/validators/user";
-import { requireRole, requireAnyRole, hashPassword, generateTempPassword, authErrorResponse } from "@/lib/auth";
+import {
+  requireRole,
+  requireAnyRole,
+  hashPassword,
+  generateTempPassword,
+  authErrorResponse,
+} from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { sendMail, newUserWelcomeEmail } from "@/lib/email";
 
@@ -18,7 +24,12 @@ export async function GET(request: NextRequest) {
     const role = url.searchParams.get("role") ?? undefined;
     const filter: Record<string, unknown> = {};
     if (isAdmin) {
-      if (role === "super_admin" || role === "reviewer" || role === "checkin_staff") filter.role = role;
+      if (
+        role === "super_admin" ||
+        role === "reviewer" ||
+        role === "checkin_staff"
+      )
+        filter.role = role;
     } else {
       filter.role = "reviewer";
       filter.isActive = true;
@@ -52,11 +63,19 @@ export async function POST(request: NextRequest) {
     const admin = await requireRole("super_admin");
     const body = await request.json().catch(() => null);
     const parsed = userCreateSchema.safeParse(body);
-    if (!parsed.success) return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+    if (!parsed.success)
+      return NextResponse.json(
+        { error: "Invalid input", details: parsed.error.flatten() },
+        { status: 400 },
+      );
 
     await connectDB();
     const existing = await User.findOne({ email: parsed.data.email });
-    if (existing) return NextResponse.json({ error: "A user with this email already exists" }, { status: 409 });
+    if (existing)
+      return NextResponse.json(
+        { error: "A user with this email already exists" },
+        { status: 409 },
+      );
 
     const tempPassword = generateTempPassword();
     const passwordHash = await hashPassword(tempPassword);
@@ -77,11 +96,20 @@ export async function POST(request: NextRequest) {
       action: "user.create",
       resourceType: "user",
       resourceId: created._id.toString(),
-      details: { email: parsed.data.email, name: parsed.data.name, role: parsed.data.role },
+      details: {
+        email: parsed.data.email,
+        name: parsed.data.name,
+        role: parsed.data.role,
+      },
       request,
     });
 
-    const { subject, html } = newUserWelcomeEmail(parsed.data.name, parsed.data.email, tempPassword, parsed.data.role);
+    const { subject, html } = newUserWelcomeEmail(
+      parsed.data.name,
+      parsed.data.email,
+      tempPassword,
+      parsed.data.role,
+    );
     await sendMail({ to: parsed.data.email, subject, html });
 
     return NextResponse.json({
