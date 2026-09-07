@@ -9,6 +9,8 @@ const CATEGORY_PREFIX: Record<RegistrationCategory, string> = {
   "UG Student": "AU",
   "PG Student / Research Scholar": "AP",
   "Accompanying Person": "AA",
+  // Grants membership too, so it shares the member ("AM") badge-code range.
+  "APTI Membership + APTICON Registration": "AM",
 };
 
 /** First number issued for each prefix. Accompanying persons run a lower/separate range. */

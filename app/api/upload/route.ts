@@ -3,6 +3,7 @@ import { uploadRequestSchema, UPLOAD_RULES } from "@/lib/validators/upload";
 import {
   buildAbstractKey,
   buildGraphicalAbstractKey,
+  buildInstitutionalLetterKey,
   buildPhotoKey,
   uploadBuffer,
 } from "@/lib/r2";
@@ -60,7 +61,9 @@ export async function POST(request: NextRequest) {
         ? buildPhotoKey(file.name)
         : purpose === "graphicalAbstract"
           ? buildGraphicalAbstractKey(file.name)
-          : buildAbstractKey(file.name);
+          : purpose === "institutionalLetter"
+            ? buildInstitutionalLetterKey(file.name)
+            : buildAbstractKey(file.name);
     const url = await uploadBuffer(
       key,
       Buffer.from(await file.arrayBuffer()),

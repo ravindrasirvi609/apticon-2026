@@ -5,9 +5,11 @@ import { createRazorpayOrder } from "@/lib/razorpay";
 import { publicUrl } from "@/lib/r2";
 import {
   APTI_MEMBER_CATEGORIES,
+  NEW_APTI_MEMBERSHIP_CATEGORY,
   razorpayOrderSchema,
 } from "@/lib/validators/registration";
 import Registration from "@/models/Registration";
+import AptiMembershipApplication from "@/models/AptiMembershipApplication";
 import { getClientIp } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { linkFromRegistration } from "@/lib/sync";
@@ -62,8 +64,11 @@ export async function POST(request: NextRequest) {
   const { tier, amount: baseAmount } = currentFeeAmount(data.category);
   const { gstAmount, totalAmount } = calculateFeeWithGst(baseAmount);
 
+  const isNewMembershipBundle = data.category === NEW_APTI_MEMBERSHIP_CATEGORY;
+
   await connectDB();
   let registration;
+  let membershipApplication;
   try {
     registration = await Registration.create({
       fullName: data.fullName,
@@ -80,15 +85,51 @@ export async function POST(request: NextRequest) {
       feeTier: tier,
       feeAmount: totalAmount,
       willSubmitAbstract: data.willSubmitAbstract,
-      includesAptiMembership: false,
+      includesAptiMembership: isNewMembershipBundle,
       aptiMemberId: data.aptiMemberId,
       paymentMode: "razorpay",
       paymentStatus: "pending",
       status: "submitted",
       remarks: data.remarks,
     });
+
+    if (isNewMembershipBundle) {
+      const membership = data.membershipDetails!;
+      membershipApplication = await AptiMembershipApplication.create({
+        registration: registration._id,
+        bloodGroup: membership.bloodGroup,
+        gender: membership.gender,
+        dob: new Date(membership.dob),
+        college: membership.college,
+        professionalState: membership.professionalState,
+        region: membership.region,
+        qualification: membership.qualification,
+        teachingExperience: membership.teachingExperience,
+        professionalExperience: membership.professionalExperience,
+        nationality: membership.nationality,
+        professionalStatus: membership.professionalStatus,
+        institutionalLetterKey: membership.institutionalLetterKey,
+        institutionalLetterUrl: publicUrl(membership.institutionalLetterKey),
+        institutionalLetterName: membership.institutionalLetterName,
+        reference: membership.reference,
+        officeAddress: membership.officeAddress,
+        officePincode: membership.officePincode,
+        officeCity: membership.officeCity,
+        officeState: membership.officeState,
+        officePhone: membership.officePhone,
+        officeFax: membership.officeFax,
+        officeEmail: membership.officeEmail,
+        residenceAddress: membership.residenceAddress,
+        residencePincode: membership.residencePincode,
+        residenceCity: membership.residenceCity,
+        residenceState: membership.residenceState,
+        residencePhone: membership.residencePhone,
+        residenceEmail: membership.residenceEmail,
+      });
+    }
   } catch (error) {
     console.error("[razorpay] registration creation failed:", error);
+    if (registration) await Registration.deleteOne({ _id: registration._id });
     return NextResponse.json(
       { error: "We could not create your registration. Please try again." },
       { status: 503 },
@@ -140,6 +181,11 @@ export async function POST(request: NextRequest) {
       _id: registration._id,
       razorpayOrderId: { $exists: false },
     });
+    if (membershipApplication) {
+      await AptiMembershipApplication.deleteOne({
+        _id: membershipApplication._id,
+      });
+    }
     console.error("[razorpay] order creation failed:", error);
     return NextResponse.json(
       { error: "Unable to start payment. Please try again." },

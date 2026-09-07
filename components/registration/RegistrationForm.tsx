@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/shadcn/input";
 import { Textarea } from "@/components/ui/shadcn/textarea";
 import { Label } from "@/components/ui/shadcn/label";
 import PhotoUploadField from "@/components/registration/PhotoUploadField";
+import InstitutionalLetterUploadField from "@/components/registration/InstitutionalLetterUploadField";
 import {
   REGISTRATION_CATEGORIES,
   FEE_TABLE,
@@ -18,7 +19,17 @@ import {
   formatRupees,
   type RegistrationCategory,
 } from "@/lib/registration-fees";
-import { APTI_MEMBER_CATEGORIES } from "@/lib/validators/registration";
+import {
+  APTI_MEMBER_CATEGORIES,
+  NEW_APTI_MEMBERSHIP_CATEGORY,
+} from "@/lib/validators/registration";
+import {
+  BLOOD_GROUPS,
+  GENDERS,
+  REGIONS,
+  QUALIFICATIONS,
+  NATIONALITIES,
+} from "@/lib/apti-membership-application";
 import AptiMembershipIdField from "@/components/ui/AptiMembershipIdField";
 import PaymentRedirectDialog from "@/components/registration/PaymentRedirectDialog";
 
@@ -34,6 +45,34 @@ interface FormData {
   willSubmitAbstract: boolean;
   aptiMemberId: string;
   remarks: string;
+
+  // Only used for the "APTI Membership + APTICON Registration" category — mirrors
+  // https://aptiindia.org/membership_form_general.
+  bloodGroup: string;
+  gender: string;
+  dob: string;
+  college: string;
+  professionalState: string;
+  region: string;
+  qualification: string;
+  teachingExperience: string;
+  professionalExperience: string;
+  nationality: string;
+  professionalStatus: string;
+  reference: string;
+  officeAddress: string;
+  officePincode: string;
+  officeCity: string;
+  officeState: string;
+  officePhone: string;
+  officeFax: string;
+  officeEmail: string;
+  residenceAddress: string;
+  residencePincode: string;
+  residenceCity: string;
+  residenceState: string;
+  residencePhone: string;
+  residenceEmail: string;
 }
 
 const STATES = [
@@ -131,6 +170,12 @@ export default function RegistrationForm() {
   const [uploading, setUploading] = useState(false);
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
+  const [institutionalLetter, setInstitutionalLetter] = useState<File | null>(
+    null,
+  );
+  const [institutionalLetterError, setInstitutionalLetterError] = useState<
+    string | null
+  >(null);
   const {
     register,
     handleSubmit,
@@ -155,16 +200,21 @@ export default function RegistrationForm() {
     APTI_MEMBER_CATEGORIES.includes(
       chosenCategory as (typeof APTI_MEMBER_CATEGORIES)[number],
     );
+  const requiresMembershipDetails =
+    chosenCategory === NEW_APTI_MEMBERSHIP_CATEGORY;
 
-  /** Uploads the photo and returns its storage key, or null if the upload failed. */
-  async function uploadPhoto(file: File): Promise<string | null> {
+  /** Uploads a file for the given purpose and returns its storage key, or null on failure. */
+  async function uploadFile(
+    file: File,
+    purpose: "photo" | "institutionalLetter",
+  ): Promise<string | null> {
     const payload = new FormData();
     payload.append("file", file);
-    payload.append("purpose", "photo");
+    payload.append("purpose", purpose);
     const res = await fetch("/api/upload", { method: "POST", body: payload });
     const body = await res.json().catch(() => null);
     if (!res.ok) {
-      toast.error(body?.error ?? "Photo upload failed. Please try again.");
+      toast.error(body?.error ?? "Upload failed. Please try again.");
       return null;
     }
     return (body as { key: string }).key;
@@ -178,11 +228,32 @@ export default function RegistrationForm() {
     }
     setPhotoError(null);
 
+    if (requiresMembershipDetails && !institutionalLetter) {
+      setInstitutionalLetterError("An institutional letter is required.");
+      toast.error("Please upload your institutional letter.");
+      return;
+    }
+    setInstitutionalLetterError(null);
+
     // Upload first — no point creating an order we'd have to discard.
     setUploading(true);
-    const photoKey = await uploadPhoto(photo);
+    const photoKey = await uploadFile(photo, "photo");
+    if (!photoKey) {
+      setUploading(false);
+      return;
+    }
+    let institutionalLetterKey: string | null = null;
+    if (requiresMembershipDetails && institutionalLetter) {
+      institutionalLetterKey = await uploadFile(
+        institutionalLetter,
+        "institutionalLetter",
+      );
+      if (!institutionalLetterKey) {
+        setUploading(false);
+        return;
+      }
+    }
     setUploading(false);
-    if (!photoKey) return;
 
     setPaying(true);
     const res = await fetch("/api/payments/razorpay/order", {
@@ -202,6 +273,37 @@ export default function RegistrationForm() {
         willSubmitAbstract: !!data.willSubmitAbstract,
         aptiMemberId: data.aptiMemberId || undefined,
         remarks: data.remarks || undefined,
+        membershipDetails: requiresMembershipDetails
+          ? {
+              bloodGroup: data.bloodGroup,
+              gender: data.gender,
+              dob: data.dob,
+              college: data.college,
+              professionalState: data.professionalState,
+              region: data.region,
+              qualification: data.qualification,
+              teachingExperience: data.teachingExperience,
+              professionalExperience: data.professionalExperience,
+              nationality: data.nationality,
+              professionalStatus: data.professionalStatus || undefined,
+              reference: data.reference || undefined,
+              institutionalLetterKey,
+              institutionalLetterName: institutionalLetter!.name,
+              officeAddress: data.officeAddress,
+              officePincode: data.officePincode,
+              officeCity: data.officeCity,
+              officeState: data.officeState,
+              officePhone: data.officePhone,
+              officeFax: data.officeFax || undefined,
+              officeEmail: data.officeEmail,
+              residenceAddress: data.residenceAddress,
+              residencePincode: data.residencePincode,
+              residenceCity: data.residenceCity,
+              residenceState: data.residenceState,
+              residencePhone: data.residencePhone,
+              residenceEmail: data.residenceEmail,
+            }
+          : undefined,
       }),
     });
     const body = await res.json().catch(() => ({}));
@@ -543,6 +645,500 @@ export default function RegistrationForm() {
           </label>
         </div>
       </div>
+
+      {/* Membership Details — only for the bundled "APTI Membership + APTICON Registration" category */}
+      {requiresMembershipDetails && (
+        <div>
+          <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--accent-500)]/20">
+            Membership Details
+          </h3>
+          <p className="mb-4 -mt-2 text-xs text-[var(--muted-text)]">
+            You&apos;ve chosen to apply for a new APTI membership along with your
+            registration. Please fill in the details below (from APTI&apos;s
+            membership application) in addition to what you&apos;ve already
+            entered above.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="bloodGroup">Blood Group *</Label>
+              <select
+                id="bloodGroup"
+                className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
+                {...register("bloodGroup", {
+                  required: requiresMembershipDetails
+                    ? "Blood group is required"
+                    : false,
+                })}
+                defaultValue=""
+              >
+                <option value="">Select Blood Group</option>
+                {BLOOD_GROUPS.map((b) => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </select>
+              {errors.bloodGroup && (
+                <p className={errCls}>{errors.bloodGroup.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="dob">Date of Birth *</Label>
+              <Input
+                id="dob"
+                type="date"
+                className="mt-2"
+                {...register("dob", {
+                  required: requiresMembershipDetails
+                    ? "Date of birth is required"
+                    : false,
+                })}
+              />
+              {errors.dob && <p className={errCls}>{errors.dob.message}</p>}
+            </div>
+            <div className="sm:col-span-2">
+              <Label>Gender *</Label>
+              <div className="mt-2 flex flex-wrap gap-4">
+                {GENDERS.map((g) => (
+                  <label
+                    key={g}
+                    className="flex items-center gap-2 text-sm text-[var(--dark-text)] cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      value={g}
+                      {...register("gender", {
+                        required: requiresMembershipDetails
+                          ? "Gender is required"
+                          : false,
+                      })}
+                      className="accent-[var(--primary-800)]"
+                    />
+                    {g}
+                  </label>
+                ))}
+              </div>
+              {errors.gender && (
+                <p className={errCls}>{errors.gender.message}</p>
+              )}
+            </div>
+            <div className="sm:col-span-2">
+              <Label htmlFor="college">College *</Label>
+              <Input
+                id="college"
+                className="mt-2"
+                placeholder="College name"
+                {...register("college", {
+                  required: requiresMembershipDetails
+                    ? "College is required"
+                    : false,
+                })}
+              />
+              {errors.college && (
+                <p className={errCls}>{errors.college.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="professionalState">State *</Label>
+              <select
+                id="professionalState"
+                className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
+                {...register("professionalState", {
+                  required: requiresMembershipDetails
+                    ? "State is required"
+                    : false,
+                })}
+                defaultValue=""
+              >
+                <option value="">Select State</option>
+                {STATES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+              {errors.professionalState && (
+                <p className={errCls}>{errors.professionalState.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="region">Region *</Label>
+              <select
+                id="region"
+                className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
+                {...register("region", {
+                  required: requiresMembershipDetails
+                    ? "Region is required"
+                    : false,
+                })}
+                defaultValue=""
+              >
+                <option value="">Select Region</option>
+                {REGIONS.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+              {errors.region && (
+                <p className={errCls}>{errors.region.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="qualification">Qualification *</Label>
+              <select
+                id="qualification"
+                className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
+                {...register("qualification", {
+                  required: requiresMembershipDetails
+                    ? "Qualification is required"
+                    : false,
+                })}
+                defaultValue=""
+              >
+                <option value="">Select Qualification</option>
+                {QUALIFICATIONS.map((q) => (
+                  <option key={q} value={q}>
+                    {q}
+                  </option>
+                ))}
+              </select>
+              {errors.qualification && (
+                <p className={errCls}>{errors.qualification.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="nationality">Nationality *</Label>
+              <select
+                id="nationality"
+                className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
+                {...register("nationality", {
+                  required: requiresMembershipDetails
+                    ? "Nationality is required"
+                    : false,
+                })}
+                defaultValue=""
+              >
+                <option value="">Select Nationality</option>
+                {NATIONALITIES.map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
+              </select>
+              {errors.nationality && (
+                <p className={errCls}>{errors.nationality.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="teachingExperience">Teaching Experience *</Label>
+              <Input
+                id="teachingExperience"
+                className="mt-2"
+                placeholder="e.g. 5 years"
+                {...register("teachingExperience", {
+                  required: requiresMembershipDetails
+                    ? "Teaching experience is required"
+                    : false,
+                })}
+              />
+              {errors.teachingExperience && (
+                <p className={errCls}>{errors.teachingExperience.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="professionalExperience">
+                Professional Experience (Other than Teaching) *
+              </Label>
+              <Input
+                id="professionalExperience"
+                className="mt-2"
+                placeholder="e.g. 3 years"
+                {...register("professionalExperience", {
+                  required: requiresMembershipDetails
+                    ? "Professional experience is required"
+                    : false,
+                })}
+              />
+              {errors.professionalExperience && (
+                <p className={errCls}>
+                  {errors.professionalExperience.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="professionalStatus">Professional Status</Label>
+              <Input
+                id="professionalStatus"
+                className="mt-2"
+                placeholder="Optional"
+                {...register("professionalStatus")}
+              />
+            </div>
+            <div>
+              <Label htmlFor="reference">Reference</Label>
+              <Input
+                id="reference"
+                className="mt-2"
+                placeholder="Optional"
+                {...register("reference")}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <InstitutionalLetterUploadField
+                file={institutionalLetter}
+                onChange={(f) => {
+                  setInstitutionalLetter(f);
+                  if (f) setInstitutionalLetterError(null);
+                }}
+                error={institutionalLetterError ?? undefined}
+                disabled={uploading || paying}
+              />
+            </div>
+          </div>
+
+          {/* Office Address */}
+          <h4 className="font-display font-semibold text-sm text-[var(--dark-text)] mt-6 mb-3">
+            Office Address
+          </h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="sm:col-span-2">
+              <Label htmlFor="officeAddress">Address *</Label>
+              <Input
+                id="officeAddress"
+                className="mt-2"
+                {...register("officeAddress", {
+                  required: requiresMembershipDetails
+                    ? "Office address is required"
+                    : false,
+                })}
+              />
+              {errors.officeAddress && (
+                <p className={errCls}>{errors.officeAddress.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="officeCity">City *</Label>
+              <Input
+                id="officeCity"
+                className="mt-2"
+                {...register("officeCity", {
+                  required: requiresMembershipDetails
+                    ? "Office city is required"
+                    : false,
+                })}
+              />
+              {errors.officeCity && (
+                <p className={errCls}>{errors.officeCity.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="officeState">State *</Label>
+              <select
+                id="officeState"
+                className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
+                {...register("officeState", {
+                  required: requiresMembershipDetails
+                    ? "Office state is required"
+                    : false,
+                })}
+                defaultValue=""
+              >
+                <option value="">Select State</option>
+                {STATES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+              {errors.officeState && (
+                <p className={errCls}>{errors.officeState.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="officePincode">Pincode *</Label>
+              <Input
+                id="officePincode"
+                inputMode="numeric"
+                maxLength={6}
+                className="mt-2"
+                {...register("officePincode", {
+                  required: requiresMembershipDetails
+                    ? "Office pincode is required"
+                    : false,
+                  pattern: {
+                    value: /^\d{6}$/,
+                    message: "Enter a valid 6-digit pincode",
+                  },
+                })}
+              />
+              {errors.officePincode && (
+                <p className={errCls}>{errors.officePincode.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="officePhone">Phone Number *</Label>
+              <Input
+                id="officePhone"
+                className="mt-2"
+                {...register("officePhone", {
+                  required: requiresMembershipDetails
+                    ? "Office phone is required"
+                    : false,
+                })}
+              />
+              {errors.officePhone && (
+                <p className={errCls}>{errors.officePhone.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="officeFax">Fax</Label>
+              <Input
+                id="officeFax"
+                className="mt-2"
+                placeholder="Optional"
+                {...register("officeFax")}
+              />
+            </div>
+            <div>
+              <Label htmlFor="officeEmail">Email *</Label>
+              <Input
+                id="officeEmail"
+                type="email"
+                className="mt-2"
+                {...register("officeEmail", {
+                  required: requiresMembershipDetails
+                    ? "Office email is required"
+                    : false,
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Invalid email",
+                  },
+                })}
+              />
+              {errors.officeEmail && (
+                <p className={errCls}>{errors.officeEmail.message}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Residence / Communication Address */}
+          <h4 className="font-display font-semibold text-sm text-[var(--dark-text)] mt-6 mb-3">
+            Residence / Communication Address
+          </h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="sm:col-span-2">
+              <Label htmlFor="residenceAddress">Address *</Label>
+              <Input
+                id="residenceAddress"
+                className="mt-2"
+                {...register("residenceAddress", {
+                  required: requiresMembershipDetails
+                    ? "Residence address is required"
+                    : false,
+                })}
+              />
+              {errors.residenceAddress && (
+                <p className={errCls}>{errors.residenceAddress.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="residenceCity">City *</Label>
+              <Input
+                id="residenceCity"
+                className="mt-2"
+                {...register("residenceCity", {
+                  required: requiresMembershipDetails
+                    ? "Residence city is required"
+                    : false,
+                })}
+              />
+              {errors.residenceCity && (
+                <p className={errCls}>{errors.residenceCity.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="residenceState">State *</Label>
+              <select
+                id="residenceState"
+                className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
+                {...register("residenceState", {
+                  required: requiresMembershipDetails
+                    ? "Residence state is required"
+                    : false,
+                })}
+                defaultValue=""
+              >
+                <option value="">Select State</option>
+                {STATES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+              {errors.residenceState && (
+                <p className={errCls}>{errors.residenceState.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="residencePincode">Pincode *</Label>
+              <Input
+                id="residencePincode"
+                inputMode="numeric"
+                maxLength={6}
+                className="mt-2"
+                {...register("residencePincode", {
+                  required: requiresMembershipDetails
+                    ? "Residence pincode is required"
+                    : false,
+                  pattern: {
+                    value: /^\d{6}$/,
+                    message: "Enter a valid 6-digit pincode",
+                  },
+                })}
+              />
+              {errors.residencePincode && (
+                <p className={errCls}>{errors.residencePincode.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="residencePhone">Phone Number *</Label>
+              <Input
+                id="residencePhone"
+                className="mt-2"
+                {...register("residencePhone", {
+                  required: requiresMembershipDetails
+                    ? "Residence phone is required"
+                    : false,
+                })}
+              />
+              {errors.residencePhone && (
+                <p className={errCls}>{errors.residencePhone.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="residenceEmail">Email *</Label>
+              <Input
+                id="residenceEmail"
+                type="email"
+                className="mt-2"
+                {...register("residenceEmail", {
+                  required: requiresMembershipDetails
+                    ? "Residence email is required"
+                    : false,
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Invalid email",
+                  },
+                })}
+              />
+              {errors.residenceEmail && (
+                <p className={errCls}>{errors.residenceEmail.message}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Payment */}
       <div>

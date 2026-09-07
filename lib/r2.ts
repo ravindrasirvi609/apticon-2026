@@ -41,6 +41,12 @@ export function buildGraphicalAbstractKey(originalName: string): string {
   return `graphical-abstracts/${new Date().getUTCFullYear()}/${nanoid(16)}.${safeExt}`;
 }
 
+export function buildInstitutionalLetterKey(originalName: string): string {
+  const ext = originalName.split(".").pop()?.toLowerCase() ?? "bin";
+  const safeExt = ["jpg", "jpeg", "png", "webp"].includes(ext) ? ext : "bin";
+  return `institutional-letters/${new Date().getUTCFullYear()}/${nanoid(16)}.${safeExt}`;
+}
+
 export function buildPaymentProofKey(originalName: string): string {
   const ext = originalName.split(".").pop()?.toLowerCase() ?? "bin";
   const safeExt = ["pdf", "jpg", "jpeg", "png", "webp"].includes(ext)
