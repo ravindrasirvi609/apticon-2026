@@ -113,25 +113,33 @@ export default function FeeTable() {
             </tr>
           </thead>
           <tbody>
-            {FEES.map((row, i) => (
-              <tr
-                key={row.category}
-                className={`border-t border-[var(--accent-500)]/10 transition-colors hover:bg-[var(--surface-100)] ${i % 2 === 0 ? "bg-white" : "bg-[var(--surface-50)]"}`}
-              >
-                <td className="px-5 py-3.5 font-medium text-[var(--dark-text)]">
-                  {row.category}
-                </td>
-                <td className="px-4 py-3.5 text-center font-bold text-emerald-700">
-                  {row.early}
-                </td>
-                <td className="px-4 py-3.5 text-center font-bold text-[var(--secondary-800)]">
-                  {row.regular}
-                </td>
-                <td className="px-4 py-3.5 text-center font-bold text-[var(--primary-800)]">
-                  {row.spot}
-                </td>
-              </tr>
-            ))}
+            {FEES.map((row, i) => {
+              const isMembershipBundle =
+                row.category === "APTI Membership + APTICON Registration";
+              return (
+                <tr
+                  key={row.category}
+                  className={`border-t border-[var(--accent-500)]/10 transition-colors ${
+                    isMembershipBundle
+                      ? "bg-[var(--accent-400)]/15 hover:bg-[var(--accent-400)]/25"
+                      : `hover:bg-[var(--surface-100)] ${i % 2 === 0 ? "bg-white" : "bg-[var(--surface-50)]"}`
+                  }`}
+                >
+                  <td className="px-5 py-3.5 font-medium text-[var(--dark-text)]">
+                    {row.category}
+                  </td>
+                  <td className="px-4 py-3.5 text-center font-bold text-emerald-700">
+                    {row.early}
+                  </td>
+                  <td className="px-4 py-3.5 text-center font-bold text-[var(--secondary-800)]">
+                    {row.regular}
+                  </td>
+                  <td className="px-4 py-3.5 text-center font-bold text-[var(--primary-800)]">
+                    {row.spot}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
