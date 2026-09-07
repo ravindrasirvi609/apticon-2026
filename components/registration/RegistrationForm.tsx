@@ -14,7 +14,7 @@ import {
   REGISTRATION_CATEGORIES,
   FEE_TABLE,
   GST_RATE,
-  calculateFeeWithGst,
+  calculateFeeBreakdown,
   currentFeeAmount,
   formatRupees,
   type RegistrationCategory,
@@ -192,9 +192,10 @@ export default function RegistrationForm() {
       ? (category as RegistrationCategory)
       : null;
   const currentFee = chosenCategory ? currentFeeAmount(chosenCategory) : null;
-  const feeBreakdown = currentFee
-    ? calculateFeeWithGst(currentFee.amount)
-    : null;
+  const feeBreakdown =
+    chosenCategory && currentFee
+      ? calculateFeeBreakdown(chosenCategory, currentFee.amount)
+      : null;
   const requiresMembershipId =
     !!chosenCategory &&
     APTI_MEMBER_CATEGORIES.includes(
@@ -567,12 +568,14 @@ export default function RegistrationForm() {
                     </span>
                     <span>{formatRupees(currentFee.amount)}</span>
                   </div>
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-[var(--muted-text)]">
-                      GST ({GST_RATE * 100}%)
-                    </span>
-                    <span>{formatRupees(feeBreakdown.gstAmount)}</span>
-                  </div>
+                  {feeBreakdown.gstAmount > 0 && (
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[var(--muted-text)]">
+                        GST ({GST_RATE * 100}%)
+                      </span>
+                      <span>{formatRupees(feeBreakdown.gstAmount)}</span>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between gap-3 border-t border-[var(--accent-500)]/25 pt-1 font-semibold">
                     <span className="inline-flex items-center gap-1 text-[var(--dark-text)]">
                       <Calculator className="h-3.5 w-3.5" /> Total payable
@@ -593,7 +596,17 @@ export default function RegistrationForm() {
             </div>
           </div>
         </div>
-        {chosenCategory && (
+        {chosenCategory && chosenCategory === NEW_APTI_MEMBERSHIP_CATEGORY && (
+          <div className="mt-3 flex items-start gap-2 text-xs text-[var(--muted-text)]">
+            <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+            <span>
+              Flat fee of {formatRupees(FEE_TABLE[chosenCategory].regular)},
+              inclusive of your APTI membership application — no additional
+              GST.
+            </span>
+          </div>
+        )}
+        {chosenCategory && chosenCategory !== NEW_APTI_MEMBERSHIP_CATEGORY && (
           <div className="mt-3 flex items-start gap-2 text-xs text-[var(--muted-text)]">
             <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
             <span>

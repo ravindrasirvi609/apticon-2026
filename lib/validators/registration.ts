@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { REGISTRATION_CATEGORIES } from "@/lib/registration-fees";
+import {
+  REGISTRATION_CATEGORIES,
+  NEW_APTI_MEMBERSHIP_CATEGORY,
+} from "@/lib/registration-fees";
 import {
   BLOOD_GROUPS,
   GENDERS,
@@ -7,6 +10,11 @@ import {
   QUALIFICATIONS,
   NATIONALITIES,
 } from "@/lib/apti-membership-application";
+
+// Re-exported so existing call sites can keep importing it from here alongside
+// APTI_MEMBER_CATEGORIES/membershipDetailsSchema; the fee module is its source of truth since
+// GST calculation also needs to know this category (see calculateFeeBreakdown).
+export { NEW_APTI_MEMBERSHIP_CATEGORY };
 
 const CategoryEnum = z.enum(REGISTRATION_CATEGORIES);
 
@@ -17,11 +25,6 @@ export const APTI_MEMBER_CATEGORIES = [
   "APTI Life Member",
   "APTI Annual Member",
 ] as const;
-
-// The one category where the registrant does NOT have an existing membership and is applying
-// for one alongside registering — collects the full aptiindia.org membership-form fields.
-export const NEW_APTI_MEMBERSHIP_CATEGORY =
-  "APTI Membership + APTICON Registration" as const;
 
 export const membershipDetailsSchema = z.object({
   bloodGroup: z.enum(BLOOD_GROUPS),
