@@ -1,5 +1,16 @@
 import { z } from "zod";
-import { REGISTRATION_CATEGORIES } from "@/lib/registration-fees";
+
+// Excludes "APTI Membership + APTICON Registration" — that category collects a full new-member
+// application per registrant (see lib/validators/registration.ts), which the group flow has no
+// per-delegate capture for.
+const GROUP_REGISTRATION_CATEGORIES = [
+  "APTI Life Member",
+  "APTI Annual Member",
+  "Non-Member",
+  "PG Student / Research Scholar",
+  "UG Student",
+  "Accompanying Person",
+] as const;
 
 export const GROUP_MIN_DELEGATES = 10;
 export const GROUP_MAX_DELEGATES = 100; // above this, submit a second group registration
@@ -42,7 +53,7 @@ export const groupRazorpayOrderSchema = z.object({
   city: z.string().max(120).trim().optional(),
   state: z.string().max(120).trim().optional(),
 
-  category: z.enum(REGISTRATION_CATEGORIES),
+  category: z.enum(GROUP_REGISTRATION_CATEGORIES),
   delegates: z
     .array(delegateSchema)
     .min(

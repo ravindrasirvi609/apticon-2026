@@ -15,6 +15,7 @@ export const UPLOAD_PURPOSES = [
   "abstract",
   "photo",
   "graphicalAbstract",
+  "institutionalLetter",
 ] as const;
 export type UploadPurpose = (typeof UPLOAD_PURPOSES)[number];
 
@@ -37,6 +38,12 @@ export const UPLOAD_RULES: Record<
     types: UPLOAD_PHOTO_TYPES,
     maxBytes: 5 * 1024 * 1024,
     label: "JPG, PNG or WebP",
+  },
+  // Matches the aptiindia.org membership form's own limit (JPG/PNG, max 2MB).
+  institutionalLetter: {
+    types: UPLOAD_PHOTO_TYPES,
+    maxBytes: 2 * 1024 * 1024,
+    label: "JPG or PNG",
   },
 };
 

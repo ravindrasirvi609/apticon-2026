@@ -35,6 +35,12 @@ const FEES = [
     regular: "₹1,500",
     spot: "₹2,000",
   },
+  {
+    category: "APTI Membership + APTICON Registration",
+    early: "₹6,500",
+    regular: "₹6,500",
+    spot: "₹6,500",
+  },
 ];
 
 const DATES = [
