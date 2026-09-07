@@ -21,7 +21,14 @@ export interface IAptiMember {
 
 const AptiMemberSchema = new Schema<IAptiMember>(
   {
-    memberId: { type: String, required: true, unique: true, trim: true, uppercase: true, index: true },
+    memberId: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      uppercase: true,
+      index: true,
+    },
     serialNo: { type: Number },
     stateCode: { type: String, trim: true },
     name: { type: String, required: true, trim: true },
@@ -32,7 +39,7 @@ const AptiMemberSchema = new Schema<IAptiMember>(
     state: { type: String, trim: true },
     pincode: { type: String, trim: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const AptiMember: Model<IAptiMember> =

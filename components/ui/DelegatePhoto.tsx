@@ -11,7 +11,12 @@ interface Props {
  * Circular delegate avatar. Falls back to the delegate's initial in the same primary gradient
  * used for the console account chip, so photo-less legacy rows still look deliberate.
  */
-export default function DelegatePhoto({ url, name, size = 40, className = "" }: Props) {
+export default function DelegatePhoto({
+  url,
+  name,
+  size = 40,
+  className = "",
+}: Props) {
   const box = { width: size, height: size };
   const base = `shrink-0 overflow-hidden rounded-full border border-[var(--accent-500)]/30 ${className}`;
 
@@ -33,7 +38,12 @@ export default function DelegatePhoto({ url, name, size = 40, className = "" }: 
   return (
     <div style={box} className={`${base} bg-[var(--surface-100)]`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={url} alt={`${name}'s profile photo`} className="h-full w-full object-cover" loading="lazy" />
+      <img
+        src={url}
+        alt={`${name}'s profile photo`}
+        className="h-full w-full object-cover"
+        loading="lazy"
+      />
     </div>
   );
 }

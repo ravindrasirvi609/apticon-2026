@@ -13,13 +13,17 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json().catch(() => null);
     const parsed = changePasswordSchema.safeParse(body);
-    if (!parsed.success) return fail("Invalid input", parsed.error.flatten().formErrors, 400);
+    if (!parsed.success)
+      return fail("Invalid input", parsed.error.flatten().formErrors, 400);
 
     await connectDB();
     const user = await User.findById(session.uid).select("+passwordHash");
     if (!user) return fail("User not found", [], 404);
 
-    const passwordOk = await verifyPassword(parsed.data.currentPassword, user.passwordHash);
+    const passwordOk = await verifyPassword(
+      parsed.data.currentPassword,
+      user.passwordHash,
+    );
     if (!passwordOk) return fail("Current password is incorrect", [], 401);
 
     user.passwordHash = await hashPassword(parsed.data.newPassword);

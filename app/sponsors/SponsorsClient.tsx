@@ -17,12 +17,36 @@ import {
 import { staggerContainer, fadeUp } from "@/lib/animations";
 
 const BENEFITS_WHY = [
-  { icon: "👥", title: "1500+ Pharmacy Leaders",    desc: "Direct access to pharmacy educators, HODs, Principals and Deans from across India." },
-  { icon: "🎓", title: "Academic Reach",           desc: "Your brand in front of decision-makers in pharmaceutical education and research." },
-  { icon: "📰", title: "Souvenir Publication",     desc: "Full and half-page advertisement in the official conference souvenir book." },
-  { icon: "🏆", title: "Brand Visibility",         desc: "Logo on backdrops, banners, registration kits, website, and social media." },
-  { icon: "🤝", title: "Exhibition Stall",         desc: "Premium or standard exhibition stalls for product demonstrations and networking." },
-  { icon: "📢", title: "Session Branding",         desc: "Opportunity to brand scientific sessions, workshops, and cultural events." },
+  {
+    icon: "👥",
+    title: "1500+ Pharmacy Leaders",
+    desc: "Direct access to pharmacy educators, HODs, Principals and Deans from across India.",
+  },
+  {
+    icon: "🎓",
+    title: "Academic Reach",
+    desc: "Your brand in front of decision-makers in pharmaceutical education and research.",
+  },
+  {
+    icon: "📰",
+    title: "Souvenir Publication",
+    desc: "Full and half-page advertisement in the official conference souvenir book.",
+  },
+  {
+    icon: "🏆",
+    title: "Brand Visibility",
+    desc: "Logo on backdrops, banners, registration kits, website, and social media.",
+  },
+  {
+    icon: "🤝",
+    title: "Exhibition Stall",
+    desc: "Premium or standard exhibition stalls for product demonstrations and networking.",
+  },
+  {
+    icon: "📢",
+    title: "Session Branding",
+    desc: "Opportunity to brand scientific sessions, workshops, and cultural events.",
+  },
 ];
 
 interface PackageItem {
@@ -35,7 +59,9 @@ interface PackageItem {
 function PackageGrid({ items }: { items: PackageItem[] }) {
   return (
     <motion.div
-      initial="hidden" whileInView="visible" viewport={{ once: true }}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
       variants={staggerContainer}
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
     >
@@ -46,16 +72,27 @@ function PackageGrid({ items }: { items: PackageItem[] }) {
           className="rounded-2xl bg-white border border-[var(--accent-500)]/15 p-5 shadow-sm hover:border-[var(--accent-500)]/40 hover:shadow-md transition-all duration-300"
         >
           <div className="flex items-start justify-between gap-3 mb-1">
-            <h3 className="font-display font-bold text-base text-[var(--dark-text)] leading-snug">{item.category}</h3>
+            <h3 className="font-display font-bold text-base text-[var(--dark-text)] leading-snug">
+              {item.category}
+            </h3>
           </div>
           {item.note && (
-            <span className="inline-block mb-2 text-[10px] font-bold uppercase tracking-wide text-[var(--muted-text)]">{item.note}</span>
+            <span className="inline-block mb-2 text-[10px] font-bold uppercase tracking-wide text-[var(--muted-text)]">
+              {item.note}
+            </span>
           )}
-          <p className="font-black text-xl text-[var(--primary-800)] mb-3">{item.amount}</p>
+          <p className="font-black text-xl text-[var(--primary-800)] mb-3">
+            {item.amount}
+          </p>
           <ul className="space-y-1.5">
             {item.benefits.map((b) => (
-              <li key={b} className="flex items-start gap-2 text-xs text-[var(--muted-text)] leading-snug">
-                <span className="w-3.5 h-3.5 rounded-full bg-[var(--accent-500)]/20 text-[var(--accent-500)] text-[8px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <li
+                key={b}
+                className="flex items-start gap-2 text-xs text-[var(--muted-text)] leading-snug"
+              >
+                <span className="w-3.5 h-3.5 rounded-full bg-[var(--accent-500)]/20 text-[var(--accent-500)] text-[8px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                  ✓
+                </span>
                 {b}
               </li>
             ))}
@@ -66,23 +103,42 @@ function PackageGrid({ items }: { items: PackageItem[] }) {
   );
 }
 
-function RateTable({ rows }: { rows: { category: string; quantity: string; amount: string }[] }) {
+function RateTable({
+  rows,
+}: {
+  rows: { category: string; quantity: string; amount: string }[];
+}) {
   return (
     <div className="overflow-x-auto rounded-2xl border border-[var(--accent-500)]/15 bg-white shadow-sm">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-[var(--accent-500)]/15 bg-[var(--surface-100)]">
-            <th className="text-left font-display font-bold text-[var(--dark-text)] px-5 py-3">Ad Category</th>
-            <th className="text-left font-display font-bold text-[var(--dark-text)] px-5 py-3">Quantity</th>
-            <th className="text-right font-display font-bold text-[var(--dark-text)] px-5 py-3">Rate</th>
+            <th className="text-left font-display font-bold text-[var(--dark-text)] px-5 py-3">
+              Ad Category
+            </th>
+            <th className="text-left font-display font-bold text-[var(--dark-text)] px-5 py-3">
+              Quantity
+            </th>
+            <th className="text-right font-display font-bold text-[var(--dark-text)] px-5 py-3">
+              Rate
+            </th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={row.category} className={i % 2 === 1 ? "bg-[var(--surface-50)]" : ""}>
-              <td className="px-5 py-3 text-[var(--dark-text)]">{row.category}</td>
-              <td className="px-5 py-3 text-[var(--muted-text)]">{row.quantity}</td>
-              <td className="px-5 py-3 text-right font-semibold text-[var(--primary-800)]">{row.amount}</td>
+            <tr
+              key={row.category}
+              className={i % 2 === 1 ? "bg-[var(--surface-50)]" : ""}
+            >
+              <td className="px-5 py-3 text-[var(--dark-text)]">
+                {row.category}
+              </td>
+              <td className="px-5 py-3 text-[var(--muted-text)]">
+                {row.quantity}
+              </td>
+              <td className="px-5 py-3 text-right font-semibold text-[var(--primary-800)]">
+                {row.amount}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -91,7 +147,13 @@ function RateTable({ rows }: { rows: { category: string; quantity: string; amoun
   );
 }
 
-function SectionHeading({ prefix, accent }: { prefix: string; accent: string }) {
+function SectionHeading({
+  prefix,
+  accent,
+}: {
+  prefix: string;
+  accent: string;
+}) {
   return (
     <ScrollReveal className="text-center mb-10">
       <h2 className="font-display font-bold text-2xl sm:text-3xl text-[var(--dark-text)]">
@@ -104,20 +166,30 @@ function SectionHeading({ prefix, accent }: { prefix: string; accent: string }) 
 export default function SponsorsClient() {
   return (
     <div className="bg-[var(--surface-50)] min-h-screen">
-
       {/* Hero */}
       <section className="relative py-24 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 tribal-pattern-bg opacity-30" aria-hidden />
+        <div
+          className="absolute inset-0 tribal-pattern-bg opacity-30"
+          aria-hidden
+        />
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>Sponsorship</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            Partner with <span className="text-gradient-primary">APTICON 2026</span>
+            Partner with{" "}
+            <span className="text-gradient-primary">APTICON 2026</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
-            Gain unparalleled visibility among 1500+ pharmacy professionals. Support India&apos;s premier pharmacy education convention and be part of a national movement.
+            Gain unparalleled visibility among 1500+ pharmacy professionals.
+            Support India&apos;s premier pharmacy education convention and be
+            part of a national movement.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <PulseButton href="mailto:apticon2026@gmail.com" variant="accent" pulse external>
+            <PulseButton
+              href="mailto:apticon2026@gmail.com"
+              variant="accent"
+              pulse
+              external
+            >
               Enquire About Sponsorship
             </PulseButton>
             <PulseButton
@@ -143,7 +215,9 @@ export default function SponsorsClient() {
             </h2>
           </ScrollReveal>
           <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
             variants={staggerContainer}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
           >
@@ -154,8 +228,12 @@ export default function SponsorsClient() {
                 className="rounded-2xl bg-white border border-[var(--accent-500)]/15 p-6 hover:border-[var(--accent-500)]/50 hover:shadow-md transition-all duration-300 group"
               >
                 <span className="text-4xl mb-4 block">{b.icon}</span>
-                <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-2 group-hover:text-[var(--primary-800)] transition-colors">{b.title}</h3>
-                <p className="text-sm text-[var(--muted-text)] leading-relaxed">{b.desc}</p>
+                <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-2 group-hover:text-[var(--primary-800)] transition-colors">
+                  {b.title}
+                </h3>
+                <p className="text-sm text-[var(--muted-text)] leading-relaxed">
+                  {b.desc}
+                </p>
               </motion.div>
             ))}
           </motion.div>
@@ -167,12 +245,17 @@ export default function SponsorsClient() {
         <div className="container-site">
           <ScrollReveal className="text-center mb-3">
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-[var(--dark-text)]">
-              Major Event <span className="text-gradient-primary">Sponsorship</span>
+              Major Event{" "}
+              <span className="text-gradient-primary">Sponsorship</span>
             </h2>
           </ScrollReveal>
-          <p className="text-center text-xs text-[var(--muted-text)] mb-12">All rates inclusive of GST</p>
+          <p className="text-center text-xs text-[var(--muted-text)] mb-12">
+            All rates inclusive of GST
+          </p>
           <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
             variants={staggerContainer}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
           >
@@ -184,18 +267,32 @@ export default function SponsorsClient() {
               >
                 {tier.featured && (
                   <div className="mb-3">
-                    <span className="text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full bg-amber-100 text-amber-700">Most Exclusive</span>
+                    <span className="text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full bg-amber-100 text-amber-700">
+                      Most Exclusive
+                    </span>
                   </div>
                 )}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full" style={{ backgroundColor: tier.color }} />
-                  <h3 className="font-display font-black text-lg text-[var(--dark-text)]">{tier.tier}</h3>
+                  <div
+                    className="w-10 h-10 rounded-full"
+                    style={{ backgroundColor: tier.color }}
+                  />
+                  <h3 className="font-display font-black text-lg text-[var(--dark-text)]">
+                    {tier.tier}
+                  </h3>
                 </div>
-                <p className="font-black text-2xl text-[var(--primary-800)] mb-5">{tier.amount}</p>
+                <p className="font-black text-2xl text-[var(--primary-800)] mb-5">
+                  {tier.amount}
+                </p>
                 <ul className="space-y-2 flex-1">
                   {tier.benefits.map((b) => (
-                    <li key={b} className="flex items-start gap-2 text-sm text-[var(--muted-text)]">
-                      <span className="w-4 h-4 rounded-full bg-[var(--accent-500)]/20 text-[var(--accent-500)] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+                    <li
+                      key={b}
+                      className="flex items-start gap-2 text-sm text-[var(--muted-text)]"
+                    >
+                      <span className="w-4 h-4 rounded-full bg-[var(--accent-500)]/20 text-[var(--accent-500)] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                        ✓
+                      </span>
                       {b}
                     </li>
                   ))}
@@ -250,7 +347,9 @@ export default function SponsorsClient() {
       <section className="py-16 md:py-20">
         <div className="container-site">
           <SectionHeading prefix="Academic" accent="Sponsorship" />
-          <p className="text-center text-sm text-[var(--muted-text)] -mt-6 mb-10">Exclusively for universities, institutes and academic consultancies</p>
+          <p className="text-center text-sm text-[var(--muted-text)] -mt-6 mb-10">
+            Exclusively for universities, institutes and academic consultancies
+          </p>
           <PackageGrid items={ACADEMIC_SPONSORSHIP} />
         </div>
       </section>
@@ -268,9 +367,15 @@ export default function SponsorsClient() {
       <CulturalDivider variant="lotus-row" className="container-site" />
 
       <div className="py-12 text-center">
-        <p className="text-[var(--muted-text)] mb-4">For customized packages and sponsorship brochure:</p>
+        <p className="text-[var(--muted-text)] mb-4">
+          For customized packages and sponsorship brochure:
+        </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
-          <PulseButton href="mailto:apticon2026@gmail.com" variant="primary" external>
+          <PulseButton
+            href="mailto:apticon2026@gmail.com"
+            variant="primary"
+            external
+          >
             Contact: apticon2026@gmail.com
           </PulseButton>
           <PulseButton

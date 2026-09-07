@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import HeroSection      from "@/components/home/HeroSection";
+import HeroSection from "@/components/home/HeroSection";
 import HeroConceptStrip from "@/components/home/HeroConceptStrip";
-import HighlightsBar    from "@/components/home/HighlightsBar";
-import AboutPreview     from "@/components/home/AboutPreview";
-import PatronsSection   from "@/components/home/PatronsSection";
-import ThemeSection     from "@/components/home/ThemeSection";
-import SpeakerTeaser    from "@/components/home/SpeakerTeaser";
-import ScheduleTeaser   from "@/components/home/ScheduleTeaser";
-import VenuePreview     from "@/components/home/VenuePreview";
-import SponsorMarquee   from "@/components/home/SponsorMarquee";
-import CulturalDivider  from "@/components/ui/CulturalDivider";
+import HighlightsBar from "@/components/home/HighlightsBar";
+import AboutPreview from "@/components/home/AboutPreview";
+import PatronsSection from "@/components/home/PatronsSection";
+import ThemeSection from "@/components/home/ThemeSection";
+import SpeakerTeaser from "@/components/home/SpeakerTeaser";
+import ScheduleTeaser from "@/components/home/ScheduleTeaser";
+import VenuePreview from "@/components/home/VenuePreview";
+import SponsorMarquee from "@/components/home/SponsorMarquee";
+import CulturalDivider from "@/components/ui/CulturalDivider";
 
 export const metadata: Metadata = {
   title: "APTICON 2026 | 28th Annual National Convention — Raipur",
@@ -17,7 +17,8 @@ export const metadata: Metadata = {
     "APTICON 2026 — 28th Annual National Convention of the Association of Pharmaceutical Teachers of India. Theme: Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat. 24–25 October 2026, Raipur, Chhattisgarh.",
   openGraph: {
     title: "APTICON 2026 — 28th Annual National Convention",
-    description: "Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat. 24–25 October 2026, Raipur, Chhattisgarh.",
+    description:
+      "Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat. 24–25 October 2026, Raipur, Chhattisgarh.",
     url: "https://apticon2026.org",
     type: "website",
   },
@@ -26,29 +27,30 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Event",
-  "name": "APTICON 2026 — 28th Annual National Convention",
-  "description": "Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat",
-  "startDate": "2026-10-24T09:00:00+05:30",
-  "endDate": "2026-10-25T21:00:00+05:30",
-  "eventStatus": "https://schema.org/EventScheduled",
-  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-  "location": {
+  name: "APTICON 2026 — 28th Annual National Convention",
+  description:
+    "Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat",
+  startDate: "2026-10-24T09:00:00+05:30",
+  endDate: "2026-10-25T21:00:00+05:30",
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  location: {
     "@type": "Place",
-    "name": "Pt. Deendayal Upadhyay Auditorium",
-    "address": {
+    name: "Pt. Deendayal Upadhyay Auditorium",
+    address: {
       "@type": "PostalAddress",
-      "streetAddress": "G.E. Road",
-      "addressLocality": "Raipur",
-      "addressRegion": "Chhattisgarh",
-      "addressCountry": "IN",
+      streetAddress: "G.E. Road",
+      addressLocality: "Raipur",
+      addressRegion: "Chhattisgarh",
+      addressCountry: "IN",
     },
   },
-  "organizer": {
+  organizer: {
     "@type": "Organization",
-    "name": "APTI Chhattisgarh State Branch",
-    "email": "apticon2026@gmail.com",
+    name: "APTI Chhattisgarh State Branch",
+    email: "apticon2026@gmail.com",
   },
-  "url": "https://apticon2026.org",
+  url: "https://apticon2026.org",
 };
 
 export default function HomePage() {

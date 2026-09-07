@@ -40,14 +40,15 @@ export default function SpeakerTeaser() {
             variants={fadeUp}
             className="mt-5 font-display text-3xl font-bold text-[var(--dark-text)] sm:text-4xl md:text-5xl"
           >
-            Distinguished <span className="text-gradient-primary">Speakers</span>
+            Distinguished{" "}
+            <span className="text-gradient-primary">Speakers</span>
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="mx-auto mt-4 max-w-xl text-sm text-[var(--muted-text)] sm:text-base"
           >
-            Speaker announcements will be updated soon. Stay tuned for an outstanding
-            lineup of pharmacy educators and industry leaders.
+            Speaker announcements will be updated soon. Stay tuned for an
+            outstanding lineup of pharmacy educators and industry leaders.
           </motion.p>
         </motion.div>
 

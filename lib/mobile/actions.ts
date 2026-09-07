@@ -1,10 +1,16 @@
 import type { NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
 import Registration from "@/models/Registration";
-import MobileActionLog, { DAY_SCOPED_ACTION_TYPES, type MobileActionType } from "@/models/MobileActionLog";
+import MobileActionLog, {
+  DAY_SCOPED_ACTION_TYPES,
+  type MobileActionType,
+} from "@/models/MobileActionLog";
 import { logAudit } from "@/lib/audit";
 import type { Role } from "@/lib/auth";
-import { getAttendeeStatus, type AttendeeStatusSnapshot } from "@/lib/mobile/status";
+import {
+  getAttendeeStatus,
+  type AttendeeStatusSnapshot,
+} from "@/lib/mobile/status";
 
 export class MobileActionError extends Error {
   status: number;
@@ -25,7 +31,12 @@ const ACTION_LABELS: Record<MobileActionType, string> = {
 };
 
 function isDuplicateKeyError(err: unknown): boolean {
-  return typeof err === "object" && err !== null && "code" in err && (err as { code: unknown }).code === 11000;
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    (err as { code: unknown }).code === 11000
+  );
 }
 
 export interface PerformActionInput {
@@ -38,25 +49,36 @@ export interface PerformActionInput {
   request?: NextRequest | Request;
 }
 
-export async function performAction(input: PerformActionInput): Promise<AttendeeStatusSnapshot> {
+export async function performAction(
+  input: PerformActionInput,
+): Promise<AttendeeStatusSnapshot> {
   await connectDB();
-  const { registrationId, actionType, staffId, staffRole, device, request } = input;
+  const { registrationId, actionType, staffId, staffRole, device, request } =
+    input;
 
-  const registration = await Registration.findById(registrationId).select("_id status").lean();
+  const registration = await Registration.findById(registrationId)
+    .select("_id status")
+    .lean();
   if (!registration) throw new MobileActionError("Attendee not found", 404);
   if (registration.status !== "approved") {
     throw new MobileActionError(
       `This attendee's registration is not approved yet (status: ${registration.status}). Actions cannot be recorded until payment is confirmed.`,
-      409
+      409,
     );
   }
 
   const isDayScoped = DAY_SCOPED_ACTION_TYPES.includes(actionType);
   if (isDayScoped && (!input.day || input.day < 1)) {
-    throw new MobileActionError(`${ACTION_LABELS[actionType]} requires a valid conference day`, 400);
+    throw new MobileActionError(
+      `${ACTION_LABELS[actionType]} requires a valid conference day`,
+      400,
+    );
   }
   if (!isDayScoped && input.day) {
-    throw new MobileActionError(`${ACTION_LABELS[actionType]} is not tracked per day`, 400);
+    throw new MobileActionError(
+      `${ACTION_LABELS[actionType]} is not tracked per day`,
+      400,
+    );
   }
   const day = isDayScoped ? (input.day as number) : 0;
 
@@ -70,14 +92,20 @@ export async function performAction(input: PerformActionInput): Promise<Attendee
     });
   } catch (err) {
     if (isDuplicateKeyError(err)) {
-      const existing = await MobileActionLog.findOne({ registration: registrationId, actionType, day })
+      const existing = await MobileActionLog.findOne({
+        registration: registrationId,
+        actionType,
+        day,
+      })
         .populate<{ staff: { name: string } }>("staff", "name")
         .lean();
-      const when = existing ? new Date(existing.createdAt).toLocaleString() : "earlier";
+      const when = existing
+        ? new Date(existing.createdAt).toLocaleString()
+        : "earlier";
       const by = existing?.staff?.name ?? "another staff member";
       throw new MobileActionError(
         `${ACTION_LABELS[actionType]} already recorded for this attendee (${when}, by ${by}).`,
-        409
+        409,
       );
     }
     throw err;
@@ -104,7 +132,9 @@ export interface ActionHistoryEntry {
   by: string;
 }
 
-export async function getActionHistory(registrationId: string): Promise<ActionHistoryEntry[]> {
+export async function getActionHistory(
+  registrationId: string,
+): Promise<ActionHistoryEntry[]> {
   await connectDB();
   const actions = await MobileActionLog.find({ registration: registrationId })
     .populate<{ staff: { name: string } }>("staff", "name")

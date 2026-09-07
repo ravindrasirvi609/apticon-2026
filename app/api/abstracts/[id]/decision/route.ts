@@ -9,22 +9,33 @@ import { sendMail, abstractDecisionEmail } from "@/lib/email";
 import { generateAbstractCode } from "@/lib/abstract-code";
 import { sendWhatsAppNotification } from "@/lib/whatsapp";
 
-export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+export async function PATCH(
+  request: NextRequest,
+  ctx: { params: Promise<{ id: string }> },
+) {
   try {
     const actor = await requireAnyRole("super_admin", "editorial");
     const { id } = await ctx.params;
-    if (!mongoose.isValidObjectId(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    if (!mongoose.isValidObjectId(id))
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
     const body = await request.json().catch(() => null);
     const parsed = abstractDecisionSchema.safeParse(body);
-    if (!parsed.success) return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+    if (!parsed.success)
+      return NextResponse.json(
+        { error: "Invalid input", details: parsed.error.flatten() },
+        { status: 400 },
+      );
 
     await connectDB();
     const abs = await Abstract.findById(id);
     if (!abs) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
     if (abs.finalDecision === "accepted" || abs.finalDecision === "rejected") {
-      return NextResponse.json({ error: "A decision has already been recorded for this abstract." }, { status: 409 });
+      return NextResponse.json(
+        { error: "A decision has already been recorded for this abstract." },
+        { status: 409 },
+      );
     }
 
     const before = { status: abs.status, finalDecision: abs.finalDecision };
@@ -33,12 +44,18 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     abs.finalDecisionBy = new mongoose.Types.ObjectId(actor.uid);
     abs.finalDecisionAt = new Date();
     abs.finalDecisionNote = parsed.data.note;
-    abs.status = parsed.data.decision === "revision_requested" ? "revision_requested" : parsed.data.decision;
+    abs.status =
+      parsed.data.decision === "revision_requested"
+        ? "revision_requested"
+        : parsed.data.decision;
 
     if (parsed.data.decision === "accepted" && parsed.data.presentationType) {
       abs.presentationType = parsed.data.presentationType;
       if (!abs.abstractCode) {
-        abs.abstractCode = await generateAbstractCode(parsed.data.presentationType, abs.theme);
+        abs.abstractCode = await generateAbstractCode(
+          parsed.data.presentationType,
+          abs.theme,
+        );
       }
     }
 
@@ -50,7 +67,12 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
       action: "abstract.decision",
       resourceType: "abstract",
       resourceId: abs._id.toString(),
-      details: { before, after: { status: abs.status, decision: parsed.data.decision }, note: parsed.data.note, submissionCode: abs.submissionCode },
+      details: {
+        before,
+        after: { status: abs.status, decision: parsed.data.decision },
+        note: parsed.data.note,
+        submissionCode: abs.submissionCode,
+      },
       request,
     });
 
@@ -61,10 +83,20 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
       parsed.data.decision,
       parsed.data.note,
       abs.abstractCode,
-      abs.presentationType
+      abs.presentationType,
     );
     await sendMail({ to: abs.email, subject, html });
-    await sendWhatsAppNotification(abs.phone, "abstract_decision", [abs.presentingAuthor, parsed.data.decision, abs.submissionCode, `${process.env.NEXT_PUBLIC_BASE_URL ?? "https://apticon-2026.vercel.app"}/abstracts/status`], abs._id.toString());
+    await sendWhatsAppNotification(
+      abs.phone,
+      "abstract_decision",
+      [
+        abs.presentingAuthor,
+        parsed.data.decision,
+        abs.submissionCode,
+        `${process.env.NEXT_PUBLIC_BASE_URL ?? "https://apticon-2026.vercel.app"}/abstracts/status`,
+      ],
+      abs._id.toString(),
+    );
 
     return NextResponse.json({ ok: true });
   } catch (err) {

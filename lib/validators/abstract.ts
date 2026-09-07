@@ -14,7 +14,7 @@ export const abstractSubmitSchema = z.object({
       z.object({
         name: z.string().min(2).max(200).trim(),
         institution: z.string().min(2).max(300).trim(),
-      })
+      }),
     )
     .max(MAX_CO_AUTHORS)
     .default([]),
@@ -25,7 +25,10 @@ export const abstractSubmitSchema = z.object({
     .string()
     .trim()
     .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
-  aptiMemberId: z.string().trim().min(3, "APTI Membership ID is required to submit an abstract"),
+  aptiMemberId: z
+    .string()
+    .trim()
+    .min(3, "APTI Membership ID is required to submit an abstract"),
   theme: z.string().refine((v) => ABSTRACT_THEMES.includes(v), "Invalid theme"),
   type: z.enum(["review", "research"]),
   abstract: z
@@ -33,18 +36,33 @@ export const abstractSubmitSchema = z.object({
     .min(100)
     .max(3800)
     .trim()
-    .refine(withinAbstractWordLimit, `Abstract must not exceed ${MAX_ABSTRACT_WORDS} words`),
+    .refine(
+      withinAbstractWordLimit,
+      `Abstract must not exceed ${MAX_ABSTRACT_WORDS} words`,
+    ),
   preferredPresentationType: z.enum(["oral", "poster"]).optional(),
   keywords: z
     .string()
     .min(3)
     .max(300)
-    .transform((v) => v.split(",").map((s) => s.trim()).filter(Boolean))
-    .refine((arr) => arr.length >= 1 && arr.length <= 8, "Provide 1–8 keywords"),
+    .transform((v) =>
+      v
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    )
+    .refine(
+      (arr) => arr.length >= 1 && arr.length <= 8,
+      "Provide 1–8 keywords",
+    ),
   fileKey: z.string().min(1, "Please attach your abstract file"),
   fileName: z.string().min(1),
-  graphicalAbstractKey: z.string().min(1, "Please attach your graphical abstract"),
-  graphicalAbstractName: z.string().min(1, "Please provide the graphical abstract filename"),
+  graphicalAbstractKey: z
+    .string()
+    .min(1, "Please attach your graphical abstract"),
+  graphicalAbstractName: z
+    .string()
+    .min(1, "Please provide the graphical abstract filename"),
 });
 
 export const abstractStatusLookupSchema = z.object({
@@ -60,7 +78,10 @@ export const abstractResubmitSchema = z.object({
     .min(100)
     .max(3800)
     .trim()
-    .refine(withinAbstractWordLimit, `Abstract must not exceed ${MAX_ABSTRACT_WORDS} words`),
+    .refine(
+      withinAbstractWordLimit,
+      `Abstract must not exceed ${MAX_ABSTRACT_WORDS} words`,
+    ),
   fileKey: z.string().optional(),
   fileName: z.string().optional(),
   graphicalAbstractKey: z.string().optional(),
@@ -83,7 +104,9 @@ export const abstractDecisionSchema = z
   });
 
 export type AbstractSubmitInput = z.infer<typeof abstractSubmitSchema>;
-export type AbstractStatusLookupInput = z.infer<typeof abstractStatusLookupSchema>;
+export type AbstractStatusLookupInput = z.infer<
+  typeof abstractStatusLookupSchema
+>;
 export type AbstractResubmitInput = z.infer<typeof abstractResubmitSchema>;
 export type AbstractAssignInput = z.infer<typeof abstractAssignSchema>;
 export type AbstractDecisionInput = z.infer<typeof abstractDecisionSchema>;

@@ -16,16 +16,19 @@ export default function FloatingParticles({ count = 8 }: { count?: number }) {
     setParticles(
       Array.from({ length: count }, (_, i) => ({
         id: i,
-        left:     `${10 + (i / count) * 82}%`,
+        left: `${10 + (i / count) * 82}%`,
         duration: `${8 + (i % 5) * 2}s`,
-        delay:    `${(i * 1.3) % 10}s`,
-        size:     `${20 + (i % 3) * 10}px`,
-      }))
+        delay: `${(i * 1.3) % 10}s`,
+        size: `${20 + (i % 3) * 10}px`,
+      })),
     );
   }, [count]);
 
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+    >
       {particles.map((p) => (
         <img
           key={p.id}
@@ -33,12 +36,12 @@ export default function FloatingParticles({ count = 8 }: { count?: number }) {
           alt=""
           className="lotus-particle absolute opacity-40"
           style={{
-            left:             p.left,
-            bottom:           "-10%",
-            width:            p.size,
-            height:           p.size,
+            left: p.left,
+            bottom: "-10%",
+            width: p.size,
+            height: p.size,
             animationDuration: p.duration,
-            animationDelay:   p.delay,
+            animationDelay: p.delay,
           }}
         />
       ))}

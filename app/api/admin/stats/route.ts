@@ -11,17 +11,47 @@ export async function GET() {
     await requireRole("super_admin");
     await connectDB();
 
-    const [byStatusAbs, byTheme, byStatusReg, byPaymentStatus, totalUsers, reviewersActive, editorialActive, totalReviews, recentAbs, recentReg, aptiMembershipRegistrations] = await Promise.all([
+    const [
+      byStatusAbs,
+      byTheme,
+      byStatusReg,
+      byPaymentStatus,
+      totalUsers,
+      reviewersActive,
+      editorialActive,
+      totalReviews,
+      recentAbs,
+      recentReg,
+      aptiMembershipRegistrations,
+    ] = await Promise.all([
       Abstract.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
-      Abstract.aggregate([{ $group: { _id: "$theme", count: { $sum: 1 } } }, { $sort: { count: -1 } }]),
-      Registration.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
-      Registration.aggregate([{ $match: { paymentStatus: { $ne: null } } }, { $group: { _id: "$paymentStatus", count: { $sum: 1 } } }]),
+      Abstract.aggregate([
+        { $group: { _id: "$theme", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+      ]),
+      Registration.aggregate([
+        { $group: { _id: "$status", count: { $sum: 1 } } },
+      ]),
+      Registration.aggregate([
+        { $match: { paymentStatus: { $ne: null } } },
+        { $group: { _id: "$paymentStatus", count: { $sum: 1 } } },
+      ]),
       User.countDocuments({}),
       User.countDocuments({ role: "reviewer", isActive: true }),
       User.countDocuments({ role: "editorial", isActive: true }),
       Review.countDocuments({}),
-      Abstract.find({}).sort({ createdAt: -1 }).limit(5).select("submissionCode title presentingAuthor status createdAt").lean(),
-      Registration.find({}).sort({ createdAt: -1 }).limit(5).select("registrationCode fullName email status paymentStatus feeAmount createdAt").lean(),
+      Abstract.find({})
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .select("submissionCode title presentingAuthor status createdAt")
+        .lean(),
+      Registration.find({})
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .select(
+          "registrationCode fullName email status paymentStatus feeAmount createdAt",
+        )
+        .lean(),
       Registration.countDocuments({ includesAptiMembership: true }),
     ]);
 

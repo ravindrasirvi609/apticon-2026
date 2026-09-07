@@ -25,7 +25,17 @@ import { Button } from "@/components/ui/shadcn/button";
 export interface NavItem {
   href: string;
   label: string;
-  icon: "dashboard" | "delegates" | "registrations" | "groups" | "abstracts" | "users" | "audit" | "settings" | "checkin" | "aptiMembers";
+  icon:
+    | "dashboard"
+    | "delegates"
+    | "registrations"
+    | "groups"
+    | "abstracts"
+    | "users"
+    | "audit"
+    | "settings"
+    | "checkin"
+    | "aptiMembers";
 }
 
 interface Props {
@@ -60,7 +70,14 @@ const NAV_ICONS = {
   aptiMembers: BadgeCheck,
 };
 
-export default function ConsoleShell({ role, brand, brandSub, nav, user, children }: Props) {
+export default function ConsoleShell({
+  role,
+  brand,
+  brandSub,
+  nav,
+  user,
+  children,
+}: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -79,12 +96,22 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
       {/* ─── Sidebar (desktop) ─── */}
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 flex-col bg-white border-r border-[var(--accent-500)]/20 z-40 print:hidden">
         <div className="p-6 border-b border-[var(--accent-500)]/20">
-          <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-12 w-auto" />
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-1">{brandSub}</div>
+          <Image
+            src="/logo/APTICON_LOGO.png"
+            alt={brand}
+            width={1536}
+            height={1024}
+            className="h-12 w-auto"
+          />
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-1">
+            {brandSub}
+          </div>
         </div>
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {nav.map((item) => {
-            const active = pathname === item.href || (!CONSOLE_ROOTS.has(item.href) && pathname.startsWith(item.href));
+            const active =
+              pathname === item.href ||
+              (!CONSOLE_ROOTS.has(item.href) && pathname.startsWith(item.href));
             const Icon = NAV_ICONS[item.icon];
             return (
               <Link
@@ -94,7 +121,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                   active
                     ? "bg-[var(--primary-800)] text-white"
-                    : "text-[var(--dark-text)] hover:bg-[var(--surface-100)] hover:text-[var(--primary-800)]"
+                    : "text-[var(--dark-text)] hover:bg-[var(--surface-100)] hover:text-[var(--primary-800)]",
                 )}
               >
                 <Icon className="w-4 h-4" />
@@ -110,10 +137,17 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-semibold truncate">{user.name}</div>
-              <div className="text-xs text-[var(--muted-text)] truncate">{user.email}</div>
+              <div className="text-xs text-[var(--muted-text)] truncate">
+                {user.email}
+              </div>
             </div>
           </div>
-          <Button variant="ghost" size="sm" className="w-full justify-start mt-1" onClick={logout}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start mt-1"
+            onClick={logout}
+          >
             <LogOut className="w-4 h-4" />
             Sign out
           </Button>
@@ -123,24 +157,56 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
       {/* ─── Mobile top bar ─── */}
       <div className="lg:hidden sticky top-0 z-40 bg-white border-b border-[var(--accent-500)]/20 px-4 h-14 flex items-center justify-between print:hidden">
         <div>
-          <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-9 w-auto" />
-          <div className="text-[9px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-0.5">{brandSub}</div>
+          <Image
+            src="/logo/APTICON_LOGO.png"
+            alt={brand}
+            width={1536}
+            height={1024}
+            className="h-9 w-auto"
+          />
+          <div className="text-[9px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-0.5">
+            {brandSub}
+          </div>
         </div>
-        <Button variant="ghost" size="icon" onClick={() => setOpen(true)} aria-label="Open menu">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setOpen(true)}
+          aria-label="Open menu"
+        >
           <Menu className="w-5 h-5" />
         </Button>
       </div>
 
       {/* Mobile sheet */}
       {open && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setOpen(false)}>
-          <div className="absolute left-0 top-0 bottom-0 w-72 bg-white flex flex-col" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="lg:hidden fixed inset-0 z-50 bg-black/50"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="absolute left-0 top-0 bottom-0 w-72 bg-white flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-4 border-b border-[var(--accent-500)]/20 flex items-center justify-between">
               <div>
-                <Image src="/logo/APTICON_LOGO.png" alt={brand} width={1536} height={1024} className="h-9 w-auto" />
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-0.5">{brandSub}</div>
+                <Image
+                  src="/logo/APTICON_LOGO.png"
+                  alt={brand}
+                  width={1536}
+                  height={1024}
+                  className="h-9 w-auto"
+                />
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-text)] mt-0.5">
+                  {brandSub}
+                </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Close">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpen(false)}
+                aria-label="Close"
+              >
                 <X className="w-5 h-5" />
               </Button>
             </div>
@@ -157,7 +223,7 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
                       "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium",
                       active
                         ? "bg-[var(--primary-800)] text-white"
-                        : "text-[var(--dark-text)] hover:bg-[var(--surface-100)]"
+                        : "text-[var(--dark-text)] hover:bg-[var(--surface-100)]",
                     )}
                   >
                     <Icon className="w-4 h-4" />
@@ -172,11 +238,20 @@ export default function ConsoleShell({ role, brand, brandSub, nav, user, childre
                   {initial}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold truncate">{user.name}</div>
-                  <div className="text-xs text-[var(--muted-text)] truncate">{user.email}</div>
+                  <div className="text-sm font-semibold truncate">
+                    {user.name}
+                  </div>
+                  <div className="text-xs text-[var(--muted-text)] truncate">
+                    {user.email}
+                  </div>
                 </div>
               </div>
-              <Button variant="ghost" size="sm" className="w-full justify-start mt-1" onClick={logout}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start mt-1"
+                onClick={logout}
+              >
                 <LogOut className="w-4 h-4" />
                 Sign out
               </Button>

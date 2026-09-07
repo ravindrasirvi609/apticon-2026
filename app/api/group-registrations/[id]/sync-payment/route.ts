@@ -11,25 +11,42 @@ import { syncGroupRazorpayRegistration } from "@/lib/registration-payment";
  * path if an earlier capture created some delegates' registrations but not all — safe to run
  * as many times as needed since it only ever processes delegates still missing a registration.
  */
-export async function POST(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+export async function POST(
+  request: NextRequest,
+  ctx: { params: Promise<{ id: string }> },
+) {
   try {
     const s = await requireAnyRole("super_admin", "editorial");
 
     const { id } = await ctx.params;
-    if (!mongoose.isValidObjectId(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    if (!mongoose.isValidObjectId(id))
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
     const limit = rateLimit(`razorpay-group-sync:${id}`, 10, 60_000);
-    if (!limit.ok) return NextResponse.json({ error: "Too many sync attempts. Please wait a minute." }, { status: 429 });
+    if (!limit.ok)
+      return NextResponse.json(
+        { error: "Too many sync attempts. Please wait a minute." },
+        { status: 429 },
+      );
 
     await connectDB();
     const group = await GroupRegistration.findById(id);
-    if (!group) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!group)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
     if (group.paymentMode !== "razorpay" || !group.razorpayOrderId) {
-      return NextResponse.json({ error: "This group registration has no Razorpay order to sync." }, { status: 400 });
+      return NextResponse.json(
+        { error: "This group registration has no Razorpay order to sync." },
+        { status: 400 },
+      );
     }
 
-    const result = await syncGroupRazorpayRegistration(group, request, { uid: s.uid, role: s.role });
-    const fresh = await GroupRegistration.findById(id).select("status paymentStatus paymentError").lean();
+    const result = await syncGroupRazorpayRegistration(group, request, {
+      uid: s.uid,
+      role: s.role,
+    });
+    const fresh = await GroupRegistration.findById(id)
+      .select("status paymentStatus paymentError")
+      .lean();
 
     return NextResponse.json({
       ok: true,
@@ -42,6 +59,9 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
   } catch (err) {
     if (err instanceof AuthError) return authErrorResponse(err);
     console.error("[razorpay] group payment sync failed:", err);
-    return NextResponse.json({ error: "Could not reach Razorpay. Please try again shortly." }, { status: 502 });
+    return NextResponse.json(
+      { error: "Could not reach Razorpay. Please try again shortly." },
+      { status: 502 },
+    );
   }
 }

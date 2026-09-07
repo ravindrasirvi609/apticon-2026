@@ -13,10 +13,14 @@ interface Props {
 }
 
 const variantStyles = {
-  accent:  "bg-[var(--accent-400)] text-[var(--dark-text)] hover:bg-[var(--accent-300)] border-2 border-[var(--accent-400)]",
-  primary: "bg-[var(--primary-800)] text-white hover:bg-[var(--primary-700)] border-2 border-[var(--primary-800)]",
-  outline: "bg-transparent text-[var(--primary-800)] border-2 border-[var(--primary-800)] hover:bg-[var(--primary-800)] hover:text-white",
-  "outline-light": "bg-transparent text-white border-2 border-white/80 hover:bg-white hover:text-[var(--primary-800)]",
+  accent:
+    "bg-[var(--accent-400)] text-[var(--dark-text)] hover:bg-[var(--accent-300)] border-2 border-[var(--accent-400)]",
+  primary:
+    "bg-[var(--primary-800)] text-white hover:bg-[var(--primary-700)] border-2 border-[var(--primary-800)]",
+  outline:
+    "bg-transparent text-[var(--primary-800)] border-2 border-[var(--primary-800)] hover:bg-[var(--primary-800)] hover:text-white",
+  "outline-light":
+    "bg-transparent text-white border-2 border-white/80 hover:bg-white hover:text-[var(--primary-800)]",
 };
 
 export default function PulseButton({

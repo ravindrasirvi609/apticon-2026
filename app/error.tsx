@@ -14,7 +14,10 @@ export default function GlobalError({ error, reset }: ErrorProps) {
 
   return (
     <div className="relative min-h-[70dvh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-      <div className="absolute inset-0 tribal-pattern-bg opacity-20" aria-hidden />
+      <div
+        className="absolute inset-0 tribal-pattern-bg opacity-20"
+        aria-hidden
+      />
 
       <div className="relative z-10">
         <p className="font-display font-black text-[6rem] sm:text-[8rem] leading-none text-gradient-primary select-none">
@@ -24,7 +27,8 @@ export default function GlobalError({ error, reset }: ErrorProps) {
           Something went wrong
         </h1>
         <p className="text-[var(--muted-text)] max-w-sm mx-auto mb-8 text-sm">
-          An unexpected error occurred. Please try again or contact us if the problem persists.
+          An unexpected error occurred. Please try again or contact us if the
+          problem persists.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">

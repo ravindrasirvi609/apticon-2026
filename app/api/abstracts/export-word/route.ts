@@ -62,7 +62,9 @@ function bodyRuns(text: string): TextRun[] {
     "Conclusion",
   ];
   // Longest first so "Materials and Methods" wins over "Methods"
-  const escaped = LABELS.map((l) => l.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).sort((a, b) => b.length - a.length);
+  const escaped = LABELS.map((l) =>
+    l.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  ).sort((a, b) => b.length - a.length);
   const rx = new RegExp(`(^|[\\s.;])(${escaped.join("|")})\\s*:\\s*`, "g");
 
   const runs: TextRun[] = [];
@@ -73,15 +75,25 @@ function bodyRuns(text: string): TextRun[] {
     const labelStart = m.index + preLen;
     // Push everything before the label
     if (labelStart > last) {
-      runs.push(new TextRun({ text: cleaned.slice(last, labelStart), font: FONT, size: pt(10) }));
+      runs.push(
+        new TextRun({
+          text: cleaned.slice(last, labelStart),
+          font: FONT,
+          size: pt(10),
+        }),
+      );
     }
     // Bold label with trailing colon + space
-    runs.push(new TextRun({ text: `${m[2]}:`, font: FONT, size: pt(10), bold: true }));
+    runs.push(
+      new TextRun({ text: `${m[2]}:`, font: FONT, size: pt(10), bold: true }),
+    );
     runs.push(new TextRun({ text: " ", font: FONT, size: pt(10) }));
     last = rx.lastIndex;
   }
   if (last < cleaned.length) {
-    runs.push(new TextRun({ text: cleaned.slice(last), font: FONT, size: pt(10) }));
+    runs.push(
+      new TextRun({ text: cleaned.slice(last), font: FONT, size: pt(10) }),
+    );
   }
   return runs;
 }
@@ -104,7 +116,9 @@ function formatAuthorLine(a: AbstractDoc): string {
   const presenter = (a.presentingAuthor || "").trim();
   const presenterInstitution = (a.institution || "").trim();
   if (presenter) {
-    parts.push(`${presenter}*${presenterInstitution ? ` (${presenterInstitution})` : ""}`);
+    parts.push(
+      `${presenter}*${presenterInstitution ? ` (${presenterInstitution})` : ""}`,
+    );
   }
   for (const co of a.coAuthors ?? []) {
     const name = (co.name || "").trim();
@@ -131,7 +145,7 @@ function buildAbstractSection(a: AbstractDoc, index: number): Paragraph[] {
           bold: true,
         }),
       ],
-    })
+    }),
   );
 
   // Title — bold, uppercase, centered
@@ -147,7 +161,7 @@ function buildAbstractSection(a: AbstractDoc, index: number): Paragraph[] {
           bold: true,
         }),
       ],
-    })
+    }),
   );
 
   // Authors — centered, each author's institution printed inline right after their name
@@ -162,7 +176,7 @@ function buildAbstractSection(a: AbstractDoc, index: number): Paragraph[] {
           size: pt(10),
         }),
       ],
-    })
+    }),
   );
 
   // "Abstract:" label — bold, left-aligned, above two-column body
@@ -178,7 +192,7 @@ function buildAbstractSection(a: AbstractDoc, index: number): Paragraph[] {
           bold: true,
         }),
       ],
-    })
+    }),
   );
 
   // Body — justified, with bolded inline section labels
@@ -187,7 +201,7 @@ function buildAbstractSection(a: AbstractDoc, index: number): Paragraph[] {
       alignment: AlignmentType.JUSTIFIED,
       spacing: { after: pt(6), line: 240 },
       children: bodyRuns(a.abstract || ""),
-    })
+    }),
   );
 
   return paras;
@@ -197,7 +211,9 @@ async function loadAbstracts(): Promise<AbstractDoc[]> {
   await connectDB();
   const items = await Abstract.find({})
     .sort({ submissionCode: 1, createdAt: 1 })
-    .select("submissionCode title coAuthors presentingAuthor institution abstract theme type")
+    .select(
+      "submissionCode title coAuthors presentingAuthor institution abstract theme type",
+    )
     .lean();
   return items.map((d) => ({
     submissionCode: d.submissionCode,
@@ -235,7 +251,12 @@ function makeFooter(): Footer {
       new Paragraph({
         alignment: AlignmentType.CENTER,
         border: {
-          top: { style: BorderStyle.SINGLE, size: 8, color: "000000", space: 4 },
+          top: {
+            style: BorderStyle.SINGLE,
+            size: 8,
+            color: "000000",
+            space: 4,
+          },
         },
         children: [
           new TextRun({ text: "", font: FONT, size: pt(10) }),
@@ -277,7 +298,7 @@ export async function GET(request: NextRequest) {
             italics: true,
           }),
         ],
-      })
+      }),
     );
   }
 
@@ -340,7 +361,8 @@ export async function GET(request: NextRequest) {
   return new NextResponse(new Uint8Array(buffer), {
     status: 200,
     headers: {
-      "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "Content-Type":
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "Content-Disposition": `attachment; filename="${filename}"`,
       "Cache-Control": "no-store",
       "Content-Length": String(buffer.length),

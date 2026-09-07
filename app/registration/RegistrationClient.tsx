@@ -10,22 +10,28 @@ import RegistrationForm from "@/components/registration/RegistrationForm";
 
 export default function RegistrationClient() {
   const scrollToRegistrationForm = () => {
-    document.getElementById("registration-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document
+      .getElementById("registration-form")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <div className="bg-[var(--surface-50)] min-h-screen">
-
       {/* Hero */}
       <section className="relative py-24 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 tribal-pattern-bg opacity-30" aria-hidden />
+        <div
+          className="absolute inset-0 tribal-pattern-bg opacity-30"
+          aria-hidden
+        />
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>Registration</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            Register for <span className="text-gradient-primary">APTICON 2026</span>
+            Register for{" "}
+            <span className="text-gradient-primary">APTICON 2026</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
-            Join 1500+ pharmacy educators and researchers at India's premier pharmaceutical education convention.
+            Join 1500+ pharmacy educators and researchers at India's premier
+            pharmaceutical education convention.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <button
@@ -44,7 +50,9 @@ export default function RegistrationClient() {
               </Button>
             </Link>
             <Link href="/registration/group">
-              <Button variant="outline" size="sm">Registering 10+ delegates? Use Group Registration</Button>
+              <Button variant="outline" size="sm">
+                Registering 10+ delegates? Use Group Registration
+              </Button>
             </Link>
           </div>
         </div>
@@ -59,7 +67,9 @@ export default function RegistrationClient() {
             <h2 className="font-display font-bold text-2xl sm:text-3xl text-[var(--dark-text)] mb-2">
               Registration Fees
             </h2>
-            <p className="text-[var(--muted-text)] text-sm">Register early to avail discounted rates.</p>
+            <p className="text-[var(--muted-text)] text-sm">
+              Register early to avail discounted rates.
+            </p>
           </ScrollReveal>
           <ScrollReveal>
             <FeeTable />
@@ -77,7 +87,10 @@ export default function RegistrationClient() {
               <h2 className="font-display font-bold text-2xl sm:text-3xl text-[var(--dark-text)] mb-2">
                 Registration Form
               </h2>
-              <p className="text-[var(--muted-text)] text-sm">Fields marked with <span className="text-red-500">*</span> are required.</p>
+              <p className="text-[var(--muted-text)] text-sm">
+                Fields marked with <span className="text-red-500">*</span> are
+                required.
+              </p>
             </ScrollReveal>
             <ScrollReveal>
               <div className="rounded-2xl bg-white border border-[var(--accent-500)]/20 shadow-sm p-6 md:p-8">

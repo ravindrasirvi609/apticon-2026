@@ -36,7 +36,32 @@ interface FormData {
   remarks: string;
 }
 
-const STATES = ["Andhra Pradesh","Assam","Bihar","Chhattisgarh","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu & Kashmir","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Odisha","Punjab","Rajasthan","Tamil Nadu","Telangana","Uttar Pradesh","Uttarakhand","West Bengal","Other"];
+const STATES = [
+  "Andhra Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Delhi",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jammu & Kashmir",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Tamil Nadu",
+  "Telangana",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+  "Other",
+];
 
 const DESIGNATIONS = [
   "Vice Chancellor",
@@ -47,22 +72,48 @@ const DESIGNATIONS = [
   "Professionals / Consultants",
 ];
 
-type RazorpayResponse = { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string };
+type RazorpayResponse = {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+};
 type RazorpayOptions = {
-  key: string; amount: number; currency: string; name: string; description: string; order_id: string;
-  prefill: { name: string; email: string; contact: string }; theme: { color: string };
-  modal: { ondismiss: () => void }; handler: (response: RazorpayResponse) => void;
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  prefill: { name: string; email: string; contact: string };
+  theme: { color: string };
+  modal: { ondismiss: () => void };
+  handler: (response: RazorpayResponse) => void;
 };
 
 declare global {
-  interface Window { Razorpay?: new (options: RazorpayOptions) => { open: () => void; on: (event: string, callback: () => void) => void }; }
+  interface Window {
+    Razorpay?: new (options: RazorpayOptions) => {
+      open: () => void;
+      on: (event: string, callback: () => void) => void;
+    };
+  }
 }
 
 function loadRazorpayCheckout() {
   if (window.Razorpay) return Promise.resolve();
   return new Promise<void>((resolve, reject) => {
-    const existing = document.querySelector<HTMLScriptElement>('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
-    if (existing) { existing.addEventListener("load", () => resolve(), { once: true }); existing.addEventListener("error", () => reject(new Error("Could not load Razorpay")), { once: true }); return; }
+    const existing = document.querySelector<HTMLScriptElement>(
+      'script[src="https://checkout.razorpay.com/v1/checkout.js"]',
+    );
+    if (existing) {
+      existing.addEventListener("load", () => resolve(), { once: true });
+      existing.addEventListener(
+        "error",
+        () => reject(new Error("Could not load Razorpay")),
+        { once: true },
+      );
+      return;
+    }
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
@@ -75,21 +126,35 @@ function loadRazorpayCheckout() {
 export default function RegistrationForm() {
   const router = useRouter();
   const [paying, setPaying] = useState(false);
-  const [redirectingToConfirmation, setRedirectingToConfirmation] = useState(false);
+  const [redirectingToConfirmation, setRedirectingToConfirmation] =
+    useState(false);
   const [uploading, setUploading] = useState(false);
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
-  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
     defaultValues: { willSubmitAbstract: false },
   });
 
   const category = watch("category");
-  const chosenCategory: RegistrationCategory | null = category && REGISTRATION_CATEGORIES.includes(category as RegistrationCategory)
-    ? (category as RegistrationCategory)
-    : null;
+  const chosenCategory: RegistrationCategory | null =
+    category &&
+    REGISTRATION_CATEGORIES.includes(category as RegistrationCategory)
+      ? (category as RegistrationCategory)
+      : null;
   const currentFee = chosenCategory ? currentFeeAmount(chosenCategory) : null;
-  const feeBreakdown = currentFee ? calculateFeeWithGst(currentFee.amount) : null;
-  const requiresMembershipId = !!chosenCategory && APTI_MEMBER_CATEGORIES.includes(chosenCategory as (typeof APTI_MEMBER_CATEGORIES)[number]);
+  const feeBreakdown = currentFee
+    ? calculateFeeWithGst(currentFee.amount)
+    : null;
+  const requiresMembershipId =
+    !!chosenCategory &&
+    APTI_MEMBER_CATEGORIES.includes(
+      chosenCategory as (typeof APTI_MEMBER_CATEGORIES)[number],
+    );
 
   /** Uploads the photo and returns its storage key, or null if the upload failed. */
   async function uploadPhoto(file: File): Promise<string | null> {
@@ -155,31 +220,59 @@ export default function RegistrationForm() {
         name: "APTICON 2026",
         description: "APTICON 2026 Registration",
         order_id: body.orderId,
-        prefill: { name: data.fullName, email: data.email, contact: data.phone },
+        prefill: {
+          name: data.fullName,
+          email: data.email,
+          contact: data.phone,
+        },
         theme: { color: "#8f1737" },
         modal: { ondismiss: () => setPaying(false) },
         handler: async (response) => {
           setRedirectingToConfirmation(true);
           try {
             const verify = await fetch("/api/payments/razorpay/verify", {
-              method: "POST", headers: { "content-type": "application/json" },
-              body: JSON.stringify({ registrationId: body.registrationId, ...response }),
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                registrationId: body.registrationId,
+                ...response,
+              }),
             });
             const result = await verify.json();
-            if (!verify.ok) throw new Error(result.error ?? "Payment verification failed");
-            toast.success(result.captured ? "Payment confirmed. Your registration is complete." : "Payment verified and is being confirmed.");
-            router.push(`/registration/success/${result.registrationCode ?? "pending"}?payment=${result.captured ? "confirmed" : "processing"}`);
+            if (!verify.ok)
+              throw new Error(result.error ?? "Payment verification failed");
+            toast.success(
+              result.captured
+                ? "Payment confirmed. Your registration is complete."
+                : "Payment verified and is being confirmed.",
+            );
+            router.push(
+              `/registration/success/${result.registrationCode ?? "pending"}?payment=${result.captured ? "confirmed" : "processing"}`,
+            );
           } catch (error) {
-            toast.error(error instanceof Error ? error.message : "Payment verification failed. It will be checked automatically.");
+            toast.error(
+              error instanceof Error
+                ? error.message
+                : "Payment verification failed. It will be checked automatically.",
+            );
             router.push(`/registration/success/pending?payment=processing`);
-          } finally { setPaying(false); }
+          } finally {
+            setPaying(false);
+          }
         },
       });
-      checkout.on("payment.failed", () => { setPaying(false); toast.error("Payment was not completed. You can try again."); });
+      checkout.on("payment.failed", () => {
+        setPaying(false);
+        toast.error("Payment was not completed. You can try again.");
+      });
       checkout.open();
     } catch (error) {
       setPaying(false);
-      toast.error(error instanceof Error ? error.message : "Unable to open secure payment.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to open secure payment.",
+      );
     }
   };
 
@@ -198,7 +291,10 @@ export default function RegistrationForm() {
           <div className="sm:col-span-2">
             <PhotoUploadField
               file={photo}
-              onChange={(f) => { setPhoto(f); if (f) setPhotoError(null); }}
+              onChange={(f) => {
+                setPhoto(f);
+                if (f) setPhotoError(null);
+              }}
               error={photoError ?? undefined}
               disabled={uploading || paying}
             />
@@ -209,22 +305,35 @@ export default function RegistrationForm() {
               id="fullName"
               className="mt-2"
               placeholder="Dr. / Mr. / Ms. Full Name"
-              {...register("fullName", { required: "Full name is required", minLength: 2 })}
+              {...register("fullName", {
+                required: "Full name is required",
+                minLength: 2,
+              })}
             />
-            {errors.fullName && <p className={errCls}>{errors.fullName.message}</p>}
+            {errors.fullName && (
+              <p className={errCls}>{errors.fullName.message}</p>
+            )}
           </div>
           <div>
             <Label htmlFor="designation">Designation *</Label>
             <select
               id="designation"
               className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
-              {...register("designation", { required: "Designation is required" })}
+              {...register("designation", {
+                required: "Designation is required",
+              })}
               defaultValue=""
             >
               <option value="">Select Designation</option>
-              {DESIGNATIONS.map((d) => <option key={d} value={d}>{d}</option>)}
+              {DESIGNATIONS.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
             </select>
-            {errors.designation && <p className={errCls}>{errors.designation.message}</p>}
+            {errors.designation && (
+              <p className={errCls}>{errors.designation.message}</p>
+            )}
           </div>
           <div className="sm:col-span-2">
             <Label htmlFor="institution">Institution / College *</Label>
@@ -232,13 +341,22 @@ export default function RegistrationForm() {
               id="institution"
               className="mt-2"
               placeholder="Full name of institution"
-              {...register("institution", { required: "Institution is required" })}
+              {...register("institution", {
+                required: "Institution is required",
+              })}
             />
-            {errors.institution && <p className={errCls}>{errors.institution.message}</p>}
+            {errors.institution && (
+              <p className={errCls}>{errors.institution.message}</p>
+            )}
           </div>
           <div>
             <Label htmlFor="city">City</Label>
-            <Input id="city" className="mt-2" placeholder="City" {...register("city")} />
+            <Input
+              id="city"
+              className="mt-2"
+              placeholder="City"
+              {...register("city")}
+            />
           </div>
           <div>
             <Label htmlFor="state">State</Label>
@@ -249,7 +367,11 @@ export default function RegistrationForm() {
               defaultValue=""
             >
               <option value="">Select State</option>
-              {STATES.map((s) => <option key={s} value={s}>{s}</option>)}
+              {STATES.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -270,7 +392,10 @@ export default function RegistrationForm() {
               placeholder="you@example.com"
               {...register("email", {
                 required: "Email is required",
-                pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email" },
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email",
+                },
               })}
             />
             {errors.email && <p className={errCls}>{errors.email.message}</p>}
@@ -286,7 +411,10 @@ export default function RegistrationForm() {
               placeholder="10-digit mobile"
               {...register("phone", {
                 required: "Mobile is required",
-                pattern: { value: /^[6-9]\d{9}$/, message: "Enter a valid 10-digit Indian mobile number" },
+                pattern: {
+                  value: /^[6-9]\d{9}$/,
+                  message: "Enter a valid 10-digit Indian mobile number",
+                },
               })}
               onInput={(e) => {
                 // Strip non-digits and cap at 10 as the user types
@@ -310,13 +438,21 @@ export default function RegistrationForm() {
             <select
               id="category"
               className="mt-2 flex h-10 w-full rounded-lg border border-[var(--accent-500)]/30 bg-white px-3 py-2 text-sm text-[var(--dark-text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)]"
-              {...register("category", { required: "Please select a category" })}
+              {...register("category", {
+                required: "Please select a category",
+              })}
               defaultValue=""
             >
               <option value="">Select Category</option>
-              {REGISTRATION_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              {REGISTRATION_CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
-            {errors.category && <p className={errCls}>{errors.category.message}</p>}
+            {errors.category && (
+              <p className={errCls}>{errors.category.message}</p>
+            )}
           </div>
           <div>
             <Label>Fee Calculator</Label>
@@ -324,21 +460,33 @@ export default function RegistrationForm() {
               {currentFee && feeBreakdown ? (
                 <div className="space-y-1 text-sm">
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-[var(--muted-text)]">Registration fee</span>
+                    <span className="text-[var(--muted-text)]">
+                      Registration fee
+                    </span>
                     <span>{formatRupees(currentFee.amount)}</span>
                   </div>
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-[var(--muted-text)]">GST ({GST_RATE * 100}%)</span>
+                    <span className="text-[var(--muted-text)]">
+                      GST ({GST_RATE * 100}%)
+                    </span>
                     <span>{formatRupees(feeBreakdown.gstAmount)}</span>
                   </div>
                   <div className="flex items-center justify-between gap-3 border-t border-[var(--accent-500)]/25 pt-1 font-semibold">
-                    <span className="inline-flex items-center gap-1 text-[var(--dark-text)]"><Calculator className="h-3.5 w-3.5" /> Total payable</span>
-                    <b className="text-[var(--primary-800)]">{formatRupees(feeBreakdown.totalAmount)}</b>
+                    <span className="inline-flex items-center gap-1 text-[var(--dark-text)]">
+                      <Calculator className="h-3.5 w-3.5" /> Total payable
+                    </span>
+                    <b className="text-[var(--primary-800)]">
+                      {formatRupees(feeBreakdown.totalAmount)}
+                    </b>
                   </div>
-                  <span className="block text-[10px] text-[var(--muted-text)] uppercase tracking-wider">{currentFee.tier.replace("_", " ")}</span>
+                  <span className="block text-[10px] text-[var(--muted-text)] uppercase tracking-wider">
+                    {currentFee.tier.replace("_", " ")}
+                  </span>
                 </div>
               ) : (
-                <span className="text-sm text-[var(--muted-text)]/70">Select a category to see the fee</span>
+                <span className="text-sm text-[var(--muted-text)]/70">
+                  Select a category to see the fee
+                </span>
               )}
             </div>
           </div>
@@ -347,8 +495,11 @@ export default function RegistrationForm() {
           <div className="mt-3 flex items-start gap-2 text-xs text-[var(--muted-text)]">
             <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
             <span>
-              Fees are auto-selected based on today&apos;s date; GST is calculated at 18% extra. Base-fee tiers for this category:
-              early bird {formatRupees(FEE_TABLE[chosenCategory].early_bird)} · regular {formatRupees(FEE_TABLE[chosenCategory].regular)} · on-spot {formatRupees(FEE_TABLE[chosenCategory].on_spot)}.
+              Fees are auto-selected based on today&apos;s date; GST is
+              calculated at 18% extra. Base-fee tiers for this category: early
+              bird {formatRupees(FEE_TABLE[chosenCategory].early_bird)} ·
+              regular {formatRupees(FEE_TABLE[chosenCategory].regular)} ·
+              on-spot {formatRupees(FEE_TABLE[chosenCategory].on_spot)}.
             </span>
           </div>
         )}
@@ -356,7 +507,10 @@ export default function RegistrationForm() {
           <div className="mt-4">
             <AptiMembershipIdField
               registerProps={register("aptiMemberId", {
-                validate: (v) => !requiresMembershipId || (v?.trim().length ?? 0) >= 3 || "APTI Membership ID is required for this category",
+                validate: (v) =>
+                  !requiresMembershipId ||
+                  (v?.trim().length ?? 0) >= 3 ||
+                  "APTI Membership ID is required for this category",
               })}
               error={errors.aptiMemberId?.message}
               helperText="As printed on your APTI membership card/email — we'll verify this before confirming your registration."
@@ -370,10 +524,21 @@ export default function RegistrationForm() {
             {...register("willSubmitAbstract")}
             className="mt-0.5 w-4 h-4 accent-[var(--primary-800)] cursor-pointer"
           />
-          <label htmlFor="abstract" className="text-sm text-[var(--dark-text)] cursor-pointer">
+          <label
+            htmlFor="abstract"
+            className="text-sm text-[var(--dark-text)] cursor-pointer"
+          >
             I intend to submit an abstract (review or research article).
             <span className="block text-xs text-[var(--muted-text)] mt-0.5">
-              You&apos;ll submit the abstract separately on the <a href="/abstracts" className="text-[var(--primary-800)] hover:underline">Abstracts page</a>. Registration and abstract will be linked automatically by your email.
+              You&apos;ll submit the abstract separately on the{" "}
+              <a
+                href="/abstracts"
+                className="text-[var(--primary-800)] hover:underline"
+              >
+                Abstracts page
+              </a>
+              . Registration and abstract will be linked automatically by your
+              email.
             </span>
           </label>
         </div>
@@ -388,9 +553,14 @@ export default function RegistrationForm() {
           <div className="flex items-start gap-2">
             <ShieldCheck className="w-4 h-4 mt-0.5 text-[var(--primary-800)] flex-shrink-0" />
             <div>
-              <p className="font-semibold text-[var(--dark-text)] mb-1">Pay securely with Razorpay</p>
+              <p className="font-semibold text-[var(--dark-text)] mb-1">
+                Pay securely with Razorpay
+              </p>
               <p className="text-[var(--muted-text)]">
-                After you submit this form, Razorpay will open its secure checkout. You can pay using UPI, cards, net banking, or any method enabled by the organiser. Your registration is confirmed automatically only after payment is captured.
+                After you submit this form, Razorpay will open its secure
+                checkout. You can pay using UPI, cards, net banking, or any
+                method enabled by the organiser. Your registration is confirmed
+                automatically only after payment is captured.
               </p>
             </div>
           </div>
@@ -416,15 +586,22 @@ export default function RegistrationForm() {
           className="w-full"
           disabled={isSubmitting || paying || uploading}
         >
-          {(paying || uploading || isSubmitting) ? (
+          {paying || uploading || isSubmitting ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              {uploading ? "Uploading photo…" : paying ? "Opening secure payment…" : "Preparing payment…"}
+              {uploading
+                ? "Uploading photo…"
+                : paying
+                  ? "Opening secure payment…"
+                  : "Preparing payment…"}
             </>
-          ) : "Continue to Secure Payment"}
+          ) : (
+            "Continue to Secure Payment"
+          )}
         </Button>
         <p className="mt-3 text-center text-xs text-[var(--muted-text)]">
-          No manual payment proof is required. Your registration confirmation is emailed automatically after Razorpay confirms the payment.
+          No manual payment proof is required. Your registration confirmation is
+          emailed automatically after Razorpay confirms the payment.
         </p>
       </div>
     </form>

@@ -1,7 +1,14 @@
 "use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { GraduationCap, FlaskConical, Factory, Sprout, ArrowRight, Target } from "lucide-react";
+import {
+  GraduationCap,
+  FlaskConical,
+  Factory,
+  Sprout,
+  ArrowRight,
+  Target,
+} from "lucide-react";
 import { staggerContainer, fadeUp, scaleIn } from "@/lib/animations";
 import { EVENT } from "@/lib/constants";
 
@@ -37,7 +44,10 @@ export default function ThemeSection() {
         className="absolute inset-0 bg-gradient-to-br from-[var(--primary-900)] via-[var(--primary-800)] to-[var(--secondary-900)]"
       />
       {/* Ambient glows */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
         <div className="absolute -left-32 top-0 h-96 w-96 rounded-full bg-[var(--accent-500)]/15 blur-[110px]" />
         <div className="absolute -bottom-32 right-0 h-96 w-96 rounded-full bg-[var(--primary-600)]/25 blur-[110px]" />
       </div>
@@ -90,7 +100,9 @@ export default function ThemeSection() {
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">
                   Sub-Vision
                 </p>
-                <p className="text-sm font-bold text-[var(--accent-300)]">{EVENT.vision}</p>
+                <p className="text-sm font-bold text-[var(--accent-300)]">
+                  {EVENT.vision}
+                </p>
               </div>
             </div>
           </motion.div>
@@ -112,7 +124,9 @@ export default function ThemeSection() {
                 <h3 className="mt-4 font-display text-lg font-bold text-white transition-colors duration-300 group-hover:text-[var(--accent-300)]">
                   {title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/65">{desc}</p>
+                <p className="mt-2 text-sm leading-relaxed text-white/65">
+                  {desc}
+                </p>
               </motion.div>
             ))}
           </motion.div>

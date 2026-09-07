@@ -1,11 +1,19 @@
 import { NextResponse } from "next/server";
 import { AuthError } from "@/lib/auth";
 
-export function ok<T>(data: T, message = "Success", status = 200): NextResponse {
+export function ok<T>(
+  data: T,
+  message = "Success",
+  status = 200,
+): NextResponse {
   return NextResponse.json({ success: true, message, data }, { status });
 }
 
-export function fail(message: string, errors: string[] = [], status = 400): NextResponse {
+export function fail(
+  message: string,
+  errors: string[] = [],
+  status = 400,
+): NextResponse {
   return NextResponse.json({ success: false, message, errors }, { status });
 }
 

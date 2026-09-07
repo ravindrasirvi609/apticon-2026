@@ -11,16 +11,25 @@ export async function GET(request: NextRequest) {
     await connectDB();
 
     const url = new URL(request.url);
-    const search = url.searchParams.get("search")?.trim() || url.searchParams.get("q")?.trim() || "";
+    const search =
+      url.searchParams.get("search")?.trim() ||
+      url.searchParams.get("q")?.trim() ||
+      "";
     const state = url.searchParams.get("state")?.trim() || "";
     const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
-    const limit = Math.min(100, Math.max(1, parseInt(url.searchParams.get("limit") || "20", 10)));
+    const limit = Math.min(
+      100,
+      Math.max(1, parseInt(url.searchParams.get("limit") || "20", 10)),
+    );
     const skip = (page - 1) * limit;
 
     const filter: Record<string, unknown> = {};
 
     if (search) {
-      const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      const regex = new RegExp(
+        search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+        "i",
+      );
       filter.$or = [
         { memberId: regex },
         { name: regex },
@@ -32,7 +41,10 @@ export async function GET(request: NextRequest) {
     }
 
     if (state) {
-      filter.state = new RegExp(`^${state.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i");
+      filter.state = new RegExp(
+        `^${state.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+        "i",
+      );
     }
 
     const [members, total] = await Promise.all([
@@ -78,14 +90,22 @@ export async function POST(request: NextRequest) {
     const body = await request.json().catch(() => null);
     const parsed = aptiMemberCreateSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid input", details: parsed.error.flatten() },
+        { status: 400 },
+      );
     }
 
     await connectDB();
 
-    const existing = await AptiMember.findOne({ memberId: parsed.data.memberId });
+    const existing = await AptiMember.findOne({
+      memberId: parsed.data.memberId,
+    });
     if (existing) {
-      return NextResponse.json({ error: `APTI Member ID "${parsed.data.memberId}" already exists.` }, { status: 409 });
+      return NextResponse.json(
+        { error: `APTI Member ID "${parsed.data.memberId}" already exists.` },
+        { status: 409 },
+      );
     }
 
     const created = await AptiMember.create({
@@ -107,7 +127,11 @@ export async function POST(request: NextRequest) {
       action: "apti_member.create",
       resourceType: "apti_member",
       resourceId: created._id.toString(),
-      details: { memberId: created.memberId, name: created.name, email: created.email },
+      details: {
+        memberId: created.memberId,
+        name: created.name,
+        email: created.email,
+      },
       request,
     });
 

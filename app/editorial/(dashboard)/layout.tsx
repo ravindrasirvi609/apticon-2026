@@ -10,14 +10,26 @@ export const metadata: Metadata = {
 };
 
 const EDITORIAL_NAV: NavItem[] = [
-  { href: "/editorial",               label: "Dashboard",     icon: "dashboard" },
-  { href: "/editorial/abstracts",     label: "Abstracts",     icon: "abstracts" },
-  { href: "/editorial/registrations", label: "Registrations", icon: "registrations" },
-  { href: "/editorial/group-registrations", label: "Group Registrations", icon: "groups" },
-  { href: "/editorial/settings",      label: "Settings",      icon: "settings" },
+  { href: "/editorial", label: "Dashboard", icon: "dashboard" },
+  { href: "/editorial/abstracts", label: "Abstracts", icon: "abstracts" },
+  {
+    href: "/editorial/registrations",
+    label: "Registrations",
+    icon: "registrations",
+  },
+  {
+    href: "/editorial/group-registrations",
+    label: "Group Registrations",
+    icon: "groups",
+  },
+  { href: "/editorial/settings", label: "Settings", icon: "settings" },
 ];
 
-export default async function EditorialDashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function EditorialDashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const session = await getSessionFromCookies();
   if (!session || session.role !== "editorial") {
     redirect("/editorial/login");

@@ -1,7 +1,8 @@
 export const SUBJECT_CODES: Record<string, string> = {
   "Pharmaceutical Technology": "PT",
   "Medicinal Chemistry": "MC",
-  "Pharmacognosy, Indigenous Drugs, Herbal Formulations and Phytochemistry": "PC",
+  "Pharmacognosy, Indigenous Drugs, Herbal Formulations and Phytochemistry":
+    "PC",
   "Pharmacology, Toxicology, Clinical Research & Pharmacovigilance": "PL",
   "Pharmaceutical Analysis and Quality Assurance": "PA",
   "Biopharmaceutics, Pharmacokinetics & Drug Metabolism": "BP",

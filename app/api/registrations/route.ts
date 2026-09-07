@@ -16,7 +16,10 @@ export async function GET(request: NextRequest) {
   const paymentStatus = url.searchParams.get("paymentStatus") ?? undefined;
   const q = url.searchParams.get("q") ?? "";
   const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
-  const limit = Math.min(100, parseInt(url.searchParams.get("limit") ?? "25", 10));
+  const limit = Math.min(
+    100,
+    parseInt(url.searchParams.get("limit") ?? "25", 10),
+  );
 
   // Search/paymentStatus narrow the whole result set; `status` only narrows the rows we return,
   // so the status counts below stay accurate for every filter chip.
@@ -25,13 +28,13 @@ export async function GET(request: NextRequest) {
   if (q) {
     const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     scope.$or = [
-      { fullName:          { $regex: safe, $options: "i" } },
-      { registrationCode:  { $regex: safe, $options: "i" } },
-      { email:             { $regex: safe, $options: "i" } },
+      { fullName: { $regex: safe, $options: "i" } },
+      { registrationCode: { $regex: safe, $options: "i" } },
+      { email: { $regex: safe, $options: "i" } },
       { transactionNumber: { $regex: safe, $options: "i" } },
-      { razorpayOrderId:   { $regex: safe, $options: "i" } },
+      { razorpayOrderId: { $regex: safe, $options: "i" } },
       { razorpayPaymentId: { $regex: safe, $options: "i" } },
-      { institution:       { $regex: safe, $options: "i" } },
+      { institution: { $regex: safe, $options: "i" } },
     ];
   }
   const filter = status ? { ...scope, status } : scope;
@@ -42,7 +45,9 @@ export async function GET(request: NextRequest) {
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .select("registrationCode fullName email institution category feeAmount feeTier status createdAt linkedAbstract paymentMode transactionNumber paymentStatus razorpayOrderId razorpayPaymentId paymentError paidAt photoUrl")
+      .select(
+        "registrationCode fullName email institution category feeAmount feeTier status createdAt linkedAbstract paymentMode transactionNumber paymentStatus razorpayOrderId razorpayPaymentId paymentError paidAt photoUrl",
+      )
       .lean(),
     Registration.aggregate<{ _id: string; count: number }>([
       { $match: scope },

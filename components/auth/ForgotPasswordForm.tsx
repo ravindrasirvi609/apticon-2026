@@ -6,11 +6,23 @@ import { Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/shadcn/button";
 import { Input } from "@/components/ui/shadcn/input";
 import { Label } from "@/components/ui/shadcn/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/shadcn/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/shadcn/card";
 
-interface ForgotFormProps { loginPath: string; title: string }
+interface ForgotFormProps {
+  loginPath: string;
+  title: string;
+}
 
-export default function ForgotPasswordForm({ loginPath, title }: ForgotFormProps) {
+export default function ForgotPasswordForm({
+  loginPath,
+  title,
+}: ForgotFormProps) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -41,13 +53,20 @@ export default function ForgotPasswordForm({ loginPath, title }: ForgotFormProps
             <Mail className="w-6 h-6 text-[var(--accent-300)]" />
           </div>
           <CardTitle>{title}</CardTitle>
-          <CardDescription>Enter your email and we'll send you a reset link.</CardDescription>
+          <CardDescription>
+            Enter your email and we'll send you a reset link.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {done ? (
             <div className="text-center py-4 space-y-3">
-              <p className="text-sm text-[var(--dark-text)]">Check your inbox for a reset link.</p>
-              <Link href={loginPath} className="text-sm text-[var(--primary-800)] hover:underline">
+              <p className="text-sm text-[var(--dark-text)]">
+                Check your inbox for a reset link.
+              </p>
+              <Link
+                href={loginPath}
+                className="text-sm text-[var(--primary-800)] hover:underline"
+              >
                 Return to sign in
               </Link>
             </div>
@@ -65,10 +84,17 @@ export default function ForgotPasswordForm({ loginPath, title }: ForgotFormProps
                 />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send reset link"}
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Send reset link"
+                )}
               </Button>
               <div className="text-center">
-                <Link href={loginPath} className="text-xs text-[var(--muted-text)] hover:text-[var(--primary-800)]">
+                <Link
+                  href={loginPath}
+                  className="text-xs text-[var(--muted-text)] hover:text-[var(--primary-800)]"
+                >
                   Back to sign in
                 </Link>
               </div>

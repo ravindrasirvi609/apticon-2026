@@ -6,7 +6,10 @@ import { ok, fail, failFromError } from "@/lib/mobile/response";
 
 // One dynamic route for all seven distribution reports (checked-in, id-card, breakfast, lunch,
 // dinner, kit, certificate) instead of near-identical files per type.
-export async function GET(request: NextRequest, ctx: { params: Promise<{ type: string }> }) {
+export async function GET(
+  request: NextRequest,
+  ctx: { params: Promise<{ type: string }> },
+) {
   try {
     await requireStaff(request);
     const { type } = await ctx.params;
@@ -17,7 +20,11 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ type: s
     const dayParam = url.searchParams.get("day");
     const day = dayParam ? Number(dayParam) : undefined;
     if (DAY_SCOPED_ACTION_TYPES.includes(actionType) && !day) {
-      return fail(`A ?day= query parameter is required for the "${type}" report`, [], 400);
+      return fail(
+        `A ?day= query parameter is required for the "${type}" report`,
+        [],
+        400,
+      );
     }
 
     const page = Number(url.searchParams.get("page") ?? "1");

@@ -1,6 +1,9 @@
 export default function Loading() {
   return (
-    <div className="min-h-[50dvh] flex flex-col items-center justify-center gap-4" aria-label="Loading">
+    <div
+      className="min-h-[50dvh] flex flex-col items-center justify-center gap-4"
+      aria-label="Loading"
+    >
       {/* Pulsing lotus */}
       <div className="relative w-16 h-16">
         <div className="absolute inset-0 rounded-full border-4 border-[var(--accent-500)]/30 animate-[spin_3s_linear_infinite]" />

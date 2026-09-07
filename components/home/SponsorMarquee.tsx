@@ -4,15 +4,21 @@ import { motion } from "framer-motion";
 import { Handshake, ArrowRight } from "lucide-react";
 
 const TIERS = [
-  { label: "Platinum Sponsor",    color: "#94A3B8" },
-  { label: "Gold Sponsor",        color: "#EA580C" },
-  { label: "Silver Sponsor",      color: "#CBD5E1" },
-  { label: "Knowledge Partner",   color: "#1E293B" },
-  { label: "Bronze Sponsor",      color: "#B45309" },
+  { label: "Platinum Sponsor", color: "#94A3B8" },
+  { label: "Gold Sponsor", color: "#EA580C" },
+  { label: "Silver Sponsor", color: "#CBD5E1" },
+  { label: "Knowledge Partner", color: "#1E293B" },
+  { label: "Bronze Sponsor", color: "#B45309" },
   { label: "Hospitality Partner", color: "#312E81" },
 ];
 
-function SponsorPlaceholder({ label, color }: { label: string; color: string }) {
+function SponsorPlaceholder({
+  label,
+  color,
+}: {
+  label: string;
+  color: string;
+}) {
   return (
     <div className="group mx-3 flex h-24 w-40 shrink-0 flex-col items-center justify-center gap-2 rounded-2xl border border-[var(--surface-200)] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md sm:mx-4 sm:w-44">
       <span
@@ -46,8 +52,8 @@ export default function SponsorMarquee() {
             Support APTICON 2026
           </h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-[var(--muted-text)]">
-            Sponsorship details will be announced shortly. Become a part of India&apos;s
-            premier pharmacy education event.
+            Sponsorship details will be announced shortly. Become a part of
+            India&apos;s premier pharmacy education event.
           </p>
         </motion.div>
       </div>

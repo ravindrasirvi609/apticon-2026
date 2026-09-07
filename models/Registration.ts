@@ -9,7 +9,12 @@ export type RegistrationStatus =
   | "resubmitted";
 
 export type PaymentMode = "neft_rtgs" | "upi" | "dd" | "online" | "razorpay";
-export type PaymentStatus = "pending" | "authorized" | "captured" | "failed" | "refunded";
+export type PaymentStatus =
+  | "pending"
+  | "authorized"
+  | "captured"
+  | "failed"
+  | "refunded";
 
 export interface IRegistration {
   _id: mongoose.Types.ObjectId;
@@ -83,46 +88,75 @@ const RegistrationSchema = new Schema<IRegistration>(
     // without a code out of the unique index.
     registrationCode: { type: String, sparse: true, unique: true, index: true },
 
-    fullName:     { type: String, required: true, trim: true },
-    designation:  { type: String, required: true, trim: true },
-    institution:  { type: String, required: true, trim: true },
-    affiliation:   { type: String, default: "", trim: true },
-    city:         { type: String, trim: true },
-    state:        { type: String, trim: true },
+    fullName: { type: String, required: true, trim: true },
+    designation: { type: String, required: true, trim: true },
+    institution: { type: String, required: true, trim: true },
+    affiliation: { type: String, default: "", trim: true },
+    city: { type: String, trim: true },
+    state: { type: String, trim: true },
 
-    email: { type: String, required: true, lowercase: true, trim: true, index: true },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+      index: true,
+    },
     phone: { type: String, required: true, trim: true },
 
     // Enforced at the API layer, not here, so legacy documents without a photo still save.
-    photoKey:  { type: String, default: "" },
-    photoUrl:  { type: String, default: "" },
+    photoKey: { type: String, default: "" },
+    photoUrl: { type: String, default: "" },
     photoName: { type: String, default: "" },
 
-    category:               { type: String, required: true },
-    feeTier:                { type: String, enum: ["early_bird", "regular", "on_spot"], required: true },
-    feeAmount:              { type: Number, required: true, min: 0 },
-    willSubmitAbstract:     { type: Boolean, default: false },
+    category: { type: String, required: true },
+    feeTier: {
+      type: String,
+      enum: ["early_bird", "regular", "on_spot"],
+      required: true,
+    },
+    feeAmount: { type: Number, required: true, min: 0 },
+    willSubmitAbstract: { type: Boolean, default: false },
     includesAptiMembership: { type: Boolean, default: false, index: true },
-    aptiMemberId:           { type: String, trim: true, uppercase: true },
+    aptiMemberId: { type: String, trim: true, uppercase: true },
 
-    paymentMode:       { type: String, enum: ["neft_rtgs", "upi", "dd", "online", "razorpay"], required: true },
+    paymentMode: {
+      type: String,
+      enum: ["neft_rtgs", "upi", "dd", "online", "razorpay"],
+      required: true,
+    },
     transactionNumber: { type: String, default: "", trim: true, index: true },
-    paymentProofKey:   { type: String, default: "" },
-    paymentProofUrl:   { type: String, default: "" },
-    paymentProofName:  { type: String, default: "" },
-    paymentStatus:     { type: String, enum: ["pending", "authorized", "captured", "failed", "refunded"], index: true },
-    razorpayOrderId:   { type: String, sparse: true, unique: true, index: true },
-    razorpayPaymentId: { type: String, sparse: true, unique: true, index: true },
-    paymentMethod:     { type: String },
-    paymentError:      { type: String },
-    paidAt:            { type: Date },
+    paymentProofKey: { type: String, default: "" },
+    paymentProofUrl: { type: String, default: "" },
+    paymentProofName: { type: String, default: "" },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "authorized", "captured", "failed", "refunded"],
+      index: true,
+    },
+    razorpayOrderId: { type: String, sparse: true, unique: true, index: true },
+    razorpayPaymentId: {
+      type: String,
+      sparse: true,
+      unique: true,
+      index: true,
+    },
+    paymentMethod: { type: String },
+    paymentError: { type: String },
+    paidAt: { type: Date },
     confirmationEmailSentAt: { type: Date },
 
     // "payment_review", "rejected" and "resubmitted" are retained for legacy manual-payment
     // documents only — nothing sets them now that Razorpay drives approval.
     status: {
       type: String,
-      enum: ["submitted", "payment_review", "approved", "rejected", "resubmitted"],
+      enum: [
+        "submitted",
+        "payment_review",
+        "approved",
+        "rejected",
+        "resubmitted",
+      ],
       default: "submitted",
       index: true,
     },
@@ -130,15 +164,24 @@ const RegistrationSchema = new Schema<IRegistration>(
     approvedAt: { type: Date },
     rejectedBy: { type: Schema.Types.ObjectId, ref: "User" },
     rejectedAt: { type: Date },
-    reviewNote:   { type: String },
+    reviewNote: { type: String },
     internalNote: { type: String },
 
-    linkedAbstract: { type: Schema.Types.ObjectId, ref: "Abstract", index: true },
-    groupRegistration: { type: Schema.Types.ObjectId, ref: "GroupRegistration", index: true, sparse: true },
+    linkedAbstract: {
+      type: Schema.Types.ObjectId,
+      ref: "Abstract",
+      index: true,
+    },
+    groupRegistration: {
+      type: Schema.Types.ObjectId,
+      ref: "GroupRegistration",
+      index: true,
+      sparse: true,
+    },
 
     remarks: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 RegistrationSchema.index({ createdAt: -1 });

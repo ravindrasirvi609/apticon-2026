@@ -8,16 +8,27 @@ import PulseButton from "@/components/ui/PulseButton";
 import { RAIPUR_PLACES } from "@/lib/constants";
 
 const TRANSPORT = [
-  { icon: Plane, label: "By Air", detail: "Swami Vivekananda Airport (RPR) — 15 km from venue" },
-  { icon: Train, label: "By Train", detail: "Raipur Junction — major hub on Mumbai–Howrah line" },
-  { icon: Car,   label: "By Road", detail: "NH 30 & NH 53 — well-connected from all CG cities" },
+  {
+    icon: Plane,
+    label: "By Air",
+    detail: "Swami Vivekananda Airport (RPR) — 15 km from venue",
+  },
+  {
+    icon: Train,
+    label: "By Train",
+    detail: "Raipur Junction — major hub on Mumbai–Howrah line",
+  },
+  {
+    icon: Car,
+    label: "By Road",
+    detail: "NH 30 & NH 53 — well-connected from all CG cities",
+  },
 ];
 
 export default function VenuePreview() {
   return (
     <section className="py-20 md:py-28 bg-[var(--surface-50)] overflow-hidden">
       <div className="container-site">
-
         {/* Header */}
         <motion.div
           initial="hidden"
@@ -26,7 +37,10 @@ export default function VenuePreview() {
           variants={staggerContainer}
           className="text-center mb-14"
         >
-          <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }} className="flex justify-center">
+          <motion.div
+            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+            className="flex justify-center"
+          >
             <GoldenBadge>Venue & Travel</GoldenBadge>
           </motion.div>
           <motion.h2
@@ -35,13 +49,16 @@ export default function VenuePreview() {
           >
             Heart of <span className="text-gradient-primary">Chhattisgarh</span>
           </motion.h2>
-          <motion.p variants={fadeLeft} className="mt-4 text-[var(--muted-text)] max-w-2xl mx-auto text-base md:text-lg">
-            Raipur — the vibrant capital city, home to ancient temples, tribal heritage, and modern academia.
+          <motion.p
+            variants={fadeLeft}
+            className="mt-4 text-[var(--muted-text)] max-w-2xl mx-auto text-base md:text-lg"
+          >
+            Raipur — the vibrant capital city, home to ancient temples, tribal
+            heritage, and modern academia.
           </motion.p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-
           {/* Left — Map & Venue */}
           <motion.div
             initial="hidden"
@@ -70,16 +87,30 @@ export default function VenuePreview() {
                   <MapPin size={18} className="text-[var(--primary-800)]" />
                 </div>
                 <div>
-                  <p className="font-bold text-[var(--dark-text)]">Pt. Deendayal Upadhyay Auditorium</p>
-                  <p className="text-sm text-[var(--muted-text)] mt-0.5">G.E. Road, Raipur, Chhattisgarh</p>
+                  <p className="font-bold text-[var(--dark-text)]">
+                    Pt. Deendayal Upadhyay Auditorium
+                  </p>
+                  <p className="text-sm text-[var(--muted-text)] mt-0.5">
+                    G.E. Road, Raipur, Chhattisgarh
+                  </p>
                 </div>
               </div>
               <div className="mt-4 grid grid-cols-3 gap-3">
                 {TRANSPORT.map(({ icon: Icon, label, detail }) => (
-                  <div key={label} className="text-center p-3 rounded-xl bg-[var(--surface-100)]">
-                    <Icon size={18} className="mx-auto text-[var(--primary-800)] mb-1" />
-                    <p className="text-xs font-bold text-[var(--dark-text)]">{label}</p>
-                    <p className="text-[10px] text-[var(--muted-text)] mt-0.5 leading-snug hidden sm:block">{detail}</p>
+                  <div
+                    key={label}
+                    className="text-center p-3 rounded-xl bg-[var(--surface-100)]"
+                  >
+                    <Icon
+                      size={18}
+                      className="mx-auto text-[var(--primary-800)] mb-1"
+                    />
+                    <p className="text-xs font-bold text-[var(--dark-text)]">
+                      {label}
+                    </p>
+                    <p className="text-[10px] text-[var(--muted-text)] mt-0.5 leading-snug hidden sm:block">
+                      {detail}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -119,8 +150,14 @@ export default function VenuePreview() {
                       sizes="(max-width: 640px) 50vw, 25vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" aria-hidden />
-                    <span className="absolute bottom-2 left-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-base shadow-sm" aria-hidden>
+                    <div
+                      className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"
+                      aria-hidden
+                    />
+                    <span
+                      className="absolute bottom-2 left-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-base shadow-sm"
+                      aria-hidden
+                    >
                       {place.icon}
                     </span>
                   </div>

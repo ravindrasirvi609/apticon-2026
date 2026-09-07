@@ -91,28 +91,39 @@ export async function GET(request: NextRequest) {
 
     let out = Array.from(rows.values());
 
-    if (filter === "registered_only") out = out.filter((r) => r.registration && r.abstracts.length === 0);
-    else if (filter === "abstract_only") out = out.filter((r) => !r.registration && r.abstracts.length > 0);
-    else if (filter === "both") out = out.filter((r) => r.registration && r.abstracts.length > 0);
-    else if (filter === "approved") out = out.filter((r) => r.registration?.status === "approved");
+    if (filter === "registered_only")
+      out = out.filter((r) => r.registration && r.abstracts.length === 0);
+    else if (filter === "abstract_only")
+      out = out.filter((r) => !r.registration && r.abstracts.length > 0);
+    else if (filter === "both")
+      out = out.filter((r) => r.registration && r.abstracts.length > 0);
+    else if (filter === "approved")
+      out = out.filter((r) => r.registration?.status === "approved");
 
     if (q) {
       const needle = q.toLowerCase();
-      out = out.filter((r) =>
-        r.email.includes(needle) ||
-        r.name.toLowerCase().includes(needle) ||
-        (r.institution?.toLowerCase().includes(needle) ?? false) ||
-        (r.registration?.code.toLowerCase().includes(needle) ?? false) ||
-        r.abstracts.some((a) => a.submissionCode.toLowerCase().includes(needle) || a.title.toLowerCase().includes(needle))
+      out = out.filter(
+        (r) =>
+          r.email.includes(needle) ||
+          r.name.toLowerCase().includes(needle) ||
+          (r.institution?.toLowerCase().includes(needle) ?? false) ||
+          (r.registration?.code.toLowerCase().includes(needle) ?? false) ||
+          r.abstracts.some(
+            (a) =>
+              a.submissionCode.toLowerCase().includes(needle) ||
+              a.title.toLowerCase().includes(needle),
+          ),
       );
     }
 
     // Sort: registered+abstract first, then registered-only, then abstract-only
     out.sort((a, b) => {
       const rank = (row: DelegateRow) =>
-        row.registration && row.abstracts.length > 0 ? 0
-        : row.registration ? 1
-        : 2;
+        row.registration && row.abstracts.length > 0
+          ? 0
+          : row.registration
+            ? 1
+            : 2;
       return rank(a) - rank(b) || a.name.localeCompare(b.name);
     });
 

@@ -6,7 +6,7 @@ import { NAV_LINKS, EVENT } from "@/lib/constants";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 
 const QUICK_LINKS = NAV_LINKS.slice(0, 6);
-const INFO_LINKS  = NAV_LINKS.slice(6);
+const INFO_LINKS = NAV_LINKS.slice(6);
 
 const LEGAL_LINKS = [
   { label: "Privacy Policy", href: "/privacy-policy" },
@@ -19,7 +19,11 @@ export default function Footer() {
     <footer className="bg-[var(--dark-text)] text-white">
       {/* Wave top */}
       <div className="wave-divider rotate-180 -mb-1">
-        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" className="w-full h-12 md:h-16">
+        <svg
+          viewBox="0 0 1440 60"
+          preserveAspectRatio="none"
+          className="w-full h-12 md:h-16"
+        >
           <path
             d="M0,30 C240,55 480,5 720,30 C960,55 1200,5 1440,30 L1440,60 L0,60 Z"
             fill="#0F172A"
@@ -32,7 +36,6 @@ export default function Footer() {
 
       <div className="container-site py-12 md:py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="mb-4">
@@ -102,20 +105,35 @@ export default function Footer() {
             </h3>
             <ul className="space-y-4">
               <li className="flex gap-3">
-                <Calendar size={16} className="mt-0.5 shrink-0 text-[var(--accent-500)]" />
+                <Calendar
+                  size={16}
+                  className="mt-0.5 shrink-0 text-[var(--accent-500)]"
+                />
                 <div>
-                  <p className="text-sm font-semibold text-white">{EVENT.dateDisplay}</p>
-                  <p className="text-xs text-white/50 mt-0.5">Conference Dates</p>
+                  <p className="text-sm font-semibold text-white">
+                    {EVENT.dateDisplay}
+                  </p>
+                  <p className="text-xs text-white/50 mt-0.5">
+                    Conference Dates
+                  </p>
                 </div>
               </li>
               <li className="flex gap-3">
-                <MapPin size={16} className="mt-0.5 shrink-0 text-[var(--accent-500)]" />
+                <MapPin
+                  size={16}
+                  className="mt-0.5 shrink-0 text-[var(--accent-500)]"
+                />
                 <div>
-                  <p className="text-sm text-white/70 leading-snug">{EVENT.venue}</p>
+                  <p className="text-sm text-white/70 leading-snug">
+                    {EVENT.venue}
+                  </p>
                 </div>
               </li>
               <li className="flex gap-3">
-                <Mail size={16} className="mt-0.5 shrink-0 text-[var(--accent-500)]" />
+                <Mail
+                  size={16}
+                  className="mt-0.5 shrink-0 text-[var(--accent-500)]"
+                />
                 <a
                   href={`mailto:${EVENT.contact}`}
                   className="text-sm text-[var(--accent-400)] hover:text-[var(--accent-300)] transition-colors"
@@ -158,7 +176,10 @@ export default function Footer() {
             ))}
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/40">
-            <p>© 2026 APTICON · APTI Chhattisgarh State Branch. All rights reserved.</p>
+            <p>
+              © 2026 APTICON · APTI Chhattisgarh State Branch. All rights
+              reserved.
+            </p>
             <p>
               Powered by{" "}
               <a

@@ -11,7 +11,14 @@ import { Button } from "@/components/ui/shadcn/button";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { Input } from "@/components/ui/shadcn/input";
 import { Badge } from "@/components/ui/shadcn/badge";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/shadcn/table";
 import { Checkbox } from "@/components/ui/shadcn/checkbox";
 
 interface DelegateRow {
@@ -37,11 +44,11 @@ interface DelegateRow {
 }
 
 const FILTERS = [
-  { key: "all",             label: "All" },
-  { key: "both",            label: "Registered + Abstract" },
+  { key: "all", label: "All" },
+  { key: "both", label: "Registered + Abstract" },
   { key: "registered_only", label: "Registered · No Abstract" },
-  { key: "abstract_only",   label: "Abstract · Not Registered" },
-  { key: "approved",        label: "Payment Approved" },
+  { key: "abstract_only", label: "Abstract · Not Registered" },
+  { key: "approved", label: "Payment Approved" },
 ] as const;
 
 type FilterKey = (typeof FILTERS)[number]["key"];
@@ -68,7 +75,9 @@ export default function DelegatesClient() {
     setLoading(false);
   }
 
-  useEffect(() => { load(); }, [filter, q]);
+  useEffect(() => {
+    load();
+  }, [filter, q]);
 
   async function nudge(kind: "register" | "abstract") {
     if (selected.size === 0) {
@@ -84,7 +93,9 @@ export default function DelegatesClient() {
       });
       const b = await res.json();
       if (!res.ok) throw new Error(b.error);
-      toast.success(`Sent ${b.sent}${b.skipped ? ` · skipped ${b.skipped}` : ""}`);
+      toast.success(
+        `Sent ${b.sent}${b.skipped ? ` · skipped ${b.skipped}` : ""}`,
+      );
       setSelected(new Set());
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed");
@@ -97,13 +108,17 @@ export default function DelegatesClient() {
     return {
       total: rows.length,
       both: rows.filter((r) => r.registration && r.abstracts.length > 0).length,
-      regOnly: rows.filter((r) => r.registration && r.abstracts.length === 0).length,
-      absOnly: rows.filter((r) => !r.registration && r.abstracts.length > 0).length,
-      approved: rows.filter((r) => r.registration?.status === "approved").length,
+      regOnly: rows.filter((r) => r.registration && r.abstracts.length === 0)
+        .length,
+      absOnly: rows.filter((r) => !r.registration && r.abstracts.length > 0)
+        .length,
+      approved: rows.filter((r) => r.registration?.status === "approved")
+        .length,
     };
   }, [rows]);
 
-  const allChecked = rows.length > 0 && rows.every((r) => selected.has(r.email));
+  const allChecked =
+    rows.length > 0 && rows.every((r) => selected.has(r.email));
 
   function toggleAll() {
     if (allChecked) setSelected(new Set());
@@ -122,7 +137,12 @@ export default function DelegatesClient() {
       <PageHeader
         title="Delegates"
         description="One row per email — see who is registered, who has submitted abstracts, and where the gaps are."
-        actions={<Badge variant="secondary"><UsersRound className="w-3 h-3 mr-1" />{counts.total} delegates</Badge>}
+        actions={
+          <Badge variant="secondary">
+            <UsersRound className="w-3 h-3 mr-1" />
+            {counts.total} delegates
+          </Badge>
+        }
       />
 
       {/* Counts */}
@@ -139,7 +159,12 @@ export default function DelegatesClient() {
           <div className="flex flex-col md:flex-row md:items-center gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted-text)]" />
-              <Input placeholder="Search name, email, code, institution…" className="pl-9" value={q} onChange={(e) => setQ(e.target.value)} />
+              <Input
+                placeholder="Search name, email, code, institution…"
+                className="pl-9"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+              />
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               {FILTERS.map((f) => (
@@ -157,17 +182,43 @@ export default function DelegatesClient() {
 
           {selected.size > 0 && (
             <div className="mt-4 flex items-center justify-between gap-2 p-3 rounded-lg bg-[var(--surface-100)] border border-[var(--accent-500)]/25">
-              <div className="text-sm font-semibold">{selected.size} selected</div>
+              <div className="text-sm font-semibold">
+                {selected.size} selected
+              </div>
               <div className="flex items-center gap-2 flex-wrap">
-                <Button size="sm" variant="outline" onClick={() => nudge("register")} disabled={sending}>
-                  {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => nudge("register")}
+                  disabled={sending}
+                >
+                  {sending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Mail className="w-4 h-4" />
+                  )}
                   Nudge to register
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => nudge("abstract")} disabled={sending}>
-                  {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => nudge("abstract")}
+                  disabled={sending}
+                >
+                  {sending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Mail className="w-4 h-4" />
+                  )}
                   Nudge to submit abstract
                 </Button>
-                <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>Clear</Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setSelected(new Set())}
+                >
+                  Clear
+                </Button>
               </div>
             </div>
           )}
@@ -179,7 +230,9 @@ export default function DelegatesClient() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-8"><Checkbox checked={allChecked} onCheckedChange={toggleAll} /></TableHead>
+                <TableHead className="w-8">
+                  <Checkbox checked={allChecked} onCheckedChange={toggleAll} />
+                </TableHead>
                 <TableHead>Name / Email</TableHead>
                 <TableHead>Institution</TableHead>
                 <TableHead>Registration</TableHead>
@@ -188,33 +241,68 @@ export default function DelegatesClient() {
             </TableHeader>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={5} className="text-center text-sm py-8 text-[var(--muted-text)]">Loading…</TableCell></TableRow>
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center text-sm py-8 text-[var(--muted-text)]"
+                  >
+                    Loading…
+                  </TableCell>
+                </TableRow>
               ) : rows.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center text-sm py-8 text-[var(--muted-text)]">No delegates match.</TableCell></TableRow>
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center text-sm py-8 text-[var(--muted-text)]"
+                  >
+                    No delegates match.
+                  </TableCell>
+                </TableRow>
               ) : (
                 rows.map((r) => (
                   <TableRow key={r.email}>
                     <TableCell>
-                      <Checkbox checked={selected.has(r.email)} onCheckedChange={() => toggleOne(r.email)} />
+                      <Checkbox
+                        checked={selected.has(r.email)}
+                        onCheckedChange={() => toggleOne(r.email)}
+                      />
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2.5">
-                        <DelegatePhoto url={r.photoUrl} name={r.name} size={32} />
+                        <DelegatePhoto
+                          url={r.photoUrl}
+                          name={r.name}
+                          size={32}
+                        />
                         <div className="min-w-0">
                           <div className="font-semibold text-sm">{r.name}</div>
-                          <div className="text-xs text-[var(--muted-text)]">{r.email}</div>
+                          <div className="text-xs text-[var(--muted-text)]">
+                            {r.email}
+                          </div>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="text-xs">{r.institution ?? "—"}</TableCell>
+                    <TableCell className="text-xs">
+                      {r.institution ?? "—"}
+                    </TableCell>
                     <TableCell>
                       {r.registration ? (
                         <div>
-                          <Link href={`/admin/registrations/${r.registration.id}`} className="text-xs font-mono text-[var(--primary-800)] hover:underline">
+                          <Link
+                            href={`/admin/registrations/${r.registration.id}`}
+                            className="text-xs font-mono text-[var(--primary-800)] hover:underline"
+                          >
                             {r.registration.code}
                           </Link>
-                          <div className="mt-1"><RegistrationStatusBadge status={r.registration.status} paymentStatus={r.registration.paymentStatus} /></div>
-                          <div className="text-[10px] text-[var(--muted-text)] mt-0.5">₹{r.registration.feeAmount.toLocaleString("en-IN")}</div>
+                          <div className="mt-1">
+                            <RegistrationStatusBadge
+                              status={r.registration.status}
+                              paymentStatus={r.registration.paymentStatus}
+                            />
+                          </div>
+                          <div className="text-[10px] text-[var(--muted-text)] mt-0.5">
+                            ₹{r.registration.feeAmount.toLocaleString("en-IN")}
+                          </div>
                         </div>
                       ) : (
                         <Badge variant="danger">Not registered</Badge>
@@ -227,10 +315,18 @@ export default function DelegatesClient() {
                         <div className="space-y-1">
                           {r.abstracts.map((a) => (
                             <div key={a.id}>
-                              <Link href={`/admin/abstracts/${a.id}`} className="text-xs text-[var(--primary-800)] hover:underline">
-                                {a.submissionCode} — {a.title.length > 40 ? a.title.slice(0, 40) + "…" : a.title}
+                              <Link
+                                href={`/admin/abstracts/${a.id}`}
+                                className="text-xs text-[var(--primary-800)] hover:underline"
+                              >
+                                {a.submissionCode} —{" "}
+                                {a.title.length > 40
+                                  ? a.title.slice(0, 40) + "…"
+                                  : a.title}
                               </Link>
-                              <div className="mt-0.5"><StatusBadge status={a.status} /></div>
+                              <div className="mt-0.5">
+                                <StatusBadge status={a.status} />
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -251,8 +347,12 @@ function MetricCard({ label, value }: { label: string; value: number }) {
   return (
     <Card>
       <CardContent className="pt-6">
-        <div className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)]">{label}</div>
-        <div className="mt-1 font-display text-3xl font-black text-[var(--primary-800)]">{value}</div>
+        <div className="text-xs font-semibold uppercase tracking-wider text-[var(--muted-text)]">
+          {label}
+        </div>
+        <div className="mt-1 font-display text-3xl font-black text-[var(--primary-800)]">
+          {value}
+        </div>
       </CardContent>
     </Card>
   );

@@ -23,7 +23,9 @@ async function main() {
   const name = process.env.SEED_ADMIN_NAME ?? "Super Admin";
 
   if (!email || !password) {
-    console.error("Missing SEED_ADMIN_EMAIL or SEED_ADMIN_PASSWORD in .env.local");
+    console.error(
+      "Missing SEED_ADMIN_EMAIL or SEED_ADMIN_PASSWORD in .env.local",
+    );
     process.exit(1);
   }
 

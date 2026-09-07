@@ -31,7 +31,8 @@ interface SheetRow {
 }
 
 async function main() {
-  const filePath = process.argv[2] ?? path.join(process.cwd(), "All APTI Data.xlsx");
+  const filePath =
+    process.argv[2] ?? path.join(process.cwd(), "All APTI Data.xlsx");
 
   const workbook = xlsx.readFile(filePath);
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -42,7 +43,9 @@ async function main() {
   const byMemberId = new Map<string, SheetRow>();
   let blankId = 0;
   for (const row of rows) {
-    const memberId = String(row["Member ID"] ?? "").trim().toUpperCase();
+    const memberId = String(row["Member ID"] ?? "")
+      .trim()
+      .toUpperCase();
     if (!memberId) {
       blankId++;
       continue;
@@ -60,7 +63,10 @@ async function main() {
           serialNo: row["Sl.no"] ? Number(row["Sl.no"]) : undefined,
           stateCode: String(row["S.Code"] ?? "").trim() || undefined,
           name: String(row["Name"] ?? "").trim(),
-          email: String(row["Email"] ?? "").trim().toLowerCase() || undefined,
+          email:
+            String(row["Email"] ?? "")
+              .trim()
+              .toLowerCase() || undefined,
           mobile: String(row["Mobile"] ?? "").trim() || undefined,
           officeAddress: String(row["Off Address"] ?? "").trim() || undefined,
           city: String(row["City"] ?? "").trim() || undefined,
@@ -82,7 +88,9 @@ async function main() {
   }
 
   const noEmail = rows.filter((r) => !String(r["Email"] ?? "").trim()).length;
-  console.log(`✓ Imported ${ops.length} unique members (${rows.length} rows in sheet, ${blankId} skipped with no Member ID, ${noEmail} with no email).`);
+  console.log(
+    `✓ Imported ${ops.length} unique members (${rows.length} rows in sheet, ${blankId} skipped with no Member ID, ${noEmail} with no email).`,
+  );
 
   await mongoose.disconnect();
 }

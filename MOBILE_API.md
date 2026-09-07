@@ -76,15 +76,17 @@ async function apiFetch(path: string, options: RequestInit = {}) {
 **Every** mobile endpoint returns this shape — there is no exception.
 
 Success:
+
 ```json
 {
   "success": true,
   "message": "Success",
-  "data": { }
+  "data": {}
 }
 ```
 
 Error:
+
 ```json
 {
   "success": false,
@@ -98,16 +100,16 @@ where relevant (e.g. failed input validation), otherwise empty.
 
 ### HTTP status codes used
 
-| Status | Meaning in this API |
-|---|---|
-| 200 | Success |
-| 400 | Bad request — invalid input, invalid id, invalid enum value, missing required field |
-| 401 | Missing/invalid/expired token, or (login only) wrong email/password |
-| 403 | Valid token, but role is not `checkin_staff`/`super_admin` |
-| 404 | Attendee or user not found |
-| 409 | **Duplicate action** — the attendee already received this exact action (see §7.4) |
-| 429 | Login rate-limited (see §5) |
-| 500 | Unexpected server error |
+| Status | Meaning in this API                                                                 |
+| ------ | ----------------------------------------------------------------------------------- |
+| 200    | Success                                                                             |
+| 400    | Bad request — invalid input, invalid id, invalid enum value, missing required field |
+| 401    | Missing/invalid/expired token, or (login only) wrong email/password                 |
+| 403    | Valid token, but role is not `checkin_staff`/`super_admin`                          |
+| 404    | Attendee or user not found                                                          |
+| 409    | **Duplicate action** — the attendee already received this exact action (see §7.4)   |
+| 429    | Login rate-limited (see §5)                                                         |
+| 500    | Unexpected server error                                                             |
 
 ---
 
@@ -118,13 +120,16 @@ where relevant (e.g. failed input validation), otherwise empty.
 Rate-limited to 8 attempts / 15 minutes per IP.
 
 **Body**
+
 ```json
 { "email": "staff@apticon.org", "password": "••••••••" }
 ```
+
 - `email`: valid email, case-insensitive
 - `password`: 6–200 characters
 
 **Success (200)**
+
 ```json
 {
   "success": true,
@@ -143,6 +148,7 @@ Rate-limited to 8 attempts / 15 minutes per IP.
 ```
 
 **Errors**
+
 - `400` — malformed body
 - `401` — wrong credentials, account inactive, or account role isn't staff (message is deliberately generic: `"Invalid credentials"` — does not reveal which)
 - `429` — too many attempts, try again later
@@ -154,6 +160,7 @@ Rate-limited to 8 attempts / 15 minutes per IP.
 Auth required. Returns the current staff member's fresh profile.
 
 **Success (200)**
+
 ```json
 {
   "success": true,
@@ -181,15 +188,18 @@ Use this on app launch to validate a stored token and to drive the
 Auth required.
 
 **Body**
+
 ```json
 { "currentPassword": "old-pass", "newPassword": "new-pass-1234" }
 ```
+
 - `currentPassword`: min 6 chars
 - `newPassword`: 8–200 chars
 
 **Success (200)**: `data: null`, `message: "Password updated"`
 
 **Errors**
+
 - `400` — validation failure (`errors` array has details)
 - `401` — current password incorrect
 
@@ -211,14 +221,14 @@ discard the stored token itself** on calling this (or on any `401`).
 
 Auth required. Query params (all optional except when noted):
 
-| Param | Type | Default | Notes |
-|---|---|---|---|
-| `q` | string | — | search text |
-| `field` | `all` \| `registrationCode` \| `email` \| `phone` \| `fullName` | `all` | which field(s) `q` searches |
-| `status` | `submitted` \| `payment_review` \| `approved` \| `rejected` \| `resubmitted` | — | exact-match filter |
-| `sort` | mongoose sort string, e.g. `-createdAt`, `fullName` | `-createdAt` | |
-| `page` | number | `1` | |
-| `limit` | number | `25` | capped at `100` |
+| Param    | Type                                                                         | Default      | Notes                       |
+| -------- | ---------------------------------------------------------------------------- | ------------ | --------------------------- |
+| `q`      | string                                                                       | —            | search text                 |
+| `field`  | `all` \| `registrationCode` \| `email` \| `phone` \| `fullName`              | `all`        | which field(s) `q` searches |
+| `status` | `submitted` \| `payment_review` \| `approved` \| `rejected` \| `resubmitted` | —            | exact-match filter          |
+| `sort`   | mongoose sort string, e.g. `-createdAt`, `fullName`                          | `-createdAt` |                             |
+| `page`   | number                                                                       | `1`          |                             |
+| `limit`  | number                                                                       | `25`         | capped at `100`             |
 
 When `field=all`, `q` is matched case-insensitively (regex) against
 `registrationCode`, `fullName`, `email`, and `phone` simultaneously — this is
@@ -227,6 +237,7 @@ box. Use `field=registrationCode` for an exact-ish registration-number lookup
 if you want a narrower search.
 
 **Success (200)**
+
 ```json
 {
   "success": true,
@@ -272,6 +283,7 @@ Auth required. `{id}` is the Mongo ObjectId (`_id`) of the registration —
 i.e. what you get from a search result's `_id`.
 
 **Success (200)**
+
 ```json
 {
   "success": true,
@@ -300,7 +312,9 @@ i.e. what you get from a search result's `_id`.
       "idCard": null,
       "kit": null,
       "certificate": null,
-      "breakfast": [{ "day": 1, "at": "2026-10-24T08:05:00.000Z", "by": "Ravi Kumar" }],
+      "breakfast": [
+        { "day": 1, "at": "2026-10-24T08:05:00.000Z", "by": "Ravi Kumar" }
+      ],
       "lunch": [],
       "dinner": []
     }
@@ -333,6 +347,7 @@ type AttendeeStatus = {
 ```
 
 **Errors**
+
 - `400` — `{id}` is not a valid Mongo ObjectId
 - `404` — no registration with that id
 
@@ -349,6 +364,7 @@ Response shape is identical to `GET /attendees/{id}` above (same
 `{ registration, status }` object).
 
 **Errors**
+
 - `400` — empty/missing code
 - `404` — no registration with that exact `registrationCode`
 
@@ -363,18 +379,20 @@ ID card, breakfast, lunch, dinner, kit, and certificate. `{id}` is the
 registration's Mongo ObjectId (same id as §6).
 
 **Body**
+
 ```json
 { "actionType": "check_in", "day": 1, "device": "Desk-iPad-3" }
 ```
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| `actionType` | `"check_in"` \| `"id_card"` \| `"breakfast"` \| `"lunch"` \| `"dinner"` \| `"kit"` \| `"certificate"` | yes | |
-| `day` | integer, 1–30 | **required** for `breakfast`/`lunch`/`dinner`; **must be omitted** for all other action types | conference day number (1, 2, 3, ...) |
-| `device` | string, max 200 chars | no | free-text device identifier, e.g. a tablet name/serial — purely for the audit trail |
+| Field        | Type                                                                                                  | Required                                                                                      | Notes                                                                               |
+| ------------ | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `actionType` | `"check_in"` \| `"id_card"` \| `"breakfast"` \| `"lunch"` \| `"dinner"` \| `"kit"` \| `"certificate"` | yes                                                                                           |                                                                                     |
+| `day`        | integer, 1–30                                                                                         | **required** for `breakfast`/`lunch`/`dinner`; **must be omitted** for all other action types | conference day number (1, 2, 3, ...)                                                |
+| `device`     | string, max 200 chars                                                                                 | no                                                                                            | free-text device identifier, e.g. a tablet name/serial — purely for the audit trail |
 
 **Success (200)** — returns the attendee's updated status snapshot (same
 shape as §6):
+
 ```json
 {
   "success": true,
@@ -428,6 +446,7 @@ The mobile UI should treat **both** `409` cases as an expected, user-facing outc
 toast/banner, e.g. "Already checked in" / "Not approved yet"), not as a crash/retry case.
 
 **Other errors**
+
 - `400` — invalid `{id}`, invalid/missing `actionType`, missing `day` for a meal type, or a `day` provided for a non-meal type
 - `404` — attendee not found
 
@@ -440,18 +459,32 @@ use this for an expandable "activity log" on the profile screen if you want
 more detail than the summarized `status` object.
 
 **Success (200)**
+
 ```json
 {
   "success": true,
   "message": "Success",
   "data": {
     "history": [
-      { "actionType": "breakfast", "day": 1, "device": "Desk-iPad-3", "at": "2026-10-24T08:05:00.000Z", "by": "Ravi Kumar" },
-      { "actionType": "check_in", "day": 0, "device": "Desk-iPad-3", "at": "2026-10-24T08:00:00.000Z", "by": "Ravi Kumar" }
+      {
+        "actionType": "breakfast",
+        "day": 1,
+        "device": "Desk-iPad-3",
+        "at": "2026-10-24T08:05:00.000Z",
+        "by": "Ravi Kumar"
+      },
+      {
+        "actionType": "check_in",
+        "day": 0,
+        "device": "Desk-iPad-3",
+        "at": "2026-10-24T08:00:00.000Z",
+        "by": "Ravi Kumar"
+      }
     ]
   }
 }
 ```
+
 `day` is `0` for non-day-scoped actions (check_in/id_card/kit/certificate).
 
 ---
@@ -463,6 +496,7 @@ more detail than the summarized `status` object.
 Auth required. Live counts for the dashboard screen.
 
 **Success (200)**
+
 ```json
 {
   "success": true,
@@ -479,6 +513,7 @@ Auth required. Live counts for the dashboard screen.
   }
 }
 ```
+
 - `totalRegistered` counts **all** registrations regardless of status —
   filter client-side if you only want `approved` ones reflected elsewhere.
 - `breakfast`/`lunch`/`dinner` are objects keyed by conference day number
@@ -493,25 +528,26 @@ Auth required. Live counts for the dashboard screen.
 
 Auth required. One endpoint for all six report types.
 
-| `{type}` value | Reports on |
-|---|---|
-| `checked-in` | check-ins |
-| `id-card` | ID card issuance |
-| `breakfast` | breakfast distribution (day-scoped) |
-| `lunch` | lunch distribution (day-scoped) |
-| `dinner` | dinner distribution (day-scoped) |
-| `kit` | kit distribution |
-| `certificate` | certificate issuance |
+| `{type}` value | Reports on                          |
+| -------------- | ----------------------------------- |
+| `checked-in`   | check-ins                           |
+| `id-card`      | ID card issuance                    |
+| `breakfast`    | breakfast distribution (day-scoped) |
+| `lunch`        | lunch distribution (day-scoped)     |
+| `dinner`       | dinner distribution (day-scoped)    |
+| `kit`          | kit distribution                    |
+| `certificate`  | certificate issuance                |
 
 Query params:
 
-| Param | Required | Notes |
-|---|---|---|
-| `day` | **required** for `breakfast`/`lunch`/`dinner`, ignored otherwise | integer conference day |
-| `page` | no | default `1` |
-| `limit` | no | default `25`, capped at `100` |
+| Param   | Required                                                         | Notes                         |
+| ------- | ---------------------------------------------------------------- | ----------------------------- |
+| `day`   | **required** for `breakfast`/`lunch`/`dinner`, ignored otherwise | integer conference day        |
+| `page`  | no                                                               | default `1`                   |
+| `limit` | no                                                               | default `25`, capped at `100` |
 
 **Success (200)** — e.g. `GET /reports/lunch?day=1`
+
 ```json
 {
   "success": true,
@@ -540,6 +576,7 @@ Query params:
 ```
 
 **Errors**
+
 - `400` — unknown `{type}`, or missing `day` for a day-scoped type
 
 ---
@@ -574,7 +611,7 @@ public-facing security boundary.
 - An attendee's registration must have **`status: "approved"`** (see §6)
   before **any** action can be recorded — `GET` endpoints (search, profile,
   by-code, history) are unaffected and always return full attendee data
-  regardless of status, so staff can always see *why* an action is blocked.
+  regardless of status, so staff can always see _why_ an action is blocked.
 - All of the above are enforced server-side (HTTP 409 on duplicate or
   not-approved) — the app should still disable/hide already-completed or
   not-yet-available action buttons using the `status` object for a good UX,
@@ -587,18 +624,18 @@ public-facing security boundary.
 
 ## 12. Suggested screen → endpoint map
 
-| Screen | Endpoint(s) |
-|---|---|
-| Login | `POST /auth/login` |
-| Dashboard | `GET /dashboard/stats` |
-| Attendee Search | `GET /attendees/search` |
-| QR Scanner | `GET /attendees/by-code/{code}` |
-| Attendee Profile | `GET /attendees/{id}` (and optionally `GET /attendees/{id}/history`) |
-| Perform Action (Check-in / ID Card / Meals / Kit / Certificate) | `POST /attendees/{id}/actions` |
-| Reports | `GET /reports/{type}` |
-| Staff Profile | `GET /auth/me` |
-| Change Password | `POST /auth/change-password` |
-| Logout | `POST /auth/logout` |
+| Screen                                                          | Endpoint(s)                                                          |
+| --------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Login                                                           | `POST /auth/login`                                                   |
+| Dashboard                                                       | `GET /dashboard/stats`                                               |
+| Attendee Search                                                 | `GET /attendees/search`                                              |
+| QR Scanner                                                      | `GET /attendees/by-code/{code}`                                      |
+| Attendee Profile                                                | `GET /attendees/{id}` (and optionally `GET /attendees/{id}/history`) |
+| Perform Action (Check-in / ID Card / Meals / Kit / Certificate) | `POST /attendees/{id}/actions`                                       |
+| Reports                                                         | `GET /reports/{type}`                                                |
+| Staff Profile                                                   | `GET /auth/me`                                                       |
+| Change Password                                                 | `POST /auth/change-password`                                         |
+| Logout                                                          | `POST /auth/logout`                                                  |
 
 ---
 

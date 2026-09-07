@@ -7,8 +7,10 @@ export default function ScrollProgressBar() {
   useEffect(() => {
     const update = () => {
       const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const pct =
+        docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
       if (barRef.current) barRef.current.style.width = `${pct}%`;
     };
 

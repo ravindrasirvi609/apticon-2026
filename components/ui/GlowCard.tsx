@@ -9,12 +9,16 @@ interface Props {
 }
 
 const glowMap = {
-  accent:    "hover:shadow-[0_8px_40px_rgba(234,88,12,0.35)]",
-  primary:   "hover:shadow-[0_8px_40px_rgba(49,46,129,0.35)]",
+  accent: "hover:shadow-[0_8px_40px_rgba(234,88,12,0.35)]",
+  primary: "hover:shadow-[0_8px_40px_rgba(49,46,129,0.35)]",
   secondary: "hover:shadow-[0_8px_40px_rgba(30,41,59,0.35)]",
 };
 
-export default function GlowCard({ children, className = "", glowColor = "accent" }: Props) {
+export default function GlowCard({
+  children,
+  className = "",
+  glowColor = "accent",
+}: Props) {
   return (
     <motion.div
       initial="rest"
