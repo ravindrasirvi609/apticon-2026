@@ -17,6 +17,11 @@ export const REGISTRATION_CATEGORIES = [
 
 export type RegistrationCategory = (typeof REGISTRATION_CATEGORIES)[number];
 
+// The ₹6500 for this category is already the final amount the registrant pays — GST is not
+// added on top, unlike every other category.
+export const NEW_APTI_MEMBERSHIP_CATEGORY =
+  "APTI Membership + APTICON Registration" as const;
+
 // INR
 export const FEE_TABLE: Record<
   RegistrationCategory,
@@ -64,6 +69,20 @@ export function calculateFeeWithGst(baseAmount: number): {
 } {
   const gstAmount = Math.round(baseAmount * GST_RATE);
   return { gstAmount, totalAmount: baseAmount + gstAmount };
+}
+
+/**
+ * Category-aware fee breakdown. Every category adds 18% GST on top of the base fee, except
+ * "APTI Membership + APTICON Registration" — its ₹6500 is a flat, GST-inclusive total.
+ */
+export function calculateFeeBreakdown(
+  category: RegistrationCategory,
+  baseAmount: number,
+): { gstAmount: number; totalAmount: number } {
+  if (category === NEW_APTI_MEMBERSHIP_CATEGORY) {
+    return { gstAmount: 0, totalAmount: baseAmount };
+  }
+  return calculateFeeWithGst(baseAmount);
 }
 
 export const GROUP_MIN_SIZE = 10;

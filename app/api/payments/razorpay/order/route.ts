@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { connectDB } from "@/lib/db";
-import { calculateFeeWithGst, currentFeeAmount } from "@/lib/registration-fees";
+import { calculateFeeBreakdown, currentFeeAmount } from "@/lib/registration-fees";
 import { createRazorpayOrder } from "@/lib/razorpay";
 import { publicUrl } from "@/lib/r2";
 import {
@@ -62,7 +62,10 @@ export async function POST(request: NextRequest) {
   }
 
   const { tier, amount: baseAmount } = currentFeeAmount(data.category);
-  const { gstAmount, totalAmount } = calculateFeeWithGst(baseAmount);
+  const { gstAmount, totalAmount } = calculateFeeBreakdown(
+    data.category,
+    baseAmount,
+  );
 
   const isNewMembershipBundle = data.category === NEW_APTI_MEMBERSHIP_CATEGORY;
 
