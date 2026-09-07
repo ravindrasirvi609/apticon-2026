@@ -7,7 +7,14 @@ import PageHeader from "@/components/console/PageHeader";
 import StatusBadge from "@/components/console/StatusBadge";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
 import { Input } from "@/components/ui/shadcn/input";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/shadcn/table";
 import { Button } from "@/components/ui/shadcn/button";
 import { toast } from "sonner";
 import ExportButtons from "@/components/console/ExportButtons";
@@ -25,7 +32,14 @@ interface AbstractItem {
   assignedReviewers: string[];
 }
 
-const STATUSES = ["", "submitted", "under_review", "accepted", "rejected", "revision_requested"] as const;
+const STATUSES = [
+  "",
+  "submitted",
+  "under_review",
+  "accepted",
+  "rejected",
+  "revision_requested",
+] as const;
 
 interface Props {
   detailBase: string; // e.g. "/admin/abstracts" or "/editorial/abstracts"
@@ -50,7 +64,9 @@ export default function AbstractsList({
     try {
       const res = await fetch("/api/abstracts/export-word");
       if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: "Download failed" }));
+        const err = await res
+          .json()
+          .catch(() => ({ error: "Download failed" }));
         toast.error(err.error || "Failed to generate Word file");
         return;
       }
@@ -58,7 +74,9 @@ export default function AbstractsList({
       // Pull filename from Content-Disposition if present
       const cd = res.headers.get("Content-Disposition") || "";
       const match = /filename="?([^"]+)"?/i.exec(cd);
-      const filename = match?.[1] || `APTICON-2026-Abstracts-${new Date().toISOString().slice(0, 10)}.docx`;
+      const filename =
+        match?.[1] ||
+        `APTICON-2026-Abstracts-${new Date().toISOString().slice(0, 10)}.docx`;
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -99,19 +117,33 @@ export default function AbstractsList({
         title={title}
         description={description}
         actions={
-          <div className="flex items-center gap-2"><ExportButtons endpoint="/api/abstracts/export" query={new URLSearchParams({ ...(q ? { q } : {}), ...(status ? { status } : {}) }).toString()} label="Abstracts" /><Button onClick={downloadWord} disabled={downloading || items.length === 0} className="bg-[var(--primary-800)] hover:bg-[var(--primary-900)] text-white">
-            {downloading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Preparing…
-              </>
-            ) : (
-              <>
-                <Download className="w-4 h-4 mr-2" />
-                Download Word
-              </>
-            )}
-          </Button></div>
+          <div className="flex items-center gap-2">
+            <ExportButtons
+              endpoint="/api/abstracts/export"
+              query={new URLSearchParams({
+                ...(q ? { q } : {}),
+                ...(status ? { status } : {}),
+              }).toString()}
+              label="Abstracts"
+            />
+            <Button
+              onClick={downloadWord}
+              disabled={downloading || items.length === 0}
+              className="bg-[var(--primary-800)] hover:bg-[var(--primary-900)] text-white"
+            >
+              {downloading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Preparing…
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Word
+                </>
+              )}
+            </Button>
+          </div>
         }
       />
 
@@ -120,7 +152,12 @@ export default function AbstractsList({
           <div className="flex flex-col md:flex-row md:items-center gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted-text)]" />
-              <Input placeholder="Search title, code, email, author…" className="pl-9" value={q} onChange={(e) => setQ(e.target.value)} />
+              <Input
+                placeholder="Search title, code, email, author…"
+                className="pl-9"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+              />
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               {STATUSES.map((s) => (
@@ -132,7 +169,9 @@ export default function AbstractsList({
                 >
                   {s ? s.replace("_", " ") : "All"}
                   {counts[s] !== undefined && s !== "" && (
-                    <span className="ml-1 text-xs opacity-70">({counts[s]})</span>
+                    <span className="ml-1 text-xs opacity-70">
+                      ({counts[s]})
+                    </span>
                   )}
                 </Button>
               ))}
@@ -158,24 +197,55 @@ export default function AbstractsList({
             </TableHeader>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={8} className="text-center text-sm py-8 text-[var(--muted-text)]">Loading…</TableCell></TableRow>
+                <TableRow>
+                  <TableCell
+                    colSpan={8}
+                    className="text-center text-sm py-8 text-[var(--muted-text)]"
+                  >
+                    Loading…
+                  </TableCell>
+                </TableRow>
               ) : items.length === 0 ? (
-                <TableRow><TableCell colSpan={8} className="text-center text-sm py-8 text-[var(--muted-text)]">No abstracts match your filters.</TableCell></TableRow>
+                <TableRow>
+                  <TableCell
+                    colSpan={8}
+                    className="text-center text-sm py-8 text-[var(--muted-text)]"
+                  >
+                    No abstracts match your filters.
+                  </TableCell>
+                </TableRow>
               ) : (
                 items.map((a) => (
                   <TableRow key={a._id}>
-                    <TableCell className="font-mono text-xs">{a.submissionCode}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {a.submissionCode}
+                    </TableCell>
                     <TableCell>
-                      <Link href={`${detailBase}/${a._id}`} className="text-[var(--primary-800)] hover:underline">
-                        {a.title.length > 60 ? a.title.slice(0, 60) + "…" : a.title}
+                      <Link
+                        href={`${detailBase}/${a._id}`}
+                        className="text-[var(--primary-800)] hover:underline"
+                      >
+                        {a.title.length > 60
+                          ? a.title.slice(0, 60) + "…"
+                          : a.title}
                       </Link>
                     </TableCell>
-                    <TableCell className="text-xs">{a.presentingAuthor}</TableCell>
+                    <TableCell className="text-xs">
+                      {a.presentingAuthor}
+                    </TableCell>
                     <TableCell className="text-xs">{a.theme}</TableCell>
-                    <TableCell className="text-xs capitalize">{a.type}</TableCell>
-                    <TableCell className="text-xs">{a.assignedReviewers.length}</TableCell>
-                    <TableCell><StatusBadge status={a.status} /></TableCell>
-                    <TableCell className="text-xs text-[var(--muted-text)]">{format(new Date(a.createdAt), "d MMM, HH:mm")}</TableCell>
+                    <TableCell className="text-xs capitalize">
+                      {a.type}
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      {a.assignedReviewers.length}
+                    </TableCell>
+                    <TableCell>
+                      <StatusBadge status={a.status} />
+                    </TableCell>
+                    <TableCell className="text-xs text-[var(--muted-text)]">
+                      {format(new Date(a.createdAt), "d MMM, HH:mm")}
+                    </TableCell>
                   </TableRow>
                 ))
               )}

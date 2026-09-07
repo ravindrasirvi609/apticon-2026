@@ -23,10 +23,15 @@ export default function PaymentRedirectDialog({ open }: { open: boolean }) {
           </div>
           <DialogTitle>Payment submitted</DialogTitle>
           <DialogDescription className="max-w-sm text-center leading-6">
-            We’re securely confirming your payment and preparing your registration confirmation. Please wait — you’ll be redirected automatically in a few seconds.
+            We’re securely confirming your payment and preparing your
+            registration confirmation. Please wait — you’ll be redirected
+            automatically in a few seconds.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex items-center justify-center gap-2 text-sm font-medium text-[var(--primary-800)]" role="status">
+        <div
+          className="flex items-center justify-center gap-2 text-sm font-medium text-[var(--primary-800)]"
+          role="status"
+        >
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
           Redirecting to your confirmation page…
         </div>

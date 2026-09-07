@@ -6,11 +6,23 @@ import { Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/shadcn/button";
 import { Input } from "@/components/ui/shadcn/input";
 import { Label } from "@/components/ui/shadcn/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/shadcn/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/shadcn/card";
 
-interface ResetFormProps { loginPath: string; title: string }
+interface ResetFormProps {
+  loginPath: string;
+  title: string;
+}
 
-export default function ResetPasswordForm({ loginPath, title }: ResetFormProps) {
+export default function ResetPasswordForm({
+  loginPath,
+  title,
+}: ResetFormProps) {
   const router = useRouter();
   const params = useSearchParams();
   const token = params.get("token") ?? "";
@@ -20,7 +32,8 @@ export default function ResetPasswordForm({ loginPath, title }: ResetFormProps) 
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (password.length < 8) return toast.error("Password must be at least 8 characters.");
+    if (password.length < 8)
+      return toast.error("Password must be at least 8 characters.");
     if (password !== confirm) return toast.error("Passwords do not match.");
     if (!token) return toast.error("Missing reset token.");
 
@@ -53,20 +66,40 @@ export default function ResetPasswordForm({ loginPath, title }: ResetFormProps) 
             <Lock className="w-6 h-6 text-[var(--accent-300)]" />
           </div>
           <CardTitle>{title}</CardTitle>
-          <CardDescription>Choose a new password. Minimum 8 characters.</CardDescription>
+          <CardDescription>
+            Choose a new password. Minimum 8 characters.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="password">New password</Label>
-              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirm">Confirm new password</Label>
-              <Input id="confirm" type="password" required value={confirm} onChange={(e) => setConfirm(e.target.value)} disabled={loading} />
+              <Input
+                id="confirm"
+                type="password"
+                required
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                disabled={loading}
+              />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Update password"}
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                "Update password"
+              )}
             </Button>
           </form>
         </CardContent>

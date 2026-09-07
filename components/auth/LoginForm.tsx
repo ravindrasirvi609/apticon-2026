@@ -7,7 +7,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/shadcn/button";
 import { Input } from "@/components/ui/shadcn/input";
 import { Label } from "@/components/ui/shadcn/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/shadcn/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/shadcn/card";
 
 interface LoginFormProps {
   role: "super_admin" | "reviewer" | "editorial";
@@ -17,14 +23,22 @@ interface LoginFormProps {
   forgotPath: string;
 }
 
-export default function LoginForm({ role, title, subtitle, successPath, forgotPath }: LoginFormProps) {
+export default function LoginForm({
+  role,
+  title,
+  subtitle,
+  successPath,
+  forgotPath,
+}: LoginFormProps) {
   const router = useRouter();
   const params = useSearchParams();
   const from = params.get("from");
   const rolePrefix =
-    role === "super_admin" ? "/admin"
-    : role === "editorial" ? "/editorial"
-    : "/reviewer";
+    role === "super_admin"
+      ? "/admin"
+      : role === "editorial"
+        ? "/editorial"
+        : "/reviewer";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -86,7 +100,10 @@ export default function LoginForm({ role, title, subtitle, successPath, forgotPa
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <Link href={forgotPath} className="text-xs text-[var(--primary-800)] hover:underline">
+                <Link
+                  href={forgotPath}
+                  className="text-xs text-[var(--primary-800)] hover:underline"
+                >
                   Forgot?
                 </Link>
               </div>
@@ -100,8 +117,17 @@ export default function LoginForm({ role, title, subtitle, successPath, forgotPa
                 disabled={loading}
               />
             </div>
-            <Button type="submit" className="w-full" size="lg" disabled={loading}>
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign in"}
+            <Button
+              type="submit"
+              className="w-full"
+              size="lg"
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                "Sign in"
+              )}
             </Button>
           </form>
           <p className="mt-6 text-center text-xs text-[var(--muted-text)]">

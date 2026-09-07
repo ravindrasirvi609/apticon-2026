@@ -29,7 +29,9 @@ export async function signSession(payload: SessionPayload): Promise<string> {
     .sign(key);
 }
 
-export async function verifySession(token: string): Promise<SessionPayload | null> {
+export async function verifySession(
+  token: string,
+): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, key);
     if (
@@ -58,14 +60,18 @@ export async function hashPassword(pw: string): Promise<string> {
   return bcrypt.hash(pw, 12);
 }
 
-export async function verifyPassword(pw: string, hash: string): Promise<boolean> {
+export async function verifyPassword(
+  pw: string,
+  hash: string,
+): Promise<boolean> {
   return bcrypt.compare(pw, hash);
 }
 
 export function generateTempPassword(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789abcdefghijkmnpqrstuvwxyz";
   let out = "";
-  for (let i = 0; i < 12; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  for (let i = 0; i < 12; i++)
+    out += chars[Math.floor(Math.random() * chars.length)];
   return out + "!";
 }
 
@@ -78,14 +84,18 @@ export async function getSessionFromCookies(): Promise<SessionPayload | null> {
   return verifySession(token);
 }
 
-export async function requireRole<R extends Role>(role: R): Promise<SessionPayload & { role: R }> {
+export async function requireRole<R extends Role>(
+  role: R,
+): Promise<SessionPayload & { role: R }> {
   const s = await getSessionFromCookies();
   if (!s) throw new AuthError("Unauthorized", 401);
   if (s.role !== role) throw new AuthError("Forbidden", 403);
   return s as SessionPayload & { role: R };
 }
 
-export async function requireAnyRole<R extends Role[]>(...roles: R): Promise<SessionPayload & { role: R[number] }> {
+export async function requireAnyRole<R extends Role[]>(
+  ...roles: R
+): Promise<SessionPayload & { role: R[number] }> {
   const s = await getSessionFromCookies();
   if (!s) throw new AuthError("Unauthorized", 401);
   if (!roles.includes(s.role)) throw new AuthError("Forbidden", 403);

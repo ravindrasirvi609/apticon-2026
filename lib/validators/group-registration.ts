@@ -8,8 +8,17 @@ const delegateSchema = z.object({
   name: z.string().min(2).max(200).trim(),
   designation: z.string().min(2).max(200).trim(),
   email: z.string().email().toLowerCase().trim(),
-  phone: z.string().trim().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
-  photoKey: z.string().max(300).regex(/^delegate-photos\/\d{4}\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp)$/, "Invalid photo reference"),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
+  photoKey: z
+    .string()
+    .max(300)
+    .regex(
+      /^delegate-photos\/\d{4}\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp)$/,
+      "Invalid photo reference",
+    ),
   photoName: z.string().min(1).max(300),
   affiliation: z.string().min(2).max(300).trim(),
   aptiMemberId: z.string().max(100).trim().optional(),
@@ -18,8 +27,14 @@ const delegateSchema = z.object({
 export const groupRazorpayOrderSchema = z.object({
   coordinatorName: z.string().min(2).max(200).trim(),
   coordinatorEmail: z.string().email().toLowerCase().trim(),
-  coordinatorPhone: z.string().trim().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
-  coordinatorPhotoKey: z.string().max(300).regex(/^delegate-photos\/\d{4}\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp)$/),
+  coordinatorPhone: z
+    .string()
+    .trim()
+    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number"),
+  coordinatorPhotoKey: z
+    .string()
+    .max(300)
+    .regex(/^delegate-photos\/\d{4}\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp)$/),
   coordinatorPhotoName: z.string().min(1).max(300),
   coordinatorAffiliation: z.string().min(2).max(300).trim(),
   coordinatorAptiMemberId: z.string().max(100).trim().optional(),
@@ -30,8 +45,14 @@ export const groupRazorpayOrderSchema = z.object({
   category: z.enum(REGISTRATION_CATEGORIES),
   delegates: z
     .array(delegateSchema)
-    .min(GROUP_MIN_DELEGATES, `A group registration needs at least ${GROUP_MIN_DELEGATES} delegates`)
-    .max(GROUP_MAX_DELEGATES, `A single group registration supports up to ${GROUP_MAX_DELEGATES} delegates — please split larger groups`),
+    .min(
+      GROUP_MIN_DELEGATES,
+      `A group registration needs at least ${GROUP_MIN_DELEGATES} delegates`,
+    )
+    .max(
+      GROUP_MAX_DELEGATES,
+      `A single group registration supports up to ${GROUP_MAX_DELEGATES} delegates — please split larger groups`,
+    ),
 });
 
 export const groupRazorpayVerifySchema = z.object({
@@ -41,14 +62,18 @@ export const groupRazorpayVerifySchema = z.object({
   razorpay_signature: z.string().length(64),
 });
 
-export const groupDecisionSchema = z.object({
-  decision: z.enum(["approved", "rejected"]),
-  reviewNote: z.string().max(2000).optional(),
-}).refine((d) => d.decision !== "rejected" || !!d.reviewNote?.trim(), {
-  message: "A note is required when rejecting a group registration",
-  path: ["reviewNote"],
-});
+export const groupDecisionSchema = z
+  .object({
+    decision: z.enum(["approved", "rejected"]),
+    reviewNote: z.string().max(2000).optional(),
+  })
+  .refine((d) => d.decision !== "rejected" || !!d.reviewNote?.trim(), {
+    message: "A note is required when rejecting a group registration",
+    path: ["reviewNote"],
+  });
 
 export type GroupRazorpayOrderInput = z.infer<typeof groupRazorpayOrderSchema>;
-export type GroupRazorpayVerifyInput = z.infer<typeof groupRazorpayVerifySchema>;
+export type GroupRazorpayVerifyInput = z.infer<
+  typeof groupRazorpayVerifySchema
+>;
 export type GroupDecisionInput = z.infer<typeof groupDecisionSchema>;

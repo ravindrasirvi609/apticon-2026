@@ -2,7 +2,11 @@ import mongoose, { Schema, Model } from "mongoose";
 import type { FeeTier, RegistrationCategory } from "@/lib/registration-fees";
 import type { PaymentStatus } from "@/models/Registration";
 
-export type GroupRegistrationStatus = "submitted" | "payment_review" | "approved" | "rejected";
+export type GroupRegistrationStatus =
+  | "submitted"
+  | "payment_review"
+  | "approved"
+  | "rejected";
 
 export interface IGroupDelegate {
   name: string;
@@ -79,7 +83,7 @@ const GroupDelegateSchema = new Schema<IGroupDelegate>(
     photoName: { type: String, default: "" },
     isComplimentary: { type: Boolean, default: false },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const GroupRegistrationSchema = new Schema<IGroupRegistration>(
@@ -87,7 +91,13 @@ const GroupRegistrationSchema = new Schema<IGroupRegistration>(
     groupCode: { type: String, required: true, unique: true, index: true },
 
     coordinatorName: { type: String, required: true, trim: true },
-    coordinatorEmail: { type: String, required: true, lowercase: true, trim: true, index: true },
+    coordinatorEmail: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+      index: true,
+    },
     coordinatorPhone: { type: String, required: true, trim: true },
     coordinatorPhotoKey: { type: String, required: true },
     coordinatorPhotoUrl: { type: String, default: "" },
@@ -103,14 +113,32 @@ const GroupRegistrationSchema = new Schema<IGroupRegistration>(
     delegateCount: { type: Number, required: true, min: 1 },
     complimentaryCount: { type: Number, required: true, default: 0 },
 
-    feeTier: { type: String, enum: ["early_bird", "regular", "on_spot"], required: true },
+    feeTier: {
+      type: String,
+      enum: ["early_bird", "regular", "on_spot"],
+      required: true,
+    },
     baseFeeAmount: { type: Number, required: true, min: 0 },
     feeAmount: { type: Number, required: true, min: 0 },
 
-    paymentMode: { type: String, enum: ["razorpay"], required: true, default: "razorpay" },
-    paymentStatus: { type: String, enum: ["pending", "authorized", "captured", "failed", "refunded"], index: true },
+    paymentMode: {
+      type: String,
+      enum: ["razorpay"],
+      required: true,
+      default: "razorpay",
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "authorized", "captured", "failed", "refunded"],
+      index: true,
+    },
     razorpayOrderId: { type: String, sparse: true, unique: true, index: true },
-    razorpayPaymentId: { type: String, sparse: true, unique: true, index: true },
+    razorpayPaymentId: {
+      type: String,
+      sparse: true,
+      unique: true,
+      index: true,
+    },
     paymentMethod: { type: String },
     paymentError: { type: String },
     paidAt: { type: Date },
@@ -126,15 +154,20 @@ const GroupRegistrationSchema = new Schema<IGroupRegistration>(
     reviewedAt: { type: Date },
     reviewNote: { type: String },
 
-    createdRegistrations: [{ type: Schema.Types.ObjectId, ref: "Registration" }],
+    createdRegistrations: [
+      { type: Schema.Types.ObjectId, ref: "Registration" },
+    ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 GroupRegistrationSchema.index({ createdAt: -1 });
 
 const GroupRegistration: Model<IGroupRegistration> =
   (mongoose.models.GroupRegistration as Model<IGroupRegistration>) ??
-  mongoose.model<IGroupRegistration>("GroupRegistration", GroupRegistrationSchema);
+  mongoose.model<IGroupRegistration>(
+    "GroupRegistration",
+    GroupRegistrationSchema,
+  );
 
 export default GroupRegistration;

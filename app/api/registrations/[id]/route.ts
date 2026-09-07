@@ -6,9 +6,13 @@ import Abstract from "@/models/Abstract";
 import { getSessionFromCookies } from "@/lib/auth";
 import { generateRegistrationQrDataUrl } from "@/lib/qrcode";
 
-export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+export async function GET(
+  _req: NextRequest,
+  ctx: { params: Promise<{ id: string }> },
+) {
   const { id } = await ctx.params;
-  if (!mongoose.isValidObjectId(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+  if (!mongoose.isValidObjectId(id))
+    return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
   const s = await getSessionFromCookies();
   if (!s) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -32,7 +36,13 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
     delete (reg as Partial<typeof reg>).internalNote;
   }
 
-  const qrCode = reg.status === "approved" ? await generateRegistrationQrDataUrl(reg.registrationCode) : undefined;
+  const qrCode =
+    reg.status === "approved"
+      ? await generateRegistrationQrDataUrl(reg.registrationCode)
+      : undefined;
 
-  return NextResponse.json({ registration: { ...reg, qrCode }, linkedAbstract });
+  return NextResponse.json({
+    registration: { ...reg, qrCode },
+    linkedAbstract,
+  });
 }

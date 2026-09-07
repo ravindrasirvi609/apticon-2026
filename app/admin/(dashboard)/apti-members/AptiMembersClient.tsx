@@ -1,22 +1,53 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { UserPlus, Upload, Search, Loader2, Edit, Trash2, ChevronLeft, ChevronRight, RefreshCw, BadgeCheck } from "lucide-react";
+import {
+  UserPlus,
+  Upload,
+  Search,
+  Loader2,
+  Edit,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  RefreshCw,
+  BadgeCheck,
+} from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/shadcn/table";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/shadcn/table";
 import { Button } from "@/components/ui/shadcn/button";
 import { Badge } from "@/components/ui/shadcn/badge";
 import { Input } from "@/components/ui/shadcn/input";
 import { Label } from "@/components/ui/shadcn/label";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogDescription,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/shadcn/dialog";
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/shadcn/alert-dialog";
 
 interface AptiMemberRow {
@@ -68,31 +99,34 @@ export default function AptiMembersClient() {
   const [editForm, setEditForm] = useState(EMPTY_MEMBER_FORM);
   const [importText, setImportText] = useState("");
 
-  const loadMembers = useCallback(async (p = page, q = search) => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        page: p.toString(),
-        limit: "20",
-        ...(q ? { search: q } : {}),
-      });
-      const res = await fetch(`/api/admin/apti-members?${params}`);
-      if (res.ok) {
-        const data = await res.json();
-        setMembers(data.members || []);
-        setTotal(data.total || 0);
-        setPage(data.page || 1);
-        setTotalPages(data.totalPages || 1);
-      } else {
-        const err = await res.json();
-        toast.error(err.error || "Failed to load members");
+  const loadMembers = useCallback(
+    async (p = page, q = search) => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams({
+          page: p.toString(),
+          limit: "20",
+          ...(q ? { search: q } : {}),
+        });
+        const res = await fetch(`/api/admin/apti-members?${params}`);
+        if (res.ok) {
+          const data = await res.json();
+          setMembers(data.members || []);
+          setTotal(data.total || 0);
+          setPage(data.page || 1);
+          setTotalPages(data.totalPages || 1);
+        } else {
+          const err = await res.json();
+          toast.error(err.error || "Failed to load members");
+        }
+      } catch {
+        toast.error("Failed to load members");
+      } finally {
+        setLoading(false);
       }
-    } catch {
-      toast.error("Failed to load members");
-    } finally {
-      setLoading(false);
-    }
-  }, [page, search]);
+    },
+    [page, search],
+  );
 
   useEffect(() => {
     loadMembers(1, search);
@@ -136,14 +170,17 @@ export default function AptiMembersClient() {
         body: JSON.stringify(payload),
       });
       const body = await res.json();
-      if (!res.ok) throw new Error(body.error || "Failed to create APTI member");
+      if (!res.ok)
+        throw new Error(body.error || "Failed to create APTI member");
 
       toast.success(`APTI Member ${body.member.memberId} added successfully.`);
       setAddOpen(false);
       setForm(EMPTY_MEMBER_FORM);
       await loadMembers(1, search);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to create APTI member");
+      toast.error(
+        e instanceof Error ? e.message : "Failed to create APTI member",
+      );
     } finally {
       setSaving(false);
     }
@@ -205,7 +242,9 @@ export default function AptiMembersClient() {
 
   const deleteMember = async (m: AptiMemberRow) => {
     try {
-      const res = await fetch(`/api/admin/apti-members/${m.id}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/apti-members/${m.id}`, {
+        method: "DELETE",
+      });
       if (res.ok) {
         toast.success(`Deleted APTI Member ${m.memberId}`);
         await loadMembers(page, search);
@@ -233,10 +272,20 @@ export default function AptiMembersClient() {
         parsedMembers = Array.isArray(parsed) ? parsed : [parsed];
       } else {
         // Parse CSV format (assuming header row or standard lines)
-        const lines = trimmed.split("\n").map((l) => l.trim()).filter(Boolean);
+        const lines = trimmed
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean);
         if (lines.length > 0) {
-          const headers = lines[0].split(",").map((h) => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ""));
-          const hasHeader = headers.some((h) => h.includes("member") || h.includes("name"));
+          const headers = lines[0].split(",").map((h) =>
+            h
+              .trim()
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, ""),
+          );
+          const hasHeader = headers.some(
+            (h) => h.includes("member") || h.includes("name"),
+          );
           const startIdx = hasHeader ? 1 : 0;
 
           for (let i = startIdx; i < lines.length; i++) {
@@ -249,10 +298,12 @@ export default function AptiMembersClient() {
                     if (h.includes("id")) rowObj.memberId = cols[idx];
                     else if (h.includes("name")) rowObj.name = cols[idx];
                     else if (h.includes("email")) rowObj.email = cols[idx];
-                    else if (h.includes("mobile") || h.includes("phone")) rowObj.mobile = cols[idx];
+                    else if (h.includes("mobile") || h.includes("phone"))
+                      rowObj.mobile = cols[idx];
                     else if (h.includes("city")) rowObj.city = cols[idx];
                     else if (h.includes("state")) rowObj.state = cols[idx];
-                    else if (h.includes("pincode") || h.includes("zip")) rowObj.pincode = cols[idx];
+                    else if (h.includes("pincode") || h.includes("zip"))
+                      rowObj.pincode = cols[idx];
                   }
                 });
                 if (rowObj.memberId && rowObj.name) parsedMembers.push(rowObj);
@@ -273,7 +324,9 @@ export default function AptiMembersClient() {
       }
 
       if (parsedMembers.length === 0) {
-        throw new Error("Could not parse any valid APTI members from provided input.");
+        throw new Error(
+          "Could not parse any valid APTI members from provided input.",
+        );
       }
 
       const res = await fetch("/api/admin/apti-members/import", {
@@ -284,12 +337,16 @@ export default function AptiMembersClient() {
       const body = await res.json();
       if (!res.ok) throw new Error(body.error || "Failed to import members");
 
-      toast.success(`Successfully imported ${body.importedCount} APTI member(s).`);
+      toast.success(
+        `Successfully imported ${body.importedCount} APTI member(s).`,
+      );
       setImportOpen(false);
       setImportText("");
       await loadMembers(1, search);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to parse and import members");
+      toast.error(
+        e instanceof Error ? e.message : "Failed to parse and import members",
+      );
     } finally {
       setImporting(false);
     }
@@ -314,7 +371,8 @@ export default function AptiMembersClient() {
                 <DialogHeader>
                   <DialogTitle>Import APTI Members</DialogTitle>
                   <DialogDescription>
-                    Paste JSON array or CSV text containing APTI members to bulk upsert into the registry.
+                    Paste JSON array or CSV text containing APTI members to bulk
+                    upsert into the registry.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-2">
@@ -331,9 +389,19 @@ export default function AptiMembersClient() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setImportOpen(false)}>Cancel</Button>
-                  <Button onClick={handleImport} disabled={importing || !importText.trim()}>
-                    {importing && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  <Button
+                    variant="outline"
+                    onClick={() => setImportOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleImport}
+                    disabled={importing || !importText.trim()}
+                  >
+                    {importing && (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    )}
                     Import Members
                   </Button>
                 </DialogFooter>
@@ -351,7 +419,9 @@ export default function AptiMembersClient() {
               <DialogContent className="max-w-xl">
                 <DialogHeader>
                   <DialogTitle>Add New APTI Member</DialogTitle>
-                  <DialogDescription>Add a single member to the official APTI registry.</DialogDescription>
+                  <DialogDescription>
+                    Add a single member to the official APTI registry.
+                  </DialogDescription>
                 </DialogHeader>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
                   <div>
@@ -361,7 +431,9 @@ export default function AptiMembersClient() {
                       placeholder="e.g. KA/LM-123"
                       className="mt-1"
                       value={form.memberId}
-                      onChange={(e) => setForm({ ...form, memberId: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, memberId: e.target.value })
+                      }
                     />
                   </div>
                   <div>
@@ -371,7 +443,9 @@ export default function AptiMembersClient() {
                       placeholder="Dr. John Smith"
                       className="mt-1"
                       value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, name: e.target.value })
+                      }
                     />
                   </div>
                   <div>
@@ -382,7 +456,9 @@ export default function AptiMembersClient() {
                       placeholder="john@example.com"
                       className="mt-1"
                       value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, email: e.target.value })
+                      }
                     />
                   </div>
                   <div>
@@ -392,7 +468,9 @@ export default function AptiMembersClient() {
                       placeholder="+91 9876543210"
                       className="mt-1"
                       value={form.mobile}
-                      onChange={(e) => setForm({ ...form, mobile: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, mobile: e.target.value })
+                      }
                     />
                   </div>
                   <div>
@@ -402,7 +480,9 @@ export default function AptiMembersClient() {
                       placeholder="Bangalore"
                       className="mt-1"
                       value={form.city}
-                      onChange={(e) => setForm({ ...form, city: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, city: e.target.value })
+                      }
                     />
                   </div>
                   <div>
@@ -412,7 +492,9 @@ export default function AptiMembersClient() {
                       placeholder="Karnataka"
                       className="mt-1"
                       value={form.state}
-                      onChange={(e) => setForm({ ...form, state: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, state: e.target.value })
+                      }
                     />
                   </div>
                   <div>
@@ -422,7 +504,9 @@ export default function AptiMembersClient() {
                       placeholder="560001"
                       className="mt-1"
                       value={form.pincode}
-                      onChange={(e) => setForm({ ...form, pincode: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, pincode: e.target.value })
+                      }
                     />
                   </div>
                   <div>
@@ -432,7 +516,9 @@ export default function AptiMembersClient() {
                       placeholder="KA"
                       className="mt-1"
                       value={form.stateCode}
-                      onChange={(e) => setForm({ ...form, stateCode: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, stateCode: e.target.value })
+                      }
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -442,14 +528,23 @@ export default function AptiMembersClient() {
                       placeholder="Department of Pharmacy, University..."
                       className="mt-1"
                       value={form.officeAddress}
-                      onChange={(e) => setForm({ ...form, officeAddress: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, officeAddress: e.target.value })
+                      }
                     />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setAddOpen(false)}>Cancel</Button>
-                  <Button onClick={createMember} disabled={saving || !form.memberId || !form.name}>
-                    {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  <Button variant="outline" onClick={() => setAddOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={createMember}
+                    disabled={saving || !form.memberId || !form.name}
+                  >
+                    {saving && (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    )}
                     Save Member
                   </Button>
                 </DialogFooter>
@@ -461,7 +556,10 @@ export default function AptiMembersClient() {
 
       {/* Filter and stats row */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full md:w-auto flex-1 max-w-md">
+        <form
+          onSubmit={handleSearchSubmit}
+          className="flex items-center gap-2 w-full md:w-auto flex-1 max-w-md"
+        >
           <div className="relative flex-1">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted-text)]" />
             <Input
@@ -472,15 +570,25 @@ export default function AptiMembersClient() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <Button type="submit" variant="outline">Search</Button>
+          <Button type="submit" variant="outline">
+            Search
+          </Button>
         </form>
 
         <div className="flex items-center gap-4 text-sm font-medium">
           <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-[var(--accent-500)]/20 shadow-xs">
             <BadgeCheck className="w-4 h-4 text-[var(--primary-800)]" />
-            <span>Total Members: <strong className="text-[var(--primary-800)]">{total}</strong></span>
+            <span>
+              Total Members:{" "}
+              <strong className="text-[var(--primary-800)]">{total}</strong>
+            </span>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => loadMembers(page, search)} title="Refresh list">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => loadMembers(page, search)}
+            title="Refresh list"
+          >
             <RefreshCw className="w-4 h-4" />
           </Button>
         </div>
@@ -502,14 +610,20 @@ export default function AptiMembersClient() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-sm text-[var(--muted-text)]">
+                  <TableCell
+                    colSpan={5}
+                    className="text-center py-8 text-sm text-[var(--muted-text)]"
+                  >
                     <Loader2 className="w-5 h-5 animate-spin mx-auto mb-2 text-[var(--primary-800)]" />
                     Loading APTI members...
                   </TableCell>
                 </TableRow>
               ) : members.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-sm text-[var(--muted-text)]">
+                  <TableCell
+                    colSpan={5}
+                    className="text-center py-8 text-sm text-[var(--muted-text)]"
+                  >
                     No APTI members found matching your search.
                   </TableCell>
                 </TableRow>
@@ -518,41 +632,78 @@ export default function AptiMembersClient() {
                   <TableRow key={m.id}>
                     <TableCell className="font-mono text-xs font-bold text-[var(--primary-800)]">
                       {m.memberId}
-                      {m.stateCode && <Badge variant="outline" className="ml-2 text-[10px]">{m.stateCode}</Badge>}
+                      {m.stateCode && (
+                        <Badge variant="outline" className="ml-2 text-[10px]">
+                          {m.stateCode}
+                        </Badge>
+                      )}
                     </TableCell>
                     <TableCell className="font-semibold text-sm">
                       {m.name}
-                      {m.serialNo && <div className="text-[10px] font-normal text-[var(--muted-text)]">Sl. #{m.serialNo}</div>}
+                      {m.serialNo && (
+                        <div className="text-[10px] font-normal text-[var(--muted-text)]">
+                          Sl. #{m.serialNo}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell className="text-xs">
-                      <div>{m.email || <span className="text-[var(--muted-text)] italic">No email</span>}</div>
+                      <div>
+                        {m.email || (
+                          <span className="text-[var(--muted-text)] italic">
+                            No email
+                          </span>
+                        )}
+                      </div>
                       <div className="text-[var(--muted-text)]">{m.mobile}</div>
                     </TableCell>
                     <TableCell className="text-xs">
-                      <div>{[m.city, m.state].filter(Boolean).join(", ") || "—"}</div>
-                      {m.pincode && <div className="text-[var(--muted-text)]">{m.pincode}</div>}
+                      <div>
+                        {[m.city, m.state].filter(Boolean).join(", ") || "—"}
+                      </div>
+                      {m.pincode && (
+                        <div className="text-[var(--muted-text)]">
+                          {m.pincode}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="icon" onClick={() => openEditModal(m)} title="Edit">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openEditModal(m)}
+                          title="Edit"
+                        >
                           <Edit className="w-4 h-4" />
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700 hover:bg-red-50" title="Delete">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              title="Delete"
+                            >
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete APTI Member?</AlertDialogTitle>
+                              <AlertDialogTitle>
+                                Delete APTI Member?
+                              </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete member <strong>{m.memberId}</strong> ({m.name})? This action cannot be undone.
+                                Are you sure you want to delete member{" "}
+                                <strong>{m.memberId}</strong> ({m.name})? This
+                                action cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={() => deleteMember(m)}>
+                              <AlertDialogAction
+                                className="bg-red-600 hover:bg-red-700"
+                                onClick={() => deleteMember(m)}
+                              >
                                 Delete
                               </AlertDialogAction>
                             </AlertDialogFooter>
@@ -570,11 +721,16 @@ export default function AptiMembersClient() {
 
       {/* Edit Dialog */}
       {editMember && (
-        <Dialog open={!!editMember} onOpenChange={(open) => !open && setEditMember(null)}>
+        <Dialog
+          open={!!editMember}
+          onOpenChange={(open) => !open && setEditMember(null)}
+        >
           <DialogContent className="max-w-xl">
             <DialogHeader>
               <DialogTitle>Edit APTI Member: {editMember.memberId}</DialogTitle>
-              <DialogDescription>Update member details in the APTI registry.</DialogDescription>
+              <DialogDescription>
+                Update member details in the APTI registry.
+              </DialogDescription>
             </DialogHeader>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
               <div>
@@ -583,7 +739,9 @@ export default function AptiMembersClient() {
                   id="editName"
                   className="mt-1"
                   value={editForm.name}
-                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, name: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -593,7 +751,9 @@ export default function AptiMembersClient() {
                   type="email"
                   className="mt-1"
                   value={editForm.email}
-                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, email: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -602,7 +762,9 @@ export default function AptiMembersClient() {
                   id="editMobile"
                   className="mt-1"
                   value={editForm.mobile}
-                  onChange={(e) => setEditForm({ ...editForm, mobile: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, mobile: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -611,7 +773,9 @@ export default function AptiMembersClient() {
                   id="editCity"
                   className="mt-1"
                   value={editForm.city}
-                  onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, city: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -620,7 +784,9 @@ export default function AptiMembersClient() {
                   id="editState"
                   className="mt-1"
                   value={editForm.state}
-                  onChange={(e) => setEditForm({ ...editForm, state: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, state: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -629,7 +795,9 @@ export default function AptiMembersClient() {
                   id="editPincode"
                   className="mt-1"
                   value={editForm.pincode}
-                  onChange={(e) => setEditForm({ ...editForm, pincode: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, pincode: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -638,7 +806,9 @@ export default function AptiMembersClient() {
                   id="editStateCode"
                   className="mt-1"
                   value={editForm.stateCode}
-                  onChange={(e) => setEditForm({ ...editForm, stateCode: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, stateCode: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -647,7 +817,9 @@ export default function AptiMembersClient() {
                   id="editSerialNo"
                   className="mt-1"
                   value={editForm.serialNo}
-                  onChange={(e) => setEditForm({ ...editForm, serialNo: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, serialNo: e.target.value })
+                  }
                 />
               </div>
               <div className="md:col-span-2">
@@ -656,13 +828,20 @@ export default function AptiMembersClient() {
                   id="editOfficeAddress"
                   className="mt-1"
                   value={editForm.officeAddress}
-                  onChange={(e) => setEditForm({ ...editForm, officeAddress: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, officeAddress: e.target.value })
+                  }
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setEditMember(null)}>Cancel</Button>
-              <Button onClick={updateMember} disabled={saving || !editForm.name}>
+              <Button variant="outline" onClick={() => setEditMember(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={updateMember}
+                disabled={saving || !editForm.name}
+              >
                 {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 Update Member
               </Button>
@@ -675,7 +854,8 @@ export default function AptiMembersClient() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between text-sm text-[var(--muted-text)]">
           <div>
-            Showing Page <strong>{page}</strong> of <strong>{totalPages}</strong> ({total} total items)
+            Showing Page <strong>{page}</strong> of{" "}
+            <strong>{totalPages}</strong> ({total} total items)
           </div>
           <div className="flex items-center gap-2">
             <Button

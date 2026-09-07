@@ -31,10 +31,17 @@ export default function AnnouncementBanner() {
         >
           <div className="bg-gradient-to-r from-[var(--accent-500)] via-[var(--accent-400)] to-[var(--accent-500)] text-[var(--dark-text)] py-2 px-4 relative">
             <div className="flex items-center justify-center gap-3 flex-wrap pr-8">
-              <Sparkles size={14} className="flex-shrink-0 text-[var(--primary-800)]" aria-hidden />
+              <Sparkles
+                size={14}
+                className="flex-shrink-0 text-[var(--primary-800)]"
+                aria-hidden
+              />
               <p className="text-xs sm:text-sm font-semibold text-center">
-                <span className="font-black text-[var(--primary-800)]">APTICON 2026</span>
-                {" "}— 24 & 25 Oct, Raipur ✦ Registration &amp; Abstract submission opened!{" "}
+                <span className="font-black text-[var(--primary-800)]">
+                  APTICON 2026
+                </span>{" "}
+                — 24 & 25 Oct, Raipur ✦ Registration &amp; Abstract submission
+                opened!{" "}
                 <Link
                   href="/registration"
                   className="underline underline-offset-2 hover:text-[var(--primary-800)] transition-colors font-bold ml-1"

@@ -1,6 +1,8 @@
 import { connectDB } from "@/lib/db";
 import Registration from "@/models/Registration";
-import MobileActionLog, { type MobileActionType } from "@/models/MobileActionLog";
+import MobileActionLog, {
+  type MobileActionType,
+} from "@/models/MobileActionLog";
 
 export interface DashboardStats {
   totalRegistered: number;
@@ -24,7 +26,12 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const [totalRegistered, groups] = await Promise.all([
     Registration.countDocuments({}),
     MobileActionLog.aggregate<ActionCountGroup>([
-      { $group: { _id: { actionType: "$actionType", day: "$day" }, count: { $sum: 1 } } },
+      {
+        $group: {
+          _id: { actionType: "$actionType", day: "$day" },
+          count: { $sum: 1 },
+        },
+      },
     ]),
   ]);
 

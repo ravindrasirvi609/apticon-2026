@@ -10,12 +10,20 @@ export const metadata: Metadata = {
 };
 
 const REVIEWER_NAV: NavItem[] = [
-  { href: "/reviewer",           label: "Dashboard",          icon: "dashboard" },
-  { href: "/reviewer/abstracts", label: "Assigned Abstracts", icon: "abstracts" },
-  { href: "/reviewer/settings",  label: "Settings",           icon: "settings" },
+  { href: "/reviewer", label: "Dashboard", icon: "dashboard" },
+  {
+    href: "/reviewer/abstracts",
+    label: "Assigned Abstracts",
+    icon: "abstracts",
+  },
+  { href: "/reviewer/settings", label: "Settings", icon: "settings" },
 ];
 
-export default async function ReviewerDashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function ReviewerDashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const session = await getSessionFromCookies();
   if (!session || session.role !== "reviewer") {
     redirect("/reviewer/login");

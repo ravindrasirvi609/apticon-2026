@@ -29,7 +29,10 @@ export default function BackToTop() {
           className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-[var(--primary-800)] text-white shadow-lg flex items-center justify-center hover:bg-[var(--primary-700)] hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)] focus:ring-offset-2 group"
         >
           {/* Pulse ring */}
-          <span aria-hidden className="absolute inset-0 rounded-full border-2 border-[var(--accent-500)] opacity-0 group-hover:opacity-60 group-hover:scale-125 transition-all duration-400" />
+          <span
+            aria-hidden
+            className="absolute inset-0 rounded-full border-2 border-[var(--accent-500)] opacity-0 group-hover:opacity-60 group-hover:scale-125 transition-all duration-400"
+          />
           <ChevronUp size={20} strokeWidth={2.5} />
         </motion.button>
       )}

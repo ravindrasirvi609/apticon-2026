@@ -32,7 +32,11 @@ async function auditLink(
     action: `registration.link.${origin}`,
     resourceType: "registration",
     resourceId: registrationId.toString(),
-    details: { registrationId: registrationId.toString(), abstractId: abstractId.toString(), origin },
+    details: {
+      registrationId: registrationId.toString(),
+      abstractId: abstractId.toString(),
+      origin,
+    },
     request,
   });
 }
@@ -47,14 +51,32 @@ export async function linkFromRegistration(
   request?: NextRequest | Request,
 ): Promise<LinkResult> {
   await connectDB();
-  const abstract = await Abstract.findOne({ email: email.toLowerCase() }).sort({ createdAt: -1 });
+  const abstract = await Abstract.findOne({ email: email.toLowerCase() }).sort({
+    createdAt: -1,
+  });
   if (!abstract) return { linked: false };
 
-  await Registration.updateOne({ _id: registrationId }, { $set: { linkedAbstract: abstract._id } });
-  await Abstract.updateOne({ _id: abstract._id }, { $set: { linkedRegistration: registrationId } });
-  await auditLink(registrationId, abstract._id, "registration_submit", null, request);
+  await Registration.updateOne(
+    { _id: registrationId },
+    { $set: { linkedAbstract: abstract._id } },
+  );
+  await Abstract.updateOne(
+    { _id: abstract._id },
+    { $set: { linkedRegistration: registrationId } },
+  );
+  await auditLink(
+    registrationId,
+    abstract._id,
+    "registration_submit",
+    null,
+    request,
+  );
 
-  return { linked: true, registrationId: registrationId.toString(), abstractId: abstract._id.toString() };
+  return {
+    linked: true,
+    registrationId: registrationId.toString(),
+    abstractId: abstract._id.toString(),
+  };
 }
 
 /**
@@ -67,14 +89,32 @@ export async function linkFromAbstract(
   request?: NextRequest | Request,
 ): Promise<LinkResult> {
   await connectDB();
-  const registration = await Registration.findOne({ email: email.toLowerCase() }).sort({ createdAt: -1 });
+  const registration = await Registration.findOne({
+    email: email.toLowerCase(),
+  }).sort({ createdAt: -1 });
   if (!registration) return { linked: false };
 
-  await Abstract.updateOne({ _id: abstractId }, { $set: { linkedRegistration: registration._id } });
-  await Registration.updateOne({ _id: registration._id }, { $set: { linkedAbstract: abstractId } });
-  await auditLink(registration._id, abstractId, "abstract_submit", null, request);
+  await Abstract.updateOne(
+    { _id: abstractId },
+    { $set: { linkedRegistration: registration._id } },
+  );
+  await Registration.updateOne(
+    { _id: registration._id },
+    { $set: { linkedAbstract: abstractId } },
+  );
+  await auditLink(
+    registration._id,
+    abstractId,
+    "abstract_submit",
+    null,
+    request,
+  );
 
-  return { linked: true, registrationId: registration._id.toString(), abstractId: abstractId.toString() };
+  return {
+    linked: true,
+    registrationId: registration._id.toString(),
+    abstractId: abstractId.toString(),
+  };
 }
 
 /**
@@ -92,11 +132,17 @@ export async function manualLink(
 
   // Clear the previous link (if any) on the abstract side
   if (reg.linkedAbstract) {
-    await Abstract.updateOne({ _id: reg.linkedAbstract }, { $unset: { linkedRegistration: "" } });
+    await Abstract.updateOne(
+      { _id: reg.linkedAbstract },
+      { $unset: { linkedRegistration: "" } },
+    );
   }
 
   if (abstractId === null) {
-    await Registration.updateOne({ _id: reg._id }, { $unset: { linkedAbstract: "" } });
+    await Registration.updateOne(
+      { _id: reg._id },
+      { $unset: { linkedAbstract: "" } },
+    );
     await logAudit({
       actor: actor.uid,
       actorRole: actor.role,
@@ -112,9 +158,19 @@ export async function manualLink(
   const abstract = await Abstract.findById(abstractId);
   if (!abstract) throw new Error("Abstract not found");
 
-  await Registration.updateOne({ _id: reg._id }, { $set: { linkedAbstract: abstract._id } });
-  await Abstract.updateOne({ _id: abstract._id }, { $set: { linkedRegistration: reg._id } });
+  await Registration.updateOne(
+    { _id: reg._id },
+    { $set: { linkedAbstract: abstract._id } },
+  );
+  await Abstract.updateOne(
+    { _id: abstract._id },
+    { $set: { linkedRegistration: reg._id } },
+  );
   await auditLink(reg._id, abstract._id, "manual", actor, request);
 
-  return { linked: true, registrationId: reg._id.toString(), abstractId: abstract._id.toString() };
+  return {
+    linked: true,
+    registrationId: reg._id.toString(),
+    abstractId: abstract._id.toString(),
+  };
 }

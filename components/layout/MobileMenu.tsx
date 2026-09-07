@@ -65,9 +65,10 @@ export default function MobileMenu({ isOpen, onClose, pathname }: Props) {
                       className={`
                         flex items-center px-4 py-3 rounded-xl text-sm font-medium
                         transition-all duration-200
-                        ${active
-                          ? "bg-[var(--primary-800)] text-[var(--accent-400)]"
-                          : "text-white/80 hover:bg-white/8 hover:text-white"
+                        ${
+                          active
+                            ? "bg-[var(--primary-800)] text-[var(--accent-400)]"
+                            : "text-white/80 hover:bg-white/8 hover:text-white"
                         }
                       `}
                     >

@@ -6,7 +6,12 @@ import { getAttendeeStatus } from "@/lib/mobile/status";
 const ATTENDEE_LIST_FIELDS =
   "registrationCode fullName email phone institution designation category feeTier status paymentStatus photoUrl createdAt";
 
-export type SearchField = "all" | "registrationCode" | "email" | "phone" | "fullName";
+export type SearchField =
+  | "all"
+  | "registrationCode"
+  | "email"
+  | "phone"
+  | "fullName";
 
 export interface SearchAttendeesParams {
   q?: string;
@@ -61,10 +66,16 @@ export async function searchAttendees(params: SearchAttendeesParams) {
     .select("registration actionType createdAt")
     .lean();
 
-  const statusByRegistration = new Map<string, { checkedInAt: Date | null; kitIssuedAt: Date | null }>();
+  const statusByRegistration = new Map<
+    string,
+    { checkedInAt: Date | null; kitIssuedAt: Date | null }
+  >();
   for (const row of actionRows) {
     const key = row.registration.toString();
-    const entry = statusByRegistration.get(key) ?? { checkedInAt: null, kitIssuedAt: null };
+    const entry = statusByRegistration.get(key) ?? {
+      checkedInAt: null,
+      kitIssuedAt: null,
+    };
     if (row.actionType === "check_in") entry.checkedInAt = row.createdAt;
     if (row.actionType === "kit") entry.kitIssuedAt = row.createdAt;
     statusByRegistration.set(key, entry);
@@ -92,7 +103,9 @@ export async function getAttendeeById(id: string) {
 
 export async function getAttendeeByCode(code: string) {
   await connectDB();
-  const registration = await Registration.findOne({ registrationCode: code }).lean();
+  const registration = await Registration.findOne({
+    registrationCode: code,
+  }).lean();
   if (!registration) return null;
   const status = await getAttendeeStatus(registration._id.toString());
   return { registration, status };

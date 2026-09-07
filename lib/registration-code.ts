@@ -25,10 +25,16 @@ const PREFIX_START: Record<string, number> = {
  * own Counter document so numbering per category starts from PREFIX_START and never collides
  * across categories.
  */
-export async function generateRegistrationCode(category: RegistrationCategory): Promise<string> {
+export async function generateRegistrationCode(
+  category: RegistrationCategory,
+): Promise<string> {
   const prefix = CATEGORY_PREFIX[category];
   const start = PREFIX_START[prefix];
   const key = `registration-code-${prefix}`;
-  const doc = await Counter.findOneAndUpdate({ _id: key }, { $inc: { seq: 1 } }, { upsert: true, new: true }).lean();
+  const doc = await Counter.findOneAndUpdate(
+    { _id: key },
+    { $inc: { seq: 1 } },
+    { upsert: true, new: true },
+  ).lean();
   return `${prefix}${start + doc!.seq - 1}`;
 }

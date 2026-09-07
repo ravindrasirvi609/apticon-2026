@@ -13,7 +13,10 @@ export async function GET(request: NextRequest) {
     const resourceType = url.searchParams.get("resourceType");
     const actorRole = url.searchParams.get("actorRole");
     const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
-    const limit = Math.min(200, parseInt(url.searchParams.get("limit") ?? "50", 10));
+    const limit = Math.min(
+      200,
+      parseInt(url.searchParams.get("limit") ?? "50", 10),
+    );
 
     const filter: Record<string, unknown> = {};
     if (action) filter.action = action;

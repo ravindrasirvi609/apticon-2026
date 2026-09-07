@@ -46,7 +46,6 @@ export default function AboutPreview() {
 
       <div className="container-site relative">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-
           {/* ── Left: copy ─────────────────────────────────── */}
           <motion.div
             initial="hidden"
@@ -66,8 +65,8 @@ export default function AboutPreview() {
               className="mt-5 font-display text-3xl font-bold leading-tight text-[var(--dark-text)] sm:text-4xl md:text-5xl"
             >
               India&apos;s Premier{" "}
-              <span className="text-gradient-primary">Pharmacy</span>{" "}
-              Education Convention
+              <span className="text-gradient-primary">Pharmacy</span> Education
+              Convention
             </motion.h2>
 
             <motion.p
@@ -78,7 +77,8 @@ export default function AboutPreview() {
               <strong className="font-semibold text-[var(--dark-text)]">
                 Association of Pharmaceutical Teachers of India (APTI)
               </strong>{" "}
-              — brings together pharmacy educators, researchers, and industry leaders from across the nation.
+              — brings together pharmacy educators, researchers, and industry
+              leaders from across the nation.
             </motion.p>
 
             <motion.p
@@ -91,7 +91,8 @@ export default function AboutPreview() {
               </strong>{" "}
               in association with the{" "}
               <strong className="font-semibold text-[var(--dark-text)]">
-                University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur
+                University Institute of Pharmacy, Pt. Ravishankar Shukla
+                University, Raipur
               </strong>{" "}
               — a NAAC A+ accredited institution.
             </motion.p>
@@ -122,7 +123,11 @@ export default function AboutPreview() {
                     initial={{ opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.1, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{
+                      delay: i * 0.1,
+                      duration: 0.55,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
                     className="group rounded-2xl border border-[var(--surface-200)] bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-500)]/40 hover:shadow-lg sm:p-5"
                   >
                     <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--primary-800)]/8 text-[var(--primary-800)] transition-colors duration-300 group-hover:bg-[var(--accent-500)]/15 group-hover:text-[var(--accent-500)] sm:h-10 sm:w-10">

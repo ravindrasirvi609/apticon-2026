@@ -8,11 +8,20 @@ interface Place {
   image: { src: string; alt: string };
 }
 
-export default function HeroBackgroundSlider({ places, index }: { places: Place[]; index: number }) {
+export default function HeroBackgroundSlider({
+  places,
+  index,
+}: {
+  places: Place[];
+  index: number;
+}) {
   const place = places[index];
 
   return (
-    <div aria-hidden className="absolute inset-0 z-0 overflow-hidden bg-[var(--secondary-900)]">
+    <div
+      aria-hidden
+      className="absolute inset-0 z-0 overflow-hidden bg-[var(--secondary-900)]"
+    >
       <AnimatePresence>
         <motion.div
           key={index}

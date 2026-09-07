@@ -40,18 +40,33 @@ async function api<T>(path: string, init?: RequestInit): Promise<T> {
     },
     cache: "no-store",
   });
-  const body = await response.json().catch(() => null) as { error?: { description?: string } } | T | null;
+  const body = (await response.json().catch(() => null)) as
+    | { error?: { description?: string } }
+    | T
+    | null;
   if (!response.ok) {
-    const message = body && typeof body === "object" && "error" in body ? body.error?.description : undefined;
+    const message =
+      body && typeof body === "object" && "error" in body
+        ? body.error?.description
+        : undefined;
     throw new Error(message || "Unable to communicate with Razorpay");
   }
   return body as T;
 }
 
-export async function createRazorpayOrder(input: { amount: number; receipt: string; notes: Record<string, string> }) {
+export async function createRazorpayOrder(input: {
+  amount: number;
+  receipt: string;
+  notes: Record<string, string>;
+}) {
   return api<RazorpayOrder>("/orders", {
     method: "POST",
-    body: JSON.stringify({ amount: input.amount, currency: "INR", receipt: input.receipt, notes: input.notes }),
+    body: JSON.stringify({
+      amount: input.amount,
+      currency: "INR",
+      receipt: input.receipt,
+      notes: input.notes,
+    }),
   });
 }
 
@@ -61,18 +76,39 @@ export async function getRazorpayPayment(paymentId: string) {
 
 /** Every payment attempt made against an order, oldest first. */
 export async function getRazorpayOrderPayments(orderId: string) {
-  return api<{ count: number; items: RazorpayPayment[] }>(`/orders/${encodeURIComponent(orderId)}/payments`);
+  return api<{ count: number; items: RazorpayPayment[] }>(
+    `/orders/${encodeURIComponent(orderId)}/payments`,
+  );
 }
 
-export function verifyRazorpayPaymentSignature(orderId: string, paymentId: string, signature: string) {
+export function verifyRazorpayPaymentSignature(
+  orderId: string,
+  paymentId: string,
+  signature: string,
+) {
   const { keySecret } = credentials();
-  const expected = crypto.createHmac("sha256", keySecret).update(`${orderId}|${paymentId}`).digest("hex");
-  return signature.length === expected.length && crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  const expected = crypto
+    .createHmac("sha256", keySecret)
+    .update(`${orderId}|${paymentId}`)
+    .digest("hex");
+  return (
+    signature.length === expected.length &&
+    crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))
+  );
 }
 
-export function verifyRazorpayWebhookSignature(rawBody: string, signature: string | null) {
+export function verifyRazorpayWebhookSignature(
+  rawBody: string,
+  signature: string | null,
+) {
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
   if (!secret || !signature) return false;
-  const expected = crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
-  return signature.length === expected.length && crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(rawBody)
+    .digest("hex");
+  return (
+    signature.length === expected.length &&
+    crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))
+  );
 }

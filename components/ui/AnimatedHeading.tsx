@@ -9,7 +9,12 @@ interface Props {
   delay?: number;
 }
 
-export default function AnimatedHeading({ text, as = "h2", className, delay = 0 }: Props) {
+export default function AnimatedHeading({
+  text,
+  as = "h2",
+  className,
+  delay = 0,
+}: Props) {
   const Tag = as;
   const words = text.split(" ");
 
@@ -25,10 +30,7 @@ export default function AnimatedHeading({ text, as = "h2", className, delay = 0 
       >
         {words.map((word, wi) => (
           <span key={wi} className="overflow-hidden inline-block">
-            <motion.span
-              variants={letterVariant}
-              className="inline-block"
-            >
+            <motion.span variants={letterVariant} className="inline-block">
               {word}
             </motion.span>
           </span>

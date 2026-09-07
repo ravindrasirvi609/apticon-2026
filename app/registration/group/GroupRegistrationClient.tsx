@@ -11,21 +11,28 @@ import { GROUP_MIN_DELEGATES } from "@/lib/validators/group-registration";
 export default function GroupRegistrationClient() {
   return (
     <div className="bg-[var(--surface-50)] min-h-screen">
-
       {/* Hero */}
       <section className="relative py-24 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 tribal-pattern-bg opacity-30" aria-hidden />
+        <div
+          className="absolute inset-0 tribal-pattern-bg opacity-30"
+          aria-hidden
+        />
         <div className="container-site relative z-10 text-center">
           <GoldenBadge>Group Registration</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            Register Your <span className="text-gradient-primary">Whole Group</span>
+            Register Your{" "}
+            <span className="text-gradient-primary">Whole Group</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
-            Bring {GROUP_MIN_DELEGATES} paid delegates from your institution to APTICON 2026 and add 1 complimentary seat for every {GROUP_MIN_DELEGATES} paid delegates — one form, one payment.
+            Bring {GROUP_MIN_DELEGATES} paid delegates from your institution to
+            APTICON 2026 and add 1 complimentary seat for every{" "}
+            {GROUP_MIN_DELEGATES} paid delegates — one form, one payment.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Link href="/registration">
-              <Button variant="outline" size="sm">Registering alone? Use the individual form</Button>
+              <Button variant="outline" size="sm">
+                Registering alone? Use the individual form
+              </Button>
             </Link>
             <Link href="/registration/status">
               <Button variant="outline" size="sm">
@@ -48,7 +55,8 @@ export default function GroupRegistrationClient() {
                 Group Registration Form
               </h2>
               <p className="text-[var(--muted-text)] text-sm">
-                Fields marked with <span className="text-red-500">*</span> are required. Minimum {GROUP_MIN_DELEGATES} delegates per group.
+                Fields marked with <span className="text-red-500">*</span> are
+                required. Minimum {GROUP_MIN_DELEGATES} delegates per group.
               </p>
             </ScrollReveal>
             <ScrollReveal>

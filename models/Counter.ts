@@ -12,6 +12,7 @@ const CounterSchema = new Schema<ICounter>({
 });
 
 const Counter: Model<ICounter> =
-  (mongoose.models.Counter as Model<ICounter>) ?? mongoose.model<ICounter>("Counter", CounterSchema);
+  (mongoose.models.Counter as Model<ICounter>) ??
+  mongoose.model<ICounter>("Counter", CounterSchema);
 
 export default Counter;

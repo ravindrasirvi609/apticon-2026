@@ -5,9 +5,22 @@ import { getClientIp } from "@/lib/auth";
 
 interface AuditInput {
   actor?: string | null;
-  actorRole: "super_admin" | "reviewer" | "editorial" | "checkin_staff" | "public" | "system";
+  actorRole:
+    | "super_admin"
+    | "reviewer"
+    | "editorial"
+    | "checkin_staff"
+    | "public"
+    | "system";
   action: string;
-  resourceType: "user" | "abstract" | "review" | "auth" | "registration" | "group_registration" | "apti_member";
+  resourceType:
+    | "user"
+    | "abstract"
+    | "review"
+    | "auth"
+    | "registration"
+    | "group_registration"
+    | "apti_member";
   resourceId?: string | null;
   details?: unknown;
   request?: NextRequest | Request;
