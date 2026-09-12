@@ -77,6 +77,11 @@ export default async function RegistrationSuccessPage({
           </div>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+            {hasCode && confirmed && (
+              <Link href={`/registration/social-post/${code}`}>
+                <Button> <span className="mr-2">📣</span> Create Social Media Post</Button>
+              </Link>
+            )}
             <Link href="/registration/status">
               <Button variant="outline">Check Status</Button>
             </Link>
