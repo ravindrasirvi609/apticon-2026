@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const normalizedMembers = rawMembers.map((m) => {
       const value = (...keys: string[]) => {
         const found = keys
-          .map((key) => m[key])
+          .map((key) => m[key] ?? m[key.replaceAll("_", "\\_")])
           .find(
             (v) =>
               v !== undefined &&
@@ -29,10 +29,6 @@ export async function POST(request: NextRequest) {
           );
         return found === undefined || found === null ? "" : String(found).trim();
       };
-      const email = value("email", "m_email1");
-      const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-        ? email.toLowerCase()
-        : "";
       const serialNoValue = value("serialNo", "Sl No");
 
       return {
@@ -40,7 +36,7 @@ export async function POST(request: NextRequest) {
         serialNo: /^\d+$/.test(serialNoValue) ? Number(serialNoValue) : undefined,
         stateCode: value("stateCode", "m_state_code"),
         name: value("name", "m_name"),
-        email: validEmail,
+        email: value("email", "m_email1") || undefined,
         mobile: value("mobile", "m_mobile1"),
         officeAddress: value("officeAddress", "m_ofc_address"),
         city: value("city", "m_ofc_city", "m_res_city"),
@@ -52,7 +48,14 @@ export async function POST(request: NextRequest) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid import format", details: parsed.error.flatten() },
+        {
+          error: "Invalid import format",
+          details: parsed.error.flatten(),
+          issues: parsed.error.issues.map((issue) => ({
+            path: issue.path,
+            message: issue.message,
+          })),
+        },
         { status: 400 },
       );
     }

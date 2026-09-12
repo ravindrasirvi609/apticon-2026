@@ -9,13 +9,9 @@ export const aptiMemberCreateSchema = z.object({
   serialNo: z.number().optional().nullable(),
   stateCode: z.string().trim().optional().nullable(),
   name: z.string().min(1, "Name is required").trim(),
-  email: z
-    .string()
-    .trim()
-    .transform((val) => val.toLowerCase())
-    .pipe(z.string().email("Invalid email address").or(z.string().max(0)))
-    .optional()
-    .nullable(),
+  // The source registry may contain non-standard email values. Preserve them
+  // instead of rejecting or replacing them during bulk import.
+  email: z.string().trim().optional().nullable(),
   mobile: z.string().trim().optional().nullable(),
   officeAddress: z.string().trim().optional().nullable(),
   city: z.string().trim().optional().nullable(),
