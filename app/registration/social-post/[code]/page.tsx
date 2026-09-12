@@ -29,16 +29,18 @@ export default async function SocialPostPage({
         <p className="mt-2 text-sm text-[var(--muted-text)]">
           Share your registration announcement with friends and colleagues.
         </p>
-        <SocialPostClient
-          name={registration.fullName}
-          photoUrl={registration.photoUrl}
-          code={registration.registrationCode}
-        />
-        <Link href={`/registration/success/${registration.registrationCode}`}>
-          <Button variant="outline" className="mt-5">
-            Back to Registration
-          </Button>
-        </Link>
+        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <SocialPostClient
+            name={registration.fullName}
+            photoUrl={registration.photoUrl}
+            code={registration.registrationCode}
+          />
+          <Link href={`/registration/success/${registration.registrationCode}`}>
+            <Button variant="outline" className="min-w-44">
+              Back to Registration
+            </Button>
+          </Link>
+        </div>
       </div>
     </main>
   );

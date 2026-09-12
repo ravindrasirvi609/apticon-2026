@@ -31,7 +31,7 @@ export default function SocialPostClient({ name, photoUrl, code }: Props) {
           className="block h-auto w-full"
         />
       </div>
-      <Button onClick={downloadPost} className="mt-6">
+      <Button onClick={downloadPost} className="min-w-44">
         <Download className="mr-2 h-4 w-4" />
         Download PNG
       </Button>
