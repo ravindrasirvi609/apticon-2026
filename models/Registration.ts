@@ -43,7 +43,7 @@ export interface IRegistration {
   feeAmount: number;
   willSubmitAbstract: boolean;
   includesAptiMembership: boolean;
-  /** Verified against the APTI membership registry — set only for "APTI Life Member" / "APTI Annual Member" categories. */
+  /** Verified against the APTI Life membership registry — set only for "APTI Life Member" / "APTI Annual Member" categories. */
   aptiMemberId?: string;
 
   // Payment

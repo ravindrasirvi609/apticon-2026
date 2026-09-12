@@ -22,7 +22,7 @@ export interface IAbstract {
   institution: string;
   email: string;
   phone: string;
-  /** Verified against the APTI membership registry at submission time — only members may submit. */
+  /** Verified against the APTI Life membership registry at submission time — only members may submit. */
   aptiMemberId: string;
   theme: string;
   // Current values: "review" | "research". Legacy submissions may hold

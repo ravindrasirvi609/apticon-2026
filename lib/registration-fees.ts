@@ -37,7 +37,7 @@ export const FEE_TABLE: Record<
   },
   "UG Student": { early_bird: 2000, regular: 2500, on_spot: 3000 },
   "Accompanying Person": { early_bird: 1000, regular: 1500, on_spot: 2000 },
-  // Flat fee regardless of tier — bundles a new APTI membership application with registration.
+  // Flat fee regardless of tier — bundles a new APTI Life membership application with registration.
   "APTI Membership + APTICON Registration": {
     early_bird: 6995,
     regular: 6995,

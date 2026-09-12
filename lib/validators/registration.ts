@@ -18,7 +18,7 @@ export { NEW_APTI_MEMBERSHIP_CATEGORY };
 
 const CategoryEnum = z.enum(REGISTRATION_CATEGORIES);
 
-// Categories that claim an existing APTI membership (as opposed to buying one, or not
+// Categories that claim an existing APTI Life membership (as opposed to buying one, or not
 // claiming one at all) — these require a verified Membership ID. Kept here (not in
 // lib/registration-fees.ts) since it's specifically about identity verification, not pricing.
 export const APTI_MEMBER_CATEGORIES = [

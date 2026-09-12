@@ -601,7 +601,7 @@ export default function RegistrationForm() {
             <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
             <span>
               Flat fee of {formatRupees(FEE_TABLE[chosenCategory].regular)},
-              inclusive of your APTI membership application — no additional
+              inclusive of your APTI Life membership application — no additional
               GST.
             </span>
           </div>
@@ -628,7 +628,7 @@ export default function RegistrationForm() {
                   "APTI Membership ID is required for this category",
               })}
               error={errors.aptiMemberId?.message}
-              helperText="As printed on your APTI membership card/email — we'll verify this before confirming your registration."
+              helperText="As printed on your APTI Life membership card/email — we'll verify this before confirming your registration."
             />
           </div>
         )}
@@ -666,7 +666,7 @@ export default function RegistrationForm() {
             Membership Details
           </h3>
           <p className="mb-4 -mt-2 text-xs text-[var(--muted-text)]">
-            You&apos;ve chosen to apply for a new APTI membership along with your
+            You&apos;ve chosen to apply for a new APTI Life membership along with your
             registration. Please fill in the details below (from APTI&apos;s
             membership application) in addition to what you&apos;ve already
             entered above.
