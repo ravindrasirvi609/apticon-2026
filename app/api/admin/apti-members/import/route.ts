@@ -9,21 +9,38 @@ export async function POST(request: NextRequest) {
   try {
     const admin = await requireRole("super_admin");
     const body = await request.json().catch(() => null);
-    const rawMembers: Record<string, unknown>[] =
-      Array.isArray(body?.members) ? body.members : [];
+    const rawMembers: Record<string, unknown>[] = Array.isArray(body)
+      ? body
+      : Array.isArray(body?.members)
+        ? body.members
+        : [];
 
     // Accept the field names used by the APTI registry export as well as the
     // application's native field names.
     const normalizedMembers = rawMembers.map((m) => {
-      const value = (...keys: string[]) =>
-        keys.map((key) => m[key]).find((v) => v !== undefined && v !== null && String(v).trim() !== "") ?? "";
+      const value = (...keys: string[]) => {
+        const found = keys
+          .map((key) => m[key])
+          .find(
+            (v) =>
+              v !== undefined &&
+              v !== null &&
+              String(v).trim() !== "",
+          );
+        return found === undefined || found === null ? "" : String(found).trim();
+      };
+      const email = value("email", "m_email1");
+      const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+        ? email.toLowerCase()
+        : "";
+      const serialNoValue = value("serialNo", "Sl No");
 
       return {
         memberId: value("memberId", "mem_id"),
-        serialNo: value("serialNo", "Sl No") ? Number(value("serialNo", "Sl No")) : undefined,
+        serialNo: /^\d+$/.test(serialNoValue) ? Number(serialNoValue) : undefined,
         stateCode: value("stateCode", "m_state_code"),
         name: value("name", "m_name"),
-        email: value("email", "m_email1"),
+        email: validEmail,
         mobile: value("mobile", "m_mobile1"),
         officeAddress: value("officeAddress", "m_ofc_address"),
         city: value("city", "m_ofc_city", "m_res_city"),
