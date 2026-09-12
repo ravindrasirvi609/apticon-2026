@@ -54,42 +54,25 @@ async function main() {
     byMemberId.set(memberId, row);
   }
 
-  const ops = Array.from(byMemberId.entries()).map(([memberId, row]) => ({
-    updateOne: {
-      filter: { memberId },
-      update: {
-        $set: {
-          memberId,
-          serialNo: row["Sl.no"] ? Number(row["Sl.no"]) : undefined,
-          stateCode: String(row["S.Code"] ?? "").trim() || undefined,
-          name: String(row["Name"] ?? "").trim(),
-          email:
-            String(row["Email"] ?? "")
-              .trim()
-              .toLowerCase() || undefined,
-          mobile: String(row["Mobile"] ?? "").trim() || undefined,
-          officeAddress: String(row["Off Address"] ?? "").trim() || undefined,
-          city: String(row["City"] ?? "").trim() || undefined,
-          state: String(row["State"] ?? "").trim() || undefined,
-          pincode: String(row["Pincode"] ?? "").trim() || undefined,
-        },
-      },
-      upsert: true,
-    },
+  const members = Array.from(byMemberId.entries()).map(([memberId, row]) => ({
+    memberId,
+    serialNo: row["Sl.no"] ? Number(row["Sl.no"]) : undefined,
+    stateCode: String(row["S.Code"] ?? "").trim() || undefined,
+    name: String(row["Name"] ?? "").trim(),
+    email: String(row["Email"] ?? "").trim().toLowerCase() || undefined,
+    mobile: String(row["Mobile"] ?? "").trim() || undefined,
+    officeAddress: String(row["Off Address"] ?? "").trim() || undefined,
+    city: String(row["City"] ?? "").trim() || undefined,
+    state: String(row["State"] ?? "").trim() || undefined,
+    pincode: String(row["Pincode"] ?? "").trim() || undefined,
   }));
 
-  const BATCH_SIZE = 1000;
-  let written = 0;
-  for (let i = 0; i < ops.length; i += BATCH_SIZE) {
-    const batch = ops.slice(i, i + BATCH_SIZE);
-    await AptiMember.bulkWrite(batch, { ordered: false });
-    written += batch.length;
-    console.log(`  ...${written}/${ops.length}`);
-  }
+  await AptiMember.deleteMany({ memberId: { $in: members.map((m) => m.memberId) } });
+  await AptiMember.insertMany(members, { ordered: true });
 
   const noEmail = rows.filter((r) => !String(r["Email"] ?? "").trim()).length;
   console.log(
-    `✓ Imported ${ops.length} unique members (${rows.length} rows in sheet, ${blankId} skipped with no Member ID, ${noEmail} with no email).`,
+    `✓ Imported ${members.length} unique members (${rows.length} rows in sheet, ${blankId} skipped with no Member ID, ${noEmail} with no email).`,
   );
 
   await mongoose.disconnect();
