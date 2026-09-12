@@ -179,13 +179,13 @@ export default function SponsorsClient() {
             <span className="text-gradient-primary">APTICON 2026</span>
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
-            Gain unparalleled visibility among 1500+ pharmacy professionals.
-            Support India&apos;s premier pharmacy education convention and be
-            part of a national movement.
+            Gain meaningful visibility among pharmacy educators, researchers,
+            professionals, and industry partners at APTICON 2026. Join the
+            Sankalp: Viksit Pharmacist for Viksit Bharat 2047.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <PulseButton
-              href="mailto:apticon2026@gmail.com"
+              href="mailto:souvenir@apticon.in"
               variant="accent"
               pulse
               external
@@ -193,9 +193,9 @@ export default function SponsorsClient() {
               Enquire About Sponsorship
             </PulseButton>
             <PulseButton
-              href="/downloads/APTICON-2026-Sponsorship-Opportunities.docx"
+              href="/downloads/APTICON-2026-Sponsorship-Opportunities.pdf"
               variant="outline"
-              download="APTICON-2026-Sponsorship-Opportunities.docx"
+              download="APTICON-2026-Sponsorship-Opportunities.pdf"
             >
               <Download size={16} />
               Download Brochure
@@ -250,7 +250,7 @@ export default function SponsorsClient() {
             </h2>
           </ScrollReveal>
           <p className="text-center text-xs text-[var(--muted-text)] mb-12">
-            All rates inclusive of GST
+            All rates exclusive of GST
           </p>
           <motion.div
             initial="hidden"
@@ -298,7 +298,7 @@ export default function SponsorsClient() {
                   ))}
                 </ul>
                 <a
-                  href="mailto:apticon2026@gmail.com"
+                  href="mailto:souvenir@apticon.in"
                   className="mt-6 block text-center py-2.5 rounded-xl border-2 border-[var(--primary-800)] text-[var(--primary-800)] font-semibold text-sm hover:bg-[var(--primary-800)] hover:text-white transition-all duration-200"
                 >
                   Express Interest
@@ -368,20 +368,20 @@ export default function SponsorsClient() {
 
       <div className="py-12 text-center">
         <p className="text-[var(--muted-text)] mb-4">
-          For customized packages and sponsorship brochure:
+          For sponsorship enquiries and customized packages:
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <PulseButton
-            href="mailto:apticon2026@gmail.com"
+            href="mailto:souvenir@apticon.in"
             variant="primary"
             external
           >
-            Contact: apticon2026@gmail.com
+            Contact: souvenir@apticon.in
           </PulseButton>
           <PulseButton
-            href="/downloads/APTICON-2026-Sponsorship-Opportunities.docx"
+            href="/downloads/APTICON-2026-Sponsorship-Opportunities.pdf"
             variant="outline"
-            download="APTICON-2026-Sponsorship-Opportunities.docx"
+            download="APTICON-2026-Sponsorship-Opportunities.pdf"
           >
             <Download size={16} />
             Download Full Brochure
