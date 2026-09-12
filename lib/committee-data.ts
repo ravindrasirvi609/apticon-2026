@@ -579,11 +579,10 @@ export const STATE_BRANCHES: StateBranch[] = [
       {
         name: "Dr. Shailesh Jain",
         role: "Vice President",
-        designation: "Dean, Faculty Of Pharmacy",
-        institution:
-          "SAM College Of Pharmacy, SAM Global University, Bhopal, Madhya Pradesh",
+        designation: "Professor and Academic Head",
+        institution: "School of Pharmacy, LNCT University, Bhopal, Madhyapradesh",
         email: "shailesh2210@gmail.com",
-        image: "https://aptiindia.org/images/committee/MP/shailesh.png",
+        image: "/committee/shailesh.jpeg",
       },
       {
         name: "Dr. Alok Pal Jain",
