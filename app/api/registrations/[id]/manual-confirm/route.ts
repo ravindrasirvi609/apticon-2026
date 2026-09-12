@@ -60,7 +60,7 @@ export async function POST(
             paymentError: 1,
           },
         },
-        { new: true },
+        { returnDocument: "after" },
       );
       if (justApproved) {
         await logAudit({
