@@ -12,7 +12,7 @@ import {
   type Nationality,
 } from "@/lib/apti-membership-application";
 
-// Captures the "APTI Membership + APTICON Registration" bundled option — the same fields as
+// Captures the "APTI Life Membership + APTICON Registration" bundled option — the same fields as
 // https://aptiindia.org/membership_form_general, for APTI to review and process into their own
 // membership registry (models/AptiMember.ts) separately. Name/email/phone/photo live on the
 // linked Registration document, not duplicated here.

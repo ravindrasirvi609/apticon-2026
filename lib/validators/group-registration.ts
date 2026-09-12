@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// Excludes "APTI Membership + APTICON Registration" — that category collects a full new-member
+// Excludes "APTI Life Membership + APTICON Registration" — that category collects a full new-member
 // application per registrant (see lib/validators/registration.ts), which the group flow has no
 // per-delegate capture for.
 const GROUP_REGISTRATION_CATEGORIES = [

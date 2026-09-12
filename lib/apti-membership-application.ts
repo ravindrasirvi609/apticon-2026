@@ -1,5 +1,5 @@
 /**
- * Field constants for the "APTI Membership + APTICON Registration" bundled option, mirroring
+ * Field constants for the "APTI Life Membership + APTICON Registration" bundled option, mirroring
  * https://aptiindia.org/membership_form_general. Kept mongoose-free so it can be imported by
  * both the client form and the Zod validator, same pattern as lib/registration-fees.ts.
  */

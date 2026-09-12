@@ -555,7 +555,7 @@ export default function GroupRegistrationForm() {
               {REGISTRATION_CATEGORIES.filter(
                 (c) =>
                   c !== "Accompanying Person" &&
-                  c !== "APTI Membership + APTICON Registration",
+                  c !== "APTI Life Membership + APTICON Registration",
               ).map((c) => (
                 <option key={c} value={c}>
                   {c}

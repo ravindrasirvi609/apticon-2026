@@ -46,7 +46,7 @@ interface FormData {
   aptiMemberId: string;
   remarks: string;
 
-  // Only used for the "APTI Membership + APTICON Registration" category — mirrors
+  // Only used for the "APTI Life Membership + APTICON Registration" category — mirrors
   // https://aptiindia.org/membership_form_general.
   bloodGroup: string;
   gender: string;
@@ -659,7 +659,7 @@ export default function RegistrationForm() {
         </div>
       </div>
 
-      {/* Membership Details — only for the bundled "APTI Membership + APTICON Registration" category */}
+      {/* Membership Details — only for the bundled "APTI Life Membership + APTICON Registration" category */}
       {requiresMembershipDetails && (
         <div>
           <h3 className="font-display font-bold text-lg text-[var(--dark-text)] mb-4 pb-2 border-b border-[var(--accent-500)]/20">
