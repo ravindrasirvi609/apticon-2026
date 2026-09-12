@@ -64,6 +64,16 @@ export default function RegistrationsList({
   const [items, setItems] = useState<RegItem[]>([]);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("");
+  const [state, setState] = useState("");
+  const [category, setCategory] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState("");
+  const [paymentMode, setPaymentMode] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(25);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [stateCounts, setStateCounts] = useState<Record<string, number>>({});
+  const [categories, setCategories] = useState<string[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
@@ -71,15 +81,39 @@ export default function RegistrationsList({
     setLoading(true);
     const params = new URLSearchParams();
     if (status) params.set("status", status);
+    if (state) params.set("state", state);
+    if (category) params.set("category", category);
+    if (paymentStatus) params.set("paymentStatus", paymentStatus);
+    if (paymentMode) params.set("paymentMode", paymentMode);
     if (q) params.set("q", q);
+    params.set("page", String(page));
+    params.set("limit", String(limit));
     fetch(`/api/registrations?${params.toString()}`)
       .then((r) => r.json())
       .then((d) => {
         setItems(d.items ?? []);
         setCounts(d.counts ?? {});
+        setStateCounts(d.stateCounts ?? {});
+        setCategories(d.categories ?? []);
+        setTotal(d.total ?? 0);
+        setTotalPages(d.totalPages ?? 1);
       })
       .finally(() => setLoading(false));
-  }, [q, status]);
+  }, [q, status, state, category, paymentStatus, paymentMode, page, limit]);
+
+  const updateFilter = (setter: (value: string) => void, value: string) => {
+    setter(value);
+    setPage(1);
+  };
+
+  const exportQuery = new URLSearchParams({
+    ...(q ? { q } : {}),
+    ...(status ? { status } : {}),
+    ...(state ? { state } : {}),
+    ...(category ? { category } : {}),
+    ...(paymentStatus ? { paymentStatus } : {}),
+    ...(paymentMode ? { paymentMode } : {}),
+  }).toString();
 
   // The legacy manual-review chip only earns its space while such records still exist.
   const chips = useMemo(
@@ -96,10 +130,7 @@ export default function RegistrationsList({
         actions={
           <ExportButtons
             endpoint="/api/registrations/export"
-            query={new URLSearchParams({
-              ...(q ? { q } : {}),
-              ...(status ? { status } : {}),
-            }).toString()}
+            query={exportQuery}
             label="Registrations"
           />
         }
@@ -132,6 +163,28 @@ export default function RegistrationsList({
                 </Button>
               ))}
             </div>
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <select className="h-9 rounded-md border bg-white px-3 text-sm" value={state} onChange={(e) => updateFilter(setState, e.target.value)}>
+              <option value="">All states</option>
+              {Object.entries(stateCounts).map(([name, count]) => <option key={name} value={name}>{name} ({count})</option>)}
+            </select>
+            <select className="h-9 rounded-md border bg-white px-3 text-sm" value={category} onChange={(e) => updateFilter(setCategory, e.target.value)}>
+              <option value="">All categories</option>
+              {categories.map((name) => <option key={name} value={name}>{name}</option>)}
+            </select>
+            <select className="h-9 rounded-md border bg-white px-3 text-sm" value={paymentStatus} onChange={(e) => updateFilter(setPaymentStatus, e.target.value)}>
+              <option value="">All payment statuses</option>
+              {['pending', 'authorized', 'captured', 'failed', 'refunded'].map((name) => <option key={name} value={name}>{name}</option>)}
+            </select>
+            <select className="h-9 rounded-md border bg-white px-3 text-sm" value={paymentMode} onChange={(e) => updateFilter(setPaymentMode, e.target.value)}>
+              <option value="">All payment modes</option>
+              {['razorpay', 'online', 'upi', 'neft_rtgs', 'dd'].map((name) => <option key={name} value={name}>{name.replace('_', '/')}</option>)}
+            </select>
+            {(state || category || paymentStatus || paymentMode) && <Button variant="ghost" size="sm" onClick={() => { setState(""); setCategory(""); setPaymentStatus(""); setPaymentMode(""); setPage(1); }}>Clear filters</Button>}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2 text-xs text-[var(--muted-text)]">
+            {Object.entries(stateCounts).slice(0, 8).map(([name, count]) => <Badge key={name} variant="secondary">{name}: {count}</Badge>)}
           </div>
         </CardContent>
       </Card>
@@ -244,6 +297,17 @@ export default function RegistrationsList({
           </Table>
         </CardContent>
       </Card>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-[var(--muted-text)]">
+        <span>Showing {total === 0 ? 0 : (page - 1) * limit + 1}-{Math.min(page * limit, total)} of {total} registrations</span>
+        <div className="flex items-center gap-2">
+          <select className="h-8 rounded-md border bg-white px-2 text-sm" value={limit} onChange={(e) => { setLimit(Number(e.target.value)); setPage(1); }}>
+            {[25, 50, 100].map((size) => <option key={size} value={size}>{size} per page</option>)}
+          </select>
+          <Button size="sm" variant="outline" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Previous</Button>
+          <span>Page {page} of {totalPages}</span>
+          <Button size="sm" variant="outline" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>Next</Button>
+        </div>
+      </div>
     </div>
   );
 }

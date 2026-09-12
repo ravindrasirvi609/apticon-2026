@@ -14,6 +14,9 @@ export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const status = url.searchParams.get("status") ?? undefined;
   const paymentStatus = url.searchParams.get("paymentStatus") ?? undefined;
+  const state = url.searchParams.get("state") ?? undefined;
+  const category = url.searchParams.get("category") ?? undefined;
+  const paymentMode = url.searchParams.get("paymentMode") ?? undefined;
   const q = url.searchParams.get("q") ?? "";
   const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
   const limit = Math.min(
@@ -25,6 +28,9 @@ export async function GET(request: NextRequest) {
   // so the status counts below stay accurate for every filter chip.
   const scope: Record<string, unknown> = {};
   if (paymentStatus) scope.paymentStatus = paymentStatus;
+  if (state) scope.state = state;
+  if (category) scope.category = category;
+  if (paymentMode) scope.paymentMode = paymentMode;
   if (q) {
     const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     scope.$or = [
@@ -39,7 +45,7 @@ export async function GET(request: NextRequest) {
   }
   const filter = status ? { ...scope, status } : scope;
 
-  const [total, items, statusGroups] = await Promise.all([
+  const [total, items, statusGroups, stateGroups, categoryGroups] = await Promise.all([
     Registration.countDocuments(filter),
     Registration.find(filter)
       .sort({ createdAt: -1 })
@@ -53,11 +59,34 @@ export async function GET(request: NextRequest) {
       { $match: scope },
       { $group: { _id: "$status", count: { $sum: 1 } } },
     ]),
+    Registration.aggregate<{ _id: string; count: number }>([
+      { $match: scope },
+      { $group: { _id: { $ifNull: ["$state", "Unknown"] }, count: { $sum: 1 } } },
+      { $sort: { count: -1, _id: 1 } },
+    ]),
+    Registration.aggregate<{ _id: string; count: number }>([
+      { $match: scope },
+      { $group: { _id: "$category", count: { $sum: 1 } } },
+      { $sort: { count: -1, _id: 1 } },
+    ]),
   ]);
 
   const counts: Record<string, number> = {};
   statusGroups.forEach((g) => (counts[g._id] = g.count));
   counts[""] = statusGroups.reduce((sum, g) => sum + g.count, 0);
 
-  return NextResponse.json({ total, page, limit, items, counts });
+  const stateCounts: Record<string, number> = {};
+  stateGroups.forEach((g) => (stateCounts[g._id || "Unknown"] = g.count));
+  const categories = categoryGroups.map((g) => g._id).filter(Boolean);
+
+  return NextResponse.json({
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit) || 1,
+    items,
+    counts,
+    stateCounts,
+    categories,
+  });
 }
