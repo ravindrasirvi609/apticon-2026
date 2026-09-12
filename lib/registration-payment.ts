@@ -60,7 +60,7 @@ export async function recordCapturedRazorpayPayment(
       },
       $unset: { rejectedBy: 1, rejectedAt: 1, reviewNote: 1, paymentError: 1 },
     },
-    { new: true },
+    { returnDocument: "after" },
   );
   const reg =
     justApproved ??
@@ -156,7 +156,7 @@ export async function recordCapturedGroupRazorpayPayment(
       },
       $unset: { paymentError: 1 },
     },
-    { new: true },
+    { returnDocument: "after" },
   );
   const group =
     justApproved ??

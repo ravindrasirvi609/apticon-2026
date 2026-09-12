@@ -11,7 +11,7 @@ export async function generateAbstractCode(
   const doc = await Counter.findOneAndUpdate(
     { _id: key },
     { $inc: { seq: 1 } },
-    { upsert: true, new: true },
+    { upsert: true, returnDocument: "after" },
   ).lean();
   return `${prefix}-${subjectCode}-${doc!.seq}`;
 }

@@ -34,7 +34,7 @@ export async function PATCH(
     const reg = await Registration.findByIdAndUpdate(
       id,
       note ? { $set: { internalNote: note } } : { $unset: { internalNote: 1 } },
-      { new: true },
+      { returnDocument: "after" },
     ).select("registrationCode internalNote");
     if (!reg) return NextResponse.json({ error: "Not found" }, { status: 404 });
 

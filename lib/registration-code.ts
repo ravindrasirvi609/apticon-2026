@@ -36,7 +36,7 @@ export async function generateRegistrationCode(
   const doc = await Counter.findOneAndUpdate(
     { _id: key },
     { $inc: { seq: 1 } },
-    { upsert: true, new: true },
+    { upsert: true, returnDocument: "after" },
   ).lean();
   return `${prefix}${start + doc!.seq - 1}`;
 }
