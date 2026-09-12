@@ -125,6 +125,8 @@ export async function GET(request: NextRequest) {
   await connectDB();
   const url = new URL(request.url);
   const status = url.searchParams.get("status") ?? undefined;
+  const theme = url.searchParams.get("theme") ?? undefined;
+  const institution = url.searchParams.get("institution") ?? undefined;
   const q = url.searchParams.get("q") ?? "";
   const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
   const limit = Math.min(
@@ -132,11 +134,14 @@ export async function GET(request: NextRequest) {
     parseInt(url.searchParams.get("limit") ?? "25", 10),
   );
 
-  const filter: Record<string, unknown> = {};
-  if (status) filter.status = status;
+  // Search/theme/institution narrow the whole result set; `status` only narrows the rows we
+  // return, so the theme/institution dropdowns below stay populated for every status chip.
+  const scope: Record<string, unknown> = {};
+  if (theme) scope.theme = theme;
+  if (institution) scope.institution = institution;
   if (q) {
     const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    filter.$or = [
+    scope.$or = [
       { title: { $regex: safe, $options: "i" } },
       { submissionCode: { $regex: safe, $options: "i" } },
       { email: { $regex: safe, $options: "i" } },
@@ -144,15 +149,16 @@ export async function GET(request: NextRequest) {
     ];
   }
   if (s.role === "reviewer") {
-    filter.assignedReviewers = s.uid;
+    scope.assignedReviewers = s.uid;
   }
+  const filter = status ? { ...scope, status } : scope;
 
   const fields =
     s.role === "reviewer"
       ? "submissionCode title theme type status createdAt assignedReviewers"
       : "submissionCode title presentingAuthor email theme type status createdAt assignedReviewers";
 
-  const [total, items] = await Promise.all([
+  const [total, items, themeGroups, institutionGroups] = await Promise.all([
     Abstract.countDocuments(filter),
     Abstract.find(filter)
       .sort({ createdAt: -1 })
@@ -160,7 +166,20 @@ export async function GET(request: NextRequest) {
       .limit(limit)
       .select(fields)
       .lean(),
+    Abstract.aggregate<{ _id: string; count: number }>([
+      { $match: scope },
+      { $group: { _id: "$theme", count: { $sum: 1 } } },
+      { $sort: { count: -1, _id: 1 } },
+    ]),
+    Abstract.aggregate<{ _id: string; count: number }>([
+      { $match: scope },
+      { $group: { _id: "$institution", count: { $sum: 1 } } },
+      { $sort: { count: -1, _id: 1 } },
+    ]),
   ]);
 
-  return NextResponse.json({ total, page, limit, items });
+  const themes = themeGroups.map((g) => g._id).filter(Boolean);
+  const institutions = institutionGroups.map((g) => g._id).filter(Boolean);
+
+  return NextResponse.json({ total, page, limit, items, themes, institutions });
 }
