@@ -55,6 +55,10 @@ export default function AbstractsList({
   const [items, setItems] = useState<AbstractItem[]>([]);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("");
+  const [theme, setTheme] = useState("");
+  const [institution, setInstitution] = useState("");
+  const [themes, setThemes] = useState<string[]>([]);
+  const [institutions, setInstitutions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
 
@@ -98,12 +102,18 @@ export default function AbstractsList({
     setLoading(true);
     const params = new URLSearchParams();
     if (status) params.set("status", status);
+    if (theme) params.set("theme", theme);
+    if (institution) params.set("institution", institution);
     if (q) params.set("q", q);
     fetch(`/api/abstracts?${params.toString()}`)
       .then((r) => r.json())
-      .then((d) => setItems(d.items ?? []))
+      .then((d) => {
+        setItems(d.items ?? []);
+        setThemes(d.themes ?? []);
+        setInstitutions(d.institutions ?? []);
+      })
       .finally(() => setLoading(false));
-  }, [q, status]);
+  }, [q, status, theme, institution]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -123,6 +133,8 @@ export default function AbstractsList({
               query={new URLSearchParams({
                 ...(q ? { q } : {}),
                 ...(status ? { status } : {}),
+                ...(theme ? { theme } : {}),
+                ...(institution ? { institution } : {}),
               }).toString()}
               label="Abstracts"
             />
@@ -176,6 +188,17 @@ export default function AbstractsList({
                 </Button>
               ))}
             </div>
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <select className="h-9 rounded-md border bg-white px-3 text-sm" value={theme} onChange={(e) => setTheme(e.target.value)}>
+              <option value="">All themes</option>
+              {themes.map((name) => <option key={name} value={name}>{name}</option>)}
+            </select>
+            <select className="h-9 rounded-md border bg-white px-3 text-sm" value={institution} onChange={(e) => setInstitution(e.target.value)}>
+              <option value="">All institutions</option>
+              {institutions.map((name) => <option key={name} value={name}>{name}</option>)}
+            </select>
+            {(theme || institution) && <Button variant="ghost" size="sm" onClick={() => { setTheme(""); setInstitution(""); }}>Clear filters</Button>}
           </div>
         </CardContent>
       </Card>

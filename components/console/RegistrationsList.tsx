@@ -67,13 +67,16 @@ export default function RegistrationsList({
   const [state, setState] = useState("");
   const [category, setCategory] = useState("");
   const [paymentStatus, setPaymentStatus] = useState("");
-  const [paymentMode, setPaymentMode] = useState("");
+  const [institution, setInstitution] = useState("");
+  const [city, setCity] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [stateCounts, setStateCounts] = useState<Record<string, number>>({});
   const [categories, setCategories] = useState<string[]>([]);
+  const [institutions, setInstitutions] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
@@ -84,7 +87,8 @@ export default function RegistrationsList({
     if (state) params.set("state", state);
     if (category) params.set("category", category);
     if (paymentStatus) params.set("paymentStatus", paymentStatus);
-    if (paymentMode) params.set("paymentMode", paymentMode);
+    if (institution) params.set("institution", institution);
+    if (city) params.set("city", city);
     if (q) params.set("q", q);
     params.set("page", String(page));
     params.set("limit", String(limit));
@@ -95,11 +99,13 @@ export default function RegistrationsList({
         setCounts(d.counts ?? {});
         setStateCounts(d.stateCounts ?? {});
         setCategories(d.categories ?? []);
+        setInstitutions(d.institutions ?? []);
+        setCities(d.cities ?? []);
         setTotal(d.total ?? 0);
         setTotalPages(d.totalPages ?? 1);
       })
       .finally(() => setLoading(false));
-  }, [q, status, state, category, paymentStatus, paymentMode, page, limit]);
+  }, [q, status, state, category, paymentStatus, institution, city, page, limit]);
 
   const updateFilter = (setter: (value: string) => void, value: string) => {
     setter(value);
@@ -112,7 +118,8 @@ export default function RegistrationsList({
     ...(state ? { state } : {}),
     ...(category ? { category } : {}),
     ...(paymentStatus ? { paymentStatus } : {}),
-    ...(paymentMode ? { paymentMode } : {}),
+    ...(institution ? { institution } : {}),
+    ...(city ? { city } : {}),
   }).toString();
 
   // The legacy manual-review chip only earns its space while such records still exist.
@@ -177,11 +184,15 @@ export default function RegistrationsList({
               <option value="">All payment statuses</option>
               {['pending', 'authorized', 'captured', 'failed', 'refunded'].map((name) => <option key={name} value={name}>{name}</option>)}
             </select>
-            <select className="h-9 rounded-md border bg-white px-3 text-sm" value={paymentMode} onChange={(e) => updateFilter(setPaymentMode, e.target.value)}>
-              <option value="">All payment modes</option>
-              {['razorpay', 'online', 'upi', 'neft_rtgs', 'dd'].map((name) => <option key={name} value={name}>{name.replace('_', '/')}</option>)}
+            <select className="h-9 rounded-md border bg-white px-3 text-sm" value={institution} onChange={(e) => updateFilter(setInstitution, e.target.value)}>
+              <option value="">All institutions</option>
+              {institutions.map((name) => <option key={name} value={name}>{name}</option>)}
             </select>
-            {(state || category || paymentStatus || paymentMode) && <Button variant="ghost" size="sm" onClick={() => { setState(""); setCategory(""); setPaymentStatus(""); setPaymentMode(""); setPage(1); }}>Clear filters</Button>}
+            <select className="h-9 rounded-md border bg-white px-3 text-sm" value={city} onChange={(e) => updateFilter(setCity, e.target.value)}>
+              <option value="">All cities</option>
+              {cities.map((name) => <option key={name} value={name}>{name}</option>)}
+            </select>
+            {(state || category || paymentStatus || institution || city) && <Button variant="ghost" size="sm" onClick={() => { setState(""); setCategory(""); setPaymentStatus(""); setInstitution(""); setCity(""); setPage(1); }}>Clear filters</Button>}
           </div>
           <div className="mt-4 flex flex-wrap gap-2 text-xs text-[var(--muted-text)]">
             {Object.entries(stateCounts).slice(0, 8).map(([name, count]) => <Badge key={name} variant="secondary">{name}: {count}</Badge>)}
