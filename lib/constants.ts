@@ -218,7 +218,7 @@ export const RAIPUR_PLACES = [
   },
 ];
 
-// All sponsorship rates are inclusive of GST, per "Sponsorship Opportunities" (APTICON 2026).
+// All sponsorship rates are exclusive of GST, per the updated sponsorship brochure.
 export const MAJOR_EVENT_SPONSORSHIP = [
   {
     tier: "Main Event Sponsor",
@@ -226,14 +226,14 @@ export const MAJOR_EVENT_SPONSORSHIP = [
     color: "#B8860B",
     featured: true,
     benefits: [
-      "3 complimentary registrations",
-      "3 complimentary accommodations",
-      "Branding with APTICON logo on leaflets & inserts in kit bag",
+      "4 complimentary registrations",
+      "4 executive accommodations",
+      "Branding with APTICON logo at leaflets, inserts in kit bag",
       "Full-page colour advertisement in souvenir",
       "Branding at venue",
       "Display at main inaugural hall",
       "5×5 metre stall for exhibition",
-      "Logo on all banners, standees & promotional material",
+      "Logo on all banners, standees, promotional stuff etc",
       "Felicitation by Guest of Honour / Chief Guest",
     ],
   },
@@ -244,7 +244,7 @@ export const MAJOR_EVENT_SPONSORSHIP = [
     benefits: [
       "2 complimentary registrations",
       "2 complimentary accommodations",
-      "Branding with APTICON logo on leaflets",
+      "Branding with APTICON logo (APTICON leaflets)",
       "Full-page colour advertisement in souvenir",
       "Branding at venue",
       "Display at main inaugural hall",
@@ -259,7 +259,7 @@ export const MAJOR_EVENT_SPONSORSHIP = [
     benefits: [
       "1 complimentary registration",
       "1 complimentary accommodation",
-      "Branding with APTICON logo on leaflets",
+      "Branding with APTICON logo at leaflets",
       "Full-page colour advertisement in souvenir",
       "Display at main inaugural hall",
       "Branding at venue",
@@ -274,7 +274,7 @@ export const MAJOR_EVENT_SPONSORSHIP = [
     benefits: [
       "1 complimentary registration",
       "1 complimentary accommodation",
-      "Branding with APTICON logo on leaflets",
+      "Branding with APTICON logo at leaflets",
       "Half-page colour advertisement in souvenir",
       "Display at main inaugural hall",
       "Branding at venue",
@@ -309,7 +309,7 @@ export const MATERIAL_SPONSORSHIP = [
   },
   {
     category: "Writing Pads",
-    note: "1,800 nos.",
+    note: "1,600 nos.",
     amount: "₹1,50,000",
     benefits: [
       "1 complimentary registration",
@@ -320,7 +320,7 @@ export const MATERIAL_SPONSORSHIP = [
   },
   {
     category: "Ball Pen with Logo",
-    note: "1,800 nos.",
+    note: "1,600 nos.",
     amount: "₹1,50,000",
     benefits: [
       "1 complimentary registration",
@@ -404,6 +404,11 @@ export const VENUE_SPONSORSHIP = [
       "2 large hoardings of sponsor outside the venue (standard size)",
     ],
   },
+  {
+    category: "Stalls (10 × 12 ft)",
+    amount: "₹60,000",
+    benefits: ["A tea table and 2 chairs will be provided with covered space"],
+  },
 ];
 
 export const FOOD_COURT_SPONSORSHIP = [
@@ -420,7 +425,7 @@ export const FOOD_COURT_SPONSORSHIP = [
   },
   {
     category: "Lunch",
-    note: "4,000 nos.",
+    note: "3,000 nos.",
     amount: "₹7,50,000",
     benefits: [
       "4 complimentary registrations",
@@ -432,7 +437,7 @@ export const FOOD_COURT_SPONSORSHIP = [
   },
   {
     category: "Dinner",
-    note: "2,000 nos.",
+    note: "1,500 nos.",
     amount: "₹5,00,000",
     benefits: [
       "3 complimentary registrations",
@@ -480,7 +485,7 @@ export const OTHER_SPONSORSHIP = [
   },
   {
     category: "Delegate Certificates",
-    note: "2,000 nos.",
+    note: "1,600 nos.",
     amount: "₹2,00,000",
     benefits: [
       "Branding with APTICON logo on prominent venue spaces",
@@ -504,14 +509,14 @@ export const ACADEMIC_SPONSORSHIP = [
   {
     category: "Main Academic Partner",
     note: "1 slot",
-    amount: "₹10,00,000",
-    benefits: ["Position of Patron"],
+    amount: "₹5,00,000",
+    benefits: [],
   },
   {
     category: "Associate Academic Partner",
     note: "2 slots",
-    amount: "₹5,00,000",
-    benefits: ["Position of Co-Patron"],
+    amount: "₹3,00,000",
+    benefits: [],
   },
 ];
 
@@ -522,7 +527,5 @@ export const SOUVENIR_AD_RATES = [
   { category: "Full Page — Colour", quantity: "20", amount: "₹50,000" },
   { category: "Half Page — Colour", quantity: "20", amount: "₹30,000" },
   { category: "Full Page — B&W", quantity: "20", amount: "₹30,000" },
-  { category: "Half Page — B&W", quantity: "20", amount: "₹15,000" },
-  { category: "Quarter Page — Colour", quantity: "40", amount: "₹12,500" },
-  { category: "Quarter Page — B&W", quantity: "40", amount: "₹10,000" },
+  { category: "Half Page — B&W", quantity: "20", amount: "₹20,000" },
 ];
