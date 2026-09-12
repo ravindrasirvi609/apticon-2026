@@ -36,7 +36,7 @@ const FEES = [
     spot: "₹2,000",
   },
   {
-    category: "APTI Membership + APTICON Registration",
+    category: "APTI Life Membership + APTICON Registration",
     early: "₹6,995",
     regular: "₹6,995",
     spot: "₹6,995",
@@ -115,7 +115,7 @@ export default function FeeTable() {
           <tbody>
             {FEES.map((row, i) => {
               const isMembershipBundle =
-                row.category === "APTI Membership + APTICON Registration";
+                row.category === "APTI Life Membership + APTICON Registration";
               return (
                 <tr
                   key={row.category}
