@@ -44,6 +44,7 @@ interface Stats {
   registrationsByStatus: Record<string, number>;
   paymentsByStatus: Record<string, number>;
   byTheme: { theme: string; count: number }[];
+  byState: { state: string; count: number }[];
   recentAbstracts: {
     id: string;
     submissionCode: string;
@@ -285,6 +286,35 @@ export default function AdminDashboard() {
             ))}
             {stats && stats.byTheme.length === 0 && (
               <p className="text-sm text-[var(--muted-text)]">No data yet.</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>Approved Registrations by State</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {(stats?.byState ?? []).map((s) => (
+              <div key={s.state}>
+                <div className="flex items-center justify-between text-sm mb-1">
+                  <span className="text-[var(--dark-text)]">{s.state}</span>
+                  <span className="font-semibold">{s.count}</span>
+                </div>
+                <div className="h-1.5 bg-[var(--surface-100)] rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-[var(--primary-800)] rounded-full"
+                    style={{
+                      width: `${Math.min(100, (s.count / Math.max(1, stats?.registrationsByStatus.approved ?? 1)) * 100)}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+            {stats && stats.byState.length === 0 && (
+              <p className="text-sm text-[var(--muted-text)]">No approved registrations yet.</p>
             )}
           </div>
         </CardContent>

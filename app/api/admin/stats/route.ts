@@ -15,6 +15,7 @@ export async function GET() {
       byStatusAbs,
       byTheme,
       byStatusReg,
+      byState,
       byPaymentStatus,
       totalUsers,
       reviewersActive,
@@ -31,6 +32,11 @@ export async function GET() {
       ]),
       Registration.aggregate([
         { $group: { _id: "$status", count: { $sum: 1 } } },
+      ]),
+      Registration.aggregate([
+        { $match: { status: "approved" } },
+        { $group: { _id: { $ifNull: ["$state", "Unknown"] }, count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
       ]),
       Registration.aggregate([
         { $match: { paymentStatus: { $ne: null } } },
@@ -89,6 +95,7 @@ export async function GET() {
       registrationsByStatus: regStatusMap,
       paymentsByStatus: paymentStatusMap,
       byTheme: byTheme.map((t) => ({ theme: t._id, count: t.count })),
+      byState: byState.map((s) => ({ state: s._id, count: s.count })),
       recentAbstracts: recentAbs.map((r) => ({
         id: r._id.toString(),
         submissionCode: r.submissionCode,
