@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Search, Trash2 } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 import PageHeader from "@/components/console/PageHeader";
 import RegistrationStatusBadge from "@/components/console/RegistrationStatusBadge";
 import DelegatePhoto from "@/components/ui/DelegatePhoto";
@@ -18,6 +19,17 @@ import {
 } from "@/components/ui/shadcn/table";
 import { Button } from "@/components/ui/shadcn/button";
 import { Badge } from "@/components/ui/shadcn/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/shadcn/alert-dialog";
 import ExportButtons from "@/components/console/ExportButtons";
 
 interface RegItem {
@@ -54,12 +66,14 @@ interface Props {
   detailBase: string; // e.g. "/admin/registrations" or "/editorial/registrations"
   title?: string;
   description?: string;
+  canDelete?: boolean;
 }
 
 export default function RegistrationsList({
   detailBase,
   title = "Registrations",
   description = "All delegate registrations.",
+  canDelete = false,
 }: Props) {
   const [items, setItems] = useState<RegItem[]>([]);
   const [q, setQ] = useState("");
@@ -110,6 +124,24 @@ export default function RegistrationsList({
   const updateFilter = (setter: (value: string) => void, value: string) => {
     setter(value);
     setPage(1);
+  };
+
+  const deleteRegistration = async (r: RegItem) => {
+    try {
+      const res = await fetch(`/api/registrations/${r._id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        toast.success(`Deleted registration ${r.registrationCode}`);
+        setItems((prev) => prev.filter((item) => item._id !== r._id));
+        setTotal((t) => Math.max(0, t - 1));
+      } else {
+        const body = await res.json().catch(() => ({}));
+        toast.error(body.error || "Failed to delete registration");
+      }
+    } catch {
+      toast.error("Failed to delete registration");
+    }
   };
 
   const exportQuery = new URLSearchParams({
@@ -214,13 +246,14 @@ export default function RegistrationsList({
                 <TableHead>Abstract?</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Submitted</TableHead>
+                {canDelete && <TableHead className="text-right">Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
                   <TableCell
-                    colSpan={9}
+                    colSpan={canDelete ? 10 : 9}
                     className="text-center text-sm py-8 text-[var(--muted-text)]"
                   >
                     Loading…
@@ -229,7 +262,7 @@ export default function RegistrationsList({
               ) : items.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={9}
+                    colSpan={canDelete ? 10 : 9}
                     className="text-center text-sm py-8 text-[var(--muted-text)]"
                   >
                     No registrations match your filters.
@@ -301,6 +334,47 @@ export default function RegistrationsList({
                     <TableCell className="text-xs text-[var(--muted-text)]">
                       {format(new Date(r.createdAt), "d MMM, HH:mm")}
                     </TableCell>
+                    {canDelete && (
+                      <TableCell className="text-right">
+                        {r.paymentStatus !== "captured" && (
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                title="Delete"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Delete registration?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete{" "}
+                                  <strong>{r.registrationCode}</strong> (
+                                  {r.fullName})? Payment for this
+                                  registration was never confirmed. This
+                                  action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  className="bg-red-600 hover:bg-red-700"
+                                  onClick={() => deleteRegistration(r)}
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        )}
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               )}
