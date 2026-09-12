@@ -1,6 +1,6 @@
 import mongoose, { Schema, Model } from "mongoose";
 
-// Imported from the official APTI membership registry (see scripts/import-apti-members.ts).
+// Imported from the official APTI Life membership registry (see scripts/import-apti-members.ts).
 // Source of truth for verifying "is this person actually an APTI member" during registration
 // (member-priced categories) and abstract submission.
 export interface IAptiMember {

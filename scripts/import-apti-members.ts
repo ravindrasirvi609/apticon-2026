@@ -1,5 +1,5 @@
 /**
- * Imports the official APTI membership registry into MongoDB.
+ * Imports the official APTI Life membership registry into MongoDB.
  * Source file is intentionally untracked (see .gitignore) — it contains real member PII.
  *
  * Run:

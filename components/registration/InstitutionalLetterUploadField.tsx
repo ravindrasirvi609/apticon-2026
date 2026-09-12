@@ -15,7 +15,7 @@ interface Props {
   disabled?: boolean;
 }
 
-/** Upload picker for the institutional letter required by the APTI membership application. */
+/** Upload picker for the institutional letter required by the APTI Life membership application. */
 export default function InstitutionalLetterUploadField({
   file,
   onChange,
