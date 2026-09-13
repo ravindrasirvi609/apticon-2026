@@ -82,24 +82,12 @@ export default function AdminDashboard() {
         description="Snapshot of registrations and abstract review pipeline."
       />
 
-      {/* Row 1 — registration metrics. Payments are confirmed by Razorpay, so "Awaiting Payment"
-          is incomplete checkouts rather than a queue anyone has to work through. */}
+      {/* Row 1 — confirmed registration metrics. */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <StatCard
           label="Registrations"
           value={stats?.totals.registrations ?? "—"}
           icon={ClipboardCheck}
-        />
-        <StatCard
-          label="Awaiting Payment"
-          value={stats?.registrationsByStatus.submitted ?? 0}
-          icon={Clock}
-          accent="amber"
-          sub={
-            stats?.paymentsByStatus.failed
-              ? `${stats.paymentsByStatus.failed} failed`
-              : undefined
-          }
         />
         <StatCard
           label="Approved · Paid"
