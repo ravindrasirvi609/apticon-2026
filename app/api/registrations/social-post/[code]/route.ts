@@ -61,13 +61,25 @@ export async function GET(
     22,
     Math.min(34, Math.round((width * 0.025 * 34) / Math.max(34, escapedName.length))),
   );
+  const fontPath = path.join(
+    process.cwd(),
+    "node_modules",
+    "next",
+    "dist",
+    "compiled",
+    "@vercel",
+    "og",
+    "Geist-Regular.ttf",
+  );
+  const fontBase64 = (await readFile(fontPath)).toString("base64");
 
   overlays.push({
     input: Buffer.from(
       `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+        <style>@font-face { font-family: ApticonSocial; src: url(data:font/ttf;base64,${fontBase64}) format('truetype'); }</style>
         <text x="${Math.round(width * 0.725)}" y="${Math.round(height * 0.68)}"
           text-anchor="middle" dominant-baseline="middle"
-          fill="#7d102e" font-family="sans-serif"
+          fill="#7d102e" font-family="ApticonSocial"
           font-size="${nameFontSize}" font-weight="900">${escapedName.toUpperCase()}</text>
       </svg>`,
     ),
