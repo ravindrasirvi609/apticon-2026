@@ -36,14 +36,16 @@ export async function POST(request: NextRequest) {
   const data = parsed.data;
   await connectDB();
 
-  const membership = await verifyAptiMember(data.aptiMemberId, data.email);
-  if (!membership.valid) {
-    return NextResponse.json(
-      {
-        error: `Only verified APTI members can submit an abstract. We couldn't verify Membership ID "${data.aptiMemberId}". Please double-check it, or contact APTI to confirm your membership.`,
-      },
-      { status: 400 },
-    );
+  if (data.aptiMemberId) {
+    const membership = await verifyAptiMember(data.aptiMemberId, data.email);
+    if (!membership.valid) {
+      return NextResponse.json(
+        {
+          error: `We couldn't verify Membership ID "${data.aptiMemberId}". Please double-check it, or leave it blank if you do not have one.`,
+        },
+        { status: 400 },
+      );
+    }
   }
 
   // Regenerate on collision (astronomically unlikely, but cheap)

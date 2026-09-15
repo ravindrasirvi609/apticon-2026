@@ -22,8 +22,8 @@ export interface IAbstract {
   institution: string;
   email: string;
   phone: string;
-  /** Verified against the APTI Life membership registry at submission time — only members may submit. */
-  aptiMemberId: string;
+  /** Optional APTI Life membership ID; verified against the registry when provided. */
+  aptiMemberId?: string;
   theme: string;
   // Current values: "review" | "research". Legacy submissions may hold
   // "oral" | "poster" — kept in the union so those documents type-check.

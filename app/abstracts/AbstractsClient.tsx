@@ -72,7 +72,7 @@ const GUIDELINES = [
 ];
 
 const SUBMISSION_NOTES = [
-  "The presenting author must be a member of APTI — your Membership ID is verified against the official APTI registry before submission is accepted.",
+  "APTI Membership ID is optional; if provided, it will be verified against the official APTI registry.",
   "Abstracts must be submitted online only through this website. No other form of submission will be accepted.",
   "Only registered delegates will be allowed to present the abstracts during APTICON.",
   `All queries related to the abstract submission should be done through e-mail: ${EVENT.contact}`,
@@ -521,12 +521,13 @@ export default function AbstractsClient() {
 
               <AptiMembershipIdField
                 registerProps={register("aptiMemberId", {
-                  required:
-                    "APTI Membership ID is required to submit an abstract",
-                  minLength: 3,
+                  minLength: {
+                    value: 3,
+                    message: "Enter a valid APTI Membership ID",
+                  },
                 })}
                 error={errors.aptiMemberId?.message}
-                helperText="Only verified APTI members can submit an abstract — enter the presenting author's Membership ID."
+                helperText="Optional — enter the presenting author's APTI Membership ID if available."
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

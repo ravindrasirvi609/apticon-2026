@@ -57,7 +57,7 @@ export default function AptiMembershipIdField({
 
   return (
     <div>
-      <Label htmlFor={registerProps.name}>APTI Membership ID *</Label>
+      <Label htmlFor={registerProps.name}>APTI Membership ID</Label>
       <div className="relative mt-2">
         <input
           id={registerProps.name}
