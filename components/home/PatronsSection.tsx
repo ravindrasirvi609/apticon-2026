@@ -113,9 +113,11 @@ export default function PatronsSection() {
                 <p className="text-sm font-semibold leading-snug text-[var(--dark-text)]">
                   {patron.name}
                 </p>
-                <p className="mt-1 text-xs leading-snug text-[var(--muted-text)]">
-                  {patron.designation}
-                </p>
+                {patron.designation && (
+                  <p className="mt-1 text-xs leading-snug text-[var(--muted-text)]">
+                    {patron.designation}
+                  </p>
+                )}
                 {patron.institution && (
                   <p className="text-xs leading-snug text-[var(--muted-text)]">
                     {patron.institution}
