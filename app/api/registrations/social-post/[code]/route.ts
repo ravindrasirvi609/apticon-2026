@@ -67,7 +67,7 @@ export async function GET(
       `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
         <text x="${Math.round(width * 0.725)}" y="${Math.round(height * 0.68)}"
           text-anchor="middle" dominant-baseline="middle"
-          fill="#7d102e" font-family="Arial, DejaVu Sans, sans-serif"
+          fill="#7d102e" font-family="sans-serif"
           font-size="${nameFontSize}" font-weight="900">${escapedName.toUpperCase()}</text>
       </svg>`,
     ),
