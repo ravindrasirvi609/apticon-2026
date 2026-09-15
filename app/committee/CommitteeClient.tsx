@@ -34,8 +34,8 @@ const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
     color: "from-[var(--accent-500)] to-amber-600",
     members: [
       {
-        name: "Hon'ble Governor / Chief Minister",
-        designation: "Chhattisgarh State",
+        name: "Announcing Soon",
+        designation: "",
         institution: "",
         role: "Chief Patron",
       },

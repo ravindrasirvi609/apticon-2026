@@ -14,8 +14,8 @@ interface Patron {
 
 const PATRONS: Patron[] = [
   {
-    name: "Hon'ble Governor / Chief Minister",
-    designation: "Chhattisgarh State",
+    name: "Announcing Soon",
+    designation: "",
     role: "Chief Patron",
   },
   {
