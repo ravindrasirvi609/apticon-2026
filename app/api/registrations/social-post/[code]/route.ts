@@ -30,7 +30,6 @@ export async function GET(
   const size = Math.round(width * 0.55);
   const x = Math.round(width * 0.715 - size / 2);
   const y = Math.round(height * 0.198);
-  const name = registration.fullName.replace(/[<>&'"`]/g, "");
   const overlays: sharp.OverlayOptions[] = [];
 
   if (registration.photoUrl) {
@@ -52,9 +51,25 @@ export async function GET(
     }
   }
 
+  const escapedName = registration.fullName
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+  const nameFontSize = Math.max(
+    22,
+    Math.min(34, Math.round((width * 0.025 * 34) / Math.max(34, escapedName.length))),
+  );
+
   overlays.push({
     input: Buffer.from(
-      `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><text x="${width * 0.725}" y="${height * 0.68}" text-anchor="middle" fill="#7d102e" font-family="Arial, sans-serif" font-size="${Math.max(24, Math.round(width * 0.025))}" font-weight="900">${name.toUpperCase()}</text></svg>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+        <text x="${Math.round(width * 0.725)}" y="${Math.round(height * 0.68)}"
+          text-anchor="middle" dominant-baseline="middle"
+          fill="#7d102e" font-family="Arial, DejaVu Sans, sans-serif"
+          font-size="${nameFontSize}" font-weight="900">${escapedName.toUpperCase()}</text>
+      </svg>`,
     ),
   });
 
