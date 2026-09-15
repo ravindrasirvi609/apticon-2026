@@ -11,6 +11,7 @@ import {
 import { getRazorpayOrderPayments, type RazorpayPayment } from "@/lib/razorpay";
 import { generateRegistrationCode } from "@/lib/registration-code";
 import { sendWhatsAppNotification } from "@/lib/whatsapp";
+import { GROUP_MIN_DELEGATES } from "@/lib/validators/group-registration";
 
 /** Who triggered a payment update — the gateway itself, or a console user re-checking it. */
 export interface PaymentActor {
@@ -162,7 +163,36 @@ export async function recordCapturedGroupRazorpayPayment(
   const byEmail = new Map(existing.map((r) => [r.email, r]));
   let delegatesProcessed = 0;
 
-  for (const delegate of group.delegates) {
+  // The coordinator is captured separately from the delegate rows in the group form, but is
+  // still a person attending the conference. Create their individual registration from the
+  // same successful group payment so they do not have to register/pay manually afterwards.
+  // This is complimentary; the group fee is calculated from the paid delegate rows only.
+  const coordinatorAsDelegate = {
+    name: group.coordinatorName,
+    designation: "Coordinator",
+    email: group.coordinatorEmail,
+    phone: group.coordinatorPhone,
+    affiliation: group.coordinatorAffiliation,
+    isAptiMember: !!group.coordinatorAptiMemberId,
+    aptiMemberId: group.coordinatorAptiMemberId,
+    photoKey: group.coordinatorPhotoKey,
+    photoUrl: group.coordinatorPhotoUrl,
+    photoName: group.coordinatorPhotoName,
+    isComplimentary: true,
+  };
+  // The coordinator uses the one free seat only for the minimum-size group (10 delegates).
+  // Larger groups already allocate their complimentary seat(s) among the delegate rows, so do
+  // not silently create a second free registration for the coordinator.
+  const delegates =
+    group.delegateCount === GROUP_MIN_DELEGATES
+      ? [coordinatorAsDelegate, ...group.delegates]
+      : group.delegates;
+  const processedEmails = new Set<string>();
+
+  for (const delegate of delegates) {
+    // The coordinator may also have been entered as a delegate. Keep one registration per person.
+    if (processedEmails.has(delegate.email)) continue;
+    processedEmails.add(delegate.email);
     const already = byEmail.get(delegate.email);
     if (already?.confirmationEmailSentAt) continue;
     try {
