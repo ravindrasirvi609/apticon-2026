@@ -20,7 +20,7 @@ const NAME_CENTER_Y = Math.round(HEIGHT * 0.68); // 1045 px
 const NAME_AREA_WIDTH = Math.round(WIDTH * 0.44); // ~450 px
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ code: string }> },
 ) {
   const { code } = await params;
@@ -35,10 +35,13 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  // Derive the template URL from the incoming request so the route works
-  // identically in local dev (http://localhost:3000) and on Vercel.
-  const { origin } = new URL(request.url);
-  const templateSrc = `${origin}/APTICON-2026-registered-post.png`;
+  // Read the template from disk and encode as a data URI so the image is
+  // fully self-contained. Passing a same-origin URL to Satori fails on Vercel
+  // because the Lambda container cannot resolve its own domain at runtime.
+  const templateBuffer = await readFile(
+    path.join(process.cwd(), "public", "APTICON-2026-registered-post.png"),
+  );
+  const templateSrc = `data:image/png;base64,${templateBuffer.toString("base64")}`;
 
   // Read the font via Node's fs — Next.js file tracing picks up readFile
   // calls and bundles the asset into the serverless function automatically.
