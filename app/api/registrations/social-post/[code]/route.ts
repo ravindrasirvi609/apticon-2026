@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import path from "node:path";
 import { readFile } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
 import sharp from "sharp";
 import { connectDB } from "@/lib/db";
 import Registration from "@/models/Registration";
@@ -58,26 +57,38 @@ export async function GET(
     .replace(/>/g, "&gt;")
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&apos;");
-  // Scale font size to the image width so the name is clearly legible.
-  // The usable text area is roughly 44% of the image width (~450px at 1023px).
+  // Scale font size so the name is clearly legible across different name lengths.
+  // Usable text area is ~44% of the image width (~450px on the 1023px template).
   const textAreaWidth = Math.round(width * 0.44);
   const nameFontSize = Math.max(
     32,
     Math.min(68, Math.floor((textAreaWidth * 1.5) / Math.max(escapedName.length, 6))),
   );
 
-  // Reference the font via a file:// URI — librsvg resolves these reliably
-  // whereas data: URIs in @font-face src are not universally supported.
-  const fontPath = path.join(process.cwd(), "public", "fonts", "Geist-Regular.ttf");
-  const fontUrl = pathToFileURL(fontPath).href;
+  // Read the font via Node's fs so Next.js bundles it into the serverless
+  // function (file tracing picks up readFile calls). Embed as a base64
+  // data URI so the SVG is self-contained and works in any environment —
+  // file:// paths are unreliable inside Vercel's Lambda containers because
+  // public/ assets are served via CDN and may not exist on the local FS.
+  const fontPath = path.join(
+    process.cwd(),
+    "node_modules",
+    "next",
+    "dist",
+    "compiled",
+    "@vercel",
+    "og",
+    "Geist-Regular.ttf",
+  );
+  const fontBase64 = (await readFile(fontPath)).toString("base64");
 
   overlays.push({
     input: Buffer.from(
       `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-        <style>@font-face { font-family: ApticonSocial; src: url('${fontUrl}') format('truetype'); }</style>
+        <style>@font-face { font-family: ApticonSocial; src: url(data:font/ttf;base64,${fontBase64}) format('truetype'); }</style>
         <text x="${Math.round(width * 0.725)}" y="${Math.round(height * 0.68)}"
           text-anchor="middle" dominant-baseline="middle"
-          fill="#7d102e" font-family="ApticonSocial, sans-serif"
+          fill="#7d102e" font-family="ApticonSocial"
           font-size="${nameFontSize}">${escapedName.toUpperCase()}</text>
       </svg>`,
     ),
