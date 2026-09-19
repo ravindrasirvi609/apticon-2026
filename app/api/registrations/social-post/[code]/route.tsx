@@ -64,18 +64,30 @@ export async function GET(
     fontBuffer.byteOffset + fontBuffer.byteLength,
   ) as ArrayBuffer;
 
-  // Pre-fetch the delegate photo so we can degrade gracefully on any error.
+  // Pre-fetch the delegate photo so Satori has the bytes inline and does not
+  // need a second outbound request at render time.
   let photoSrc: string | null = null;
   if (registration.photoUrl) {
     try {
       const res = await fetch(registration.photoUrl);
       if (res.ok) {
         const buf = Buffer.from(await res.arrayBuffer());
-        // Encode as a data URI so Satori has the bytes without a second fetch.
-        photoSrc = `data:image/jpeg;base64,${buf.toString("base64")}`;
+        // Derive the MIME type from the response header first, then fall back
+        // to the URL extension.  Hardcoding image/jpeg breaks PNG and WebP
+        // uploads, and some decoders (including resvg) reject mismatched types.
+        const contentType = res.headers.get("content-type");
+        const extMatch = registration.photoUrl.match(/\.(jpe?g|png|webp)$/i);
+        const mimeType =
+          contentType?.split(";")[0].trim() ||
+          (extMatch ? `image/${extMatch[1].replace("jpg", "jpeg")}` : "image/jpeg");
+        photoSrc = `data:${mimeType};base64,${buf.toString("base64")}`;
+      } else {
+        console.error(
+          `[social-post] photo fetch ${res.status} for ${registration.photoUrl}`,
+        );
       }
-    } catch {
-      // Template remains usable without the photo.
+    } catch (err) {
+      console.error("[social-post] photo fetch threw:", err);
     }
   }
 
