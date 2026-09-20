@@ -79,6 +79,17 @@ export default function WpdClient() {
     ctx.fillStyle = "#173d89";
     ctx.font = "400 30px Arial, sans-serif";
     ctx.fillText(designation, 59, 1024);
+
+    if (!saved) {
+      ctx.save();
+      ctx.translate(WIDTH / 2, HEIGHT / 2);
+      ctx.rotate(-Math.PI / 7);
+      ctx.fillStyle = "rgba(18, 59, 131, 0.18)";
+      ctx.font = "800 58px Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("PREVIEW • SAVE DETAILS TO DOWNLOAD", 0, 0);
+      ctx.restore();
+    }
   };
 
   useEffect(() => {
@@ -87,15 +98,19 @@ export default function WpdClient() {
     image.onload = () => { backgroundRef.current = image; draw(); };
   }, []);
 
-  useEffect(() => { draw(); }, [form, photoPreview]);
+  useEffect(() => { draw(); }, [form, photoPreview, saved]);
 
-  const update = (key: keyof FormState, value: string) => setForm((current) => ({ ...current, [key]: value }));
+  const update = (key: keyof FormState, value: string) => {
+    setSaved(false);
+    setForm((current) => ({ ...current, [key]: value }));
+  };
 
   const selectPhoto = (file: File | undefined) => {
     if (!file) return;
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) return setError("Please select a JPG, PNG or WebP photo.");
     if (file.size > 5 * 1024 * 1024) return setError("Photo must be 5 MB or smaller.");
     setError("");
+    setSaved(false);
     setPhotoFile(file);
     const url = URL.createObjectURL(file);
     setPhotoPreview(url);
@@ -153,7 +168,7 @@ export default function WpdClient() {
             {saved && <p className="mt-4 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">Your post details have been saved.</p>}
             <div className="mt-6 flex flex-wrap gap-3">
               <Button onClick={savePost} disabled={saving}>{saving ? <Loader2 className="animate-spin" /> : <Save />} Save details</Button>
-              <Button onClick={download} variant="outline"><Download /> Download PNG</Button>
+              {saved && <Button onClick={download} variant="outline"><Download /> Download PNG</Button>}
             </div>
           </section>
           <section className="rounded-2xl border border-[var(--primary-800)]/10 bg-white p-4 shadow-sm sm:p-6">
