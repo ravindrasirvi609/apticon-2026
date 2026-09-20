@@ -133,7 +133,7 @@ export default function WpdClient() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 max-w-2xl">
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--accent-500)]">World Pharmacists Day 2026</p>
-          <h1 className="mt-2 font-display text-4xl font-bold text-[var(--primary-800)] sm:text-5xl">Create your WPD social post</h1>
+          <h1 className="mt-2 font-display text-4xl font-bold text-[var(--primary-800)] sm:text-5xl">Create your social post</h1>
           <p className="mt-4 text-[var(--muted-text)]">Add your details and photo. Your information is saved securely so the post can be generated again if needed.</p>
         </div>
         <div className="grid gap-8 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:items-start">
