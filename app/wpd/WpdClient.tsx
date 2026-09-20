@@ -9,7 +9,7 @@ const HEIGHT = 1350;
 const PHOTO = { x: 40, y: 460, width: 476, height: 484, radius: 44 };
 const NAME_AREA = { x: 40, y: 963, width: 1000, height: 256, radius: 44 };
 
-type FormState = { name: string; designation: string; email: string; mobile: string };
+type FormState = { name: string; designation: string; organization: string; email: string; mobile: string };
 
 function roundedPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
   ctx.beginPath();
@@ -40,7 +40,7 @@ export default function WpdClient() {
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState<FormState>({ name: "", designation: "", email: "", mobile: "" });
+  const [form, setForm] = useState<FormState>({ name: "", designation: "", organization: "", email: "", mobile: "" });
 
   const draw = () => {
     const canvas = canvasRef.current;
@@ -80,6 +80,7 @@ export default function WpdClient() {
 
     const name = form.name.trim() || "Your Name";
     const designation = form.designation.trim() || "Your Designation";
+    const organization = form.organization.trim() || "Your Organization";
     const nameSize = fitText(ctx, name, 900, 54);
     ctx.fillStyle = "#123b83";
     ctx.font = `800 ${nameSize}px Arial, sans-serif`;
@@ -87,7 +88,10 @@ export default function WpdClient() {
     ctx.fillText(name, WIDTH / 2, 1080);
     ctx.fillStyle = "#173d89";
     ctx.font = "400 30px Arial, sans-serif";
-    ctx.fillText(designation, WIDTH / 2, 1135);
+    ctx.fillText(designation, WIDTH / 2, 1125);
+    ctx.fillStyle = "#173d89";
+    ctx.font = `400 ${fitText(ctx, organization, 900, 28)}px Arial, sans-serif`;
+    ctx.fillText(organization, WIDTH / 2, 1170);
     ctx.textAlign = "start";
 
     if (!saved) {
@@ -141,7 +145,7 @@ export default function WpdClient() {
   const savePost = async () => {
     setError("");
     if (!photoFile) return setError("Please upload your photo.");
-    if (!form.name || !form.designation || !form.email || !form.mobile) return setError("Please complete all required fields.");
+    if (!form.name || !form.designation || !form.organization || !form.email || !form.mobile) return setError("Please complete all required fields.");
     setSaving(true);
     const data = new FormData();
     Object.entries(form).forEach(([key, value]) => data.append(key, value));
@@ -164,7 +168,7 @@ export default function WpdClient() {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:items-start">
           <section className="rounded-2xl border border-[var(--primary-800)]/10 bg-white p-6 shadow-sm">
             <div className="space-y-4">
-              {([['name','Full name'],['designation','Designation'],['email','Email address'],['mobile','Mobile number']] as const).map(([key, label]) => (
+              {([['name','Full name'],['designation','Designation'],['organization','Organization'],['email','Email address'],['mobile','Mobile number']] as const).map(([key, label]) => (
                 <label key={key} className="block text-sm font-semibold text-[var(--dark-text)]">
                   {label} <span className="text-red-500">*</span>
                   <input value={form[key]} onChange={(event) => update(key, event.target.value)} type={key === "email" ? "email" : key === "mobile" ? "tel" : "text"} className="mt-1.5 h-11 w-full rounded-lg border border-slate-200 bg-white px-3 font-normal outline-none transition focus:border-[var(--primary-700)] focus:ring-2 focus:ring-[var(--primary-700)]/15" required />
