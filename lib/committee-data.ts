@@ -25,7 +25,7 @@ export const NATIONAL_BODY: CommitteeMember[] = [
   {
     name: "Dr. Mihir Kumar Kar",
     role: "Vice President (Eastern Region)",
-    designation: "Assistant Professor",
+    designation: "Professor",
     institution:
       "Sri Jayadev College of Pharmaceutical Sciences, Naharkanta, Bhubaneswar 752101, Odisha",
     email: "mihirkar.apti@gmail.com",
