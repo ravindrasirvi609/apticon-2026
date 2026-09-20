@@ -7,6 +7,7 @@ import { buildWpdPostPhotoKey, uploadBuffer } from "@/lib/r2";
 const detailsSchema = z.object({
   name: z.string().trim().min(2).max(100),
   designation: z.string().trim().min(2).max(120),
+  organization: z.string().trim().min(2).max(160),
   email: z.string().trim().email().max(160),
   mobile: z.string().trim().regex(/^[+\d][\d\s().-]{7,20}$/),
 });
@@ -18,12 +19,13 @@ export async function POST(request: NextRequest) {
   const parsed = detailsSchema.safeParse({
     name: formData.get("name"),
     designation: formData.get("designation"),
+    organization: formData.get("organization"),
     email: formData.get("email"),
     mobile: formData.get("mobile"),
   });
   const photo = formData.get("photo");
   if (!parsed.success || !(photo instanceof File)) {
-    return NextResponse.json({ error: "Name, designation, email, mobile and photo are required." }, { status: 400 });
+    return NextResponse.json({ error: "Name, designation, organization, email, mobile and photo are required." }, { status: 400 });
   }
   if (!("image/jpeg" === photo.type || "image/png" === photo.type || "image/webp" === photo.type)) {
     return NextResponse.json({ error: "Photo must be JPG, PNG or WebP." }, { status: 400 });
