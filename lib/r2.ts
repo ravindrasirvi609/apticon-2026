@@ -35,6 +35,12 @@ export function buildPhotoKey(originalName: string): string {
   return `delegate-photos/${new Date().getUTCFullYear()}/${nanoid(16)}.${safeExt}`;
 }
 
+export function buildWpdPostPhotoKey(originalName: string): string {
+  const ext = originalName.split(".").pop()?.toLowerCase() ?? "bin";
+  const safeExt = ["jpg", "jpeg", "png", "webp"].includes(ext) ? ext : "bin";
+  return `wpd-posts/${new Date().getUTCFullYear()}/${nanoid(16)}.${safeExt}`;
+}
+
 export function buildGraphicalAbstractKey(originalName: string): string {
   const ext = originalName.split(".").pop()?.toLowerCase() ?? "bin";
   const safeExt = ["jpg", "jpeg", "png", "webp"].includes(ext) ? ext : "bin";

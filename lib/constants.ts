@@ -26,6 +26,7 @@ export const NAV_LINKS = [
   { label: "Registration", href: "/registration" },
   { label: "Abstracts", href: "/abstracts" },
   { label: "Gallery", href: "/gallery" },
+  { label: "WPD Post", href: "/wpd" },
   { label: "Contact", href: "/contact" },
 ];
 
