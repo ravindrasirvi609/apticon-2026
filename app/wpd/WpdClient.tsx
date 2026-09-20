@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { Download, ImagePlus, Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/shadcn/button";
 
-const WIDTH = 1254;
-const HEIGHT = 1254;
-const PHOTO = { x: 55, y: 503, width: 507, height: 416, radius: 42 };
+const WIDTH = 1080;
+const HEIGHT = 1350;
+const PHOTO = { x: 40, y: 460, width: 476, height: 484, radius: 44 };
+const NAME_AREA = { x: 40, y: 963, width: 1000, height: 256, radius: 44 };
 
 type FormState = { name: string; designation: string; email: string; mobile: string };
 
@@ -50,6 +51,13 @@ export default function WpdClient() {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
     ctx.drawImage(background, 0, 0, WIDTH, HEIGHT);
 
+    // Keep the editable name/designation panel clean when the template has blank fields.
+    ctx.save();
+    roundedPath(ctx, NAME_AREA.x, NAME_AREA.y, NAME_AREA.width, NAME_AREA.height, NAME_AREA.radius);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.restore();
+
     ctx.save();
     roundedPath(ctx, PHOTO.x, PHOTO.y, PHOTO.width, PHOTO.height, PHOTO.radius);
     ctx.clip();
@@ -72,13 +80,15 @@ export default function WpdClient() {
 
     const name = form.name.trim() || "Your Name";
     const designation = form.designation.trim() || "Your Designation";
-    const nameSize = fitText(ctx, name, 530, 46);
+    const nameSize = fitText(ctx, name, 900, 54);
     ctx.fillStyle = "#123b83";
     ctx.font = `800 ${nameSize}px Arial, sans-serif`;
-    ctx.fillText(name, 59, 972);
+    ctx.textAlign = "center";
+    ctx.fillText(name, WIDTH / 2, 1080);
     ctx.fillStyle = "#173d89";
     ctx.font = "400 30px Arial, sans-serif";
-    ctx.fillText(designation, 59, 1024);
+    ctx.fillText(designation, WIDTH / 2, 1135);
+    ctx.textAlign = "start";
 
     if (!saved) {
       ctx.save();
