@@ -12,7 +12,9 @@ const GROUP_REGISTRATION_CATEGORIES = [
   "Accompanying Person",
 ] as const;
 
-export const GROUP_MIN_DELEGATES = 10;
+// A group must have 15 paid delegate entries. The coordinator is the second
+// complimentary seat for the minimum-size group.
+export const GROUP_MIN_DELEGATES = 15;
 export const GROUP_MAX_DELEGATES = 100; // above this, submit a second group registration
 
 const delegateSchema = z.object({

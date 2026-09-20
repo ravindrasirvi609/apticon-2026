@@ -6,7 +6,9 @@ import CulturalDivider from "@/components/ui/CulturalDivider";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/shadcn/button";
 import GroupRegistrationForm from "@/components/registration/GroupRegistrationForm";
-import { GROUP_MIN_DELEGATES } from "@/lib/validators/group-registration";
+import {
+  GROUP_MIN_DELEGATES,
+} from "@/lib/validators/group-registration";
 
 export default function GroupRegistrationClient() {
   return (
@@ -25,8 +27,7 @@ export default function GroupRegistrationClient() {
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
             Bring {GROUP_MIN_DELEGATES} paid delegates from your institution to
-            APTICON 2026 and add 1 complimentary seat for every{" "}
-            {GROUP_MIN_DELEGATES} paid delegates — one form, one payment.
+            APTICON 2026 and get 2 complimentary seats — one form, one payment.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Link href="/registration">
@@ -56,7 +57,7 @@ export default function GroupRegistrationClient() {
               </h2>
               <p className="text-[var(--muted-text)] text-sm">
                 Fields marked with <span className="text-red-500">*</span> are
-                required. Minimum {GROUP_MIN_DELEGATES} delegates per group.
+                required. Minimum {GROUP_MIN_DELEGATES} paid delegates per group.
               </p>
             </ScrollReveal>
             <ScrollReveal>
