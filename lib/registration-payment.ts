@@ -180,7 +180,7 @@ export async function recordCapturedGroupRazorpayPayment(
     photoName: group.coordinatorPhotoName,
     isComplimentary: true,
   };
-  // The coordinator uses the one free seat only for the minimum-size group (10 delegates).
+  // The coordinator uses one of the two free seats only for the minimum-size group (15 delegates).
   // Larger groups already allocate their complimentary seat(s) among the delegate rows, so do
   // not silently create a second free registration for the coordinator.
   const delegates =

@@ -19,7 +19,6 @@ import PhotoUploadField from "@/components/registration/PhotoUploadField";
 import {
   REGISTRATION_CATEGORIES,
   GST_RATE,
-  GROUP_COMPLIMENTARY_AT,
   calculateFeeWithGst,
   currentGroupFeeAmount,
   formatRupees,
@@ -621,8 +620,8 @@ export default function GroupRegistrationForm() {
         <div className="mt-3 flex items-start gap-2 text-xs text-[var(--muted-text)]">
           <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
           <span>
-            Bring {GROUP_MIN_DELEGATES} paid delegates and add 1 complimentary
-            seat for each group of {GROUP_MIN_DELEGATES} paid delegates — the
+            Bring {GROUP_MIN_DELEGATES} paid delegates and get 2 complimentary
+            seats for each group of {GROUP_MIN_DELEGATES} paid delegates — the
             total above already reflects it. All delegates in a group share one
             fee category.
           </span>

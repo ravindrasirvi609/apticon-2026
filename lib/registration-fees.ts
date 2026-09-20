@@ -85,14 +85,15 @@ export function calculateFeeBreakdown(
   return calculateFeeWithGst(baseAmount);
 }
 
-export const GROUP_MIN_SIZE = 10;
+export const GROUP_MIN_SIZE = 15;
 
-/** Total headcount (10 paid + 1 complimentary) at which the first free seat is granted. */
-export const GROUP_COMPLIMENTARY_AT = GROUP_MIN_SIZE + 1;
+/** Total headcount (15 paid + 2 complimentary) at which the first free seats are granted. */
+export const GROUP_COMPLIMENTARY_AT = GROUP_MIN_SIZE + 2;
+export const GROUP_COMPLIMENTARY_PER_TIER = 2;
 
-/** One complimentary seat for every ten paid delegates (11 total for the first free seat). */
+/** Two complimentary seats for every fifteen paid delegates (17 total for the first tier). */
 export function groupComplimentaryCount(delegateCount: number): number {
-  return Math.floor(delegateCount / GROUP_COMPLIMENTARY_AT);
+  return Math.floor(delegateCount / GROUP_COMPLIMENTARY_AT) * GROUP_COMPLIMENTARY_PER_TIER;
 }
 
 export function currentGroupFeeAmount(
