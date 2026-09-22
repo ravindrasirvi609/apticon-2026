@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/shadcn/button";
 const WIDTH = 1080;
 const HEIGHT = 1350;
 const PHOTO = { x: 40, y: 460, width: 476, height: 484, radius: 44 };
-const NAME_AREA = { x: 40, y: 963, width: 1000, height: 256, radius: 44 };
+// The updated template reserves the left side of the white panel for the
+// Powered By logo. Keep the editable copy in the open area on the right.
+const NAME_AREA = { x: 255, y: 975, width: 745, height: 220, radius: 24 };
 
 type FormState = { name: string; designation: string; organization: string; email: string; mobile: string };
 
@@ -51,13 +53,6 @@ export default function WpdClient() {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
     ctx.drawImage(background, 0, 0, WIDTH, HEIGHT);
 
-    // Keep the editable name/designation panel clean when the template has blank fields.
-    ctx.save();
-    roundedPath(ctx, NAME_AREA.x, NAME_AREA.y, NAME_AREA.width, NAME_AREA.height, NAME_AREA.radius);
-    ctx.fillStyle = "#ffffff";
-    ctx.fill();
-    ctx.restore();
-
     ctx.save();
     roundedPath(ctx, PHOTO.x, PHOTO.y, PHOTO.width, PHOTO.height, PHOTO.radius);
     ctx.clip();
@@ -81,17 +76,18 @@ export default function WpdClient() {
     const name = form.name.trim() || "Your Name";
     const designation = form.designation.trim() || "Your Designation";
     const organization = form.organization.trim() || "Your Organization";
-    const nameSize = fitText(ctx, name, 900, 54);
+    const nameSize = fitText(ctx, name, NAME_AREA.width - 36, 54);
     ctx.fillStyle = "#123b83";
     ctx.font = `800 ${nameSize}px Arial, sans-serif`;
     ctx.textAlign = "center";
-    ctx.fillText(name, WIDTH / 2, 1080);
+    const textCenterX = NAME_AREA.x + NAME_AREA.width / 2;
+    ctx.fillText(name, textCenterX, 1055);
     ctx.fillStyle = "#173d89";
     ctx.font = "400 30px Arial, sans-serif";
-    ctx.fillText(designation, WIDTH / 2, 1125);
+    ctx.fillText(designation, textCenterX, 1105);
     ctx.fillStyle = "#173d89";
-    ctx.font = `400 ${fitText(ctx, organization, 900, 28)}px Arial, sans-serif`;
-    ctx.fillText(organization, WIDTH / 2, 1170);
+    ctx.font = `400 ${fitText(ctx, organization, NAME_AREA.width - 36, 28)}px Arial, sans-serif`;
+    ctx.fillText(organization, textCenterX, 1155);
     ctx.textAlign = "start";
 
     if (!saved) {
