@@ -340,7 +340,16 @@ export function abstractDecisionEmail(
                 ],
               },
             ]
-          : []),
+          : decision === "accepted"
+            ? [
+                {
+                  type: "callout" as const,
+                  variant: "info" as const,
+                  title: "Presentation Type Allocation",
+                  body: "Your abstract has been accepted! The presentation type (Oral or Poster) and presentation code will be allocated soon and communicated to you.",
+                },
+              ]
+            : []),
         ...(note
           ? [
               {

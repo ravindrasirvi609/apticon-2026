@@ -49,13 +49,15 @@ export async function PATCH(
         ? "revision_requested"
         : parsed.data.decision;
 
-    if (parsed.data.decision === "accepted" && parsed.data.presentationType) {
-      abs.presentationType = parsed.data.presentationType;
-      if (!abs.abstractCode) {
-        abs.abstractCode = await generateAbstractCode(
-          parsed.data.presentationType,
-          abs.theme,
-        );
+    if (parsed.data.decision === "accepted") {
+      if (parsed.data.presentationType) {
+        abs.presentationType = parsed.data.presentationType;
+        if (!abs.abstractCode) {
+          abs.abstractCode = await generateAbstractCode(
+            parsed.data.presentationType,
+            abs.theme,
+          );
+        }
       }
     }
 
