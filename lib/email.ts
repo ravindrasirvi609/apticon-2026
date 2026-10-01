@@ -546,7 +546,7 @@ export async function registrationApprovedEmail(
 ) {
   const nextStepsInfo = hasLinkedAbstract
     ? `We can see your abstract submission is linked to this registration — you're fully set up.`
-    : `If you plan to present a paper or poster, please submit your abstract before <b>30 September 2026</b>.`;
+    : `If you plan to present a paper or poster, please submit your abstract before <b>6 October 2026</b>.`;
   const qrCid = `qr-${code}`;
   const qrPng = await generateRegistrationQrPngBuffer(code);
   return {
@@ -774,7 +774,7 @@ export function nudgeAbstractEmail(name: string, registrationCode: string) {
         { type: "text", html: `Dear ${esc(name)},` },
         {
           type: "text",
-          html: `Thank you for registering (<b>${esc(registrationCode)}</b>) for APTICON 2026. If you'd like to present your research, the call for abstracts is open until <b>30 September 2026</b>.`,
+          html: `Thank you for registering (<b>${esc(registrationCode)}</b>) for APTICON 2026. If you'd like to present your research, the call for abstracts is open until <b>6 October 2026</b>.`,
         },
         {
           type: "callout",
