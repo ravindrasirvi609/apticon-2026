@@ -977,7 +977,7 @@ Delegates now register **and** may (optionally) submit an abstract. Both flows m
    - Payment rejected → _"We couldn't verify your payment. Reason: X. Please resubmit"_
    - Abstract submitted → (existing)
    - Abstract decision → (existing)
-   - Nudge: registered but no abstract → _"Consider submitting an abstract by 30 Sep 2026"_ (manual trigger from admin)
+   - Nudge: registered but no abstract → _"Consider submitting an abstract by 6 Oct 2026"_ (manual trigger from admin)
    - Nudge: abstract but no registration → _"You must register to present. Register by …"_
 4. **Sync key** = email. On abstract submit, if a registration exists for that email, link them. Same on registration submit. Manual re-link available in admin.
 5. **Every email uses the same branded template** — one shared header/footer/CSS so the delegate experience feels like one platform, not multiple.
