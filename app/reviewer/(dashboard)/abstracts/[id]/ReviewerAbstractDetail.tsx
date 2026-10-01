@@ -102,8 +102,6 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
   async function submit() {
     if (comments.trim().length < 20)
       return toast.error("Comments must be at least 20 characters.");
-    if (accept && !presentationType)
-      return toast.error("Select Oral or Poster to accept this abstract.");
     setSaving(true);
     try {
       const res = await fetch("/api/reviews", {
@@ -255,13 +253,17 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
 
                   {accept ? (
                     <div>
-                      <Label>Presentation type *</Label>
+                      <Label>Presentation type (optional)</Label>
                       <div className="mt-2 grid grid-cols-2 gap-2">
                         {(["oral", "poster"] as const).map((v) => (
                           <button
                             key={v}
                             type="button"
-                            onClick={() => setPresentationType(v)}
+                            onClick={() =>
+                              setPresentationType((prev) =>
+                                prev === v ? null : v,
+                              )
+                            }
                             className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
                               presentationType === v
                                 ? "bg-emerald-600 text-white border-emerald-600"
@@ -273,8 +275,9 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
                         ))}
                       </div>
                       <p className="mt-2 text-xs text-[var(--muted-text)]">
-                        An Abstract Code will be generated based on this choice
-                        and cannot be changed afterwards.
+                        {presentationType
+                          ? "An Abstract Code will be generated based on this choice."
+                          : "If left unselected, abstract will be accepted without a presentation type. It can be allocated later."}
                       </p>
                     </div>
                   ) : (

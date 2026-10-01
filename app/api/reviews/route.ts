@@ -91,12 +91,14 @@ export async function POST(request: NextRequest) {
       abs.finalDecisionAt = new Date();
       abs.finalDecisionNote = parsed.data.comments;
       abs.status = "accepted";
-      abs.presentationType = parsed.data.presentationType;
-      if (!abs.abstractCode) {
-        abs.abstractCode = await generateAbstractCode(
-          parsed.data.presentationType!,
-          abs.theme,
-        );
+      if (parsed.data.presentationType) {
+        abs.presentationType = parsed.data.presentationType;
+        if (!abs.abstractCode) {
+          abs.abstractCode = await generateAbstractCode(
+            parsed.data.presentationType,
+            abs.theme,
+          );
+        }
       }
       await abs.save();
 
