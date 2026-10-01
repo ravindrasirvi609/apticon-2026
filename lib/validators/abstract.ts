@@ -89,16 +89,11 @@ export const abstractAssignSchema = z.object({
   reviewerIds: z.array(z.string().length(24)).min(1).max(10),
 });
 
-export const abstractDecisionSchema = z
-  .object({
-    decision: z.enum(["accepted", "rejected", "revision_requested"]),
-    note: z.string().max(2000).optional(),
-    presentationType: z.enum(["oral", "poster"]).optional(),
-  })
-  .refine((d) => d.decision !== "accepted" || !!d.presentationType, {
-    message: "Select Oral or Poster to accept this abstract",
-    path: ["presentationType"],
-  });
+export const abstractDecisionSchema = z.object({
+  decision: z.enum(["accepted", "rejected", "revision_requested"]),
+  note: z.string().max(2000).optional(),
+  presentationType: z.enum(["oral", "poster"]).optional(),
+});
 
 export type AbstractSubmitInput = z.infer<typeof abstractSubmitSchema>;
 export type AbstractStatusLookupInput = z.infer<

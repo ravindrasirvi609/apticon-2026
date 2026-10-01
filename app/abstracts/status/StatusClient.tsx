@@ -166,13 +166,19 @@ export default function StatusClient() {
               <b>Submitted:</b>{" "}
               {format(new Date(result.createdAt), "d MMM yyyy, h:mm a")}
             </div>
-            {result.abstractCode && (
+            {result.abstractCode ? (
               <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
                 <b>Abstract Code ({result.presentationType}):</b>{" "}
                 <span className="font-mono font-bold">
                   {result.abstractCode}
                 </span>
               </div>
+            ) : (
+              result.status === "accepted" && (
+                <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900">
+                  <b>Presentation Type Allocation:</b> Your abstract has been accepted! The presentation type (Oral/Poster) and abstract code will be allocated soon.
+                </div>
+              )
             )}
             {result.finalDecisionAt && (
               <div>

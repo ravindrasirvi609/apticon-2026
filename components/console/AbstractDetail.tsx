@@ -185,10 +185,6 @@ export default function AbstractDetail({
 
   async function saveDecision() {
     if (!decisionOpen) return;
-    if (decisionOpen === "accepted" && !presentationType) {
-      toast.error("Select Oral or Poster before accepting.");
-      return;
-    }
     setSaving(true);
     try {
       const res = await fetch(`/api/abstracts/${id}/decision`, {
@@ -623,14 +619,14 @@ export default function AbstractDetail({
             </p>
             {decisionOpen === "accepted" && (
               <div>
-                <Label>Presentation type *</Label>
+                <Label>Presentation type (optional)</Label>
                 {a.preferredPresentationType && (
                   <p className="mt-1 text-xs text-[var(--muted-text)]">
                     Author preferred{" "}
                     <span className="font-semibold capitalize">
                       {a.preferredPresentationType}
                     </span>{" "}
-                    — confirm or change it below.
+                    — you can select now or leave unselected to allocate later.
                   </p>
                 )}
                 <div className="mt-2 grid grid-cols-2 gap-2">
@@ -638,7 +634,9 @@ export default function AbstractDetail({
                     <button
                       key={v}
                       type="button"
-                      onClick={() => setPresentationType(v)}
+                      onClick={() =>
+                        setPresentationType((prev) => (prev === v ? null : v))
+                      }
                       className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
                         presentationType === v
                           ? "bg-emerald-600 text-white border-emerald-600"
@@ -650,8 +648,9 @@ export default function AbstractDetail({
                   ))}
                 </div>
                 <p className="mt-2 text-xs text-[var(--muted-text)]">
-                  An Abstract Code will be generated based on this choice and
-                  cannot be changed afterwards.
+                  {presentationType
+                    ? "An Abstract Code will be generated based on this choice."
+                    : "If left unselected, abstract will be accepted without a presentation type. It can be allocated later."}
                 </p>
               </div>
             )}
@@ -676,12 +675,7 @@ export default function AbstractDetail({
             >
               Cancel
             </Button>
-            <Button
-              onClick={saveDecision}
-              disabled={
-                saving || (decisionOpen === "accepted" && !presentationType)
-              }
-            >
+            <Button onClick={saveDecision} disabled={saving}>
               {saving && <Loader2 className="w-4 h-4 animate-spin" />} Record
               decision
             </Button>
