@@ -12,7 +12,9 @@ import {
   Info,
   Printer,
   CheckCircle2,
+  Pencil,
 } from "lucide-react";
+import EditRegistrationDialog from "@/components/console/EditRegistrationDialog";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
@@ -111,6 +113,7 @@ export default function RegistrationDetail({
   const [savingNote, setSavingNote] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   async function load() {
     const res = await fetch(`/api/registrations/${id}`);
@@ -231,8 +234,19 @@ export default function RegistrationDetail({
         {/* Left: personal + payment */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle>Delegate Information</CardTitle>
+              {isAdmin && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 text-xs font-medium"
+                  onClick={() => setEditDialogOpen(true)}
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                  Edit Information
+                </Button>
+              )}
             </CardHeader>
             <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="sm:col-span-2 flex items-center gap-4 pb-3 mb-1 border-b border-[var(--accent-500)]/15">
@@ -658,6 +672,26 @@ export default function RegistrationDetail({
           </Card>
         </div>
       </div>
+
+      <EditRegistrationDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        registration={r}
+        onSuccess={(updated) => {
+          setData((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  registration: {
+                    ...prev.registration,
+                    ...updated,
+                  },
+                }
+              : prev,
+          );
+          load();
+        }}
+      />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Trash2 } from "lucide-react";
+import { Search, Trash2, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import PageHeader from "@/components/console/PageHeader";
@@ -12,10 +12,10 @@ import { Input } from "@/components/ui/shadcn/input";
 import {
   Table,
   TableHeader,
-  TableBody,
   TableRow,
   TableHead,
   TableCell,
+  TableBody,
 } from "@/components/ui/shadcn/table";
 import { Button } from "@/components/ui/shadcn/button";
 import { Badge } from "@/components/ui/shadcn/badge";
@@ -31,6 +31,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/shadcn/alert-dialog";
 import ExportButtons from "@/components/console/ExportButtons";
+import EditRegistrationDialog from "@/components/console/EditRegistrationDialog";
 
 interface RegItem {
   _id: string;
@@ -50,6 +51,14 @@ interface RegItem {
   razorpayPaymentId?: string;
   paidAt?: string;
   photoUrl?: string;
+  phone?: string;
+  designation?: string;
+  affiliation?: string;
+  city?: string;
+  state?: string;
+  photoKey?: string;
+  photoName?: string;
+  remarks?: string;
 }
 
 const STATUSES = ["", "submitted", "approved", "rejected"] as const;
@@ -67,6 +76,7 @@ interface Props {
   title?: string;
   description?: string;
   canDelete?: boolean;
+  canEdit?: boolean;
 }
 
 export default function RegistrationsList({
@@ -74,8 +84,10 @@ export default function RegistrationsList({
   title = "Registrations",
   description = "All delegate registrations.",
   canDelete = false,
+  canEdit = false,
 }: Props) {
   const [items, setItems] = useState<RegItem[]>([]);
+  const [editingRegistration, setEditingRegistration] = useState<RegItem | null>(null);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("");
   const [state, setState] = useState("");
@@ -246,14 +258,14 @@ export default function RegistrationsList({
                 <TableHead>Abstract?</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Submitted</TableHead>
-                {canDelete && <TableHead className="text-right">Actions</TableHead>}
+                {(canDelete || canEdit) && <TableHead className="text-right">Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
                   <TableCell
-                    colSpan={canDelete ? 10 : 9}
+                    colSpan={canDelete || canEdit ? 10 : 9}
                     className="text-center text-sm py-8 text-[var(--muted-text)]"
                   >
                     Loading…
@@ -262,7 +274,7 @@ export default function RegistrationsList({
               ) : items.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={canDelete ? 10 : 9}
+                    colSpan={canDelete || canEdit ? 10 : 9}
                     className="text-center text-sm py-8 text-[var(--muted-text)]"
                   >
                     No registrations match your filters.
@@ -334,45 +346,58 @@ export default function RegistrationsList({
                     <TableCell className="text-xs text-[var(--muted-text)]">
                       {format(new Date(r.createdAt), "d MMM, HH:mm")}
                     </TableCell>
-                    {canDelete && (
+                    {(canDelete || canEdit) && (
                       <TableCell className="text-right">
-                        {r.paymentStatus !== "captured" && (
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Delete registration?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Are you sure you want to delete{" "}
-                                  <strong>{r.registrationCode}</strong> (
-                                  {r.fullName})? Payment for this
-                                  registration was never confirmed. This
-                                  action cannot be undone.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  className="bg-red-600 hover:bg-red-700"
-                                  onClick={() => deleteRegistration(r)}
+                        <div className="flex items-center justify-end gap-1">
+                          {canEdit && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-[var(--primary-800)] hover:text-[var(--primary-900)] hover:bg-[var(--accent-500)]/15"
+                              title="Edit delegate information"
+                              onClick={() => setEditingRegistration(r)}
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                          )}
+                          {canDelete && r.paymentStatus !== "captured" && (
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                  title="Delete"
                                 >
-                                  Delete
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        )}
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>
+                                    Delete registration?
+                                  </AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to delete{" "}
+                                    <strong>{r.registrationCode}</strong> (
+                                    {r.fullName})? Payment for this
+                                    registration was never confirmed. This
+                                    action cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    className="bg-red-600 hover:bg-red-700"
+                                    onClick={() => deleteRegistration(r)}
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          )}
+                        </div>
                       </TableCell>
                     )}
                   </TableRow>
@@ -393,6 +418,19 @@ export default function RegistrationsList({
           <Button size="sm" variant="outline" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>Next</Button>
         </div>
       </div>
+
+      <EditRegistrationDialog
+        open={!!editingRegistration}
+        onOpenChange={(open) => !open && setEditingRegistration(null)}
+        registration={editingRegistration}
+        onSuccess={(updated) => {
+          setItems((prev) =>
+            prev.map((item) =>
+              item._id === updated._id ? { ...item, ...updated } : item,
+            ),
+          );
+        }}
+      />
     </div>
   );
 }
