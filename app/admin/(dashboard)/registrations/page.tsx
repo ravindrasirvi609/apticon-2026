@@ -7,6 +7,7 @@ export default function AdminRegistrationsPage() {
       title="Registrations"
       description="All delegate registrations across the pipeline."
       canDelete
+      canEdit
     />
   );
 }

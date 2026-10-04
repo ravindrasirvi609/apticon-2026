@@ -6,6 +6,8 @@ import Abstract from "@/models/Abstract";
 import { getSessionFromCookies, requireRole, authErrorResponse } from "@/lib/auth";
 import { generateRegistrationQrDataUrl } from "@/lib/qrcode";
 import { logAudit } from "@/lib/audit";
+import { publicUrl } from "@/lib/r2";
+import { updateRegistrationPersonalSchema } from "@/lib/validators/registration";
 
 export async function GET(
   _req: NextRequest,
@@ -92,6 +94,116 @@ export async function DELETE(
     });
 
     return NextResponse.json({ ok: true, id });
+  } catch (err) {
+    return authErrorResponse(err);
+  }
+}
+
+// PATCH — super_admin only, to edit delegate's personal information (name, contact, institution, photo, etc.)
+// Strictly excludes payment and status related data.
+export async function PATCH(
+  request: NextRequest,
+  ctx: { params: Promise<{ id: string }> },
+) {
+  try {
+    const admin = await requireRole("super_admin");
+    const { id } = await ctx.params;
+    if (!mongoose.isValidObjectId(id))
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+
+    const body = await request.json().catch(() => null);
+    const parsed = updateRegistrationPersonalSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: parsed.error.flatten() },
+        { status: 400 },
+      );
+    }
+
+    await connectDB();
+    const reg = await Registration.findById(id);
+    if (!reg) {
+      return NextResponse.json(
+        { error: "Registration not found" },
+        { status: 404 },
+      );
+    }
+
+    const data = parsed.data;
+    const oldValues = {
+      fullName: reg.fullName,
+      email: reg.email,
+      phone: reg.phone,
+      designation: reg.designation,
+      institution: reg.institution,
+      affiliation: reg.affiliation || "",
+      city: reg.city || "",
+      state: reg.state || "",
+      photoUrl: reg.photoUrl || "",
+      remarks: reg.remarks || "",
+    };
+
+    reg.fullName = data.fullName;
+    reg.email = data.email;
+    reg.phone = data.phone;
+    reg.designation = data.designation;
+    reg.institution = data.institution;
+    reg.affiliation = data.affiliation ?? "";
+    reg.city = data.city ?? "";
+    reg.state = data.state ?? "";
+    reg.remarks = data.remarks ?? "";
+
+    if (data.photoKey !== undefined) {
+      if (data.photoKey) {
+        reg.photoKey = data.photoKey;
+        reg.photoUrl = publicUrl(data.photoKey);
+        reg.photoName = data.photoName ?? "";
+      } else {
+        reg.photoKey = "";
+        reg.photoUrl = "";
+        reg.photoName = "";
+      }
+    }
+
+    await reg.save();
+
+    const newValues = {
+      fullName: reg.fullName,
+      email: reg.email,
+      phone: reg.phone,
+      designation: reg.designation,
+      institution: reg.institution,
+      affiliation: reg.affiliation,
+      city: reg.city,
+      state: reg.state,
+      photoUrl: reg.photoUrl,
+      remarks: reg.remarks,
+    };
+
+    const changes: Record<string, { from: unknown; to: unknown }> = {};
+    for (const key of Object.keys(newValues) as (keyof typeof newValues)[]) {
+      if (oldValues[key] !== newValues[key]) {
+        changes[key] = { from: oldValues[key], to: newValues[key] };
+      }
+    }
+
+    await logAudit({
+      actor: admin.uid,
+      actorRole: admin.role,
+      action: "registration.update",
+      resourceType: "registration",
+      resourceId: id,
+      details: {
+        registrationCode: reg.registrationCode,
+        changes,
+      },
+      request,
+    });
+
+    return NextResponse.json({
+      ok: true,
+      registration: reg.toObject(),
+    });
   } catch (err) {
     return authErrorResponse(err);
   }

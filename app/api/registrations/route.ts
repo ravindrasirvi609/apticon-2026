@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       .skip((page - 1) * limit)
       .limit(limit)
       .select(
-        "registrationCode fullName email institution category feeAmount feeTier status createdAt linkedAbstract paymentMode transactionNumber paymentStatus razorpayOrderId razorpayPaymentId paymentError paidAt photoUrl",
+        "registrationCode fullName email phone designation institution affiliation city state category feeAmount feeTier status createdAt linkedAbstract paymentMode transactionNumber paymentStatus razorpayOrderId razorpayPaymentId paymentError paidAt photoUrl photoKey photoName remarks",
       )
       .lean(),
     Registration.aggregate<{ _id: string; count: number }>([

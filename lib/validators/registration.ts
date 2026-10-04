@@ -153,6 +153,47 @@ export const nudgeRequestSchema = z.object({
   kind: z.enum(["register", "abstract"]),
 });
 
+export const updateRegistrationPersonalSchema = z.object({
+  fullName: z
+    .string()
+    .min(2, "Full name must be at least 2 characters")
+    .max(200, "Full name cannot exceed 200 characters")
+    .trim(),
+  email: z
+    .string()
+    .email("Enter a valid email address")
+    .toLowerCase()
+    .trim(),
+  phone: z
+    .string()
+    .trim()
+    .min(6, "Phone number must be at least 6 digits")
+    .max(20, "Phone number cannot exceed 20 characters"),
+  designation: z
+    .string()
+    .min(2, "Designation must be at least 2 characters")
+    .max(200, "Designation cannot exceed 200 characters")
+    .trim(),
+  institution: z
+    .string()
+    .min(2, "Institution must be at least 2 characters")
+    .max(300, "Institution cannot exceed 300 characters")
+    .trim(),
+  affiliation: z.string().max(300).trim().nullish().default(""),
+  city: z.string().max(120).trim().nullish().default(""),
+  state: z.string().max(120).trim().nullish().default(""),
+  photoKey: z
+    .string()
+    .max(300)
+    .regex(
+      /^delegate-photos\/\d{4}\/[A-Za-z0-9_-]+\.(jpg|jpeg|png|webp)$/,
+      "Invalid photo reference",
+    )
+    .nullish(),
+  photoName: z.string().max(300).nullish(),
+  remarks: z.string().max(2000).nullish().default(""),
+});
+
 export type RazorpayOrderInput = z.infer<typeof razorpayOrderSchema>;
 export type RegistrationStatusLookupInput = z.infer<
   typeof registrationStatusLookupSchema
@@ -160,3 +201,6 @@ export type RegistrationStatusLookupInput = z.infer<
 export type RegistrationNoteInput = z.infer<typeof registrationNoteSchema>;
 export type RegistrationLinkInput = z.infer<typeof registrationLinkSchema>;
 export type NudgeRequestInput = z.infer<typeof nudgeRequestSchema>;
+export type UpdateRegistrationPersonalInput = z.infer<
+  typeof updateRegistrationPersonalSchema
+>;
