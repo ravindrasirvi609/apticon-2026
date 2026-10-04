@@ -19,7 +19,9 @@ import AptiMember from "../models/AptiMember";
 
 interface SheetRow {
   "Sl.no"?: number;
+  "Sl No"?: number | string;
   "Member ID"?: string;
+  mem_id?: string;
   "S.Code"?: string;
   Name?: string;
   Email?: string;
@@ -43,7 +45,7 @@ async function main() {
   const byMemberId = new Map<string, SheetRow>();
   let blankId = 0;
   for (const row of rows) {
-    const memberId = String(row["Member ID"] ?? "")
+    const memberId = String(row["Member ID"] ?? row.mem_id ?? "")
       .trim()
       .toUpperCase();
     if (!memberId) {
@@ -56,7 +58,7 @@ async function main() {
 
   const members = Array.from(byMemberId.entries()).map(([memberId, row]) => ({
     memberId,
-    serialNo: row["Sl.no"] ? Number(row["Sl.no"]) : undefined,
+    serialNo: row["Sl.no"] || row["Sl No"] ? Number(row["Sl.no"] ?? row["Sl No"]) : undefined,
     stateCode: String(row["S.Code"] ?? "").trim() || undefined,
     name: String(row["Name"] ?? "").trim(),
     email: String(row["Email"] ?? "").trim().toLowerCase() || undefined,
@@ -67,8 +69,16 @@ async function main() {
     pincode: String(row["Pincode"] ?? "").trim() || undefined,
   }));
 
-  await AptiMember.deleteMany({ memberId: { $in: members.map((m) => m.memberId) } });
-  await AptiMember.insertMany(members, { ordered: true });
+  await AptiMember.bulkWrite(
+    members.map((member) => ({
+      updateOne: {
+        filter: { memberId: member.memberId },
+        update: { $set: member },
+        upsert: true,
+      },
+    })),
+    { ordered: true },
+  );
 
   const noEmail = rows.filter((r) => !String(r["Email"] ?? "").trim()).length;
   console.log(

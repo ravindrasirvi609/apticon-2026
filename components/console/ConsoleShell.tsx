@@ -17,6 +17,7 @@ import {
   Users,
   UsersRound,
   X,
+  Newspaper,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -35,7 +36,8 @@ export interface NavItem {
     | "audit"
     | "settings"
     | "checkin"
-    | "aptiMembers";
+    | "aptiMembers"
+    | "wpd";
 }
 
 interface Props {
@@ -68,6 +70,7 @@ const NAV_ICONS = {
   settings: Settings,
   checkin: UserCheck,
   aptiMembers: BadgeCheck,
+  wpd: Newspaper,
 };
 
 export default function ConsoleShell({
