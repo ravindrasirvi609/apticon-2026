@@ -109,6 +109,7 @@ const DESIGNATIONS = [
   "Research Scholars / PG Students",
   "UG Students",
   "Professionals / Consultants",
+  "Accompanying Person",
 ];
 
 type RazorpayResponse = {
