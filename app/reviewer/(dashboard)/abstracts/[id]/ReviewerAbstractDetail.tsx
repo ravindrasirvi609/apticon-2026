@@ -52,9 +52,6 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
 
   const [accept, setAccept] = useState(false);
   const [verdict, setVerdict] = useState<"reject" | "revise">("revise");
-  const [presentationType, setPresentationType] = useState<
-    "oral" | "poster" | null
-  >(null);
   const [comments, setComments] = useState("");
   const [commentsPrivate, setCommentsPrivate] = useState("");
   const [saving, setSaving] = useState(false);
@@ -89,7 +86,6 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
     if (mine) {
       if (mine.verdict === "accept") {
         setAccept(true);
-        setPresentationType(mine.presentationType ?? null);
       } else {
         setAccept(false);
         setVerdict(mine.verdict);
@@ -110,7 +106,6 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
         body: JSON.stringify({
           abstractId: id,
           verdict: accept ? "accept" : verdict,
-          presentationType: accept ? presentationType : undefined,
           comments,
           commentsPrivate: commentsPrivate || undefined,
         }),
@@ -251,36 +246,7 @@ export default function ReviewerAbstractDetail({ id }: { id: string }) {
                     </p>
                   </div>
 
-                  {accept ? (
-                    <div>
-                      <Label>Presentation type (optional)</Label>
-                      <div className="mt-2 grid grid-cols-2 gap-2">
-                        {(["oral", "poster"] as const).map((v) => (
-                          <button
-                            key={v}
-                            type="button"
-                            onClick={() =>
-                              setPresentationType((prev) =>
-                                prev === v ? null : v,
-                              )
-                            }
-                            className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
-                              presentationType === v
-                                ? "bg-emerald-600 text-white border-emerald-600"
-                                : "bg-white border-[var(--accent-500)]/30"
-                            }`}
-                          >
-                            {v}
-                          </button>
-                        ))}
-                      </div>
-                      <p className="mt-2 text-xs text-[var(--muted-text)]">
-                        {presentationType
-                          ? "An Abstract Code will be generated based on this choice."
-                          : "If left unselected, abstract will be accepted without a presentation type. It can be allocated later."}
-                      </p>
-                    </div>
-                  ) : (
+                  {accept ? null : (
                     <div>
                       <Label>Recommendation</Label>
                       <div className="mt-2 grid grid-cols-2 gap-2">
