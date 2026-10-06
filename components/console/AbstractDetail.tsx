@@ -119,9 +119,6 @@ export default function AbstractDetail({
     null | "accepted" | "rejected" | "revision_requested"
   >(null);
   const [decisionNote, setDecisionNote] = useState("");
-  const [presentationType, setPresentationType] = useState<
-    "oral" | "poster" | null
-  >(null);
   const [saving, setSaving] = useState(false);
 
   async function load() {
@@ -193,8 +190,6 @@ export default function AbstractDetail({
         body: JSON.stringify({
           decision: decisionOpen,
           note: decisionNote || undefined,
-          presentationType:
-            decisionOpen === "accepted" ? presentationType : undefined,
         }),
       });
       const body = await res.json();
@@ -202,7 +197,6 @@ export default function AbstractDetail({
       toast.success("Decision recorded. Notification email sent to author.");
       setDecisionOpen(null);
       setDecisionNote("");
-      setPresentationType(null);
       await load();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed to record decision");
@@ -566,15 +560,7 @@ export default function AbstractDetail({
               <div className="mt-4 grid grid-cols-1 gap-2">
                 <Button
                   variant="default"
-                  onClick={() => {
-                    setDecisionOpen("accepted");
-                    setPresentationType(
-                      (a.preferredPresentationType as
-                        | "oral"
-                        | "poster"
-                        | undefined) ?? null,
-                    );
-                  }}
+                  onClick={() => setDecisionOpen("accepted")}
                 >
                   <CheckCircle2 className="w-4 h-4" /> Accept
                 </Button>
@@ -602,7 +588,6 @@ export default function AbstractDetail({
         onOpenChange={(v) => {
           if (!v) {
             setDecisionOpen(null);
-            setPresentationType(null);
           }
         }}
       >
@@ -617,43 +602,6 @@ export default function AbstractDetail({
               The author will receive an email with your note (if provided).
               This action is recorded in the audit log.
             </p>
-            {decisionOpen === "accepted" && (
-              <div>
-                <Label>Presentation type (optional)</Label>
-                {a.preferredPresentationType && (
-                  <p className="mt-1 text-xs text-[var(--muted-text)]">
-                    Author preferred{" "}
-                    <span className="font-semibold capitalize">
-                      {a.preferredPresentationType}
-                    </span>{" "}
-                    — you can select now or leave unselected to allocate later.
-                  </p>
-                )}
-                <div className="mt-2 grid grid-cols-2 gap-2">
-                  {(["oral", "poster"] as const).map((v) => (
-                    <button
-                      key={v}
-                      type="button"
-                      onClick={() =>
-                        setPresentationType((prev) => (prev === v ? null : v))
-                      }
-                      className={`px-3 py-2 rounded-lg border text-sm font-semibold capitalize ${
-                        presentationType === v
-                          ? "bg-emerald-600 text-white border-emerald-600"
-                          : "bg-white border-[var(--accent-500)]/30"
-                      }`}
-                    >
-                      {v}
-                    </button>
-                  ))}
-                </div>
-                <p className="mt-2 text-xs text-[var(--muted-text)]">
-                  {presentationType
-                    ? "An Abstract Code will be generated based on this choice."
-                    : "If left unselected, abstract will be accepted without a presentation type. It can be allocated later."}
-                </p>
-              </div>
-            )}
             <div>
               <Label htmlFor="note">Note to author (optional)</Label>
               <Textarea
@@ -670,7 +618,6 @@ export default function AbstractDetail({
               variant="outline"
               onClick={() => {
                 setDecisionOpen(null);
-                setPresentationType(null);
               }}
             >
               Cancel
