@@ -14,6 +14,7 @@ export async function GET() {
     const [
       byStatusAbs,
       byTheme,
+      byPresentationTypeAccepted,
       byStatusReg,
       byState,
       byPaymentStatus,
@@ -29,6 +30,10 @@ export async function GET() {
       Abstract.aggregate([
         { $group: { _id: "$theme", count: { $sum: 1 } } },
         { $sort: { count: -1 } },
+      ]),
+      Abstract.aggregate([
+        { $match: { status: "accepted" } },
+        { $group: { _id: "$presentationType", count: { $sum: 1 } } },
       ]),
       Registration.aggregate([
         { $group: { _id: "$status", count: { $sum: 1 } } },
@@ -64,6 +69,16 @@ export async function GET() {
     const abstractStatusMap: Record<string, number> = {};
     byStatusAbs.forEach((s) => (abstractStatusMap[s._id] = s.count));
 
+    // Accepted abstracts broken down by presentation type. Abstracts
+    // accepted without a presentation type (not yet allocated oral/poster)
+    // land under "unassigned" rather than being silently dropped.
+    const acceptedByPresentationType = { oral: 0, poster: 0, unassigned: 0 };
+    byPresentationTypeAccepted.forEach((s) => {
+      if (s._id === "oral") acceptedByPresentationType.oral = s.count;
+      else if (s._id === "poster") acceptedByPresentationType.poster = s.count;
+      else acceptedByPresentationType.unassigned += s.count;
+    });
+
     const regStatusMap: Record<string, number> = {};
     byStatusReg.forEach((s) => (regStatusMap[s._id] = s.count));
 
@@ -92,6 +107,7 @@ export async function GET() {
         aptiMembershipRegistrations,
       },
       abstractsByStatus: abstractStatusMap,
+      acceptedByPresentationType,
       registrationsByStatus: regStatusMap,
       paymentsByStatus: paymentStatusMap,
       byTheme: byTheme.map((t) => ({ theme: t._id, count: t.count })),
