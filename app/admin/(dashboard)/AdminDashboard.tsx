@@ -9,6 +9,9 @@ import {
   ClipboardCheck,
   IndianRupee,
   BadgeCheck,
+  Mic,
+  Image as ImageIcon,
+  HelpCircle,
 } from "lucide-react";
 import PageHeader from "@/components/console/PageHeader";
 import {
@@ -41,6 +44,11 @@ interface Stats {
     aptiMembershipRegistrations: number;
   };
   abstractsByStatus: Record<string, number>;
+  acceptedByPresentationType: {
+    oral: number;
+    poster: number;
+    unassigned: number;
+  };
   registrationsByStatus: Record<string, number>;
   paymentsByStatus: Record<string, number>;
   byTheme: { theme: string; count: number }[];
@@ -135,6 +143,28 @@ export default function AdminDashboard() {
           label="Active Reviewers"
           value={stats?.totals.activeReviewers ?? 0}
           icon={Users}
+        />
+      </div>
+
+      {/* Row 3 — accepted abstracts by presentation type */}
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <StatCard
+          label="Accepted · Oral"
+          value={stats?.acceptedByPresentationType.oral ?? 0}
+          icon={Mic}
+          accent="emerald"
+        />
+        <StatCard
+          label="Accepted · Poster"
+          value={stats?.acceptedByPresentationType.poster ?? 0}
+          icon={ImageIcon}
+          accent="emerald"
+        />
+        <StatCard
+          label="Accepted · Unassigned"
+          value={stats?.acceptedByPresentationType.unassigned ?? 0}
+          icon={HelpCircle}
+          accent="amber"
         />
       </div>
 
