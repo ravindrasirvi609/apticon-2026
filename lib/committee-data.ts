@@ -213,7 +213,7 @@ export const STATE_BRANCHES: StateBranch[] = [
         institution:
           "University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur, Chhattisgarh 492010",
         email: "ambervyas@gmail.com",
-        image: "https://aptiindia.org/images/committee/CG/amber.png",
+        image: "/committee/dr. amber vyas.jpeg",
       },
       {
         name: "Dr. Ajazuddin",
