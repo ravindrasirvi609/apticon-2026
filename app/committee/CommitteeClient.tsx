@@ -115,7 +115,7 @@ const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
         institution:
           "University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur, Chhattisgarh 492010",
         email: "ambervyas@gmail.com",
-        image: "https://aptiindia.org/images/committee/CG/amber.png",
+        image: "/committee/dr. amber vyas.jpeg",
         role: "Organizing Secretary",
       },
       {
