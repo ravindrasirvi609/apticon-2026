@@ -45,6 +45,16 @@ export const NAV_LINKS = [
   { label: "Contact", href: "/contact" },
 ];
 
+export const COMMITTEE_SUBLINKS = [
+  { label: "Patrons", href: "/committee#patrons" },
+  { label: "Organizing Committee", href: "/committee#organizing" },
+  { label: "Task Committees", href: "/committee#task" },
+  { label: "APTI National", href: "/committee#national" },
+  { label: "Advisors & Mentors", href: "/committee#advisors" },
+  { label: "Young Leadership", href: "/committee#young" },
+  { label: "PCI & Regulatory", href: "/committee#regulatory" },
+];
+
 export const STATS = [
   { value: 28, suffix: "th", label: "Annual Convention" },
   { value: 1500, suffix: "+", label: "Expected Delegates" },

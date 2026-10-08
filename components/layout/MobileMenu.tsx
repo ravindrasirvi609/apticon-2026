@@ -1,8 +1,8 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { X } from "lucide-react";
-import { NAV_LINKS } from "@/lib/constants";
+import { ChevronDown, X } from "lucide-react";
+import { COMMITTEE_SUBLINKS, NAV_LINKS } from "@/lib/constants";
 import { mobileMenuVariants, staggerContainer, fadeUp } from "@/lib/animations";
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
 }
 
 export default function MobileMenu({ isOpen, onClose, pathname }: Props) {
+  const committeeActive = pathname === "/committee";
   return (
     <AnimatePresence>
       {isOpen && (
@@ -57,6 +58,34 @@ export default function MobileMenu({ isOpen, onClose, pathname }: Props) {
             >
               {NAV_LINKS.map((link) => {
                 const active = pathname === link.href;
+                if (link.href === "/committee") {
+                  return (
+                    <motion.li key={link.href} variants={fadeUp}>
+                      <div className={`rounded-xl ${committeeActive ? "bg-[var(--primary-800)]" : ""}`}>
+                        <Link
+                          href={link.href}
+                          onClick={onClose}
+                          className={`flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${committeeActive ? "text-[var(--accent-400)]" : "text-white/80 hover:bg-white/8 hover:text-white"}`}
+                        >
+                          {link.label}
+                          <ChevronDown size={16} className="ml-auto" aria-hidden="true" />
+                        </Link>
+                        <div className="pb-2 px-3 space-y-1">
+                          {COMMITTEE_SUBLINKS.map((subLink) => (
+                            <Link
+                              key={subLink.href}
+                              href={subLink.href}
+                              onClick={onClose}
+                              className="block rounded-lg px-4 py-2 text-xs text-white/65 hover:bg-white/10 hover:text-white transition-colors"
+                            >
+                              {subLink.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.li>
+                  );
+                }
                 return (
                   <motion.li key={link.href} variants={fadeUp}>
                     <Link
