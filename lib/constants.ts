@@ -2,16 +2,21 @@ export const EVENT = {
   name: "APTICON 2026",
   edition: "28th Annual National Convention",
   theme: "Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat",
-  themeHindi: "फार्मा शिक्षकों का संकल्प — विकसित भारत 2047",
+  themeHindi: "फार्मा शिक्षकों का संकल्प - विकसित भारत 2047",
   vision: "Viksit Bharat 2047",
   dates: { start: "2026-10-24", end: "2026-10-25" },
   dateDisplay: "24th & 25th October 2026",
   venue: "Pt. Deendayal Upadhyay Auditorium, G.E. Road, Raipur (C.G.)",
+  venueAddress:
+    "G.E. Road, near Science College, Amanaka, Raipur, Chhattisgarh – 492010",
   host: "APTI Chhattisgarh State Branch",
+  hostedBy: "Association of Pharmaceutical Teachers of India (APTI) Central Zone",
+  organisedBy: "Association of Pharmaceutical Teachers of India (APTI) C.G. State Branch",
   partner:
     "University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur (C.G.)",
   universityAccreditation: "NAAC Accredited 'A+'",
   contact: "apticon2026@gmail.com",
+  website: "www.apticon.in",
   targetDate: new Date("2026-10-24T09:00:00+05:30"),
 };
 
@@ -34,6 +39,7 @@ export const NAV_LINKS = [
   { label: "Venue", href: "/venue" },
   { label: "Registration", href: "/registration" },
   { label: "Abstracts", href: "/abstracts" },
+  { label: "Exhibition", href: "/exhibition" },
   { label: "Gallery", href: "/gallery" },
   { label: "WPD Post", href: "/wpd" },
   { label: "Contact", href: "/contact" },
@@ -57,6 +63,20 @@ export const ABSTRACT_THEMES = [
   "Pharmaceutical Education and Professional Pharmacy",
   "Drug Regulatory Affairs & Pharmaceutical Management",
   "Artificial Intelligence / Bioinformatics / Data Analytics",
+];
+
+// Scientific tracks as listed in the brochure (display only — the abstract form keeps ABSTRACT_THEMES).
+export const SCIENTIFIC_TRACKS = [
+  "Pharmaceutical Technology, Nanotechnology, Nanomedicine & Advanced Drug Delivery",
+  "Medicinal Chemistry, Drug Discovery & Computational Pharmaceutical Sciences",
+  "Pharmacognosy, Indigenous Drugs, Herbal Medicines & Phytopharmaceuticals",
+  "Pharmacology, Toxicology, Clinical Research & Pharmacovigilance",
+  "Pharmaceutical Analysis, Quality Assurance, Regulatory Science & Drug Regulatory Affairs",
+  "Biopharmaceuticals, Pharmacokinetics, Pharmacodynamics & Precision Medicine",
+  "Pharmaceutical Biotechnology, Biologics & Advanced Therapeutics",
+  "Pharmaceutical Education, Professional Pharmacy, Practice & Public Health",
+  "Artificial Intelligence, Bioinformatics, Medical Devices, Diagnostics & Digital Transformation in Pharmacy",
+  "Pharmaceutical Management, Intellectual Property, Innovation, Sustainability & Future of Pharma",
 ];
 
 export const SCHEDULE_DAY1 = [
@@ -225,6 +245,122 @@ export const RAIPUR_PLACES = [
       src: "/cultural/GAURGHAAT_small_02.JPG",
       alt: "Gaurighat waterfall near Raipur, Chhattisgarh",
     },
+  },
+];
+
+export interface TravelPlace {
+  name: string;
+  description: string;
+  image: string;
+  distance?: string;
+  time?: string;
+}
+
+// From the brochure — road distance and travel time from Raipur.
+export const PLACES_CHHATTISGARH: TravelPlace[] = [
+  {
+    name: "Chitrakote Falls",
+    description:
+      "A major natural attraction of Chhattisgarh, widely known for its dramatic waterfall landscape.",
+    image: "/cultural/CHITRAKOTE.jpg",
+    distance: "~274 km",
+    time: "~4 hr 24 min",
+  },
+  {
+    name: "Tirathgarh Waterfall",
+    description:
+      "A scenic waterfall destination associated with the forests of Bastar.",
+    image: "/cultural/Tirathgarh Waterfall Jagdalpur Chhattisgarh.jpg",
+    distance: "~290 km",
+    time: "~5 hr",
+  },
+  {
+    name: "Kanger Valley National Park",
+    description: "A biodiversity-rich natural destination in Bastar.",
+    image: "/cultural/Kanger Ghati National Park Chattisgarh.jpg",
+    distance: "~285 km",
+    time: "~5 hr",
+  },
+  {
+    name: "Kotumsar Caves",
+    description: "A well-known cave attraction in the Kanger Valley region.",
+    image: "/cultural/kotumsar-caves-jagdalpur-chhattisgarh-1-attr-hero.jpeg",
+    distance: "~285 km",
+    time: "~5 hr",
+  },
+  {
+    name: "Sirpur",
+    description:
+      "An important archaeological and cultural heritage destination.",
+    image: "/cultural/brochure/sirpur.jpg",
+    distance: "~82 km",
+    time: "~1 hr 14 min",
+  },
+  {
+    name: "Bhoramdeo",
+    description: "A historic temple and heritage site.",
+    image: "/cultural/brochure/bhoramdeo.jpg",
+    distance: "~135 km",
+    time: "~2 hr 9 min",
+  },
+  {
+    name: "Barnawapara",
+    description: "A nature and wildlife destination.",
+    image: "/cultural/brochure/barnawapara.jpg",
+    distance: "~106 km",
+    time: "~2 hr 45 min",
+  },
+  {
+    name: "Mainpat",
+    description: "A hill destination known for scenic landscapes.",
+    image: "/cultural/brochure/mainpat.jpg",
+    distance: "~300 km",
+    time: "~6 hr",
+  },
+];
+
+export const PLACES_RAIPUR: TravelPlace[] = [
+  {
+    name: "Mahant Ghasidas Memorial Museum",
+    description:
+      "A prominent museum showcasing the archaeological, tribal and cultural heritage of Chhattisgarh.",
+    image: "/cultural/brochure/mahant-ghasidas-museum.jpg",
+  },
+  {
+    name: "Purkhauti Muktangan",
+    description:
+      "An open-air cultural museum depicting the state's tribal lifestyle, traditions, folk art and architecture.",
+    image: "/cultural/brochure/purkhauti-muktangan.jpg",
+  },
+  {
+    name: "Nandan Van Zoo & Safari, Naya Raipur",
+    description:
+      "A major wildlife and eco-tourism destination featuring diverse flora and fauna in a natural setting.",
+    image: "/cultural/brochure/nandan-van-zoo.jpg",
+  },
+  {
+    name: "Telibandha (Marine Drive)",
+    description:
+      "A popular urban leisure destination around the picturesque Telibandha Lake, especially vibrant during the evening.",
+    image: "/cultural/brochure/telibandha.jpg",
+  },
+  {
+    name: "MM Fun City",
+    description:
+      "A popular recreational and water-park destination near Raipur, suitable for families and visitors seeking leisure activities.",
+    image: "/cultural/brochure/mm-fun-city.jpg",
+  },
+  {
+    name: "Rajiv Lochan Temple, Rajim",
+    description:
+      "A historic temple town at the confluence of the Mahanadi, Pairi and Sondhur rivers, known for its religious and architectural heritage.",
+    image: "/cultural/brochure/rajiv-lochan-temple.jpg",
+  },
+  {
+    name: "Sirpur (Near Raipur)",
+    description:
+      "A prominent archaeological and cultural heritage destination of Chhattisgarh.",
+    image: "/cultural/brochure/sirpur-near-raipur.jpg",
   },
 ];
 

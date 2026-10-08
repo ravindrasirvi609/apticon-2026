@@ -25,7 +25,8 @@ const CONTACTS = [
   {
     icon: MapPin,
     label: "Venue",
-    value: "Pt. Deendayal Upadhyay Auditorium, G.E. Road, Raipur (C.G.)",
+    value:
+      "Pt. Deendayal Upadhyay Auditorium, G.E. Road, near Science College, Amanaka, Raipur (C.G.) – 492010",
     href: null,
   },
   {

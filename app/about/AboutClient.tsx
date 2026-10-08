@@ -12,56 +12,28 @@ import {
   fadeRight,
 } from "@/lib/animations";
 import { EVENT } from "@/lib/constants";
-import { NATIONAL_BODY } from "@/lib/committee-data";
+import {
+  INVITATION_MESSAGES,
+  NATIONAL_BODY,
+  TRIBUTES,
+} from "@/lib/committee-data";
 
 const HISTORY = [
-  {
-    year: "1996",
-    edition: "1st",
-    city: "Mysore, Karnataka",
-    note: "APTI's first Annual National Convention",
-  },
-  {
-    year: "2000",
-    edition: "5th",
-    city: "Udaipur, Rajasthan",
-    note: "Fifth edition of the convention",
-  },
-  {
-    year: "2006",
-    edition: "11th",
-    city: "Bangalore, Karnataka",
-    note: "Second time hosted in Bangalore",
-  },
-  {
-    year: "2011",
-    edition: "16th",
-    city: "Moga, Punjab",
-    note: "Hosted in Punjab",
-  },
-  {
-    year: "2016",
-    edition: "21st",
-    city: "Manipal",
-    note: "Second time hosted at Manipal University",
-  },
-  {
-    year: "2022",
-    edition: "25th",
-    city: "Mysuru, Karnataka",
-    note: "Returned to APTICON's founding city",
-  },
-  {
-    year: "2024",
-    edition: "27th",
-    city: "Bhubaneswar, Odisha",
-    note: "Most recent edition before APTICON 2024",
-  },
+  { year: "1996", edition: "1st", city: "Mysore, Karnataka", note: "APTI's first Annual National Convention" },
+  { year: "2008", edition: "13th", city: "Bilaspur, Chhattisgarh", note: "First APTICON hosted by the APTI Chhattisgarh State Branch" },
+  { year: "2015", edition: "20th", city: "Indore, Madhya Pradesh", note: "Hosted by the APTI Madhya Pradesh State Branch" },
+  { year: "2016", edition: "21st", city: "Manipal University", note: "Second time hosted at Manipal" },
+  { year: "2017", edition: "22nd", city: "Lloyd, Greater Noida", note: "Hosted in Uttar Pradesh" },
+  { year: "2018", edition: "23rd", city: "Jaipur, Rajasthan", note: "Hosted in the Pink City" },
+  { year: "2019", edition: "24th", city: "Dehradun, Uttarakhand", note: "Hosted in Uttarakhand" },
+  { year: "2022", edition: "25th", city: "JSS College of Pharmacy, Mysuru", note: "Returned to APTICON's founding city" },
+  { year: "2023", edition: "26th", city: "PSIT, Kanpur", note: "Hosted in Uttar Pradesh" },
+  { year: "2024", edition: "27th", city: "Utkal University, Bhubaneswar", note: "Most recent edition before APTICON 2026" },
   {
     year: "2026",
     edition: "28th",
-    city: "Raipur (C.G.)",
-    note: "Viksit Bharat 2047 theme",
+    city: "Raipur, Chhattisgarh",
+    note: "Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat",
     current: true,
   },
 ];
@@ -70,30 +42,44 @@ const ABOUT_SECTIONS = [
   {
     title: "About APTI",
     subtitle: "Association of Pharmaceutical Teachers of India",
-    body: "Founded to unite pharmacy educators across India, APTI is the apex body representing pharmaceutical teachers at all levels. With a network of over 1,000 members spanning every state, APTI shapes the academic and professional direction of pharmacy education in India.",
+    body: "APTI is a premier national professional organization dedicated to advancing pharmacy education, research, innovation, academic excellence, and professional development in India. With over 20,000 members, APTI brings together educators, academicians, researchers, students, and pharmacy professionals across the country through a five-zone framework — North, South, East, West, and Central — supported by zonal and state-level leadership.",
     icon: "🏛️",
     color: "from-[var(--primary-800)] to-[var(--primary-900)]",
   },
   {
-    title: "APTI Chhattisgarh",
-    subtitle: "State Branch — Host of APTICON 2026",
-    body: "The Chhattisgarh State Branch of APTI has been actively promoting pharmacy education across the state since its inception. With dedicated faculty members across multiple pharmacy institutions, the branch is proud to host the 28th edition of APTICON in the heart of central India.",
+    title: "APTI Central Zone",
+    subtitle: "Madhya Pradesh · Chhattisgarh · Jharkhand — Host of APTICON 2026",
+    body: "The APTI Central Zone comprises the state branches of Madhya Pradesh, Chhattisgarh, and Jharkhand. It serves as a key regional platform for academic interaction, scientific exchange, professional networking, research collaboration, and participation in national APTI activities, bringing together the institutional strengths of its three constituent states.",
+    icon: "🧭",
+    color: "from-[var(--accent-500)] to-amber-600",
+  },
+  {
+    title: "APTI Chhattisgarh State Branch",
+    subtitle: "Established 2003 — Organiser of APTICON 2026",
+    body: "Established in 2003 with 25 members, the APTI Chhattisgarh State Branch has grown into an active academic platform with around 350 members today, including a Women's Forum. The branch hosted the 13th APTICON at Bilaspur in 2008, and now hosts the 28th APTICON 2026 in Raipur, in association with the University Institute of Pharmacy, Pt. Ravishankar Shukla University.",
     icon: "🌿",
     color: "from-emerald-700 to-emerald-900",
   },
   {
-    title: "University Institute of Pharmacy",
-    subtitle: "Pt. Ravishankar Shukla University, Raipur",
-    body: "Established as a premier centre for pharmaceutical education in Chhattisgarh, UIP at Pt. RSU offers undergraduate, postgraduate and doctoral programmes. The university holds NAAC 'A+' accreditation and has produced thousands of pharmacy graduates serving across India and abroad.",
-    icon: "🎓",
-    color: "from-[var(--secondary-800)] to-[var(--secondary-900)]",
+    title: "Madhya Pradesh & Jharkhand Branches",
+    subtitle: "APTI Central Zone",
+    body: "Established in 1995, the MP State Branch hosted APTICON at Indore in 2015 and has earned APTI honours for research, teaching excellence, and Best APTI Branch recognition. The Jharkhand Branch represents the state's pharmacy academic and professional community, contributing actively to regional coordination within the Central Zone.",
+    icon: "🤝",
+    color: "from-pink-700 to-pink-900",
   },
   {
     title: "Pt. Ravishankar Shukla University",
-    subtitle: "NAAC A+ Accredited — Raipur, C.G.",
-    body: "Named after Chhattisgarh's first Chief Minister, Pt. RSU is one of the largest universities in central India. Spread across a lush campus in Raipur, the university is home to 35+ departments and has been consistently accredited at the highest grade by NAAC.",
+    subtitle: "Est. 1964 — NAAC A+ Accredited, Raipur",
+    body: "One of the oldest and premier institutions of higher education in Chhattisgarh. Spread across a 300+ acre campus, PRSU comprises around 30 teaching departments and 164 affiliated colleges. Recognized by the UGC under Sections 2(f) and 12(B), accredited NAAC Grade A+, NIRF-ranked and supported through DST-PURSE and ANRF-PAIR funding, it is a significant higher-education and research hub of Central India.",
     icon: "🏫",
-    color: "from-[var(--accent-500)] to-amber-600",
+    color: "from-[var(--secondary-800)] to-[var(--secondary-900)]",
+  },
+  {
+    title: "University Institute of Pharmacy",
+    subtitle: "Pt. Ravishankar Shukla University, Raipur — Est. 2001",
+    body: "A research-intensive centre for pharmaceutical education with an approved Ph.D. research centre since 2004, M.Pharm (Pharmaceutics) since 2006–07 and four more specializations introduced in 2024–25. Supported by AICTE, UGC, DST, ICMR, PCI and CG-COST, with DST-FIST, UGC-SAP and AICTE-MODROB support, UIOP has received the Dr. Baburam Saxena Trophy for Best University Department on five occasions.",
+    icon: "🎓",
+    color: "from-[var(--primary-800)] to-[var(--accent-500)]",
   },
 ];
 
@@ -216,6 +202,106 @@ export default function AboutClient() {
         </div>
       </section>
 
+      {/* About APTICON */}
+      <section className="pb-20 md:pb-24">
+        <div className="container-site grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <ScrollReveal>
+            <div className="h-full rounded-2xl bg-white border border-[var(--accent-500)]/15 p-6 md:p-8 shadow-sm">
+              <h2 className="font-display font-bold text-2xl text-[var(--primary-800)] mb-4">
+                About APTICON
+              </h2>
+              <p className="text-sm md:text-base text-[var(--muted-text)] leading-relaxed">
+                APTICON, the Annual National Convention of APTI, is the
+                organization&apos;s principal national scientific and academic
+                forum, bringing together pharmacy educators, researchers,
+                students, academicians and professionals for scientific
+                exchange, research dissemination, pedagogical advancement,
+                professional development and interdisciplinary collaboration.
+                The series commenced with the 1st APTICON at Mysore, Karnataka,
+                and has since travelled to major academic and pharmaceutical
+                centres across India. Across 27 editions, APTICON has evolved
+                into a national platform for contemporary pharmaceutical
+                research, scientific deliberations, academic and pedagogical
+                discourse, professional networking, awards and recognition.
+              </p>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.1}>
+            <div className="h-full rounded-2xl bg-[var(--primary-800)] p-6 md:p-8 shadow-sm text-white">
+              <h2 className="font-display font-bold text-2xl text-[var(--accent-400)] mb-4">
+                About APTICON 2026 Raipur
+              </h2>
+              <p className="text-sm md:text-base text-white/80 leading-relaxed">
+                The 28th Annual National Convention is being hosted in Raipur,
+                Chhattisgarh, by the APTI Chhattisgarh State Branch in
+                association with the University Institute of Pharmacy, Pt.
+                Ravishankar Shukla University. Building on the legacy of the
+                preceding 27 APTICONs, it provides a national platform for
+                pharmacy educators, academicians, researchers, students,
+                industry professionals and healthcare stakeholders to
+                deliberate on emerging developments in pharmaceutical sciences,
+                education, research, innovation, technology and professional
+                practice — and is particularly significant for the APTI Central
+                Zone of Chhattisgarh, Madhya Pradesh and Jharkhand.
+              </p>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Invitation */}
+      <section className="py-20 md:py-24 bg-white">
+        <div className="container-site">
+          <ScrollReveal className="mb-12 text-center">
+            <GoldenBadge>Invitation</GoldenBadge>
+            <h2 className="mt-4 font-display font-bold text-2xl sm:text-3xl md:text-4xl text-[var(--dark-text)]">
+              A Warm <span className="text-gradient-primary">Welcome</span> to
+              Raipur
+            </h2>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {INVITATION_MESSAGES.map((msg, i) => (
+              <ScrollReveal key={msg.name} delay={i * 0.1}>
+                <article className="h-full rounded-2xl border border-[var(--accent-500)]/20 bg-[var(--surface-50)] p-6 md:p-8 shadow-sm">
+                  <div className="flex items-center gap-4 mb-5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={msg.image}
+                      alt={msg.name}
+                      className="w-20 h-24 rounded-xl object-cover object-top shadow-md"
+                    />
+                    <div>
+                      <p className="font-display font-bold text-lg text-[var(--primary-800)]">
+                        {msg.name}
+                      </p>
+                      <p className="text-sm font-semibold text-[var(--dark-text)]">
+                        {msg.role}
+                      </p>
+                      <p className="text-xs font-bold tracking-wide text-[var(--accent-500)]">
+                        APTICON 2026
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-sm font-semibold text-[var(--dark-text)] mb-3">
+                    {msg.salutation}
+                  </p>
+                  <div className="space-y-3">
+                    {msg.paragraphs.map((para, k) => (
+                      <p
+                        key={k}
+                        className="text-sm text-[var(--muted-text)] leading-relaxed"
+                      >
+                        {para}
+                      </p>
+                    ))}
+                  </div>
+                </article>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* National Body */}
       <section className="py-20 md:py-24 bg-[var(--surface-100)]">
         <div className="container-site">
@@ -290,7 +376,7 @@ export default function AboutClient() {
           <ScrollReveal className="text-center mb-16">
             <GoldenBadge>Our Journey</GoldenBadge>
             <h2 className="mt-5 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-[var(--dark-text)]">
-              28 Editions of{" "}
+              Milestones of{" "}
               <span className="text-gradient-accent">Excellence</span>
             </h2>
           </ScrollReveal>
@@ -357,6 +443,51 @@ export default function AboutClient() {
                   </p>
                 </div>
               </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tribute */}
+      <section className="py-20 md:py-24 bg-[var(--surface-100)]">
+        <div className="container-site">
+          <ScrollReveal className="mb-12 text-center">
+            <GoldenBadge>Tribute</GoldenBadge>
+            <h2 className="mt-4 font-display font-bold italic text-2xl sm:text-3xl md:text-4xl text-[var(--dark-text)]">
+              In Loving Memory…
+            </h2>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {TRIBUTES.map((t, i) => (
+              <ScrollReveal key={t.name} delay={i * 0.08}>
+                <article className="h-full flex flex-col sm:flex-row gap-5 rounded-2xl bg-white border border-[var(--accent-500)]/15 p-5 shadow-sm">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={t.image}
+                    alt={t.name}
+                    loading="lazy"
+                    className="w-32 h-40 rounded-xl object-cover shadow-sm mx-auto sm:mx-0 flex-shrink-0"
+                  />
+                  <div>
+                    <h3 className="font-display font-bold text-lg text-[var(--primary-800)]">
+                      {t.name}
+                    </h3>
+                    <p className="text-xs font-semibold text-[var(--dark-text)] mb-3">
+                      {t.title}
+                    </p>
+                    <div className="space-y-2">
+                      {t.bio.map((para, k) => (
+                        <p
+                          key={k}
+                          className="text-xs text-[var(--muted-text)] leading-relaxed"
+                        >
+                          {para}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              </ScrollReveal>
             ))}
           </div>
         </div>

@@ -146,7 +146,12 @@ export default function Footer() {
             {/* Organizers */}
             <div className="mt-6 pt-6 border-t border-white/10">
               <p className="text-xs text-white/40 leading-relaxed">
-                Hosted by <span className="text-white/70">{EVENT.host}</span>
+                Hosted by{" "}
+                <span className="text-white/70">{EVENT.hostedBy}</span>
+              </p>
+              <p className="text-xs text-white/40 leading-relaxed mt-1">
+                Organised by{" "}
+                <span className="text-white/70">{EVENT.organisedBy}</span>
               </p>
               <p className="text-xs text-white/40 leading-relaxed mt-1">
                 In association with{" "}
@@ -189,7 +194,8 @@ export default function Footer() {
                 className="text-[var(--accent-500)]/70 hover:text-[var(--accent-400)] transition-colors"
               >
                 Operant Pharmacy Federation
-              </a>
+              </a>{" "}
+              &amp; GPAT Discussion Center
             </p>
           </div>
         </div>
