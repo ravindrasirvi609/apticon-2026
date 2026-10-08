@@ -40,14 +40,14 @@ export default function AnnouncementBanner() {
                 <span className="font-black text-[var(--primary-800)]">
                   APTICON 2026
                 </span>{" "}
-                — 24 & 25 Oct, Raipur ✦ Registration &amp; Abstract submission
-                opened!{" "}
+                — 24 & 25 Oct, Raipur ✦ Abstract submissions closed on 6
+                October 2026.{" "}
                 <Link
-                  href="/registration"
+                  href="/abstracts/status"
                   className="underline underline-offset-2 hover:text-[var(--primary-800)] transition-colors font-bold ml-1"
                   onClick={dismiss}
                 >
-                  Learn More →
+                  Check Status →
                 </Link>
               </p>
             </div>

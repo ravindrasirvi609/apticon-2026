@@ -158,11 +158,11 @@ export default function HeroSection() {
             />
           </Link>
           <Link
-            href="/abstracts"
+            href="/abstracts/status"
             className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/35 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/20 sm:text-base"
           >
             <FileText size={17} className="shrink-0" />
-            Submit Abstract
+            Check Abstract Status
           </Link>
         </motion.div>
 
