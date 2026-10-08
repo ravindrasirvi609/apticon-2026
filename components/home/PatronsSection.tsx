@@ -3,36 +3,65 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { User, ArrowRight, Crown } from "lucide-react";
 import { staggerContainer, fadeUp, scaleIn } from "@/lib/animations";
+import type { CommitteeMember } from "@/lib/committee-data";
+import { CHIEF_GUESTS, PATRONS } from "@/lib/committee-rosters";
 
-interface Patron {
-  name: string;
-  designation: string;
-  institution?: string;
-  role: string;
-  image?: string;
+function PatronCard({
+  patron,
+  large,
+}: {
+  patron: CommitteeMember;
+  large?: boolean;
+}) {
+  const size = large ? "h-36 w-36" : "h-28 w-28";
+  return (
+    <motion.div
+      variants={fadeUp}
+      className="group flex flex-col items-center gap-3 rounded-2xl border border-[var(--surface-200)] bg-[var(--surface-50)] p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-500)]/40 hover:shadow-lg"
+    >
+      <div className="relative">
+        {patron.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={patron.image}
+            alt={patron.name}
+            className={`${size} rounded-full object-cover object-top ring-4 ring-white shadow-md`}
+          />
+        ) : (
+          <div
+            className={`flex ${size} items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-800)] to-[var(--accent-500)] ring-4 ring-white shadow-md`}
+          >
+            <User size={36} className="text-white/90" />
+          </div>
+        )}
+      </div>
+
+      {patron.role && (
+        <span className="inline-block rounded-full bg-gradient-to-r from-[var(--primary-800)] to-[var(--accent-500)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white">
+          {patron.role}
+        </span>
+      )}
+
+      <div>
+        <p
+          className={`font-semibold leading-snug text-[var(--dark-text)] ${large ? "text-base" : "text-sm"}`}
+        >
+          {patron.name}
+        </p>
+        {patron.designation && (
+          <p className="mt-1 text-xs leading-snug text-[var(--muted-text)]">
+            {patron.designation}
+          </p>
+        )}
+        {patron.institution && (
+          <p className="text-xs leading-snug text-[var(--muted-text)]">
+            {patron.institution}
+          </p>
+        )}
+      </div>
+    </motion.div>
+  );
 }
-
-const PATRONS: Patron[] = [
-  {
-    name: "Announcing Soon",
-    designation: "",
-    role: "Chief Patron",
-  },
-  {
-    name: "Prof. S.N. Shukla",
-    designation: "Hon. Vice Chancellor",
-    institution: "Pt. Ravishankar Shukla University, Raipur (C.G.)",
-    role: "Co-Chief Patron",
-    image: "/committee/national/vice_chancler.png",
-  },
-  {
-    name: "Dr. Montu K. Patel",
-    designation: "Hon. President",
-    institution: "Pharmacy Council of India",
-    role: "Co-Chief Patron",
-    image: "/committee/national/montu_patel.png",
-  },
-];
 
 export default function PatronsSection() {
   return (
@@ -75,56 +104,29 @@ export default function PatronsSection() {
           </motion.p>
         </motion.div>
 
-        {/* Patron cards */}
+        {/* Chief Patron */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
           variants={staggerContainer}
-          className="mx-auto grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-3"
+          className="mx-auto grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2"
         >
-          {PATRONS.map((patron, i) => (
-            <motion.div
-              key={i}
-              variants={fadeUp}
-              className="group flex flex-col items-center gap-3 rounded-2xl border border-[var(--surface-200)] bg-[var(--surface-50)] p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-500)]/40 hover:shadow-lg"
-            >
-              {/* Avatar */}
-              <div className="relative">
-                {patron.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={patron.image}
-                    alt={patron.name}
-                    className="h-28 w-28 rounded-full object-cover ring-4 ring-white shadow-md"
-                  />
-                ) : (
-                  <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary-800)] to-[var(--accent-500)] ring-4 ring-white shadow-md">
-                    <User size={36} className="text-white/90" />
-                  </div>
-                )}
-              </div>
+          {CHIEF_GUESTS.map((patron) => (
+            <PatronCard key={patron.name} patron={patron} large />
+          ))}
+        </motion.div>
 
-              <span className="inline-block rounded-full bg-gradient-to-r from-[var(--primary-800)] to-[var(--accent-500)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white">
-                {patron.role}
-              </span>
-
-              <div>
-                <p className="text-sm font-semibold leading-snug text-[var(--dark-text)]">
-                  {patron.name}
-                </p>
-                {patron.designation && (
-                  <p className="mt-1 text-xs leading-snug text-[var(--muted-text)]">
-                    {patron.designation}
-                  </p>
-                )}
-                {patron.institution && (
-                  <p className="text-xs leading-snug text-[var(--muted-text)]">
-                    {patron.institution}
-                  </p>
-                )}
-              </div>
-            </motion.div>
+        {/* Patrons */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={staggerContainer}
+          className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {PATRONS.map((patron) => (
+            <PatronCard key={patron.name} patron={patron} />
           ))}
         </motion.div>
 
@@ -137,10 +139,10 @@ export default function PatronsSection() {
           className="mt-10 flex justify-center md:mt-12"
         >
           <Link
-            href="/committee"
+            href="/committee#patrons"
             className="group inline-flex items-center gap-2 rounded-full border-2 border-[var(--primary-800)] px-7 py-3 text-sm font-bold text-[var(--primary-800)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[var(--primary-800)] hover:text-white sm:text-base"
           >
-            View Full Committee
+            View All Patrons &amp; Committees
             <ArrowRight
               size={16}
               className="transition-transform duration-300 group-hover:translate-x-1"

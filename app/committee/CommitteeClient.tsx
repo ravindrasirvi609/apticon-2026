@@ -1,220 +1,53 @@
 "use client";
+import { useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { Mail, User } from "lucide-react";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/shadcn/tabs";
 import { staggerContainer, fadeUp } from "@/lib/animations";
-import { NATIONAL_BODY, STATE_BRANCHES } from "@/lib/committee-data";
+import {
+  NATIONAL_BODY,
+  STATE_BRANCHES,
+  type CommitteeGroup,
+  type CommitteeMember,
+} from "@/lib/committee-data";
+import {
+  ACADEMIC_PARTNERS,
+  CHIEF_GUESTS,
+  CO_PATRONS,
+  INDUSTRY_PATRONS,
+  LOC,
+  MENTORS,
+  NATIONAL_ADVISORS,
+  PATRONS,
+  PCI_MEMBERS,
+  REGISTRATION_COMMITTEE,
+  REGULATORY_PATRONS,
+  SCIENTIFIC_COMMITTEE,
+  TASK_COMMITTEES,
+  WOMEN_FORUM,
+  YOUNG_LEADERSHIP,
+} from "@/lib/committee-rosters";
 
-interface Member {
-  name: string;
-  designation: string;
-  institution: string;
-  role?: string;
-  email?: string;
-  image?: string;
-}
-
-const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
-  {
-    group: "National Body",
-    color: "from-[var(--primary-800)] to-[var(--accent-500)]",
-    members: NATIONAL_BODY.map((m) => ({
-      name: m.name,
-      designation: m.designation,
-      institution: m.institution,
-      role: m.role,
-      email: m.email,
-      image: m.image,
-    })),
-  },
-  {
-    group: "Patrons",
-    color: "from-[var(--accent-500)] to-amber-600",
-    members: [
-      {
-        name: "Announcing Soon",
-        designation: "",
-        institution: "",
-        role: "Chief Patron",
-      },
-      {
-        name: "Prof. S.N. Shukla",
-        designation: "Hon. Vice Chancellor",
-        institution: "Pt. Ravishankar Shukla University, Raipur (C.G.)",
-        role: "Co-Chief Patron",
-        image: "/committee/national/vice_chancler.png",
-      },
-      {
-        name: "Dr. Montu K. Patel",
-        designation: "Hon. President",
-        institution: "Pharmacy Council of India",
-        role: "Co-Chief Patron",
-        image: "/committee/national/montu_patel.png",
-      },
-    ],
-  },
-  {
-    group: "Local Organizing Committee",
-    color: "from-[var(--primary-800)] to-[var(--primary-900)]",
-    members: [
-      {
-        name: "Prof. Deependra Singh",
-        designation: "Professor",
-        institution:
-          "University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur, Chhattisgarh 492010",
-        email: "deependraiop@gmail.com",
-        image: "/committee/national/deependra-singh.jpg?v=2",
-        role: "Chairman, LOC",
-      },
-      {
-        name: "Dr. Nirmal Dongre",
-        designation: "Professor & Head",
-        institution:
-          "Institute of Pharmaceutical Sciences, SAGE University, Indore, Madhya Pradesh 452020",
-        email: "dongrenirmal@gmail.com",
-        image: "https://aptiindia.org/images/committee/MP/NIRMAL.png",
-        role: "Co-Chairman, LOC",
-      },
-      {
-        name: "Prof. Shekhar Verma",
-        designation: "Professor",
-        institution:
-          "University College of Pharmacy, Pt. Deendayal Upadhyay Memorial Health Sciences and Ayush University of Raipur, Chhattisgarh 492001",
-        email: "shekharpharma@gmail.com",
-        image: "https://aptiindia.org/images/committee/CG/shekhars.png",
-        role: "Co-Chairman, LOC",
-      },
-      {
-        name: "Dr. Ajazuddin",
-        designation: "Principal and Professor",
-        institution:
-          "Rungta College of Pharmaceutical Sciences and Research, Rungta Educational Campus, Bhilai, Chhattisgarh 490024",
-        email: "write2ajaz@gmail.com",
-        image: "https://aptiindia.org/images/committee/CG/azad.png",
-        role: "Co-Chairman, LOC",
-      },
-      {
-        name: "Dr. Shailesh Jain",
-        designation: "Professor and Academic Head",
-        institution: "School of Pharmacy, LNCT University, Bhopal, Madhyapradesh",
-        email: "shailesh2210@gmail.com",
-        image: "/committee/shailesh.jpeg",
-        role: "Co-Chairman, LOC",
-      },
-    ],
-  },
-  {
-    group: "Organizing Secretariat",
-    color: "from-[var(--secondary-800)] to-[var(--secondary-900)]",
-    members: [
-      {
-        name: "Prof. Amber Vyas",
-        designation: "Professor",
-        institution:
-          "University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur, Chhattisgarh 492010",
-        email: "ambervyas@gmail.com",
-        image: "/committee/dr. amber vyas.jpeg",
-        role: "Organizing Secretary",
-      },
-      {
-        name: "Prof. Shivshankar Shukla",
-        designation: "Professor",
-        institution: "Columbia Institute of Pharmacy, Tekari, Raipur (C.G.)",
-        email: "shivpharma007@gmail.com",
-        image: "https://aptiindia.org/images/committee/CG/shukla.png",
-        role: "Joint Organizing Secretary",
-      },
-      {
-        name: "Dr. Rakesh Patel",
-        designation: "Principal",
-        institution:
-          "School of Pharmacy, Dr. APJ Abdul Kalam University, Indore, Madhya Pradesh",
-        email: "secretaryaptimp2022@gmail.com",
-        image: "https://aptiindia.org/images/committee/MP/rakesh.png",
-        role: "Joint Organizing Secretary",
-      },
-      {
-        name: "Dr. Satyendra Shrivastav",
-        designation: "",
-        institution: "",
-        role: "Associate Secretary",
-        image: "/committee/satyendra-shrivastav.png",
-      },
-      {
-        name: "Dr. Ravindra Pandey",
-        designation: "",
-        institution: "",
-        role: "Associate Secretary",
-        image: "/committee/ravindra-pandey.jpg",
-      },
-      {
-        name: "Dr. Dheeraj Ahirwar",
-        designation: "",
-        institution: "",
-        role: "Associate Secretary",
-      },
-      {
-        name: "Dr. Sudhir Bharadwaj",
-        designation: "",
-        institution: "",
-        role: "Associate Secretary",
-      },
-      {
-        name: "Dr. Mukesh Sharma",
-        designation: "",
-        institution: "",
-        role: "Associate Secretary",
-      },
-      {
-        name: "Dr. Vishal Jain",
-        designation: "",
-        institution: "",
-        role: "Treasurer",
-        image: "/committee/vishal-jain.jpg",
-      },
-    ],
-  },
-  {
-    group: "Registration Committee",
-    color: "from-emerald-700 to-emerald-900",
-    members: [
-      {
-        name: "Dr. Ravindra Pandey",
-        designation: "",
-        institution: "",
-        role: "Chairman",
-        image: "/committee/ravindra-pandey.jpg",
-      },
-      {
-        name: "Dr. Vishwanath Gupta",
-        designation: "",
-        institution: "",
-        role: "Co-Chairman",
-      },
-    ],
-  },
-  {
-    group: "Scientific Committee",
-    color: "from-pink-700 to-pink-900",
-    members: [
-      {
-        name: "Dr. Manju Singh",
-        designation: "",
-        institution: "",
-        role: "Chairman",
-        image: "/committee/manju-singh.jpeg",
-      },
-    ],
-  },
-];
+const PRIMARY = "from-[var(--primary-800)] to-[var(--accent-500)]";
+const GOLD = "from-[var(--accent-500)] to-amber-600";
+const MAROON = "from-[var(--primary-800)] to-[var(--primary-900)]";
+const SECONDARY = "from-[var(--secondary-800)] to-[var(--secondary-900)]";
+const EMERALD = "from-emerald-700 to-emerald-900";
+const PINK = "from-pink-700 to-pink-900";
 
 function MemberCard({
   member,
   gradient,
 }: {
-  member: Member;
+  member: CommitteeMember;
   gradient: string;
 }) {
   return (
@@ -233,7 +66,8 @@ function MemberCard({
             <img
               src={member.image}
               alt={member.name}
-              className="w-28 h-28 rounded-full object-cover ring-4 ring-white shadow-md"
+              loading="lazy"
+              className="w-28 h-28 rounded-full object-cover object-top ring-4 ring-white shadow-md"
             />
           ) : (
             <div
@@ -278,7 +112,163 @@ function MemberCard({
   );
 }
 
+// Smaller card for the large brochure rosters (mentors, advisors, task committees…).
+function CompactMemberCard({ member }: { member: CommitteeMember }) {
+  return (
+    <div className="flex flex-col items-center text-center rounded-xl bg-white border border-[var(--accent-500)]/15 p-3 shadow-sm hover:shadow-md hover:border-[var(--accent-500)]/40 transition-all duration-300">
+      {member.image ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={member.image}
+          alt={member.name}
+          loading="lazy"
+          className="w-20 h-24 sm:w-24 sm:h-28 rounded-lg object-cover object-top shadow-sm"
+        />
+      ) : (
+        <div className="w-20 h-24 sm:w-24 sm:h-28 rounded-lg bg-[var(--surface-100)] flex items-center justify-center">
+          <User size={28} className="text-[var(--muted-text)]" />
+        </div>
+      )}
+      <p className="mt-2 font-semibold text-xs sm:text-[13px] text-[var(--dark-text)] leading-snug">
+        {member.name}
+      </p>
+      {member.role && (
+        <p className="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--accent-500)]">
+          {member.role}
+        </p>
+      )}
+      {(member.designation || member.institution) && (
+        <p className="mt-0.5 text-[11px] text-[var(--muted-text)] leading-snug line-clamp-2">
+          {[member.designation, member.institution].filter(Boolean).join(", ")}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function GroupHeading({ title, color }: { title: string; color: string }) {
+  return (
+    <ScrollReveal className="mb-6">
+      <div className="flex items-center gap-4">
+        <div className={`h-8 w-1.5 rounded-full bg-gradient-to-b ${color}`} />
+        <h2 className="font-display font-bold text-xl sm:text-2xl md:text-3xl text-[var(--dark-text)]">
+          {title}
+        </h2>
+      </div>
+    </ScrollReveal>
+  );
+}
+
+function LargeGroup({
+  title,
+  members,
+  color,
+}: {
+  title: string;
+  members: CommitteeMember[];
+  color: string;
+}) {
+  return (
+    <div>
+      <GroupHeading title={title} color={color} />
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-60px" }}
+        variants={staggerContainer}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+      >
+        {members.map((member, i) => (
+          <MemberCard key={i} member={member} gradient={color} />
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+function CompactGroup({
+  title,
+  members,
+  color,
+  small,
+}: {
+  title: string;
+  members: CommitteeMember[];
+  color: string;
+  small?: boolean;
+}) {
+  return (
+    <div>
+      {small ? (
+        <h3 className="font-display font-semibold text-lg text-[var(--primary-800)] mb-4 flex items-center gap-3">
+          <span className={`h-6 w-1 rounded-full bg-gradient-to-b ${color}`} />
+          {title}
+        </h3>
+      ) : (
+        <GroupHeading title={title} color={color} />
+      )}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {members.map((member, i) => (
+          <CompactMemberCard key={i} member={member} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CompactGroups({
+  groups,
+  color,
+}: {
+  groups: CommitteeGroup[];
+  color: string;
+}) {
+  return (
+    <div className="space-y-10">
+      {groups.map((g) => (
+        <CompactGroup
+          key={g.title}
+          title={g.title}
+          members={g.members}
+          color={color}
+          small
+        />
+      ))}
+    </div>
+  );
+}
+
+const TABS = [
+  { value: "patrons", label: "Patrons" },
+  { value: "organizing", label: "Organizing Committee" },
+  { value: "task", label: "Task Committees" },
+  { value: "national", label: "APTI National" },
+  { value: "advisors", label: "Advisors & Mentors" },
+  { value: "young", label: "Young Leadership" },
+  { value: "regulatory", label: "PCI & Regulatory" },
+] as const;
+
+const DEFAULT_TAB = "patrons";
+
+function subscribeToHash(onChange: () => void) {
+  window.addEventListener("hashchange", onChange);
+  return () => window.removeEventListener("hashchange", onChange);
+}
+
+function readHashTab() {
+  const fromHash = window.location.hash.replace("#", "");
+  return TABS.some((t) => t.value === fromHash) ? fromHash : DEFAULT_TAB;
+}
+
 export default function CommitteeClient() {
+  // The active tab lives in the URL hash so links like /committee#task work.
+  const tab = useSyncExternalStore(subscribeToHash, readHashTab, () => DEFAULT_TAB);
+
+  function changeTab(value: string) {
+    window.history.replaceState(null, "", `#${value}`);
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+  }
+
   return (
     <div className="bg-[var(--surface-50)] min-h-screen">
       {/* Hero */}
@@ -294,81 +284,105 @@ export default function CommitteeClient() {
             APTICON
           </h1>
           <p className="mt-5 text-base md:text-lg text-[var(--muted-text)] max-w-xl mx-auto">
-            Dedicated pharmacy educators and professionals working together to
-            make APTICON 2026 a landmark event.
+            Patrons, mentors, advisors and dedicated pharmacy educators working
+            together to make APTICON 2026 a landmark event.
           </p>
         </div>
       </section>
 
       <CulturalDivider variant="bastar" className="opacity-40" />
 
-      {/* Committee groups */}
-      <section className="py-16 md:py-20">
-        <div className="container-site space-y-16">
-          {COMMITTEE.map((group) => (
-            <div key={group.group}>
-              <ScrollReveal className="mb-8">
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`h-8 w-1.5 rounded-full bg-gradient-to-b ${group.color}`}
-                  />
-                  <h2 className="font-display font-bold text-2xl sm:text-3xl text-[var(--dark-text)]">
-                    {group.group}
-                  </h2>
-                </div>
-              </ScrollReveal>
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                variants={staggerContainer}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-              >
-                {group.members.map((member, i) => (
-                  <MemberCard key={i} member={member} gradient={group.color} />
-                ))}
-              </motion.div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <CulturalDivider variant="bastar" className="opacity-40" />
-
-      {/* State APTI Branches */}
-      <section className="py-16 md:py-20">
+      <section className="py-12 md:py-16">
         <div className="container-site">
-          <ScrollReveal className="mb-12 text-center">
-            <GoldenBadge>Across India</GoldenBadge>
-            <h2 className="mt-4 font-display font-bold text-2xl sm:text-3xl text-[var(--dark-text)]">
-              State APTI Branches
-            </h2>
-          </ScrollReveal>
-          <div className="space-y-12">
-            {STATE_BRANCHES.map((branch) => (
-              <div key={branch.state}>
-                <h3 className="font-display font-semibold text-lg text-[var(--primary-800)] mb-4 flex items-center gap-3">
-                  <span className="h-6 w-1 rounded-full bg-gradient-to-b from-[var(--secondary-800)] to-[var(--secondary-900)]" />
-                  {branch.state}
-                </h3>
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-60px" }}
-                  variants={staggerContainer}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-                >
-                  {branch.members.map((member, i) => (
-                    <MemberCard
-                      key={i}
-                      member={member}
-                      gradient="from-[var(--secondary-800)] to-[var(--secondary-900)]"
-                    />
-                  ))}
-                </motion.div>
+          <Tabs value={tab} onValueChange={changeTab}>
+            <div className="sticky top-16 z-20 -mx-4 px-4 py-2 bg-[var(--surface-50)]/95 backdrop-blur">
+              <TabsList className="w-full h-auto justify-start overflow-x-auto flex-nowrap gap-1">
+                {TABS.map((t) => (
+                  <TabsTrigger key={t.value} value={t.value}>
+                    {t.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </div>
+
+            <TabsContent value="patrons" className="mt-10 space-y-16">
+              <LargeGroup title="Chief Patron" members={CHIEF_GUESTS} color={GOLD} />
+              <LargeGroup title="Patrons" members={PATRONS} color={PRIMARY} />
+              <LargeGroup title="Co-Patrons" members={CO_PATRONS} color={MAROON} />
+              <LargeGroup
+                title="Industry Patrons"
+                members={INDUSTRY_PATRONS}
+                color={SECONDARY}
+              />
+              <LargeGroup
+                title="Academic Partners"
+                members={ACADEMIC_PARTNERS}
+                color={EMERALD}
+              />
+            </TabsContent>
+
+            <TabsContent value="organizing" className="mt-10 space-y-16">
+              {LOC.map((g) => (
+                <LargeGroup key={g.title} title={g.title} members={g.members} color={MAROON} />
+              ))}
+              <LargeGroup
+                title="Scientific Committee"
+                members={SCIENTIFIC_COMMITTEE}
+                color={PINK}
+              />
+              <LargeGroup
+                title="Registration Committee"
+                members={REGISTRATION_COMMITTEE}
+                color={EMERALD}
+              />
+            </TabsContent>
+
+            <TabsContent value="task" className="mt-10">
+              <GroupHeading title="Task Committees" color={SECONDARY} />
+              <CompactGroups groups={TASK_COMMITTEES} color={SECONDARY} />
+            </TabsContent>
+
+            <TabsContent value="national" className="mt-10 space-y-16">
+              <LargeGroup
+                title="APTI National Office Bearers"
+                members={NATIONAL_BODY}
+                color={PRIMARY}
+              />
+              <CompactGroup title="APTI Women Forum" members={WOMEN_FORUM} color={PINK} />
+              <div>
+                <GroupHeading title="APTI State Branches Leadership" color={SECONDARY} />
+                <CompactGroups
+                  groups={STATE_BRANCHES.map((b) => ({ title: b.state, members: b.members }))}
+                  color={SECONDARY}
+                />
               </div>
-            ))}
-          </div>
+            </TabsContent>
+
+            <TabsContent value="advisors" className="mt-10 space-y-16">
+              <CompactGroup title="Mentors" members={MENTORS} color={GOLD} />
+              <CompactGroup
+                title="APTI National Advisors"
+                members={NATIONAL_ADVISORS}
+                color={PRIMARY}
+              />
+            </TabsContent>
+
+            <TabsContent value="young" className="mt-10">
+              <CompactGroup
+                title="APTI Young Leadership"
+                members={YOUNG_LEADERSHIP}
+                color={MAROON}
+              />
+            </TabsContent>
+
+            <TabsContent value="regulatory" className="mt-10 space-y-16">
+              <CompactGroup title="PCI Members" members={PCI_MEMBERS} color={PRIMARY} />
+              <div>
+                <GroupHeading title="Regulatory Patrons" color={EMERALD} />
+                <CompactGroups groups={REGULATORY_PATRONS} color={EMERALD} />
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
     </div>

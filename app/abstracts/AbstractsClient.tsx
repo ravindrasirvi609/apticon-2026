@@ -28,6 +28,7 @@ import { Card, CardContent } from "@/components/ui/shadcn/card";
 import {
   ABSTRACT_THEMES,
   EVENT,
+  SCIENTIFIC_TRACKS,
   isAbstractSubmissionOpen,
 } from "@/lib/constants";
 import { MAX_ABSTRACT_WORDS, MAX_CO_AUTHORS } from "@/lib/validators/abstract";
@@ -68,9 +69,11 @@ const IMPORTANT_DATES = [
 ];
 
 const GUIDELINES = [
+  "Type: Oral / Poster presentation.",
   "Abstract must be in English, typed in Times New Roman 12pt.",
   "Word limit: 250–300 words (excluding title and authors).",
-  "Structure: Background, Objectives, Methods, Results, Conclusions.",
+  "Structure: Title (bold), Name & Affiliation of all authors (italics) & email of presenting author, followed by Background, Objectives, Methods, Results and Conclusion.",
+  "Include a declaration of no conflict of interest and plagiarism.",
   "Do not include figures, tables, or references in the abstract.",
   "Presenting author must be listed first in the author list.",
 ];
@@ -284,11 +287,33 @@ export default function AbstractsClient() {
         </Card>
       </section>
 
+      {/* Scientific Tracks (brochure) */}
+      <section className="py-8 px-4 max-w-4xl mx-auto">
+        <ScrollReveal>
+          <h3 className="font-display text-xl font-bold text-[var(--dark-text)] mb-4">
+            Scientific Tracks
+          </h3>
+          <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {SCIENTIFIC_TRACKS.map((t, i) => (
+              <li
+                key={t}
+                className="flex gap-3 px-4 py-3 rounded-lg bg-white border border-[var(--accent-500)]/25 text-sm text-[var(--dark-text)]"
+              >
+                <span className="font-display font-black text-[var(--accent-500)]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ol>
+        </ScrollReveal>
+      </section>
+
       {/* Themes */}
       <section className="py-8 px-4 max-w-4xl mx-auto">
         <ScrollReveal>
           <h3 className="font-display text-xl font-bold text-[var(--dark-text)] mb-4">
-            Areas of Specialization
+            Abstract Submission Themes
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {ABSTRACT_THEMES.map((t) => (
@@ -335,8 +360,10 @@ export default function AbstractsClient() {
               ))}
             </ol>
             <p className="mt-4 text-sm font-medium text-[var(--primary-800)]">
-              All accepted abstracts will be published in a special issue of
-              IJPER.
+              Approximately 50 selected full papers will be considered for
+              publication in a special issue of the Indian Journal of
+              Pharmaceutical Education and Research (IJPER), subject to the
+              journal&apos;s editorial and peer-review requirements.
             </p>
           </CardContent>
         </Card>

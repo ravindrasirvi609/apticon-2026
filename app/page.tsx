@@ -39,7 +39,8 @@ const jsonLd = {
     name: "Pt. Deendayal Upadhyay Auditorium",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "G.E. Road",
+      streetAddress: "G.E. Road, near Science College, Amanaka",
+      postalCode: "492010",
       addressLocality: "Raipur",
       addressRegion: "Chhattisgarh",
       addressCountry: "IN",
@@ -98,7 +99,7 @@ export default function HomePage() {
       
 
       {/* 10. Sponsors marquee */}
-      {/* <SponsorMarquee /> */}
+      <SponsorMarquee />
     </>
   );
 }

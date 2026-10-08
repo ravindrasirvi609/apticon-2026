@@ -1,11 +1,16 @@
 "use client";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { MapPin, Plane, Train, Car, Utensils } from "lucide-react";
+import { MapPin, Plane, Train, Car, Clock } from "lucide-react";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import { RAIPUR_PLACES } from "@/lib/constants";
+import {
+  EVENT,
+  PLACES_CHHATTISGARH,
+  PLACES_RAIPUR,
+  type TravelPlace,
+} from "@/lib/constants";
 import {
   staggerContainer,
   fadeUp,
@@ -17,31 +22,31 @@ const TRANSPORT = [
   {
     icon: Plane,
     label: "By Air",
-    title: "Swami Vivekananda Airport (RPR)",
+    title: "Swami Vivekananda Airport, Raipur (RPR)",
     details: [
-      "~15 km from venue",
-      "Flights from Delhi, Mumbai, Hyderabad, Kolkata, Bengaluru",
-      "Taxi/cab easily available",
+      "Distance to venue ~15 km",
+      "Travel time ~30–40 minutes",
+      "Taxis, app-based cabs and airport transfer services are available",
     ],
   },
   {
     icon: Train,
-    label: "By Train",
+    label: "By Rail",
     title: "Raipur Junction Railway Station",
     details: [
-      "~5 km from venue",
-      "On Mumbai–Howrah & Delhi–Chennai rail corridors",
-      "Shatabdi, Rajdhani, Duronto connectivity",
+      "Distance to venue ~6 km",
+      "Travel time ~15–20 minutes",
+      "Auto-rickshaws, taxis and app-based cabs are easily available outside the station",
     ],
   },
   {
     icon: Car,
     label: "By Road",
-    title: "National Highway Connectivity",
+    title: "Well Connected by Highways",
     details: [
-      "NH 30 (Raipur–Jagdalpur)",
-      "NH 53 (Raipur–Nagpur)",
-      "State bus services from all CG districts",
+      "Connected with Nagpur, Bhopal, Bilaspur, Ranchi and Sambalpur",
+      "Well-maintained national highways ensure a smooth and comfortable journey",
+      "Major hotel zone at Civil Lines, close to the venue",
     ],
   },
 ];
@@ -98,6 +103,48 @@ const HOTELS = [
   },
 ];
 
+function PlaceGrid({ places }: { places: TravelPlace[] }) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {places.map((place, i) => (
+        <ScrollReveal key={place.name} delay={(i % 4) * 0.08}>
+          <article className="group h-full overflow-hidden rounded-2xl border border-[var(--accent-500)]/15 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-500)]/50 hover:shadow-lg">
+            <div className="relative aspect-[16/10] overflow-hidden bg-[var(--surface-100)]">
+              <Image
+                src={place.image}
+                alt={place.name}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+            <div className="p-5">
+              <h4 className="font-display font-bold text-lg text-[var(--dark-text)] transition-colors group-hover:text-[var(--primary-800)]">
+                {place.name}
+              </h4>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--muted-text)]">
+                {place.description}
+              </p>
+              {place.distance && (
+                <div className="mt-3 flex items-center gap-4 text-xs font-semibold text-[var(--primary-800)]">
+                  <span className="flex items-center gap-1">
+                    <Car size={13} /> {place.distance}
+                  </span>
+                  {place.time && (
+                    <span className="flex items-center gap-1">
+                      <Clock size={13} /> {place.time}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </article>
+        </ScrollReveal>
+      ))}
+    </div>
+  );
+}
+
 export default function VenueClient() {
   return (
     <div className="bg-[var(--surface-50)] min-h-screen">
@@ -138,7 +185,7 @@ export default function VenueClient() {
               Pt. Deendayal Upadhyay Auditorium
             </h2>
             <p className="mt-3 text-[var(--muted-text)]">
-              G.E. Road, Raipur, Chhattisgarh
+              {EVENT.venueAddress}
             </p>
           </ScrollReveal>
 
@@ -168,7 +215,7 @@ export default function VenueClient() {
                       Pt. Deendayal Upadhyay Auditorium
                     </p>
                     <p className="text-sm text-[var(--muted-text)] mt-0.5">
-                      G.E. Road, Raipur, C.G. — 492001
+                      {EVENT.venueAddress}
                     </p>
                   </div>
                 </div>
@@ -228,7 +275,7 @@ export default function VenueClient() {
         <div className="container-site">
           <ScrollReveal className="text-center mb-12">
             <h2 className="font-display font-bold text-3xl sm:text-4xl text-[var(--dark-text)]">
-              How to <span className="text-gradient-accent">Reach Raipur</span>
+              How to <span className="text-gradient-accent">Reach the Venue</span>
             </h2>
           </ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -278,41 +325,14 @@ export default function VenueClient() {
               detour.
             </p>
           </ScrollReveal>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {RAIPUR_PLACES.map((place, i) => (
-              <ScrollReveal key={place.name} delay={i * 0.08}>
-                <article className="group h-full overflow-hidden rounded-2xl border border-[var(--accent-500)]/15 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-500)]/50 hover:shadow-lg">
-                  <div className="relative aspect-[16/10] overflow-hidden bg-[var(--surface-100)]">
-                    <Image
-                      src={place.image.src}
-                      alt={place.image.alt}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div
-                      className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"
-                      aria-hidden
-                    />
-                    <span
-                      className="absolute bottom-3 left-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-xl shadow-sm"
-                      aria-hidden
-                    >
-                      {place.icon}
-                    </span>
-                  </div>
-                  <div className="p-5">
-                    <h3 className="font-display font-bold text-lg text-[var(--dark-text)] transition-colors group-hover:text-[var(--primary-800)]">
-                      {place.name}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-[var(--muted-text)]">
-                      {place.description}
-                    </p>
-                  </div>
-                </article>
-              </ScrollReveal>
-            ))}
-          </div>
+          <h3 className="font-display font-bold text-2xl text-[var(--primary-800)] mb-5">
+            Places to Visit in Chhattisgarh
+          </h3>
+          <PlaceGrid places={PLACES_CHHATTISGARH} />
+          <h3 className="mt-14 font-display font-bold text-2xl text-[var(--primary-800)] mb-5">
+            In &amp; Around Raipur
+          </h3>
+          <PlaceGrid places={PLACES_RAIPUR} />
         </div>
       </section>
 

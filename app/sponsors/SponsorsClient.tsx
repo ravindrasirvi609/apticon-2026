@@ -200,6 +200,9 @@ export default function SponsorsClient() {
               <Download size={16} />
               Download Brochure
             </PulseButton>
+            <PulseButton href="/exhibition" variant="outline">
+              Exhibition &amp; Expo
+            </PulseButton>
           </div>
         </div>
       </section>

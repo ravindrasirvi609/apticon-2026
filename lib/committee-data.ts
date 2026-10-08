@@ -1,16 +1,111 @@
 export interface CommitteeMember {
   name: string;
-  role: string;
-  designation: string;
-  institution: string;
+  role?: string;
+  designation?: string;
+  institution?: string;
   email?: string;
   image?: string;
+}
+
+export interface CommitteeGroup {
+  title: string;
+  members: CommitteeMember[];
 }
 
 export interface StateBranch {
   state: string;
   members: CommitteeMember[];
 }
+
+export interface Tribute {
+  name: string;
+  title: string;
+  image: string;
+  bio: string[];
+}
+
+export interface InvitationMessage {
+  name: string;
+  role: string;
+  image: string;
+  salutation: string;
+  paragraphs: string[];
+}
+
+export const INVITATION_MESSAGES: InvitationMessage[] = [
+  {
+    name: "Prof. Deependra Singh",
+    role: "Chairman, Local Organising Committee",
+    image: "/committee/brochure/misc/deependra-singh-invite.jpg",
+    salutation:
+      "Dear Respected Teachers, Esteemed Colleagues, and Members of the Pharmacy Fraternity,",
+    paragraphs: [
+      "It is with great warmth and a deep sense of honour that I extend to you, on behalf of the Local Organizing Committee, a heartfelt invitation to APTICON 2026 — the 28th Annual National Convention of the Association of Pharmaceutical Teachers of India, to be held on 24–25 October 2026 in Raipur, Chhattisgarh.",
+      "For us in Chhattisgarh, this is more than an event — it is a moment of pride and gratitude. Nearly two decades after our state branch hosted APTICON at Bilaspur in 2008, we once again have the privilege of welcoming our pharmacy fraternity home to Chhattisgarh. This convention is being organized by the APTI Central Zone, bringing together the collective strength of Chhattisgarh, Madhya Pradesh, and Jharkhand, and is hosted by the APTI Chhattisgarh State Branch, in warm association with the University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur.",
+      "APTICON 2026 carries a theme close to every teacher's heart — “Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat” — a reflection of the quiet resolve each one of us carries every day in our classrooms and laboratories, shaping tomorrow's pharmacists who will build a self-reliant India.",
+      "Over these two days, we hope to create space not just for keynote lectures, research presentations, and academic discourse, but for the kind of conversations, friendships, and shared learning that truly sustain our profession. This is your convention — a coming together of teachers, researchers, students, and industry partners, united by a common purpose.",
+      "Chhattisgarh looks forward to welcoming you with open arms and warm hospitality. Come, be part of this journey — let us reflect, reconnect, and renew our collective sankalp together.",
+    ],
+  },
+  {
+    name: "Prof. Amber Vyas",
+    role: "Organising Secretary",
+    image: "/committee/brochure/misc/amber-vyas-invite.jpg",
+    salutation: "Greetings from the Organising Committee of APTICON 2026!",
+    paragraphs: [
+      "It is my great pleasure and privilege to welcome you to the 28th Annual National Convention of the Association of Pharmaceutical Teachers of India (APTI), to be held on 24–25 October 2026 in Raipur, Chhattisgarh, under the theme “Pharma Teacher's Sankalp: Viksit Pharmacist for Atmanirbhar Bharat.”",
+      "For decades, APTI has served as a distinguished national platform for pharmaceutical teachers and academicians, fostering excellence in pharmacy education, research, professional development, innovation, and academic collaboration. APTICON continues this enduring legacy by bringing together pharmaceutical educators, researchers, academicians, industry professionals, practitioners, students, and other stakeholders from across the country.",
+      "APTICON 2026 is envisioned as more than a scientific convention — it is a collective platform for reflection, knowledge exchange, innovation, and forward-looking dialogue. The convention will provide opportunities to deliberate upon emerging developments in pharmaceutical sciences, contemporary approaches to pharmacy education, technological advancements, interdisciplinary research, academia–industry collaboration, and the evolving responsibilities of pharmacy teachers in preparing future-ready pharmacists.",
+      "The theme reflects our collective commitment to strengthening the foundation of pharmacy education and nurturing pharmacists who are competent, innovative, ethical, skilled, and responsive to the evolving needs of society and the nation. As India moves towards the vision of a Viksit Bharat, the role of pharmacy educators assumes greater significance in shaping the next generation of pharmaceutical professionals and leaders.",
+      "Hosted by APTI Chhattisgarh, in association with the University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur, APTICON 2026 will provide a vibrant forum for meaningful academic and professional engagement. I warmly invite all members of the pharmaceutical fraternity to participate in this significant national gathering and contribute their knowledge, ideas, experiences, and vision.",
+      "Together, let us transform our collective vision into meaningful action and shape the future of pharmacy through knowledge, innovation, collaboration, and purposeful education. I look forward to welcoming you all to APTICON 2026, Raipur.",
+    ],
+  },
+];
+
+export const TRIBUTES: Tribute[] = [
+  {
+    name: "Late Shri Kailash Chandra Sharma",
+    title: "Pioneer in Pharmacy, Entrepreneur and Visionary",
+    image: "/committee/brochure/misc/tribute-kailash-chandra-sharma.jpg",
+    bio: [
+      "Born into the respected Pandey family of Patan-Sikar, Rajasthan, Late Shri Kailash Chandra Sharma's life was marked by perseverance, strong family values, entrepreneurship, and a deep commitment to service. After his family relocated to Raipur, he pursued his education with determination and became one of the earliest students to obtain a B. Pharm degree in Chhattisgarh.",
+      "Although he had an opportunity to pursue higher education in Canada, he returned to India to fulfil his family responsibilities and devoted himself to building a pharmaceutical enterprise. In 1950, the family began pharmaceutical manufacturing, marking the beginning of an entrepreneurial journey that would grow steadily despite considerable financial challenges during its early years.",
+      "Through his vision, dedication, and perseverance, Sharma Ayurvedic Pharmacy developed into a prominent manufacturer of Ayurvedic medicines in Chhattisgarh. His life remains a lasting testament to perseverance, entrepreneurship, education, leadership, and commitment to society.",
+    ],
+  },
+  {
+    name: "Late Dr. Jawahar Singh Dangi",
+    title: "Legend in Pharmacy Field and Multifaceted Talent",
+    image: "/committee/brochure/misc/tribute-jawahar-singh-dangi.jpg",
+    bio: [
+      "Dr. Jawahar Singh Dangi, born on 26 January 1952 in Village Chirai, Tehsil Kesli, Sagar, Madhya Pradesh, was a distinguished academician, pharmacist, and multifaceted personality whose life reflects determination, discipline, and excellence. He pursued higher education at Dr. Harisingh Gour University, Sagar, and entered the field of pharmacy through an inspiring and remarkable turn of circumstances.",
+      "With his outstanding academic and professional contributions, Dr. Dangi established himself as a respected personality in the pharmacy profession and received recognition, including a Lifetime Service Award, for his dedicated service.",
+      "A talented musician and singer, he was proficient in instruments including harmonium, dholak, tabla, and jhaang-manjira. His life beautifully combined pharmaceutical excellence, leadership, music, cultural values, and service.",
+    ],
+  },
+  {
+    name: "Late Dr. Arvind Kumar Jha",
+    title:
+      "Senior Academician, Researcher and Academic Leader in Pharmaceutical Sciences",
+    image: "/committee/brochure/misc/tribute-arvind-kumar-jha.jpg",
+    bio: [
+      "Dr. Arvind Kumar Jha was a distinguished senior academician and researcher in the field of Pharmaceutical Sciences, with expertise in drug design, QSAR, molecular docking, medicinal chemistry, and synthesis of biologically active compounds. He completed his B. Pharm., M. Pharm., and Ph.D. from Dr. Harisingh Gour University, Sagar.",
+      "He was among the founder members associated with the establishment of the SLT Institute of Pharmaceutical Sciences, Guru Ghasidas University, Bilaspur, one of the early pharmacy institutions in the state, and contributed to the development of CIMS Bilaspur, RITEE Institute of Pharmacy, Raipur, and the College of Pharmaceutical Sciences, Shri Shankaracharya Technical Campus, Bhilai.",
+      "He also served as the Vice-Chancellor of Shri Shankaracharya Professional University, Bhilai, playing a meaningful role in advancing pharmaceutical education and research in Chhattisgarh and India.",
+    ],
+  },
+  {
+    name: "Late Prof. Dr. Ravindra B. Saudagar",
+    title: "Pharmaceutical Academician, Researcher and Academic Leader",
+    image: "/committee/brochure/misc/tribute-ravindra-saudagar.jpg",
+    bio: [
+      "Prof. Dr. Ravindra B. Saudagar was a distinguished pharmaceutical academician and researcher with expertise in Pharmaceutical Chemistry and Pharmaceutical Sciences. He completed his Ph.D. in 2008 from the University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur.",
+      "He served as Principal and Professor at Columbia Institute of Pharmacy, Raipur, and subsequently joined Kalyani Charitable Trust's R. G. Sapkal College of Pharmacy, Anjaneri, Nashik, Maharashtra, as its Founder Principal.",
+      "His research interests encompassed pharmaceutical analysis, drug-delivery systems, nasal drug delivery, nanosuspensions, novel pharmaceutical formulations, and medicinal chemistry, making a meaningful contribution to the advancement of pharmaceutical sciences in India.",
+    ],
+  },
+];
 
 export const NATIONAL_BODY: CommitteeMember[] = [
   {
@@ -25,7 +120,7 @@ export const NATIONAL_BODY: CommitteeMember[] = [
   {
     name: "Dr. Mihir Kumar Kar",
     role: "Vice President (Eastern Region)",
-    designation: "Professor",
+    designation: "Assistant Professor",
     institution:
       "Sri Jayadev College of Pharmaceutical Sciences, Naharkanta, Bhubaneswar 752101, Odisha",
     email: "mihirkar.apti@gmail.com",
@@ -82,7 +177,7 @@ export const NATIONAL_BODY: CommitteeMember[] = [
     institution:
       "Datta Meghe College of Pharmacy, Datta Meghe Institute of Higher Education and Research, Sawangi (Meghe), Wardha, Maharashtra 442001",
     email: "anilpethe@gmail.com",
-    image: "https://aptiindia.org/images/committee/anilpethe.png",
+    image: "/committee/brochure/misc/anil-pethe.jpg",
   },
   {
     name: "Dr. Raj Shekharan",
@@ -105,7 +200,7 @@ export const NATIONAL_BODY: CommitteeMember[] = [
     name: "Dr. Pravin Digambar Chaudhari",
     role: "Immediate Past President",
     designation: "Principal",
-    institution: "Modern College of Pharmacy, Nigadi, Pune, Maharashtra",
+    institution: "Smt. Kishoritai Bhoyar College of Pharmacy, Nagpur, Maharashtra",
     email: "pdchaudhari21@rediffmail.com",
     image: "/committee/national/pravin-chaudhari.jpg?v=2",
   },
@@ -200,6 +295,23 @@ export const STATE_BRANCHES: StateBranch[] = [
           "Faculty of Pharmaceutical Sciences, Assam down town University, Guwahati, India.",
         email: "saikat.pharm@rediffmail.com",
         image: "https://aptiindia.org/images/committee/AS/sen1.png",
+      },
+    ],
+  },
+  {
+    state: "Bihar",
+    members: [
+      {
+        name: "Bhuneshwar Dutta Tripathi",
+        image: "/committee/states/bhuneshwar-dutta-tripathi.jpg",
+      },
+      {
+        name: "Dr. Saumendu Deb Roy",
+        image: "/committee/states/saumendu-deb-roy.jpg",
+      },
+      {
+        name: "Dr. Shambaditya Goswami",
+        image: "/committee/states/shambaditya-goswami.jpg",
       },
     ],
   },
@@ -562,6 +674,10 @@ export const STATE_BRANCHES: StateBranch[] = [
         email: "r_praveenraj@rediffmail.com",
         image: "https://aptiindia.org/images/committee/KE/RAJ.png",
       },
+      {
+        name: "Dr. Beena P",
+        image: "/committee/states/beena-p.jpg",
+      },
     ],
   },
   {
@@ -681,7 +797,7 @@ export const STATE_BRANCHES: StateBranch[] = [
     ],
   },
   {
-    state: "Orissa",
+    state: "Odisha",
     members: [
       {
         name: "Dr. Somzeet Panda",
@@ -716,6 +832,23 @@ export const STATE_BRANCHES: StateBranch[] = [
           "University Department of Pharmaceutical Sciences, Utkal University, Bhubaneswar",
         email: "sahoosunitkumar@gmail.com",
         image: "https://aptiindia.org/images/committee/OD/sunit.png",
+      },
+    ],
+  },
+  {
+    state: "Puducherry",
+    members: [
+      {
+        name: "Dr. V. Sree Janardhanan",
+        image: "/committee/states/v-sree-janardhanan.jpg",
+      },
+      {
+        name: "Senniappan Palnisamy",
+        image: "/committee/states/senniappan-palnisamy.jpg",
+      },
+      {
+        name: "Prof. (Dr.) Ganna Anitha",
+        image: "/committee/states/ganna-anitha.jpg",
       },
     ],
   },
@@ -801,6 +934,23 @@ export const STATE_BRANCHES: StateBranch[] = [
     ],
   },
   {
+    state: "Sikkim",
+    members: [
+      {
+        name: "Dr. Nihar Ranjan Bhuyan",
+        image: "/committee/states/nihar-ranjan-bhuyan.jpg",
+      },
+      {
+        name: "Dr. Sanjib Bahadur",
+        image: "/committee/states/sanjib-bahadur.jpg",
+      },
+      {
+        name: "Chandrika Sharma",
+        image: "/committee/states/chandrika-sharma.jpg",
+      },
+    ],
+  },
+  {
     state: "Tamil Nadu",
     members: [
       {
@@ -876,6 +1026,23 @@ export const STATE_BRANCHES: StateBranch[] = [
           "University College of Pharmaceutical Sciences, Kakatiya University, Warangal, Telangana",
         email: "ynrku@yahoo.co.in",
         image: "https://aptiindia.org/images/committee/TL/reddy.png",
+      },
+    ],
+  },
+  {
+    state: "Tripura",
+    members: [
+      {
+        name: "Dr. Rajat Ghosh",
+        image: "/committee/states/rajat-ghosh.jpg",
+      },
+      {
+        name: "Dr. Rishi Raj Chetree",
+        image: "/committee/states/rishi-raj-chetree.jpg",
+      },
+      {
+        name: "Dr. Subhashis Debnath",
+        image: "/committee/states/subhashis-debnath.jpg",
       },
     ],
   },
