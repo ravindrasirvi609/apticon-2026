@@ -111,7 +111,7 @@ const COMMITTEE: { group: string; color: string; members: Member[] }[] = [
     members: [
       {
         name: "Prof. Amber Vyas",
-        designation: "Assistant Professor",
+        designation: "Professor",
         institution:
           "University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur, Chhattisgarh 492010",
         email: "ambervyas@gmail.com",

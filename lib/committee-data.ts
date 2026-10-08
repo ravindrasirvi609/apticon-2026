@@ -209,7 +209,7 @@ export const STATE_BRANCHES: StateBranch[] = [
       {
         name: "Amber Vyas",
         role: "President",
-        designation: "Assistant Professor",
+        designation: "Professor",
         institution:
           "University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur, Chhattisgarh 492010",
         email: "ambervyas@gmail.com",
