@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Menu } from "lucide-react";
-import { NAV_LINKS } from "@/lib/constants";
+import { ChevronDown, Menu } from "lucide-react";
+import { COMMITTEE_SUBLINKS, NAV_LINKS } from "@/lib/constants";
 import MobileMenu from "./MobileMenu";
 
 const PRIMARY_LINKS = NAV_LINKS.slice(0, 7);
@@ -14,6 +14,7 @@ const SECONDARY_LINKS = NAV_LINKS.slice(7);
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [committeeMenuOpen, setCommitteeMenuOpen] = useState(false);
   const pathname = usePathname();
   const { scrollY } = useScroll();
 
@@ -73,6 +74,49 @@ export default function Navbar() {
             >
               {PRIMARY_LINKS.map((link) => {
                 const active = pathname === link.href;
+                if (link.href === "/committee") {
+                  return (
+                    <div key={link.href} className="relative group">
+                      <button
+                        type="button"
+                        onClick={() => setCommitteeMenuOpen((open) => !open)}
+                        aria-expanded={committeeMenuOpen}
+                        aria-haspopup="true"
+                        className={`relative inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                          active
+                            ? "text-[var(--primary-800)]"
+                            : "text-[var(--dark-text)]/70 hover:text-[var(--primary-800)]"
+                        }`}
+                      >
+                        {link.label}
+                        <ChevronDown size={14} aria-hidden="true" />
+                        {active && (
+                          <motion.span
+                            layoutId="nav-indicator"
+                            className="absolute inset-x-2 -bottom-0.5 h-0.5 rounded-full bg-[var(--primary-800)]"
+                          />
+                        )}
+                      </button>
+                      <div
+                        className={`absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-[var(--accent-500)]/20 overflow-hidden transition-all duration-200 ${
+                          committeeMenuOpen
+                            ? "opacity-100 visible pointer-events-auto"
+                            : "opacity-0 invisible pointer-events-none"
+                        }`}
+                      >
+                        {COMMITTEE_SUBLINKS.map((subLink) => (
+                          <Link
+                            key={subLink.href}
+                            href={subLink.href}
+                            className="block px-4 py-2.5 text-sm text-[var(--dark-text)] hover:bg-[var(--surface-100)] hover:text-[var(--primary-800)] transition-colors"
+                          >
+                            {subLink.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
                 return (
                   <Link
                     key={link.href}
