@@ -15,6 +15,15 @@ export const EVENT = {
   targetDate: new Date("2026-10-24T09:00:00+05:30"),
 };
 
+// Abstract submissions close at the end of 6 October 2026 (IST).
+export const ABSTRACT_SUBMISSION_DEADLINE = new Date(
+  "2026-10-06T23:59:59+05:30",
+);
+
+export function isAbstractSubmissionOpen(now = new Date()) {
+  return now <= ABSTRACT_SUBMISSION_DEADLINE;
+}
+
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },

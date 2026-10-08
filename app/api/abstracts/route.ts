@@ -12,9 +12,17 @@ import { getClientIp } from "@/lib/auth";
 import { linkFromAbstract } from "@/lib/sync";
 import { verifyAptiMember } from "@/lib/apti-membership";
 import { sendWhatsAppNotification } from "@/lib/whatsapp";
+import { isAbstractSubmissionOpen } from "@/lib/constants";
 
 // POST /api/abstracts — public abstract submission
 export async function POST(request: NextRequest) {
+  if (!isAbstractSubmissionOpen()) {
+    return NextResponse.json(
+      { error: "Abstract submissions closed on 6 October 2026." },
+      { status: 410 },
+    );
+  }
+
   const ip = getClientIp(request);
   const limit = rateLimit(`submit:${ip}`, 5, 60 * 60_000);
   if (!limit.ok) {

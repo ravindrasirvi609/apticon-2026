@@ -25,7 +25,11 @@ import { Input } from "@/components/ui/shadcn/input";
 import { Textarea } from "@/components/ui/shadcn/textarea";
 import { Label } from "@/components/ui/shadcn/label";
 import { Card, CardContent } from "@/components/ui/shadcn/card";
-import { ABSTRACT_THEMES, EVENT } from "@/lib/constants";
+import {
+  ABSTRACT_THEMES,
+  EVENT,
+  isAbstractSubmissionOpen,
+} from "@/lib/constants";
 import { MAX_ABSTRACT_WORDS, MAX_CO_AUTHORS } from "@/lib/validators/abstract";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 import AptiMembershipIdField from "@/components/ui/AptiMembershipIdField";
@@ -84,6 +88,8 @@ const REJECTED_CATEGORIES = [
   "Papers without methodology and results",
   "Papers describing simple laboratory experiments",
 ];
+
+const SUBMISSIONS_OPEN = isAbstractSubmissionOpen();
 
 export default function AbstractsClient() {
   const router = useRouter();
@@ -340,9 +346,24 @@ export default function AbstractsClient() {
       <section className="py-12 px-4 max-w-3xl mx-auto">
         <Card>
           <CardContent className="pt-8">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-[var(--primary-800)] mb-6 text-center">
-              Submission Form
-            </h2>
+            {!SUBMISSIONS_OPEN ? (
+              <div className="py-6 text-center">
+                <h2 className="font-display text-2xl md:text-3xl font-bold text-[var(--primary-800)]">
+                  Abstract Submissions Are Closed
+                </h2>
+                <p className="mt-4 text-[var(--muted-text)]">
+                  The submission deadline was 6 October 2026. New abstracts are
+                  no longer being accepted.
+                </p>
+                <Link href="/abstracts/status" className="mt-6 inline-block">
+                  <Button>Check Submission Status</Button>
+                </Link>
+              </div>
+            ) : (
+              <>
+                <h2 className="font-display text-2xl md:text-3xl font-bold text-[var(--primary-800)] mb-6 text-center">
+                  Submission Form
+                </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div>
@@ -749,6 +770,8 @@ export default function AbstractsClient() {
                 </p>
               </div>
             </form>
+              </>
+            )}
           </CardContent>
         </Card>
       </section>
