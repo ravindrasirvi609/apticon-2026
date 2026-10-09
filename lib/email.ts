@@ -468,6 +468,62 @@ export function abstractResubmittedEmail(
   };
 }
 
+export function abstractPresentationTypeEmail(
+  name: string,
+  code: string,
+  title: string,
+  presentationType: "oral" | "poster",
+  abstractCode: string,
+) {
+  const typeLabel = presentationType === "oral" ? "Oral Presentation" : "Poster Presentation";
+
+  return {
+    subject: `Presentation Type Assigned — ${code}`,
+    html: renderEmail({
+      title: "Presentation Type Assigned",
+      preheader: `Your presentation type has been assigned: ${typeLabel}`,
+      blocks: [
+        { type: "text", html: `Dear ${esc(name)},` },
+        {
+          type: "text",
+          html: `Congratulations! Your accepted abstract has been assigned a presentation type.`,
+        },
+        {
+          type: "callout",
+          variant: "success",
+          title: `${typeLabel}`,
+          body: `Submission <b>${esc(code)}</b> — <i>${esc(title)}</i>`,
+        },
+        {
+          type: "kv",
+          rows: [
+            {
+              label: `Abstract Code (${presentationType})`,
+              value: abstractCode,
+            },
+          ],
+        },
+        {
+          type: "text",
+          html: `Please save your abstract code for reference. You will need it for registration and check-in at the conference.`,
+        },
+        {
+          type: "button",
+          label: "View Full Details",
+          href: `${BASE_URL}/abstracts/status`,
+        },
+        {
+          type: "callout",
+          variant: "info",
+          title: "Reminder",
+          body: `Presenting authors must be registered delegates. Please ensure your <a href="${BASE_URL}/registration" style="color:${BRAND.primary800};font-weight:700;">registration</a> is complete.`,
+        },
+        { type: "signoff" },
+      ],
+    }),
+  };
+}
+
 export function abstractResubmissionNoticeEmail(
   code: string,
   title: string,
