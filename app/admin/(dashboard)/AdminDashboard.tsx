@@ -12,6 +12,10 @@ import {
   Mic,
   Image as ImageIcon,
   HelpCircle,
+  Inbox,
+  FilePen,
+  RotateCcw,
+  XCircle,
 } from "lucide-react";
 import PageHeader from "@/components/console/PageHeader";
 import {
@@ -143,6 +147,35 @@ export default function AdminDashboard() {
           label="Active Reviewers"
           value={stats?.totals.activeReviewers ?? 0}
           icon={Users}
+        />
+      </div>
+
+      {/* Row 2b — remaining abstract statuses, so every status is visible
+          and the cards add up to the total. */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <StatCard
+          label="Pending Assignment"
+          value={stats?.abstractsByStatus.submitted ?? 0}
+          icon={Inbox}
+          accent="amber"
+        />
+        <StatCard
+          label="Revision Requested"
+          value={stats?.abstractsByStatus.revision_requested ?? 0}
+          icon={FilePen}
+          accent="amber"
+        />
+        <StatCard
+          label="Resubmitted"
+          value={stats?.abstractsByStatus.resubmitted ?? 0}
+          icon={RotateCcw}
+          accent="amber"
+        />
+        <StatCard
+          label="Rejected"
+          value={stats?.abstractsByStatus.rejected ?? 0}
+          icon={XCircle}
+          accent="rose"
         />
       </div>
 
@@ -351,7 +384,7 @@ function StatCard({
   label: string;
   value: number | string;
   icon: React.ComponentType<{ className?: string }>;
-  accent?: "amber" | "emerald";
+  accent?: "amber" | "emerald" | "rose";
   sub?: string;
 }) {
   const color =
@@ -359,7 +392,9 @@ function StatCard({
       ? "text-emerald-700"
       : accent === "amber"
         ? "text-amber-700"
-        : "text-[var(--primary-800)]";
+        : accent === "rose"
+          ? "text-rose-700"
+          : "text-[var(--primary-800)]";
   return (
     <Card>
       <CardContent className="pt-6">
