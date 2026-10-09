@@ -119,6 +119,10 @@ export default function AbstractDetail({
     null | "accepted" | "rejected" | "revision_requested"
   >(null);
   const [decisionNote, setDecisionNote] = useState("");
+  const [presentationTypeOpen, setPresentationTypeOpen] = useState(false);
+  const [selectedPresentationType, setSelectedPresentationType] = useState<
+    "oral" | "poster" | null
+  >(null);
   const [saving, setSaving] = useState(false);
 
   async function load() {
@@ -200,6 +204,30 @@ export default function AbstractDetail({
       await load();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed to record decision");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function savePresentationType() {
+    if (!selectedPresentationType) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/abstracts/${id}/presentation-type`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ presentationType: selectedPresentationType }),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error);
+      toast.success("Presentation type assigned. Abstract code generated.");
+      setPresentationTypeOpen(false);
+      setSelectedPresentationType(null);
+      await load();
+    } catch (e) {
+      toast.error(
+        e instanceof Error ? e.message : "Failed to assign presentation type",
+      );
     } finally {
       setSaving(false);
     }
@@ -538,6 +566,76 @@ export default function AbstractDetail({
                       <div className="font-mono font-bold text-[var(--primary-800)]">
                         {a.abstractCode}
                       </div>
+                    </div>
+                  )}
+                  {a.status === "accepted" && !a.presentationType && (
+                    <div className="mt-3 p-3 rounded bg-amber-50 border border-amber-200">
+                      <p className="text-sm text-amber-900 font-semibold mb-2">
+                        ⚠️ Presentation type not assigned
+                      </p>
+                      <p className="text-xs text-amber-800 mb-3">
+                        This abstract was accepted without an oral/poster
+                        designation. Assign one now to generate the abstract
+                        code.
+                      </p>
+                      <Dialog open={presentationTypeOpen} onOpenChange={setPresentationTypeOpen}>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="outline">
+                            Assign presentation type
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Assign Presentation Type</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-3">
+                            <p className="text-sm text-[var(--muted-text)]">
+                              Select whether this accepted abstract should be
+                              presented as oral or poster.
+                            </p>
+                            <div className="grid grid-cols-2 gap-2">
+                              {(["oral", "poster"] as const).map((v) => (
+                                <button
+                                  key={v}
+                                  type="button"
+                                  onClick={() =>
+                                    setSelectedPresentationType(
+                                      selectedPresentationType === v ? null : v,
+                                    )
+                                  }
+                                  className={`px-4 py-3 rounded-lg border text-sm font-semibold capitalize ${
+                                    selectedPresentationType === v
+                                      ? "bg-emerald-600 text-white border-emerald-600"
+                                      : "bg-white border-[var(--accent-500)]/30 hover:border-[var(--accent-500)]/60"
+                                  }`}
+                                >
+                                  {v}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                setPresentationTypeOpen(false);
+                                setSelectedPresentationType(null);
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              onClick={savePresentationType}
+                              disabled={saving || !selectedPresentationType}
+                            >
+                              {saving && (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              )}
+                              Assign
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   )}
                   {a.finalDecisionAt && (
