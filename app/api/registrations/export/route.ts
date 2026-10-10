@@ -40,9 +40,20 @@ export async function GET(request: NextRequest) {
   const filter: Record<string, unknown> = {};
   const status = url.searchParams.get("status");
   const paymentStatus = url.searchParams.get("paymentStatus");
+  const state = url.searchParams.get("state");
+  const category = url.searchParams.get("category");
+  const institution = url.searchParams.get("institution");
+  const city = url.searchParams.get("city");
   const q = url.searchParams.get("q") ?? "";
+  const sortParam = url.searchParams.get("sort") ?? "-createdAt";
+  const allowedSorts = new Set(["-createdAt", "createdAt", "fullName", "-fullName", "institution", "-institution", "category", "-category", "-feeAmount", "feeAmount"]);
+  const sort = allowedSorts.has(sortParam) ? sortParam : "-createdAt";
   if (status) filter.status = status;
   if (paymentStatus) filter.paymentStatus = paymentStatus;
+  if (state) filter.state = state;
+  if (category) filter.category = category;
+  if (institution) filter.institution = institution;
+  if (city) filter.city = city;
   if (q) {
     const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     filter.$or = [
@@ -55,7 +66,7 @@ export async function GET(request: NextRequest) {
       "institution",
     ].map((field) => ({ [field]: { $regex: safe, $options: "i" } }));
   }
-  const rows = await Registration.find(filter).sort({ createdAt: -1 }).lean();
+  const rows = await Registration.find(filter).sort(sort).lean();
   const data = rows.map((r) => [
     r.registrationCode,
     r.fullName,
