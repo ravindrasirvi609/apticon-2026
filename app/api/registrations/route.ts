@@ -19,6 +19,9 @@ export async function GET(request: NextRequest) {
   const institution = url.searchParams.get("institution") ?? undefined;
   const city = url.searchParams.get("city") ?? undefined;
   const q = url.searchParams.get("q") ?? "";
+  const sortParam = url.searchParams.get("sort") ?? "-createdAt";
+  const allowedSorts = new Set(["-createdAt", "createdAt", "fullName", "-fullName", "institution", "-institution", "category", "-category", "-feeAmount", "feeAmount"]);
+  const sort = allowedSorts.has(sortParam) ? sortParam : "-createdAt";
   const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
   const limit = Math.min(
     100,
@@ -50,7 +53,7 @@ export async function GET(request: NextRequest) {
   const [total, items, statusGroups, stateGroups, categoryGroups, institutionGroups, cityGroups] = await Promise.all([
     Registration.countDocuments(filter),
     Registration.find(filter)
-      .sort({ createdAt: -1 })
+      .sort(sort)
       .skip((page - 1) * limit)
       .limit(limit)
       .select(
