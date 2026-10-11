@@ -18,7 +18,7 @@ import { isAbstractSubmissionOpen } from "@/lib/constants";
 export async function POST(request: NextRequest) {
   if (!isAbstractSubmissionOpen()) {
     return NextResponse.json(
-      { error: "Abstract submissions closed on 6 October 2026." },
+      { error: "Abstract submissions are currently closed." },
       { status: 410 },
     );
   }

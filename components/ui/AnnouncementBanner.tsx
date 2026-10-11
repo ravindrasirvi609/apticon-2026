@@ -40,7 +40,7 @@ export default function AnnouncementBanner() {
                 <span className="font-black text-[var(--primary-800)]">
                   APTICON 2026
                 </span>{" "}
-                — 24 & 25 Oct, Raipur ✦ Abstract submissions closed on 6
+                — 24 & 25 Oct, Raipur ✦ Abstract submissions are temporarily open
                 October 2026.{" "}
                 <Link
                   href="/abstracts/status"

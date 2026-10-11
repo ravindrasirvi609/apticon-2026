@@ -62,7 +62,7 @@ interface AbstractForm {
 
 const IMPORTANT_DATES = [
   { event: "Abstract Submission Opens", date: "10 August 2026", done: true },
-  { event: "Last Date for Submission", date: "6 October 2026", done: false },
+  { event: "Last Date for Submission", date: "11 October 2026, 12:35 PM IST", done: false },
   { event: "Acceptance Notification", date: "10 October 2026", done: false },
   { event: "Revised Abstract Deadline", date: "18 October 2026", done: false },
   { event: "Conference Dates", date: "24–25 October 2026", done: false },
@@ -389,7 +389,7 @@ export default function AbstractsClient() {
                   Abstract Submissions Are Closed
                 </h2>
                 <p className="mt-4 text-[var(--muted-text)]">
-                  The submission deadline was 6 October 2026. New abstracts are
+                  The submission deadline has passed. New abstracts are
                   no longer being accepted.
                 </p>
                 <Link href="/abstracts/status" className="mt-6 inline-block">
