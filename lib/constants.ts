@@ -39,6 +39,7 @@ export const NAV_LINKS = [
   { label: "Venue", href: "/venue" },
   { label: "Registration", href: "/registration" },
   { label: "Abstracts", href: "/abstracts" },
+  { label: "Presentation Guidelines", href: "/guidelines" },
   { label: "Exhibition", href: "/exhibition" },
   { label: "Gallery", href: "/gallery" },
   { label: "WPD Post", href: "/wpd" },

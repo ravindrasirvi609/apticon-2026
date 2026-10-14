@@ -148,7 +148,7 @@ export default function Navbar() {
                   <button className="px-3 py-2 text-sm font-medium text-[var(--dark-text)]/70 hover:text-[var(--primary-800)] transition-colors rounded-lg">
                     More ▾
                   </button>
-                  <div className="absolute top-full right-0 mt-2 w-44 bg-white rounded-xl shadow-xl border border-[var(--accent-500)]/20 overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-[var(--accent-500)]/20 overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                     {SECONDARY_LINKS.map((link) => (
                       <Link
                         key={link.href}

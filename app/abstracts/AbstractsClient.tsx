@@ -283,6 +283,16 @@ export default function AbstractsClient() {
                 </li>
               ))}
             </ul>
+            <p className="mt-5 text-sm text-[var(--muted-text)]">
+              Preparing to present?{" "}
+              <Link
+                href="/guidelines"
+                className="font-semibold text-[var(--primary-800)] underline underline-offset-2 hover:text-[var(--primary-700)]"
+              >
+                View the Oral &amp; Poster Presentation Guidelines
+              </Link>
+              .
+            </p>
           </CardContent>
         </Card>
       </section>
