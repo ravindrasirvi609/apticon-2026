@@ -209,7 +209,7 @@ function buildAbstractSection(a: AbstractDoc, index: number): Paragraph[] {
 
 async function loadAbstracts(): Promise<AbstractDoc[]> {
   await connectDB();
-  const items = await Abstract.find({})
+  const items = await Abstract.find({ status: "accepted" })
     .sort({ submissionCode: 1, createdAt: 1 })
     .select(
       "submissionCode title coAuthors presentingAuthor institution abstract theme type",
