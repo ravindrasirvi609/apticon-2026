@@ -8,7 +8,6 @@ import {
   Upload,
   Loader2,
   FileText,
-  Search,
   Microscope,
   Users,
   Sparkles,
@@ -221,10 +220,10 @@ export default function AbstractsClient() {
             ))}
           </div>
           <div className="mt-6 flex items-center justify-center gap-3">
-            <Link href="/abstracts/status">
+            <Link href="/guidelines">
               <Button variant="outline">
-                <Search className="w-4 h-4" />
-                Check Submission Status
+                <FileText className="w-4 h-4" />
+                Presentation Guidelines
               </Button>
             </Link>
           </div>
