@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Trash2, Pencil } from "lucide-react";
+import { Search, Trash2, Pencil, ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import PageHeader from "@/components/console/PageHeader";
@@ -95,6 +95,7 @@ export default function RegistrationsList({
   const [paymentStatus, setPaymentStatus] = useState("");
   const [institution, setInstitution] = useState("");
   const [city, setCity] = useState("");
+  const [sort, setSort] = useState("-createdAt");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
   const [total, setTotal] = useState(0);
@@ -106,6 +107,40 @@ export default function RegistrationsList({
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
+  const sortLabel: Record<string, string> = {
+    fullName: "Name",
+    institution: "Institution",
+    category: "Category",
+    feeAmount: "Fee",
+    createdAt: "Submitted",
+  };
+
+  const toggleSort = (field: string) => {
+    setSort((current) => {
+      const currentField = current.replace(/^-/, "");
+      if (currentField !== field) return field === "createdAt" ? "-createdAt" : field;
+      return current.startsWith("-") ? field : `-${field}`;
+    });
+    setPage(1);
+  };
+
+  const sortButton = (field: string) => {
+    const active = sort.replace(/^-/, "") === field;
+    const descending = sort.startsWith("-");
+    const Icon = active ? (descending ? ArrowDown : ArrowUp) : ArrowUpDown;
+    return (
+      <button
+        type="button"
+        className="inline-flex items-center gap-1 hover:text-[var(--primary-800)]"
+        onClick={() => toggleSort(field)}
+        title={`Sort by ${sortLabel[field]}`}
+      >
+        {sortLabel[field]}
+        <Icon className="h-3.5 w-3.5" />
+      </button>
+    );
+  };
+
   useEffect(() => {
     setLoading(true);
     const params = new URLSearchParams();
@@ -115,6 +150,7 @@ export default function RegistrationsList({
     if (paymentStatus) params.set("paymentStatus", paymentStatus);
     if (institution) params.set("institution", institution);
     if (city) params.set("city", city);
+    if (sort) params.set("sort", sort);
     if (q) params.set("q", q);
     params.set("page", String(page));
     params.set("limit", String(limit));
@@ -131,7 +167,7 @@ export default function RegistrationsList({
         setTotalPages(d.totalPages ?? 1);
       })
       .finally(() => setLoading(false));
-  }, [q, status, state, category, paymentStatus, institution, city, page, limit]);
+  }, [q, status, state, category, paymentStatus, institution, city, sort, page, limit]);
 
   const updateFilter = (setter: (value: string) => void, value: string) => {
     setter(value);
@@ -164,6 +200,7 @@ export default function RegistrationsList({
     ...(paymentStatus ? { paymentStatus } : {}),
     ...(institution ? { institution } : {}),
     ...(city ? { city } : {}),
+    ...(sort ? { sort } : {}),
   }).toString();
 
   // The legacy manual-review chip only earns its space while such records still exist.
@@ -250,14 +287,14 @@ export default function RegistrationsList({
             <TableHeader>
               <TableRow>
                 <TableHead>Code</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Institution</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Fee</TableHead>
+                <TableHead>{sortButton("fullName")}</TableHead>
+                <TableHead>{sortButton("institution")}</TableHead>
+                <TableHead>{sortButton("category")}</TableHead>
+                <TableHead>{sortButton("feeAmount")}</TableHead>
                 <TableHead>Payment</TableHead>
                 <TableHead>Abstract?</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Submitted</TableHead>
+                <TableHead>{sortButton("createdAt")}</TableHead>
                 {(canDelete || canEdit) && <TableHead className="text-right">Actions</TableHead>}
               </TableRow>
             </TableHeader>

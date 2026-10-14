@@ -20,9 +20,10 @@ export const EVENT = {
   targetDate: new Date("2026-10-24T09:00:00+05:30"),
 };
 
-// Abstract submissions close at the end of 6 October 2026 (IST).
+// Abstract submissions are temporarily open for one hour (until 11 October 2026,
+// 12:35:44 PM IST), after which the public submission API closes automatically.
 export const ABSTRACT_SUBMISSION_DEADLINE = new Date(
-  "2026-10-06T23:59:59+05:30",
+  "2026-10-11T12:35:44+05:30",
 );
 
 export function isAbstractSubmissionOpen(now = new Date()) {
