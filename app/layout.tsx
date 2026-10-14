@@ -11,6 +11,7 @@ import AnnouncementBanner from "@/components/ui/AnnouncementBanner";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
 import BackToTop from "@/components/ui/BackToTop";
 import OpfBadge from "@/components/ui/OpfBadge";
+import AppStoreLinksPanel from "@/components/ui/AppStoreLinks";
 import { Toaster } from "@/components/ui/shadcn/sonner";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -124,6 +125,7 @@ export default function RootLayout({
           <BackToTop />
         </div>
         <OpfBadge />
+        <AppStoreLinksPanel />
         {/* Global toast notifications */}
         <Toaster />
       </body>
