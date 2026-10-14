@@ -10,10 +10,10 @@ export const PATRONS: CommitteeMember[] = [
   { name: "Prof. Sachchidanand Shukla", role: "Patron", designation: "Vice Chancellor", institution: "Pt. Ravishankar Shukla University", image: "/committee/brochure/patrons/sachchidanand-shukla.jpg" },
   { name: "Dr. Montu Kumar M. Patel", role: "Patron", designation: "President", institution: "Pharmacy Council of India", image: "/committee/brochure/patrons/montu-kumar-m-patel.jpg" },
   { name: "Prof. B. Suresh", role: "Patron", designation: "Pro Chancellor", institution: "JSS AHER", image: "/committee/brochure/patrons/b-suresh.jpg" },
-  { name: "Prof. Atul Kumar Nasa", role: "Patron", designation: "President", institution: "IPGA", image: "/committee/brochure/patrons/atul-kumar-nasa.jpg" },
+  { name: "Dr. Milind J. Umekar", role: "Patron", designation: "President", institution: "APTI", image: "/committee/brochure/patrons/milind-j-umekar.jpg" },
   { name: "Dr. T. V. Narayana", role: "Patron", designation: "Gen. Secretary", institution: "IPCA", image: "/committee/brochure/patrons/t-v-narayana.jpg" },
   { name: "Dr. R. N. Gupta", role: "Patron", designation: "President", institution: "IPA", image: "/committee/brochure/patrons/r-n-gupta.jpg" },
-  { name: "Dr. Milind J. Umekar", role: "Patron", designation: "President", institution: "APTI", image: "/committee/brochure/patrons/milind-j-umekar.jpg" },
+  { name: "Prof. Atul Kumar Nasa", role: "Patron", designation: "President", institution: "IPGA", image: "/committee/brochure/patrons/atul-kumar-nasa.jpg" },
 ];
 
 export const CO_PATRONS: CommitteeMember[] = [
