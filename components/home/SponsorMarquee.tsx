@@ -13,6 +13,10 @@ const CO_ASSOCIATES = [
   { name: "D Y Patil University, Navi Mumbai", logo: "/sponsors/dy-patil.png" },
   { name: "Shri Davara University", logo: "/sponsors/davara.png" },
   { name: "Sri Aurobindo Institute of Pharmacy", logo: "/sponsors/sri-aurobindo.png" },
+  {
+    name: "Bureau for Experiential Pharmacy Education Status Upliftment",
+    logo: "/sponsors/experiential-pharmacy-school-software.jpeg",
+  },
 ];
 
 const POWERED_BY = [
