@@ -14,7 +14,6 @@ import OpfBadge from "@/components/ui/OpfBadge";
 import AppStoreLinksPanel from "@/components/ui/AppStoreLinks";
 import { Toaster } from "@/components/ui/shadcn/sonner";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -117,7 +116,6 @@ export default function RootLayout({
         <main id="main-content" className="flex-1">
           {children}
           <Analytics />
-          <SpeedInsights />
         </main>
         <div className="site-chrome">
           <Footer />
