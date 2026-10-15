@@ -22,7 +22,7 @@ export const EVENT = {
 
 // Abstract submissions are open for 1 hour today from 2:00 PM to 3:00 PM IST.
 export const ABSTRACT_SUBMISSION_START = new Date("2026-10-15T14:00:00+05:30");
-export const ABSTRACT_SUBMISSION_DEADLINE = new Date("2026-10-15T15:00:00+05:30");
+export const ABSTRACT_SUBMISSION_DEADLINE = new Date("2026-10-15T17:00:00+05:30");
 
 export function isAbstractSubmissionOpen(now = new Date()) {
   return now >= ABSTRACT_SUBMISSION_START && now <= ABSTRACT_SUBMISSION_DEADLINE;
