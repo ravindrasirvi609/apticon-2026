@@ -10,6 +10,8 @@ import "@/models/User";
 import "@/models/Registration";
 import "@/models/MobileActionLog";
 import "@/models/DelegateLoginAttempt";
+import "@/models/DelegateQuestion";
+import "@/models/DelegateFeedback";
 import "@/models/AuditLog";
 import "@/models/Abstract";
 import "@/models/Review";
