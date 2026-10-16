@@ -13,3 +13,16 @@ export const delegateLoginSchema = z.object({
 });
 
 export type DelegateLoginInput = z.infer<typeof delegateLoginSchema>;
+
+export const delegateQuestionSchema = z.object({
+  text: z.string().trim().min(3).max(500),
+  isAnonymous: z.boolean().default(false),
+});
+
+export const delegateFeedbackSchema = z.object({
+  rating: z.number().int().min(1).max(5),
+  comment: z.string().trim().max(1000).default(""),
+});
+
+export type DelegateQuestionInput = z.infer<typeof delegateQuestionSchema>;
+export type DelegateFeedbackInput = z.infer<typeof delegateFeedbackSchema>;
