@@ -14,7 +14,7 @@ const MOBILE_API_PREFIX = "/api/mobile";
 
 function withCorsHeaders(response: NextResponse): NextResponse {
   response.headers.set("Access-Control-Allow-Origin", "*");
-  response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
   response.headers.set(
     "Access-Control-Allow-Headers",
     "Content-Type, Authorization",
