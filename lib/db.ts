@@ -9,6 +9,7 @@ import mongoose from "mongoose";
 import "@/models/User";
 import "@/models/Registration";
 import "@/models/MobileActionLog";
+import "@/models/DelegateLoginAttempt";
 import "@/models/AuditLog";
 import "@/models/Abstract";
 import "@/models/Review";
