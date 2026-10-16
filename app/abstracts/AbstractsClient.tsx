@@ -61,7 +61,7 @@ interface AbstractForm {
 
 const IMPORTANT_DATES = [
   { event: "Abstract Submission Opens", date: "10 August 2026", done: true },
-  { event: "Last Date for Submission", date: "11 October 2026, 12:35 PM IST", done: false },
+  { event: "Special Submission Window", date: "15 October 2026, 2:00 PM – 3:00 PM IST", done: false },
   { event: "Acceptance Notification", date: "10 October 2026", done: false },
   { event: "Revised Abstract Deadline", date: "18 October 2026", done: false },
   { event: "Conference Dates", date: "24–25 October 2026", done: false },
