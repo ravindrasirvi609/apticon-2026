@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Trash2, Pencil, ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { Search, Trash2, Pencil, ArrowDown, ArrowUp, ArrowUpDown, IdCard } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import PageHeader from "@/components/console/PageHeader";
@@ -216,11 +216,14 @@ export default function RegistrationsList({
         title={title}
         description={description}
         actions={
-          <ExportButtons
-            endpoint="/api/registrations/export"
-            query={exportQuery}
-            label="Registrations"
-          />
+          <>
+            {detailBase === "/admin/registrations" && (
+              <Link href="/admin/registrations/id-cards">
+                <Button variant="outline" size="sm"><IdCard className="mr-2 h-4 w-4" /> ID Cards</Button>
+              </Link>
+            )}
+            <ExportButtons endpoint="/api/registrations/export" query={exportQuery} label="Registrations" />
+          </>
         }
       />
 
