@@ -73,7 +73,7 @@ export default function BulkIdCards({ cards }: { cards: CardData[] }) {
               {/* Delegate details stay inside the white rounded panel. */}
               <div className="absolute left-[10%] right-[10%] top-[69%] h-[18%]">
                 <div className="absolute inset-x-0 text-center font-sans leading-[1.15] text-[#4b1725]">
-                  <div className="truncate text-[clamp(12px,2vw,22px)] font-extrabold">{card.fullName}</div>
+                  <div className="truncate text-[clamp(10px,1.6vw,18px)] font-extrabold">{card.fullName}</div>
                   <div className="truncate text-[clamp(8px,1.1vw,12px)]">{card.designation}</div>
                   <div className="mx-auto max-w-[82%] whitespace-normal break-words [overflow-wrap:anywhere] text-[clamp(8px,1.1vw,12px)] leading-tight line-clamp-2">
                     {card.institution}
