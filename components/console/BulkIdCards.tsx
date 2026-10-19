@@ -56,8 +56,8 @@ export default function BulkIdCards({ cards }: { cards: CardData[] }) {
       ) : (
         <div className="flex flex-col items-center gap-6">
           {cards.map((card) => (
-            <article key={card.registrationCode} className="id-card-sheet relative aspect-[1090/1557] w-full max-w-[760px] overflow-hidden bg-white shadow-lg print:max-w-none print:shadow-none">
-              <img src="/IDCARDAPTICON.png" alt="" className="absolute inset-0 h-full w-full" />
+            <article key={card.registrationCode} className="id-card-sheet relative h-[132mm] w-[92mm] shrink-0 overflow-hidden bg-white shadow-lg print:shadow-none">
+              <img src="/id card.jpg" alt="" className="absolute inset-0 h-full w-full" />
               {/* Photo, QR and registration code belong in the blank yellow section. */}
               <div className="absolute left-[18%] right-[18%] top-[48%] h-[15.5%]">
                 <div className="flex h-full items-start justify-center gap-[12%] pt-[2%]">
