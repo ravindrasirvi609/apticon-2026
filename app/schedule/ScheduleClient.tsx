@@ -74,9 +74,6 @@ export default function ScheduleClient() {
               </button>
             ))}
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--accent-500)]/30 text-xs font-semibold text-[var(--muted-text)] hover:border-[var(--accent-500)] hover:text-[var(--primary-800)] transition-colors">
-            <Download size={14} /> Program Book
-          </button>
         </div>
       </section>
 
