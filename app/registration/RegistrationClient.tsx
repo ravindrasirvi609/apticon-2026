@@ -7,7 +7,7 @@ import {
   QrCode,
   Search,
 } from "lucide-react";
-import { EVENT } from "@/lib/constants";
+import { EVENT, REGISTRATION_OPEN } from "@/lib/constants";
 
 const HOW_TO_REGISTER = [
   {
@@ -66,12 +66,12 @@ export default function RegistrationClient() {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <button
               type="button"
-              onClick={scrollToRegistrationForm}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2"
-              aria-label="Scroll to registration form"
+              onClick={REGISTRATION_OPEN ? scrollToRegistrationForm : undefined}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-sm font-semibold"
+              aria-label="Registrations are closed"
             >
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Registration Open
+              <span className="w-2 h-2 rounded-full bg-rose-500" />
+              Registrations Closed
             </button>
             <Link href="/registration/status">
               <Button variant="outline" size="sm">
@@ -192,11 +192,17 @@ export default function RegistrationClient() {
                 required.
               </p>
             </ScrollReveal>
-            <ScrollReveal>
-              <div className="rounded-2xl bg-white border border-[var(--accent-500)]/20 shadow-sm p-6 md:p-8">
-                <RegistrationForm />
+            {REGISTRATION_OPEN ? (
+              <ScrollReveal>
+                <div className="rounded-2xl bg-white border border-[var(--accent-500)]/20 shadow-sm p-6 md:p-8">
+                  <RegistrationForm />
+                </div>
+              </ScrollReveal>
+            ) : (
+              <div className="rounded-2xl bg-rose-50 border border-rose-200 p-6 md:p-8 text-center text-rose-800">
+                Registrations for APTICON 2026 are currently closed.
               </div>
-            </ScrollReveal>
+            )}
           </div>
         </div>
       </section>
