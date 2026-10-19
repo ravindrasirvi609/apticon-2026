@@ -14,10 +14,13 @@ import { rateLimit } from "@/lib/rate-limit";
 import { logAudit } from "@/lib/audit";
 import { verifyAptiMember } from "@/lib/apti-membership";
 import { APTI_MEMBER_CATEGORIES } from "@/lib/validators/registration";
+import { REGISTRATION_OPEN } from "@/lib/constants";
 
 // Creates the GroupRegistration and its Razorpay order. The amount is always derived
 // server-side from delegateCount + category, same discipline as the individual-order route.
 export async function POST(request: NextRequest) {
+  if (!REGISTRATION_OPEN)
+    return NextResponse.json({ error: "Registrations are currently closed." }, { status: 403 });
   const ip = getClientIp(request);
   const limit = rateLimit(`razorpay-group-order:${ip}`, 3, 60 * 60_000);
   if (!limit.ok)

@@ -15,9 +15,12 @@ import { rateLimit } from "@/lib/rate-limit";
 import { linkFromRegistration } from "@/lib/sync";
 import { logAudit } from "@/lib/audit";
 import { verifyAptiMember } from "@/lib/apti-membership";
+import { REGISTRATION_OPEN } from "@/lib/constants";
 
 // Creates the local registration and its Razorpay Order. The amount is always derived server-side.
 export async function POST(request: NextRequest) {
+  if (!REGISTRATION_OPEN)
+    return NextResponse.json({ error: "Registrations are currently closed." }, { status: 403 });
   const ip = getClientIp(request);
   const limit = rateLimit(`razorpay-order:${ip}`, 5, 60 * 60_000);
   if (!limit.ok)

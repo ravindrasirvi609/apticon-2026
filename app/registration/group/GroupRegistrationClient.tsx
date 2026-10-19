@@ -6,6 +6,7 @@ import CulturalDivider from "@/components/ui/CulturalDivider";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/shadcn/button";
 import GroupRegistrationForm from "@/components/registration/GroupRegistrationForm";
+import { REGISTRATION_OPEN } from "@/lib/constants";
 import {
   GROUP_MIN_DELEGATES,
 } from "@/lib/validators/group-registration";
@@ -60,11 +61,17 @@ export default function GroupRegistrationClient() {
                 required. Minimum {GROUP_MIN_DELEGATES} paid delegates per group.
               </p>
             </ScrollReveal>
-            <ScrollReveal>
-              <div className="rounded-2xl bg-white border border-[var(--accent-500)]/20 shadow-sm p-6 md:p-8">
-                <GroupRegistrationForm />
+            {REGISTRATION_OPEN ? (
+              <ScrollReveal>
+                <div className="rounded-2xl bg-white border border-[var(--accent-500)]/20 shadow-sm p-6 md:p-8">
+                  <GroupRegistrationForm />
+                </div>
+              </ScrollReveal>
+            ) : (
+              <div className="rounded-2xl bg-rose-50 border border-rose-200 p-6 md:p-8 text-center text-rose-800">
+                Group registrations for APTICON 2026 are currently closed.
               </div>
-            </ScrollReveal>
+            )}
           </div>
         </div>
       </section>
