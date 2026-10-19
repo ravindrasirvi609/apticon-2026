@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { getSessionFromCookies } from "@/lib/auth";
 import Registration from "@/models/Registration";
+import GroupRegistration from "@/models/GroupRegistration";
 import { csvResponse, excelResponse } from "@/lib/export";
 
 const headers = [
   "Registration Code",
+  "Registration Type",
+  "Group Code",
   "Name",
   "Designation",
   "Institution",
@@ -67,8 +70,19 @@ export async function GET(request: NextRequest) {
     ].map((field) => ({ [field]: { $regex: safe, $options: "i" } }));
   }
   const rows = await Registration.find(filter).sort(sort).lean();
+  const groupIds = rows
+    .map((row) => row.groupRegistration)
+    .filter((groupId): groupId is NonNullable<typeof groupId> => Boolean(groupId));
+  const groups = await GroupRegistration.find({ _id: { $in: groupIds } })
+    .select("groupCode")
+    .lean();
+  const groupCodes = new Map(
+    groups.map((group) => [String(group._id), group.groupCode]),
+  );
   const data = rows.map((r) => [
     r.registrationCode,
+    r.groupRegistration ? "Group" : "Individual",
+    r.groupRegistration ? groupCodes.get(String(r.groupRegistration)) ?? "" : "",
     r.fullName,
     r.designation,
     r.institution,
