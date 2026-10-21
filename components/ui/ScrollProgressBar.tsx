@@ -22,7 +22,7 @@ export default function ScrollProgressBar() {
   return (
     <div
       aria-hidden
-      className="fixed top-0 left-0 right-0 z-[150] h-[3px] bg-transparent pointer-events-none"
+      className="fixed top-0 left-0 right-0 z-[150] print:hidden h-[3px] bg-transparent pointer-events-none"
     >
       <div
         ref={barRef}

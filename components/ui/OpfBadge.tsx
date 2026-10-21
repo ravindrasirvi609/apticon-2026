@@ -1,7 +1,7 @@
 export default function OpfBadge() {
   return (
     <div
-      className="fixed bottom-5 left-5 z-40 flex w-28 flex-col items-center gap-1.5 text-center"
+      className="fixed bottom-5 left-5 z-40 flex print:hidden w-28 flex-col items-center gap-1.5 text-center"
       aria-label="Operant Pharmacy Federation"
     >
       <img
