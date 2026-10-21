@@ -56,7 +56,7 @@ export default function SessionCard({
           {session.title}
         </h3>
         {session.description && (
-          <p className="mt-1 text-xs text-[var(--muted-text)] leading-relaxed">
+          <p className="mt-1 text-xs text-[var(--muted-text)] leading-relaxed whitespace-pre-line">
             {session.description}
           </p>
         )}
