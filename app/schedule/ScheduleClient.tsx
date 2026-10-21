@@ -6,9 +6,24 @@ import CulturalDivider from "@/components/ui/CulturalDivider";
 import SessionCard from "@/components/schedule/SessionCard";
 import { SCHEDULE_DAY1, SCHEDULE_DAY2, SESSION_COLORS } from "@/lib/constants";
 import { staggerContainer, fadeUp } from "@/lib/animations";
-import { Download } from "lucide-react";
+import {
+  OralOnlineList,
+  EPosterList,
+} from "@/components/schedule/PresentationLists";
 
 const DAYS = [
+  {
+    key: "online-oral",
+    label: "Online Oral",
+    date: "21 Oct 2026",
+    sessions: null,
+  },
+  {
+    key: "e-poster",
+    label: "E-Poster",
+    date: "22 Oct 2026",
+    sessions: null,
+  },
   {
     key: "day1",
     label: "Day 1",
@@ -31,6 +46,9 @@ const LEGEND = Object.entries(SESSION_COLORS).map(([key, cls]) => ({
 export default function ScheduleClient() {
   const [activeDay, setActiveDay] = useState("day1");
   const currentDay = DAYS.find((d) => d.key === activeDay)!;
+  const conferenceDay = currentDay.sessions
+    ? { ...currentDay, sessions: currentDay.sessions }
+    : null;
 
   return (
     <div className="bg-[var(--surface-50)] min-h-screen">
@@ -57,7 +75,7 @@ export default function ScheduleClient() {
       {/* Day tabs */}
       <section className="sticky top-16 md:top-20 z-20 bg-[var(--surface-50)]/95 backdrop-blur-sm border-b border-[var(--accent-500)]/15 py-4">
         <div className="container-site flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             {DAYS.map((d) => (
               <button
                 key={d.key}
@@ -80,90 +98,94 @@ export default function ScheduleClient() {
       {/* Sessions */}
       <section className="py-14 md:py-20">
         <div className="container-site">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Timeline */}
-            <div className="lg:col-span-2">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeDay}
-                  initial="hidden"
-                  animate="visible"
-                  exit={{ opacity: 0, y: -10 }}
-                  variants={staggerContainer}
-                >
-                  {currentDay.sessions.map((session, i) => (
-                    <motion.div key={i} variants={fadeUp}>
-                      <SessionCard session={session} index={i} />
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Day summary */}
-              <div className="rounded-2xl bg-[var(--primary-800)] p-6 text-white">
-                <p className="text-xs font-bold tracking-widest uppercase text-[var(--accent-400)] mb-2">
-                  {currentDay.label}
-                </p>
-                <p className="font-display font-bold text-xl">
-                  {currentDay.date}
-                </p>
-                <p className="text-sm text-white/70 mt-1">
-                  {currentDay.sessions.length} sessions planned
-                </p>
-                <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5">
-                  {[
-                    "Inauguration",
-                    "Keynotes",
-                    "Scientific Sessions",
-                    "Workshops",
-                    "Networking",
-                  ].map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-center gap-2 text-xs text-white/70"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-500)]" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
+          {activeDay === "online-oral" && <OralOnlineList />}
+          {activeDay === "e-poster" && <EPosterList />}
+          {conferenceDay && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+              {/* Timeline */}
+              <div className="lg:col-span-2">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeDay}
+                    initial="hidden"
+                    animate="visible"
+                    exit={{ opacity: 0, y: -10 }}
+                    variants={staggerContainer}
+                  >
+                    {conferenceDay.sessions.map((session, i) => (
+                      <motion.div key={i} variants={fadeUp}>
+                        <SessionCard session={session} index={i} />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
-              {/* Legend */}
-              <div className="rounded-2xl bg-white border border-[var(--accent-500)]/15 p-5">
-                <p className="text-xs font-bold tracking-widest uppercase text-[var(--muted-text)] mb-4">
-                  Session Types
-                </p>
-                <div className="space-y-2">
-                  {LEGEND.map(({ key, cls }) => (
-                    <div key={key} className="flex items-center gap-3">
-                      <span
-                        className={`text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full ${cls}`}
+              {/* Sidebar */}
+              <div className="space-y-6">
+                {/* Day summary */}
+                <div className="rounded-2xl bg-[var(--primary-800)] p-6 text-white">
+                  <p className="text-xs font-bold tracking-widest uppercase text-[var(--accent-400)] mb-2">
+                    {currentDay.label}
+                  </p>
+                  <p className="font-display font-bold text-xl">
+                    {currentDay.date}
+                  </p>
+                  <p className="text-sm text-white/70 mt-1">
+                    {conferenceDay.sessions.length} sessions planned
+                  </p>
+                  <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5">
+                    {[
+                      "Inauguration",
+                      "Keynotes",
+                      "Scientific Sessions",
+                      "Workshops",
+                      "Networking",
+                    ].map((item) => (
+                      <div
+                        key={item}
+                        className="flex items-center gap-2 text-xs text-white/70"
                       >
-                        {key}
-                      </span>
-                    </div>
-                  ))}
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-500)]" />
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Legend */}
+                <div className="rounded-2xl bg-white border border-[var(--accent-500)]/15 p-5">
+                  <p className="text-xs font-bold tracking-widest uppercase text-[var(--muted-text)] mb-4">
+                    Session Types
+                  </p>
+                  <div className="space-y-2">
+                    {LEGEND.map(({ key, cls }) => (
+                      <div key={key} className="flex items-center gap-3">
+                        <span
+                          className={`text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full ${cls}`}
+                        >
+                          {key}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Venue reminder */}
+                <div className="rounded-2xl bg-[var(--surface-100)] border border-[var(--accent-500)]/15 p-5">
+                  <p className="text-xs font-bold tracking-widest uppercase text-[var(--accent-500)] mb-2">
+                    Venue
+                  </p>
+                  <p className="text-sm font-semibold text-[var(--dark-text)] leading-snug">
+                    Pt. Deendayal Upadhyay Auditorium
+                  </p>
+                  <p className="text-xs text-[var(--muted-text)] mt-1">
+                    G.E. Road, Raipur, C.G.
+                  </p>
                 </div>
               </div>
-
-              {/* Venue reminder */}
-              <div className="rounded-2xl bg-[var(--surface-100)] border border-[var(--accent-500)]/15 p-5">
-                <p className="text-xs font-bold tracking-widest uppercase text-[var(--accent-500)] mb-2">
-                  Venue
-                </p>
-                <p className="text-sm font-semibold text-[var(--dark-text)] leading-snug">
-                  Pt. Deendayal Upadhyay Auditorium
-                </p>
-                <p className="text-xs text-[var(--muted-text)] mt-1">
-                  G.E. Road, Raipur, C.G.
-                </p>
-              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
     </div>
