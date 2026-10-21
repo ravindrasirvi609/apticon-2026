@@ -28,13 +28,23 @@ export default function BulkIdCards({ cards }: { cards: CardData[] }) {
   };
 
   return (
-    <main className="min-h-screen bg-slate-100 p-4 md:p-8">
+    <main className="id-card-main min-h-screen bg-slate-100 p-4 md:p-8">
       <style>{`
-        @page { size: A4 portrait; margin: 0; }
+        @page { size: 92mm 132mm; margin: 0; }
         @media print {
-          body { background: white !important; }
+          html, body { margin: 0 !important; padding: 0 !important; background: white !important; width: 92mm; }
+          .id-card-main { padding: 0 !important; min-height: 0 !important; background: white !important; }
           .id-card-toolbar { display: none !important; }
-          .id-card-sheet { break-after: page; page-break-after: always; }
+          .id-card-list { display: block !important; gap: 0 !important; }
+          .id-card-sheet {
+            display: block;
+            margin: 0 !important;
+            box-shadow: none !important;
+            break-inside: avoid;
+            page-break-inside: avoid;
+            break-after: page;
+            page-break-after: always;
+          }
           .id-card-sheet:last-child { break-after: auto; page-break-after: auto; }
         }
       `}</style>
@@ -54,7 +64,7 @@ export default function BulkIdCards({ cards }: { cards: CardData[] }) {
           No confirmed registrations have an ID card yet.
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-6">
+        <div className="id-card-list flex flex-col items-center gap-6">
           {cards.map((card) => (
             <article key={card.registrationCode} className="id-card-sheet relative h-[132mm] w-[92mm] shrink-0 overflow-hidden bg-white shadow-lg print:shadow-none">
               <img src="/id card.jpg" alt="" className="absolute inset-0 h-full w-full" />
