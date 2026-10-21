@@ -158,6 +158,13 @@ export default function HeroSection() {
             />
           </Link>
           <Link
+            href="/schedule"
+            className="group inline-flex items-center justify-center gap-2 rounded-full bg-white/15 border border-white/40 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/25 hover:border-white/70 sm:text-base"
+          >
+            <Calendar size={17} className="shrink-0 text-[var(--accent-300)]" />
+            Presentation Schedule
+          </Link>
+          <Link
             href="/abstracts/status"
             className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/35 bg-white/10 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/20 sm:text-base"
           >
