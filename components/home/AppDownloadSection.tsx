@@ -51,7 +51,7 @@ export default function AppDownloadSection() {
           </div>
         </div>
 
-        <div className="mx-auto md:mx-0">
+        <div className="mx-auto md:mx-0 lg:mr-24">
           <div className="rounded-[2rem] border border-white/15 bg-white/5 p-3 shadow-2xl">
             <Image
               src="/apticon-icon.png"

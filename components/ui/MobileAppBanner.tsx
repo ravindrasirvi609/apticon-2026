@@ -120,7 +120,7 @@ export default function MobileAppBanner() {
             {!both && (
               <StoreBadge
                 store={platform === "ios" ? "apple" : "play"}
-                className="h-9"
+                className="h-8 min-[380px]:h-9"
               />
             )}
             <button
