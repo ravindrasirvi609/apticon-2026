@@ -4,6 +4,7 @@ import { getSessionFromCookies } from "@/lib/auth";
 import Registration from "@/models/Registration";
 import GroupRegistration from "@/models/GroupRegistration";
 import { csvResponse, excelResponse } from "@/lib/export";
+import { isSpotTier } from "@/lib/registration-fees";
 
 const headers = [
   "Registration Code",
@@ -19,6 +20,7 @@ const headers = [
   "Phone",
   "Category",
   "Fee Tier",
+  "Spot Registration",
   "Fee Amount",
   "Wants Abstract",
   "APTI Member ID",
@@ -47,6 +49,7 @@ export async function GET(request: NextRequest) {
   const category = url.searchParams.get("category");
   const institution = url.searchParams.get("institution");
   const city = url.searchParams.get("city");
+  const spot = url.searchParams.get("spot");
   const q = url.searchParams.get("q") ?? "";
   const sortParam = url.searchParams.get("sort") ?? "-createdAt";
   const allowedSorts = new Set(["-createdAt", "createdAt", "fullName", "-fullName", "institution", "-institution", "category", "-category", "-feeAmount", "feeAmount"]);
@@ -57,6 +60,8 @@ export async function GET(request: NextRequest) {
   if (category) filter.category = category;
   if (institution) filter.institution = institution;
   if (city) filter.city = city;
+  if (spot === "yes") filter.feeTier = "on_spot";
+  else if (spot === "no") filter.feeTier = { $ne: "on_spot" };
   if (q) {
     const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     filter.$or = [
@@ -93,6 +98,7 @@ export async function GET(request: NextRequest) {
     r.phone,
     r.category,
     r.feeTier,
+    isSpotTier(r.feeTier) ? "Yes" : "No",
     r.feeAmount,
     r.willSubmitAbstract ? "Yes" : "No",
     r.aptiMemberId,

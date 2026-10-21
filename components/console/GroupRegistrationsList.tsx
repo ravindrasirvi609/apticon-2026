@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/shadcn/table";
 import { Button } from "@/components/ui/shadcn/button";
 import { Badge } from "@/components/ui/shadcn/badge";
+import { isSpotTier } from "@/lib/registration-fees";
 
 interface GroupItem {
   _id: string;
@@ -185,6 +186,11 @@ export default function GroupRegistrationsList({
                       <div className="text-[10px] uppercase tracking-wider text-[var(--muted-text)]">
                         {g.feeTier.replace("_", " ")}
                       </div>
+                      {isSpotTier(g.feeTier) && (
+                        <Badge variant="gold" className="mt-1 text-[10px] uppercase tracking-wider">
+                          Spot
+                        </Badge>
+                      )}
                     </TableCell>
                     <TableCell>
                       <Badge

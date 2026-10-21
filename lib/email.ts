@@ -926,7 +926,7 @@ export function nudgeRegisterEmail(name: string, abstractCode: string) {
         },
         {
           type: "text",
-          html: `Early-bird rates end <b>15 September 2026</b>.`,
+          html: `Spot registration is now open — on-spot rates apply.`,
         },
         { type: "signoff" },
       ],

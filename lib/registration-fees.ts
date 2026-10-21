@@ -47,12 +47,19 @@ export const FEE_TABLE: Record<
 
 // Same dates as the public FeeTable UI copy
 const EARLY_BIRD_CUTOFF = new Date("2026-09-16T00:00:00+05:30"); // "Till 15 Sep" (inclusive of Sep 15)
-const ON_SPOT_START = new Date("2026-10-24T00:00:00+05:30"); // conference start
+// Spot registration (on-spot rates) opens on this date and runs through the convention.
+export const ON_SPOT_START = new Date("2026-10-21T00:00:00+05:30");
+export const ON_SPOT_START_LABEL = "21 October 2026";
 
 export function currentFeeTier(now: Date = new Date()): FeeTier {
   if (now < EARLY_BIRD_CUTOFF) return "early_bird";
   if (now < ON_SPOT_START) return "regular";
   return "on_spot";
+}
+
+/** A registration made at on-spot rates — what the admin consoles flag as a "Spot" registration. */
+export function isSpotTier(tier: string | undefined | null): boolean {
+  return tier === "on_spot";
 }
 
 export function currentFeeAmount(

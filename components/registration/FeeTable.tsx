@@ -51,12 +51,12 @@ const DATES = [
   },
   {
     label: "Regular Registration",
-    date: "16 Sep – 10 Oct 2026",
+    date: "16 Sep – 20 Oct 2026",
     color: "text-[var(--secondary-800)]",
   },
   {
-    label: "On-Spot Registration",
-    date: "24–25 October 2026",
+    label: "Spot Registration (Open Now)",
+    date: "From 21 October 2026",
     color: "text-[var(--primary-800)]",
   },
 ];
@@ -100,14 +100,14 @@ export default function FeeTable() {
                 Regular
                 <br />
                 <span className="text-[var(--accent-400)] normal-case text-[10px]">
-                  Sep – Oct 10
+                  16 Sep – 20 Oct
                 </span>
               </th>
               <th className="text-center px-4 py-4 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
-                On-Spot
+                Spot
                 <br />
                 <span className="text-[var(--accent-400)] normal-case text-[10px]">
-                  At Venue
+                  From 21 Oct
                 </span>
               </th>
             </tr>

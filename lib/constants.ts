@@ -24,9 +24,10 @@ export const EVENT = {
 export const ABSTRACT_SUBMISSION_START = new Date("2026-10-15T14:00:00+05:30");
 export const ABSTRACT_SUBMISSION_DEADLINE = new Date("2026-10-15T15:00:00+05:30");
 
-// Registrations are currently closed. Keep this shared by the public UI and
-// payment endpoints so the closure cannot be bypassed with a direct request.
-export const REGISTRATION_OPEN = false;
+// Registrations are open as spot registrations (on-spot rates, see ON_SPOT_START in
+// registration-fees.ts). Keep this shared by the public UI and payment endpoints so closing
+// registrations cannot be bypassed with a direct request.
+export const REGISTRATION_OPEN = true;
 
 export function isAbstractSubmissionOpen(now = new Date()) {
   return now >= ABSTRACT_SUBMISSION_START && now <= ABSTRACT_SUBMISSION_DEADLINE;
