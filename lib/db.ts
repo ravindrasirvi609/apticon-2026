@@ -19,6 +19,8 @@ import "@/models/PasswordReset";
 import "@/models/AptiMember";
 import "@/models/GroupRegistration";
 import "@/models/WpdPost";
+import "@/models/EmailCampaign";
+import "@/models/EmailRecipient";
 
 const MONGO_URI = process.env.MONGO_URI;
 

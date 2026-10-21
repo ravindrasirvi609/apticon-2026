@@ -26,7 +26,14 @@ interface AuditRow {
   createdAt: string;
 }
 
-const RESOURCE_TYPES = ["", "user", "abstract", "review", "auth"];
+const RESOURCE_TYPES = [
+  "",
+  "user",
+  "abstract",
+  "review",
+  "auth",
+  "email_campaign",
+];
 const ACTOR_ROLES = ["", "super_admin", "reviewer", "public", "system"];
 
 export default function AuditClient() {

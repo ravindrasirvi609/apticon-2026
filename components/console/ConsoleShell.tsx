@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   Layers,
   LogOut,
+  Mail,
   Menu,
   Settings,
   UserCheck,
@@ -37,7 +38,8 @@ export interface NavItem {
     | "settings"
     | "checkin"
     | "aptiMembers"
-    | "wpd";
+    | "wpd"
+    | "mail";
 }
 
 interface Props {
@@ -71,6 +73,7 @@ const NAV_ICONS = {
   checkin: UserCheck,
   aptiMembers: BadgeCheck,
   wpd: Newspaper,
+  mail: Mail,
 };
 
 export default function ConsoleShell({

@@ -61,6 +61,11 @@ export function buildPaymentProofKey(originalName: string): string {
   return `payment-proofs/${new Date().getUTCFullYear()}/${nanoid(16)}.${safeExt}`;
 }
 
+/** Bulk-email attachment. `ext` must already be validated against the allowed attachment types. */
+export function buildEmailAttachmentKey(ext: string): string {
+  return `email-attachments/${new Date().getUTCFullYear()}/${nanoid(16)}.${ext}`;
+}
+
 export function publicUrl(key: string): string {
   return `${PUBLIC_URL.replace(/\/$/, "")}/${key}`;
 }

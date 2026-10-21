@@ -20,7 +20,8 @@ interface AuditInput {
     | "auth"
     | "registration"
     | "group_registration"
-    | "apti_member";
+    | "apti_member"
+    | "email_campaign";
   resourceId?: string | null;
   details?: unknown;
   request?: NextRequest | Request;
