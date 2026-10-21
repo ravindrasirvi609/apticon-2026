@@ -7,33 +7,33 @@ import SessionCard from "@/components/schedule/SessionCard";
 import { SCHEDULE_DAY1, SCHEDULE_DAY2, SESSION_COLORS } from "@/lib/constants";
 import { staggerContainer, fadeUp } from "@/lib/animations";
 import {
-  OralOnlineList,
-  EPosterList,
+  OralScheduleList,
+  PosterScheduleList,
 } from "@/components/schedule/PresentationLists";
 
-const DAYS = [
+const TABS = [
   {
-    key: "online-oral",
-    label: "Online Oral",
-    date: "21 Oct 2026",
+    key: "oral-schedule",
+    label: "Oral Schedule",
+    sublabel: "Full Program",
     sessions: null,
   },
   {
-    key: "e-poster",
-    label: "E-Poster",
-    date: "22 Oct 2026",
+    key: "poster-schedule",
+    label: "Poster Schedule",
+    sublabel: "Day 1 & Day 2",
     sessions: null,
   },
   {
     key: "day1",
-    label: "Day 1",
-    date: "24 October 2026",
+    label: "Main Program — Day 1",
+    sublabel: "24 Oct 2026",
     sessions: SCHEDULE_DAY1,
   },
   {
     key: "day2",
-    label: "Day 2",
-    date: "25 October 2026",
+    label: "Main Program — Day 2",
+    sublabel: "25 Oct 2026",
     sessions: SCHEDULE_DAY2,
   },
 ];
@@ -44,69 +44,67 @@ const LEGEND = Object.entries(SESSION_COLORS).map(([key, cls]) => ({
 }));
 
 export default function ScheduleClient() {
-  const [activeDay, setActiveDay] = useState("day1");
-  const currentDay = DAYS.find((d) => d.key === activeDay)!;
-  const conferenceDay = currentDay.sessions
-    ? { ...currentDay, sessions: currentDay.sessions }
+  const [activeTab, setActiveTab] = useState("oral-schedule");
+  const currentTab = TABS.find((t) => t.key === activeTab)!;
+  const conferenceDay = currentTab.sessions
+    ? { ...currentTab, sessions: currentTab.sessions }
     : null;
 
   return (
     <div className="bg-[var(--surface-50)] min-h-screen">
       {/* Hero */}
-      <section className="relative py-24 md:py-28 overflow-hidden">
+      <section className="relative py-20 md:py-24 overflow-hidden bg-gradient-to-b from-[var(--surface-100)] to-[var(--surface-50)]">
         <div
           className="absolute inset-0 tribal-pattern-bg opacity-30"
           aria-hidden
         />
         <div className="container-site relative z-10 text-center">
-          <GoldenBadge>Program</GoldenBadge>
+          <GoldenBadge>Scientific Program</GoldenBadge>
           <h1 className="mt-6 font-display font-black text-4xl sm:text-5xl md:text-6xl text-[var(--dark-text)] leading-tight">
-            Conference <span className="text-gradient-primary">Schedule</span>
+            Convention & Presentation <span className="text-gradient-primary">Schedule</span>
           </h1>
-          <p className="mt-4 text-[var(--muted-text)] max-w-xl mx-auto">
-            Two days of keynotes, scientific sessions, workshops and cultural
-            experiences in the heart of Raipur.
+          <p className="mt-4 text-[var(--muted-text)] max-w-2xl mx-auto text-base sm:text-lg">
+            Complete schedule for Oral Presentations, Poster Presentations, Keynotes, Workshops and Plenary Sessions at APTICON 2026 Raipur.
           </p>
         </div>
       </section>
 
       <CulturalDivider variant="bastar" className="opacity-40" />
 
-      {/* Day tabs */}
-      <section className="sticky top-16 md:top-20 z-20 bg-[var(--surface-50)]/95 backdrop-blur-sm border-b border-[var(--accent-500)]/15 py-4">
-        <div className="container-site flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex flex-wrap gap-3">
-            {DAYS.map((d) => (
-              <button
-                key={d.key}
-                onClick={() => setActiveDay(d.key)}
-                className={`px-6 py-2.5 rounded-full font-semibold text-sm transition-all duration-200
-                  ${
-                    activeDay === d.key
-                      ? "bg-[var(--primary-800)] text-white shadow-md"
-                      : "bg-white border border-[var(--accent-500)]/25 text-[var(--muted-text)] hover:text-[var(--primary-800)] hover:border-[var(--accent-500)]/60"
-                  }`}
-              >
-                <span className="hidden sm:inline">{d.label} — </span>
-                {d.date}
-              </button>
-            ))}
-          </div>
+      {/* Tabs bar */}
+      <section className="sticky top-16 md:top-20 z-20 bg-[var(--surface-50)]/95 backdrop-blur-md border-b border-[var(--accent-500)]/15 py-3.5 shadow-sm">
+        <div className="container-site flex items-center justify-center sm:justify-start gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-1">
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-5 py-2.5 rounded-full font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-200 shrink-0
+                ${
+                  activeTab === tab.key
+                    ? "bg-[var(--primary-800)] text-white shadow-md scale-[1.02]"
+                    : "bg-white border border-[var(--accent-500)]/25 text-[var(--muted-text)] hover:text-[var(--primary-800)] hover:border-[var(--accent-500)]/60"
+                }`}
+            >
+              <span>{tab.label}</span>
+              <span className="opacity-70 font-normal text-[11px] ml-1.5">({tab.sublabel})</span>
+            </button>
+          ))}
         </div>
       </section>
 
-      {/* Sessions */}
-      <section className="py-14 md:py-20">
+      {/* Main Content */}
+      <section className="py-10 md:py-16">
         <div className="container-site">
-          {activeDay === "online-oral" && <OralOnlineList />}
-          {activeDay === "e-poster" && <EPosterList />}
+          {activeTab === "oral-schedule" && <OralScheduleList />}
+          {activeTab === "poster-schedule" && <PosterScheduleList />}
+
           {conferenceDay && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
               {/* Timeline */}
               <div className="lg:col-span-2">
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={activeDay}
+                    key={activeTab}
                     initial="hidden"
                     animate="visible"
                     exit={{ opacity: 0, y: -10 }}
@@ -123,13 +121,13 @@ export default function ScheduleClient() {
 
               {/* Sidebar */}
               <div className="space-y-6">
-                {/* Day summary */}
+                {/* Summary */}
                 <div className="rounded-2xl bg-[var(--primary-800)] p-6 text-white">
                   <p className="text-xs font-bold tracking-widest uppercase text-[var(--accent-400)] mb-2">
-                    {currentDay.label}
+                    {currentTab.label}
                   </p>
                   <p className="font-display font-bold text-xl">
-                    {currentDay.date}
+                    {currentTab.sublabel}
                   </p>
                   <p className="text-sm text-white/70 mt-1">
                     {conferenceDay.sessions.length} sessions planned
