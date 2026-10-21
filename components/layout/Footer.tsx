@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Mail, MapPin, Calendar } from "lucide-react";
 import { NAV_LINKS, EVENT } from "@/lib/constants";
 import CulturalDivider from "@/components/ui/CulturalDivider";
-import { AppStoreLinks } from "@/components/ui/AppStoreLinks";
+import { AppStoreLinks, APP_NAME } from "@/components/ui/AppStoreLinks";
 
 const QUICK_LINKS = NAV_LINKS.slice(0, 6);
 const INFO_LINKS = NAV_LINKS.slice(6);
@@ -59,7 +59,7 @@ export default function Footer() {
             </p>
             <div className="mt-6">
               <p className="mb-3 text-xs font-bold uppercase tracking-widest text-[var(--accent-500)]">
-                Download the APTICON App
+                Download the {APP_NAME}
               </p>
               <AppStoreLinks compact />
             </div>

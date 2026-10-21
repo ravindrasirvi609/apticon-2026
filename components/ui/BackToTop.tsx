@@ -26,7 +26,7 @@ export default function BackToTop() {
           transition={{ type: "spring", damping: 20, stiffness: 300 }}
           onClick={scrollTop}
           aria-label="Back to top"
-          className="fixed bottom-6 right-6 z-50 print:hidden w-12 h-12 rounded-full bg-[var(--primary-800)] text-white shadow-lg flex items-center justify-center hover:bg-[var(--primary-700)] hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)] focus:ring-offset-2 group"
+          className="back-to-top fixed bottom-6 right-6 z-50 print:hidden w-12 h-12 rounded-full bg-[var(--primary-800)] text-white shadow-lg flex items-center justify-center hover:bg-[var(--primary-700)] hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent-400)] focus:ring-offset-2 group"
         >
           {/* Pulse ring */}
           <span

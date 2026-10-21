@@ -12,6 +12,7 @@ import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
 import BackToTop from "@/components/ui/BackToTop";
 import OpfBadge from "@/components/ui/OpfBadge";
 import AppStoreLinksPanel from "@/components/ui/AppStoreLinks";
+import MobileAppBanner from "@/components/ui/MobileAppBanner";
 import { Toaster } from "@/components/ui/shadcn/sonner";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -121,6 +122,8 @@ export default function RootLayout({
           <Footer />
           {/* Floating back-to-top */}
           <BackToTop />
+          {/* Phones: "Download the APTICON Delegates App" bar */}
+          <MobileAppBanner />
         </div>
         <OpfBadge />
         <AppStoreLinksPanel />
