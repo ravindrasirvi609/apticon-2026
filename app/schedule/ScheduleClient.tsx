@@ -13,18 +13,6 @@ import {
 
 const TABS = [
   {
-    key: "oral-schedule",
-    label: "Oral Schedule",
-    sublabel: "Full Program",
-    sessions: null,
-  },
-  {
-    key: "poster-schedule",
-    label: "Poster Schedule",
-    sublabel: "Day 1 & Day 2",
-    sessions: null,
-  },
-  {
     key: "day1",
     label: "Main Program — Day 1",
     sublabel: "24 Oct 2026",
@@ -36,6 +24,18 @@ const TABS = [
     sublabel: "25 Oct 2026",
     sessions: SCHEDULE_DAY2,
   },
+  {
+    key: "poster-schedule",
+    label: "Poster Schedule",
+    sublabel: "Day 1 & Day 2",
+    sessions: null,
+  },
+  {
+    key: "oral-schedule",
+    label: "Oral Schedule",
+    sublabel: "Full Program",
+    sessions: null,
+  },
 ];
 
 const LEGEND = Object.entries(SESSION_COLORS).map(([key, cls]) => ({
@@ -44,7 +44,7 @@ const LEGEND = Object.entries(SESSION_COLORS).map(([key, cls]) => ({
 }));
 
 export default function ScheduleClient() {
-  const [activeTab, setActiveTab] = useState("oral-schedule");
+  const [activeTab, setActiveTab] = useState("day1");
   const currentTab = TABS.find((t) => t.key === activeTab)!;
   const conferenceDay = currentTab.sessions
     ? { ...currentTab, sessions: currentTab.sessions }
