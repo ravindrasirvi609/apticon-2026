@@ -5,7 +5,7 @@ import { APP_NAME, AppStoreLinks } from "@/components/ui/AppStoreLinks";
 const FEATURES = [
   { icon: CalendarDays, text: "Browse the session schedule on the go" },
   { icon: MessageCircleQuestion, text: "Send questions to speakers during sessions" },
-  { icon: Star, text: "Share feedback on the sessions you attend" },
+  { icon: Star, text: "Rate the sessions you attend" },
 ];
 
 /** Home-page call to action for the delegate app — the one place phones always see it in full. */
