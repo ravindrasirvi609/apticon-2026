@@ -48,6 +48,7 @@ export const NAV_LINKS = [
   { label: "Gallery", href: "/gallery" },
   { label: "WPD Post", href: "/wpd" },
   { label: "Contact", href: "/contact" },
+  { label: "Feedback & Certificate", href: "/feedback" },
 ];
 
 export const COMMITTEE_SUBLINKS = [

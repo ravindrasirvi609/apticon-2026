@@ -13,6 +13,7 @@ import {
   LogOut,
   Mail,
   Menu,
+  MessageSquare,
   Settings,
   UserCheck,
   Users,
@@ -39,7 +40,8 @@ export interface NavItem {
     | "checkin"
     | "aptiMembers"
     | "wpd"
-    | "mail";
+    | "mail"
+    | "feedback";
 }
 
 interface Props {
@@ -74,6 +76,7 @@ const NAV_ICONS = {
   aptiMembers: BadgeCheck,
   wpd: Newspaper,
   mail: Mail,
+  feedback: MessageSquare,
 };
 
 export default function ConsoleShell({

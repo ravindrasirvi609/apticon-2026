@@ -21,6 +21,7 @@ import "@/models/GroupRegistration";
 import "@/models/WpdPost";
 import "@/models/EmailCampaign";
 import "@/models/EmailRecipient";
+import "@/models/EventFeedback";
 
 const MONGO_URI = process.env.MONGO_URI;
 
