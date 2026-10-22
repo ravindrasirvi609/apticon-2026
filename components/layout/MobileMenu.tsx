@@ -2,7 +2,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ChevronDown, X } from "lucide-react";
-import { COMMITTEE_SUBLINKS, NAV_LINKS } from "@/lib/constants";
+import { COMMITTEE_SUBLINKS, FEEDBACK_NAV_LINK, NAV_LINKS } from "@/lib/constants";
+import { useFeedbackLive } from "@/lib/use-feedback-live";
 import { AppStoreLinks, APP_NAME } from "@/components/ui/AppStoreLinks";
 import { mobileMenuVariants, staggerContainer, fadeUp } from "@/lib/animations";
 
@@ -14,6 +15,8 @@ interface Props {
 
 export default function MobileMenu({ isOpen, onClose, pathname }: Props) {
   const committeeActive = pathname === "/committee";
+  const feedbackLive = useFeedbackLive();
+  const links = feedbackLive ? [...NAV_LINKS, FEEDBACK_NAV_LINK] : NAV_LINKS;
   return (
     <AnimatePresence>
       {isOpen && (
@@ -57,7 +60,7 @@ export default function MobileMenu({ isOpen, onClose, pathname }: Props) {
               animate="visible"
               className="flex-1 overflow-y-auto py-6 px-4 space-y-1"
             >
-              {NAV_LINKS.map((link) => {
+              {links.map((link) => {
                 const active = pathname === link.href;
                 if (link.href === "/committee") {
                   return (

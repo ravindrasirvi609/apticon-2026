@@ -48,8 +48,14 @@ export const NAV_LINKS = [
   { label: "Gallery", href: "/gallery" },
   { label: "WPD Post", href: "/wpd" },
   { label: "Contact", href: "/contact" },
-  { label: "Feedback & Certificate", href: "/feedback" },
 ];
+
+// Not in NAV_LINKS on purpose: nothing about the post-event feedback form is shown on the public
+// site until it goes live. The menus append this link via useFeedbackLive() once it does.
+export const FEEDBACK_NAV_LINK = {
+  label: "Feedback & Certificate",
+  href: "/feedback",
+};
 
 export const COMMITTEE_SUBLINKS = [
   { label: "Patrons", href: "/committee#patrons" },

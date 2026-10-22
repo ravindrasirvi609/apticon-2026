@@ -1,8 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { format } from "date-fns";
-import { Clock, Loader2, Search, Send } from "lucide-react";
+import { Loader2, Search, Send } from "lucide-react";
 import { toast } from "sonner";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import { Button } from "@/components/ui/shadcn/button";
@@ -28,12 +27,6 @@ import {
 import CertificateStep from "./CertificateStep";
 import RatingField from "./RatingField";
 
-interface Props {
-  initiallyOpen: boolean;
-  /** ISO timestamp the form goes live. */
-  opensAt: string;
-}
-
 type Step = "identify" | "form" | "certificate";
 
 interface Delegate {
@@ -42,27 +35,7 @@ interface Delegate {
   institution: string;
 }
 
-function countdown(ms: number) {
-  const total = Math.max(0, Math.floor(ms / 1000));
-  return {
-    days: Math.floor(total / 86400),
-    hours: Math.floor((total % 86400) / 3600),
-    minutes: Math.floor((total % 3600) / 60),
-    seconds: total % 60,
-  };
-}
-
-export default function FeedbackClient({ initiallyOpen, opensAt }: Props) {
-  const opensAtMs = new Date(opensAt).getTime();
-  // Tick only while waiting, so the page flips to the form by itself when 12:00 arrives.
-  const [now, setNow] = useState(() => Date.now());
-  const open = initiallyOpen || now >= opensAtMs;
-  useEffect(() => {
-    if (open) return;
-    const t = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(t);
-  }, [open]);
-
+export default function FeedbackClient() {
   const [step, setStep] = useState<Step>("identify");
   const [code, setCode] = useState("");
   const [email, setEmail] = useState("");
@@ -143,8 +116,6 @@ export default function FeedbackClient({ initiallyOpen, opensAt }: Props) {
     }
   }
 
-  const cd = countdown(opensAtMs - now);
-
   return (
     <div className="min-h-[80vh] px-4 py-16">
       <div className="mx-auto mb-8 max-w-2xl text-center">
@@ -157,47 +128,8 @@ export default function FeedbackClient({ initiallyOpen, opensAt }: Props) {
         </p>
       </div>
 
-      {/* ── Not live yet ── */}
-      {!open && (
-        <Card className="mx-auto max-w-2xl text-center">
-          <CardContent className="pt-6">
-            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-700">
-              <Clock size={28} />
-            </div>
-            <h2 className="font-display text-xl font-bold text-[var(--primary-800)]">
-              The feedback form opens on the last day of the convention
-            </h2>
-            <p className="mt-2 text-sm text-[var(--muted-text)]">
-              {format(new Date(opensAt), "EEEE, d MMMM yyyy 'at' h:mm a")} IST
-            </p>
-            <div className="mt-6 grid grid-cols-4 gap-3">
-              {(
-                [
-                  ["Days", cd.days],
-                  ["Hours", cd.hours],
-                  ["Minutes", cd.minutes],
-                  ["Seconds", cd.seconds],
-                ] as const
-              ).map(([label, value]) => (
-                <div key={label} className="rounded-xl bg-[var(--surface-100)] py-3">
-                  <div className="font-display text-3xl font-black text-[var(--primary-800)] tabular-nums">
-                    {String(value).padStart(2, "0")}
-                  </div>
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-text)]">
-                    {label}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="mt-6 text-sm text-[var(--muted-text)]">
-              Keep your registration code and registered email handy.
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
       {/* ── Step 1: identify ── */}
-      {open && step === "identify" && (
+      {step === "identify" && (
         <Card className="mx-auto max-w-2xl">
           <CardHeader>
             <CardTitle>Find your registration</CardTitle>
@@ -254,7 +186,7 @@ export default function FeedbackClient({ initiallyOpen, opensAt }: Props) {
       )}
 
       {/* ── Step 2: the form ── */}
-      {open && step === "form" && delegate && (
+      {step === "form" && delegate && (
         <form onSubmit={submit} className="mx-auto max-w-3xl space-y-6" noValidate>
           <Card>
             <CardContent className="flex flex-wrap items-center justify-between gap-2 pt-6 text-sm">
@@ -363,7 +295,7 @@ export default function FeedbackClient({ initiallyOpen, opensAt }: Props) {
       )}
 
       {/* ── Step 3: certificate ── */}
-      {open && step === "certificate" && delegate && (
+      {step === "certificate" && delegate && (
         <CertificateStep
           code={code}
           email={email}

@@ -35,10 +35,7 @@ export function isEventFeedbackOpen(now: Date = new Date()): boolean {
 
 export function assertEventFeedbackOpen(): void {
   if (!isEventFeedbackOpen())
-    throw new FeedbackAccessError(
-      "The feedback form opens on 25 October 2026 at 12:00 PM IST.",
-      403,
-    );
+    throw new FeedbackAccessError("The feedback form is not available yet.", 403);
 }
 
 /** Code and email are guessable-ish credentials, so cap attempts per IP. */
