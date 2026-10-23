@@ -5,7 +5,6 @@ import Registration from "@/models/Registration";
 import { requireRole, authErrorResponse } from "@/lib/auth";
 import { generateRegistrationCode } from "@/lib/registration-code";
 import { registrationApprovedEmail, sendMail } from "@/lib/email";
-import { sendWhatsAppNotification } from "@/lib/whatsapp";
 import { logAudit } from "@/lib/audit";
 
 export async function POST(

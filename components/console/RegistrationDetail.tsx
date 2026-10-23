@@ -20,6 +20,7 @@ import { format } from "date-fns";
 import PageHeader from "@/components/console/PageHeader";
 import RegistrationStatusBadge from "@/components/console/RegistrationStatusBadge";
 import StatusBadge from "@/components/console/StatusBadge";
+import { isSpotTier } from "@/lib/registration-fees";
 import DelegatePhoto from "@/components/ui/DelegatePhoto";
 import { Button } from "@/components/ui/shadcn/button";
 import {
@@ -304,6 +305,11 @@ export default function RegistrationDetail({
                 label="Fee"
                 value={`₹${r.feeAmount.toLocaleString("en-IN")} (${r.feeTier.replace("_", " ")})`}
               />
+              {isSpotTier(r.feeTier) && (
+                <Badge variant="gold" className="uppercase tracking-wider">
+                  Spot registration
+                </Badge>
+              )}
               <Field
                 label="Submitted"
                 value={format(new Date(r.createdAt), "d MMM yyyy, HH:mm")}

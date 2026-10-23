@@ -2,7 +2,6 @@ import { NextResponse, type NextRequest } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import GroupRegistration from "@/models/GroupRegistration";
-import Registration from "@/models/Registration";
 import { getSessionFromCookies } from "@/lib/auth";
 
 export async function GET(
@@ -23,14 +22,5 @@ export async function GET(
   const group = await GroupRegistration.findById(id).lean();
   if (!group) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Older approved groups can have the registrations created successfully while
-  // `createdRegistrations` was not persisted. Recover those links from the reverse
-  // reference stored on each registration.
-  let createdRegistrations = group.createdRegistrations ?? [];
-  if (createdRegistrations.length === 0 && group.status === "approved") {
-    const linked = await Registration.find({ groupRegistration: group._id }).select("_id").lean();
-    createdRegistrations = linked.map((registration) => registration._id);
-  }
-
-  return NextResponse.json({ group: { ...group, createdRegistrations } });
+  return NextResponse.json({ group });
 }

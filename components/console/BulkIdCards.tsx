@@ -28,13 +28,23 @@ export default function BulkIdCards({ cards }: { cards: CardData[] }) {
   };
 
   return (
-    <main className="min-h-screen bg-slate-100 p-4 md:p-8">
+    <main className="id-card-main min-h-screen bg-slate-100 p-4 md:p-8">
       <style>{`
-        @page { size: A4 portrait; margin: 0; }
+        @page { size: 92mm 132mm; margin: 0; }
         @media print {
-          body { background: white !important; }
+          html, body { margin: 0 !important; padding: 0 !important; background: white !important; width: 92mm; }
+          .id-card-main { padding: 0 !important; min-height: 0 !important; background: white !important; }
           .id-card-toolbar { display: none !important; }
-          .id-card-sheet { break-after: page; page-break-after: always; }
+          .id-card-list { display: block !important; gap: 0 !important; }
+          .id-card-sheet {
+            display: block;
+            margin: 0 !important;
+            box-shadow: none !important;
+            break-inside: avoid;
+            page-break-inside: avoid;
+            break-after: page;
+            page-break-after: always;
+          }
           .id-card-sheet:last-child { break-after: auto; page-break-after: auto; }
         }
       `}</style>
@@ -54,10 +64,10 @@ export default function BulkIdCards({ cards }: { cards: CardData[] }) {
           No confirmed registrations have an ID card yet.
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-6">
+        <div className="id-card-list flex flex-col items-center gap-6">
           {cards.map((card) => (
-            <article key={card.registrationCode} className="id-card-sheet relative aspect-[1090/1557] w-full max-w-[760px] overflow-hidden bg-white shadow-lg print:max-w-none print:shadow-none">
-              <img src="/IDCARDAPTICON.png" alt="" className="absolute inset-0 h-full w-full" />
+            <article key={card.registrationCode} className="id-card-sheet relative h-[132mm] w-[92mm] shrink-0 overflow-hidden bg-white shadow-lg print:shadow-none">
+              <img src="/id card.jpg" alt="" className="absolute inset-0 h-full w-full" />
               {/* Photo, QR and registration code belong in the blank yellow section. */}
               <div className="absolute left-[18%] right-[18%] top-[48%] h-[15.5%]">
                 <div className="flex h-full items-start justify-center gap-[12%] pt-[2%]">
@@ -73,12 +83,12 @@ export default function BulkIdCards({ cards }: { cards: CardData[] }) {
               {/* Delegate details stay inside the white rounded panel. */}
               <div className="absolute left-[10%] right-[10%] top-[69%] h-[18%]">
                 <div className="absolute inset-x-0 text-center font-sans leading-[1.15] text-[#4b1725]">
-                  <div className="truncate text-[clamp(17px,3.1vw,34px)] font-extrabold">{card.fullName}</div>
-                  <div className="truncate text-[clamp(13px,2.1vw,24px)]">{card.designation}</div>
-                  <div className="mx-auto max-w-[82%] whitespace-normal break-words [overflow-wrap:anywhere] text-[clamp(13px,2.1vw,24px)] leading-tight line-clamp-2">
+                  <div className="truncate text-[clamp(10px,1.6vw,18px)] font-extrabold">{card.fullName}</div>
+                  <div className="truncate text-[clamp(8px,1.1vw,12px)]">{card.designation}</div>
+                  <div className="mx-auto max-w-[82%] whitespace-normal break-words [overflow-wrap:anywhere] text-[clamp(8px,1.1vw,12px)] leading-tight line-clamp-2">
                     {card.institution}
                   </div>
-                  <div className="truncate text-[clamp(12px,1.9vw,21px)] font-semibold uppercase tracking-wide">{card.category}</div>
+                  <div className="truncate text-[clamp(7px,1vw,10px)] font-semibold uppercase tracking-wide">{card.category}</div>
                 </div>
               </div>
             </article>

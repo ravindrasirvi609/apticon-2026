@@ -5,17 +5,22 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown, Menu } from "lucide-react";
-import { COMMITTEE_SUBLINKS, NAV_LINKS } from "@/lib/constants";
+import { COMMITTEE_SUBLINKS, FEEDBACK_NAV_LINK, NAV_LINKS } from "@/lib/constants";
+import { useFeedbackLive } from "@/lib/use-feedback-live";
 import MobileMenu from "./MobileMenu";
 
 const PRIMARY_LINKS = NAV_LINKS.slice(0, 7);
-const SECONDARY_LINKS = NAV_LINKS.slice(7);
+const BASE_SECONDARY_LINKS = NAV_LINKS.slice(7);
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [committeeMenuOpen, setCommitteeMenuOpen] = useState(false);
   const pathname = usePathname();
+  const feedbackLive = useFeedbackLive();
+  const SECONDARY_LINKS = feedbackLive
+    ? [...BASE_SECONDARY_LINKS, FEEDBACK_NAV_LINK]
+    : BASE_SECONDARY_LINKS;
   const { scrollY } = useScroll();
 
   const navBg = useTransform(

@@ -64,15 +64,25 @@ export default function RegistrationClient() {
             pharmaceutical education convention.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <button
-              type="button"
-              onClick={REGISTRATION_OPEN ? scrollToRegistrationForm : undefined}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-sm font-semibold"
-              aria-label="Registrations are closed"
-            >
-              <span className="w-2 h-2 rounded-full bg-rose-500" />
-              Registrations Closed
-            </button>
+            {REGISTRATION_OPEN ? (
+              <button
+                type="button"
+                onClick={scrollToRegistrationForm}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold hover:bg-emerald-100 transition-colors"
+                aria-label="Spot registration is open — go to the registration form"
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Spot Registration Open
+              </button>
+            ) : (
+              <span
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-sm font-semibold"
+                role="status"
+              >
+                <span className="w-2 h-2 rounded-full bg-rose-500" />
+                Registrations Closed
+              </span>
+            )}
             <Link href="/registration/status">
               <Button variant="outline" size="sm">
                 <Search className="w-4 h-4" />

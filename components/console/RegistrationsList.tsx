@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/shadcn/alert-dialog";
 import ExportButtons from "@/components/console/ExportButtons";
 import EditRegistrationDialog from "@/components/console/EditRegistrationDialog";
+import { isSpotTier } from "@/lib/registration-fees";
 
 interface RegItem {
   _id: string;
@@ -95,6 +96,7 @@ export default function RegistrationsList({
   const [paymentStatus, setPaymentStatus] = useState("");
   const [institution, setInstitution] = useState("");
   const [city, setCity] = useState("");
+  const [spot, setSpot] = useState("");
   const [sort, setSort] = useState("-createdAt");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
@@ -150,6 +152,7 @@ export default function RegistrationsList({
     if (paymentStatus) params.set("paymentStatus", paymentStatus);
     if (institution) params.set("institution", institution);
     if (city) params.set("city", city);
+    if (spot) params.set("spot", spot);
     if (sort) params.set("sort", sort);
     if (q) params.set("q", q);
     params.set("page", String(page));
@@ -167,7 +170,7 @@ export default function RegistrationsList({
         setTotalPages(d.totalPages ?? 1);
       })
       .finally(() => setLoading(false));
-  }, [q, status, state, category, paymentStatus, institution, city, sort, page, limit]);
+  }, [q, status, state, category, paymentStatus, institution, city, spot, sort, page, limit]);
 
   const updateFilter = (setter: (value: string) => void, value: string) => {
     setter(value);
@@ -200,6 +203,7 @@ export default function RegistrationsList({
     ...(paymentStatus ? { paymentStatus } : {}),
     ...(institution ? { institution } : {}),
     ...(city ? { city } : {}),
+    ...(spot ? { spot } : {}),
     ...(sort ? { sort } : {}),
   }).toString();
 
@@ -276,7 +280,12 @@ export default function RegistrationsList({
               <option value="">All cities</option>
               {cities.map((name) => <option key={name} value={name}>{name}</option>)}
             </select>
-            {(state || category || paymentStatus || institution || city) && <Button variant="ghost" size="sm" onClick={() => { setState(""); setCategory(""); setPaymentStatus(""); setInstitution(""); setCity(""); setPage(1); }}>Clear filters</Button>}
+            <select className="h-9 rounded-md border bg-white px-3 text-sm" value={spot} onChange={(e) => updateFilter(setSpot, e.target.value)}>
+              <option value="">Spot &amp; regular</option>
+              <option value="yes">Spot registrations only</option>
+              <option value="no">Non-spot only</option>
+            </select>
+            {(state || category || paymentStatus || institution || city || spot) && <Button variant="ghost" size="sm" onClick={() => { setState(""); setCategory(""); setPaymentStatus(""); setInstitution(""); setCity(""); setSpot(""); setPage(1); }}>Clear filters</Button>}
           </div>
           <div className="mt-4 flex flex-wrap gap-2 text-xs text-[var(--muted-text)]">
             {Object.entries(stateCounts).slice(0, 8).map(([name, count]) => <Badge key={name} variant="secondary">{name}: {count}</Badge>)}
@@ -294,6 +303,7 @@ export default function RegistrationsList({
                 <TableHead>{sortButton("institution")}</TableHead>
                 <TableHead>{sortButton("category")}</TableHead>
                 <TableHead>{sortButton("feeAmount")}</TableHead>
+                <TableHead>Spot</TableHead>
                 <TableHead>Payment</TableHead>
                 <TableHead>Abstract?</TableHead>
                 <TableHead>Status</TableHead>
@@ -305,7 +315,7 @@ export default function RegistrationsList({
               {loading ? (
                 <TableRow>
                   <TableCell
-                    colSpan={canDelete || canEdit ? 10 : 9}
+                    colSpan={canDelete || canEdit ? 11 : 10}
                     className="text-center text-sm py-8 text-[var(--muted-text)]"
                   >
                     Loading…
@@ -314,7 +324,7 @@ export default function RegistrationsList({
               ) : items.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={canDelete || canEdit ? 10 : 9}
+                    colSpan={canDelete || canEdit ? 11 : 10}
                     className="text-center text-sm py-8 text-[var(--muted-text)]"
                   >
                     No registrations match your filters.
@@ -353,6 +363,15 @@ export default function RegistrationsList({
                       <div className="text-[10px] uppercase tracking-wider text-[var(--muted-text)]">
                         {r.feeTier.replace("_", " ")}
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      {isSpotTier(r.feeTier) ? (
+                        <Badge variant="gold" className="text-[10px] uppercase tracking-wider">
+                          Spot
+                        </Badge>
+                      ) : (
+                        <span className="text-xs text-[var(--muted-text)]">—</span>
+                      )}
                     </TableCell>
                     <TableCell className="text-xs">
                       <div className="uppercase">

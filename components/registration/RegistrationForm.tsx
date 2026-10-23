@@ -17,6 +17,7 @@ import {
   calculateFeeBreakdown,
   currentFeeAmount,
   formatRupees,
+  isSpotTier,
   type RegistrationCategory,
 } from "@/lib/registration-fees";
 import {
@@ -586,7 +587,9 @@ export default function RegistrationForm() {
                     </b>
                   </div>
                   <span className="block text-[10px] text-[var(--muted-text)] uppercase tracking-wider">
-                    {currentFee.tier.replace("_", " ")}
+                    {isSpotTier(currentFee.tier)
+                      ? "Spot registration · on-spot rates"
+                      : currentFee.tier.replace("_", " ")}
                   </span>
                 </div>
               ) : (

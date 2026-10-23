@@ -2,12 +2,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Calendar } from "lucide-react";
-import { NAV_LINKS, EVENT } from "@/lib/constants";
+import { NAV_LINKS, EVENT, FEEDBACK_NAV_LINK } from "@/lib/constants";
+import { useFeedbackLive } from "@/lib/use-feedback-live";
 import CulturalDivider from "@/components/ui/CulturalDivider";
-import { AppStoreLinks } from "@/components/ui/AppStoreLinks";
+import { AppStoreLinks, APP_NAME } from "@/components/ui/AppStoreLinks";
 
 const QUICK_LINKS = NAV_LINKS.slice(0, 6);
-const INFO_LINKS = NAV_LINKS.slice(6);
+const BASE_INFO_LINKS = NAV_LINKS.slice(6);
 
 const LEGAL_LINKS = [
   { label: "Privacy Policy", href: "/privacy-policy" },
@@ -16,6 +17,10 @@ const LEGAL_LINKS = [
 ];
 
 export default function Footer() {
+  const feedbackLive = useFeedbackLive();
+  const INFO_LINKS = feedbackLive
+    ? [...BASE_INFO_LINKS, FEEDBACK_NAV_LINK]
+    : BASE_INFO_LINKS;
   return (
     <footer className="bg-[var(--dark-text)] text-white">
       {/* Wave top */}
@@ -59,7 +64,7 @@ export default function Footer() {
             </p>
             <div className="mt-6">
               <p className="mb-3 text-xs font-bold uppercase tracking-widest text-[var(--accent-500)]">
-                Download the APTICON App
+                Download the {APP_NAME}
               </p>
               <AppStoreLinks compact />
             </div>

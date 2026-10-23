@@ -356,6 +356,13 @@ body {
   padding-inline: clamp(1rem, 5vw, 4rem);
 }
 
+/* Keep the back-to-top button clear of the phone app-download bar while that bar is showing. */
+@media (max-width: 1023px) {
+  html[data-app-banner="on"] .back-to-top {
+    bottom: 6.5rem;
+  }
+}
+
 /* ─── Console mode: hide public site chrome ────────────────── */
 body[data-shell="console"] .site-chrome {
   display: none !important;

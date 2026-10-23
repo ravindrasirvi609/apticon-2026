@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
   const category = url.searchParams.get("category") ?? undefined;
   const institution = url.searchParams.get("institution") ?? undefined;
   const city = url.searchParams.get("city") ?? undefined;
+  const spot = url.searchParams.get("spot") ?? undefined; // "yes" = spot registrations only, "no" = the rest
   const q = url.searchParams.get("q") ?? "";
   const sortParam = url.searchParams.get("sort") ?? "-createdAt";
   const allowedSorts = new Set(["-createdAt", "createdAt", "fullName", "-fullName", "institution", "-institution", "category", "-category", "-feeAmount", "feeAmount"]);
@@ -36,6 +37,8 @@ export async function GET(request: NextRequest) {
   if (category) scope.category = category;
   if (institution) scope.institution = institution;
   if (city) scope.city = city;
+  if (spot === "yes") scope.feeTier = "on_spot";
+  else if (spot === "no") scope.feeTier = { $ne: "on_spot" };
   if (q) {
     const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     scope.$or = [

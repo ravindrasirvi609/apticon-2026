@@ -1,5 +1,4 @@
 import { NextResponse, type NextRequest } from "next/server";
-import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import {
   getRazorpayPayment,
@@ -7,15 +6,6 @@ import {
 } from "@/lib/razorpay";
 import { groupRazorpayVerifySchema } from "@/lib/validators/group-registration";
 import GroupRegistration from "@/models/GroupRegistration";
-import Registration from "@/models/Registration";
-import { generateRegistrationCode } from "@/lib/registration-code";
-import {
-  sendMail,
-  registrationApprovedEmail,
-  groupRegistrationApprovedEmail,
-} from "@/lib/email";
-import { logAudit } from "@/lib/audit";
-import { sendWhatsAppNotification } from "@/lib/whatsapp";
 import { recordCapturedGroupRazorpayPayment } from "@/lib/registration-payment";
 
 export async function POST(request: NextRequest) {

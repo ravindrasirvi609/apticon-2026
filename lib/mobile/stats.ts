@@ -24,7 +24,9 @@ interface ActionCountGroup {
 export async function getDashboardStats(): Promise<DashboardStats> {
   await connectDB();
   const [totalRegistered, groups] = await Promise.all([
-    Registration.countDocuments({}),
+    // The volunteer app must show only confirmed attendees, not submitted or
+    // payment-pending registration attempts.
+    Registration.countDocuments({ status: "approved" }),
     MobileActionLog.aggregate<ActionCountGroup>([
       {
         $group: {

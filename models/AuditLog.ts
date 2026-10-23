@@ -21,7 +21,8 @@ export interface IAuditLog {
     | "auth"
     | "registration"
     | "group_registration"
-    | "apti_member";
+    | "apti_member"
+    | "email_campaign";
   resourceId: mongoose.Types.ObjectId | null;
   details: unknown;
   ip: string;
@@ -62,6 +63,7 @@ const AuditLogSchema = new Schema<IAuditLog>(
         "registration",
         "group_registration",
         "apti_member",
+        "email_campaign",
       ],
       required: true,
       index: true,

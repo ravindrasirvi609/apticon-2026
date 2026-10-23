@@ -24,9 +24,10 @@ export const EVENT = {
 export const ABSTRACT_SUBMISSION_START = new Date("2026-10-15T14:00:00+05:30");
 export const ABSTRACT_SUBMISSION_DEADLINE = new Date("2026-10-15T15:00:00+05:30");
 
-// Registrations are currently closed. Keep this shared by the public UI and
-// payment endpoints so the closure cannot be bypassed with a direct request.
-export const REGISTRATION_OPEN = false;
+// Registrations are open as spot registrations (on-spot rates, see ON_SPOT_START in
+// registration-fees.ts). Keep this shared by the public UI and payment endpoints so closing
+// registrations cannot be bypassed with a direct request.
+export const REGISTRATION_OPEN = true;
 
 export function isAbstractSubmissionOpen(now = new Date()) {
   return now >= ABSTRACT_SUBMISSION_START && now <= ABSTRACT_SUBMISSION_DEADLINE;
@@ -38,7 +39,7 @@ export const NAV_LINKS = [
   { label: "Committee", href: "/committee" },
   { label: "Sponsors", href: "/sponsors" },
   // { label: "Speakers", href: "/speakers" },
-  // { label: "Schedule", href: "/schedule" },
+  { label: "Schedule", href: "/schedule" },
   { label: "Venue", href: "/venue" },
   { label: "Registration", href: "/registration" },
   { label: "Abstracts", href: "/abstracts" },
@@ -48,6 +49,13 @@ export const NAV_LINKS = [
   { label: "WPD Post", href: "/wpd" },
   { label: "Contact", href: "/contact" },
 ];
+
+// Not in NAV_LINKS on purpose: nothing about the post-event feedback form is shown on the public
+// site until it goes live. The menus append this link via useFeedbackLive() once it does.
+export const FEEDBACK_NAV_LINK = {
+  label: "Feedback & Certificate",
+  href: "/feedback",
+};
 
 export const COMMITTEE_SUBLINKS = [
   { label: "Patrons", href: "/committee#patrons" },
@@ -95,95 +103,158 @@ export const SCIENTIFIC_TRACKS = [
 
 export const SCHEDULE_DAY1 = [
   {
-    time: "09:00 – 10:00",
-    title: "Registration & Welcome Kit Distribution",
+    time: "08:30 – 10:00",
+    title: "Registration",
     type: "logistics",
-    hall: "Main Lobby",
+    hall: "Auditorium Lobby",
   },
   {
-    time: "10:00 – 11:30",
-    title: "Inaugural Ceremony",
+    time: "08:30 – 10:00",
+    title: "Breakfast",
+    type: "break",
+    hall: "Cafeteria",
+  },
+  {
+    time: "10:30 – 12:00",
+    title: "Inaugural Function",
     type: "inaugural",
     hall: "Main Auditorium",
-    description: "Lamp lighting, welcome address, release of souvenir",
   },
   {
-    time: "11:30 – 12:30",
-    title: "Presidential Address",
+    time: "12:00 – 12:40",
+    title: "KLE Oration Lecture",
     type: "keynote",
     hall: "Main Auditorium",
+    description: "Technical Session 1\nShri B. R. Shankaranand Ji, All India Organizing Secretary, Bharatiya Shikshan Mandal (BSM)\nChair: Prof. Arun Nanda, Professor, Maharshi Dayanand University, Rohtak, Haryana\nCo-chair: Prof. Anil Pethe, Professor & Dean, Datta Meghe College of Pharmacy, Adani Institute of Higher Education & Research, Deemed University, Wardha",
   },
   {
-    time: "12:30 – 13:30",
-    title: "Lunch & Networking",
+    time: "12:40 – 13:10",
+    title: "Dr. G. Bhagwant Memorial Lecture",
+    type: "keynote",
+    hall: "Main Auditorium",
+    description: "Technical Session 1\nProf. Umesh Banakar, Professor and President, Banakar Consulting Services, Westfield, Indiana, USA. Founder, Goa Center for Excellence in Intellectual Property (GCEIP)\nChair: Prof. Prabhakar Veera Reddy, University College of Pharmaceutical Sciences, Palamuru University, Mahabubnagar, Telangana\nCo-chair: Dr. Sarath Chandran C, CC Member, PCI, College of Pharmaceutical Sciences, Govt Medical College Kannur, Pariyaram",
+  },
+  {
+    time: "13:10 – 14:00",
+    title: "Panel Discussion I — Pharma Teacher’s Sankalp: From Teaching to Transforming Competencies",
+    type: "panel",
+    hall: "Main Auditorium",
+    description: "Technical Session 1\nImplementation of New PCI Curriculum for Skill-Based, Innovation-Driven and Future-Ready Pharmacy Education\nModerator: Prof. Rakesh Somani, Principal, School of Pharmacy, DY Patil University, Navi Mumbai\nPanelists:\n• Dr. Ajay Sachan, Deputy Drugs Controller India, CDSCO, Ahmedabad Zone, Ministry of Health and Family Welfare, Govt. of India\n• Dr. Tilak Raj Bhardwaj, Baddi University of Engineering Science and Technology, Baddi, HP\n• Dr. Akash Ved, Professor and Head, Dr. A.P.J. Abdul Kalam Technical University, UP\n• Prof. Sohan Chitlange, Vice-President APTI West Zone; Vice Chancellor, ALARD University, Pune\n• Prof. M. Venkat Ramanna, Vice-President, APTI South Zone\n• Mr. Manoj Karwa, Head – Clinical Trials & Pharmacovigilance\n• Dr. Vikas Batra, Senior Group Leader (R&D), Sun Pharma, Gurugram",
+  },
+  {
+    time: "14:00 – 14:30",
+    title: "Lunch",
     type: "break",
-    hall: "Dining Hall",
+    hall: "Cafeteria",
   },
   {
-    time: "13:30 – 15:00",
-    title: "Keynote: Viksit Bharat 2047 — Pharmacy's Role",
+    time: "14:30 – 17:30",
+    title: "Oral/Poster Presentations",
+    type: "scientific",
+    hall: "Main Lobby",
+    description: "Runs in parallel with Technical Session 2.",
+  },
+  {
+    time: "14:30 – 15:10",
+    title: "M. L. Schroff Memorial Lecture",
     type: "keynote",
+    hall: "Main Auditorium",
+    description: "Technical Session 2\nProf. Vandana Patravale, Professor, Pharmaceutics, Institute of Chemical Technology, Mumbai\nChair: Dr. Narendra Devanaboyina, Principal, VJ's College of Pharmacy, Rajahmundry, Andhra Pradesh\nCo-chair: Dr. Vishal Kumar Gupta, Dean (Academics), JSS Academy of Higher Education and Research, Mysuru",
+  },
+  {
+    time: "15:10 – 15:50",
+    title: "Dr. G. P. Srivastava Memorial Lecture",
+    type: "keynote",
+    hall: "Main Auditorium",
+    description: "Technical Session 2\nProf. Ing. Ladislav Kokoska, Professor, Faculty of Tropical AgriSciences, Czech University of Life Sciences, Prague\nChair: Prof. Kamla Pathak, Director, Research and Innovation, Lloyd Group of Institutions, Greater Noida\nCo-chair: Prof. Vandana Garg, Professor, Maharshi Dayanand University (MDU), Rohtak, Haryana",
+  },
+  {
+    time: "15:50 – 16:30",
+    title: "Shri A. Mishra Memorial Lecture in Pharmaceutical Technology",
+    type: "keynote",
+    hall: "Main Auditorium",
+    description: "Technical Session 2\nProf. Manish Chaurasiya, Scientist G, CSIR-Central Drug Research Institute, Lucknow\nChair: Dr. Akhlesh K. Singhai, Director, School of Pharmacy, LNCT University, Bhopal\nCo-chair: Dr. K. Ravi Shankar, Principal & Professor, Aditya College of Pharmacy, Kakinada, Andhra Pradesh",
+  },
+  {
+    time: "16:30 – 17:00",
+    title: "Workshop on AI Softwares",
+    type: "workshop",
+    hall: "Main Auditorium",
+    description: "Technical Session 2\nDr. Dharmendra Ahuja, Bureau for Health and Education Experimental Pharmacology Software",
+  },
+  {
+    time: "17:00 – 17:15",
+    title: "Hye-Tea",
+    type: "break",
+    hall: "Cafeteria",
+  },
+  {
+    time: "17:15 – 20:00",
+    title: "Award Function and Cultural Night",
+    type: "cultural",
     hall: "Main Auditorium",
   },
   {
-    time: "15:00 – 16:30",
-    title: "Scientific Session I: Pharmaceutical Education Innovation",
-    type: "scientific",
-    hall: "Hall A",
-  },
-  { time: "16:30 – 17:00", title: "Tea Break", type: "break", hall: "Foyer" },
-  {
-    time: "17:00 – 18:30",
-    title: "Scientific Session II: Drug Discovery & Development",
-    type: "scientific",
-    hall: "Hall A",
-  },
-  {
-    time: "19:00 – 21:00",
-    title: "Cultural Evening — Chhattisgarhi Folk Performances",
-    type: "cultural",
-    hall: "Open Stage",
+    time: "20:00 – 22:00",
+    title: "Dinner",
+    type: "break",
+    hall: "Cafeteria",
   },
 ];
 
 export const SCHEDULE_DAY2 = [
   {
-    time: "09:00 – 10:30",
-    title: "Keynote: Atmanirbhar Bharat — Indigenous Pharma",
+    time: "08:00 – 09:30",
+    title: "Breakfast",
+    type: "break",
+    hall: "Cafeteria",
+  },
+  {
+    time: "09:30 – 10:10",
+    title: "J. S. S. Oration Lecture",
     type: "keynote",
     hall: "Main Auditorium",
+    description: "Prof. M. D. Burande, Director, Pharmaceutical Sciences, JSPM University, Wagholi, Pune\nChair: Dr. Surendra H. Bodake, HOD, Department of Pharmacology, GGU, Bilaspur\nCo-chair: Dr. Mohammed Haneefa, Principal, Moulana College of Pharmacy, Angadippuram, Kerala",
   },
   {
-    time: "10:30 – 12:00",
-    title: "Scientific Session III: Clinical Pharmacy & Pharmacovigilance",
+    time: "10:00 – 12:00",
+    title: "Oral/Poster Presentations",
     type: "scientific",
-    hall: "Hall A",
+    hall: "Main Lobby",
   },
   {
-    time: "12:00 – 13:00",
-    title: "Workshop: Outcome-Based Pharmacy Education",
-    type: "workshop",
-    hall: "Hall B",
-  },
-  { time: "13:00 – 14:00", title: "Lunch", type: "break", hall: "Dining Hall" },
-  {
-    time: "14:00 – 15:30",
-    title: "Scientific Session IV: Herbal Medicine & Traditional Knowledge",
-    type: "scientific",
-    hall: "Hall A",
-  },
-  { time: "15:30 – 16:00", title: "Tea Break", type: "break", hall: "Foyer" },
-  {
-    time: "16:00 – 17:00",
-    title: "Panel Discussion: Future of Pharmacy Education in India",
+    time: "10:10 – 11:10",
+    title: "Women Forum Event — Panel Discussion II",
     type: "panel",
     hall: "Main Auditorium",
+    description: "Women in Pharma: From Empowerment to Leadership for Viksit Bharat @2047\nModerator: Prof. Vandana Soni, Professor, Department of Pharmaceutical Sciences, Dr. Harisingh Gour Vishwavidyalaya\nPanelists:\n• Prof. Vandana Patravale, Professor, Pharmaceutics, Institute of Chemical Technology, Mumbai\n• Prof. Meena Chintamaneni, Pro Vice-Chancellor, NMIMS Deemed to be University, Mumbai\n• Prof. Milind J. Umekar, President, APTI; Director, Smt. Kishoritai Bhoyar College of Pharmacy, Kamptee, Nagpur\n• Prof. Deependra Singh, Chairman ERC, Pharmacy Council of India; Professor, University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur\n• Prof. Suneela Dhaneswar, Director, Amity University, Mumbai\n• Dr. Sanju Nanda, Professor, Department of Pharmaceutical Sciences, Maharshi Dayanand University, Rohtak, Haryana",
   },
   {
-    time: "17:00 – 18:00",
-    title: "Valedictory Ceremony & Awards",
+    time: "11:10 – 11:50",
+    title: "54th IPC Trust Sponsored Lecture",
+    type: "keynote",
+    hall: "Main Auditorium",
+    description: "Prof. Sanjay Jain, Professor, Department of Pharmaceutics, Dr. H. S. Gour University, Sagar, MP\nChair: Prof. N. V. V. Jagan Mohan Reddy, Professor, VJ's College of Pharmacy, Rajahmundry, Andhra Pradesh\nCo-chair: Dr. K. Venkat Ramanna, President, APTI AP State Branch",
+  },
+  {
+    time: "11:50 – 12:50",
+    title: "Panel Discussion III",
+    type: "panel",
+    hall: "Main Auditorium",
+    description: "From Classroom to Pharmaceutical Innovation: Connecting Academia and Industry. Academia–Industry Convergence for Innovation, Quality, Research and an Atmanirbhar Pharmaceutical Ecosystem\nModerator: Prof. Rohit Dutt, Vice-President, APTI North Zone\nPanelists:\n• Dr. Arun S. Bhatnagar, Director General and Group Advisor, Sparsh and IIST Group of Institutions\n• Dr. Lovleen Kumar, Associate Director, Analytical Research & Development, Dr. Reddy's Laboratories, Hyderabad\n• Dr. Nagendra K Singh, Lead, Global MS&T Capacity Hub, Sandoz, Hyderabad\n• Dr. Sandeep Suryavanshi, Deputy General Manager, Alkem, Daman, Vapi\n• Mr. Kishor Jadwani, Chancellor, Columbia Professional University\n• Prof. Umesh Patil, Department of Pharmaceutical Sciences, Dr. Harisingh Gour Vishwavidyalaya",
+  },
+  {
+    time: "13:00 – 14:00",
+    title: "Lunch",
+    type: "break",
+    hall: "Cafeteria",
+  },
+  {
+    time: "14:00 – 16:00",
+    title: "Valedictory Function",
     type: "valedictory",
     hall: "Main Auditorium",
+    description: "Release of APTI journals and newsletters; Awards & Felicitation Ceremony; APTI Annual General Body Meeting.",
   },
 ];
 

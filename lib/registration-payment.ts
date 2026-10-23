@@ -70,20 +70,7 @@ export async function recordCapturedRazorpayPayment(
       status: "approved",
     }));
   if (!reg) return null;
-  console.info("[registration] payment capture handled", { registrationId: reg._id.toString(), newlyApproved: !!justApproved, registrationCode: reg.registrationCode });
 
-  await logAudit({
-    actor: actor.uid ?? null,
-    actorRole: actor.role,
-    action: "payment.razorpay.captured",
-    resourceType: "registration",
-    resourceId: reg._id.toString(),
-    details: { registrationCode: reg.registrationCode, razorpayOrderId: payment.order_id, razorpayPaymentId: payment.id, amount: payment.amount },
-    request,
-  });
-  const { subject, html, attachments } = await registrationApprovedEmail(reg.fullName, reg.registrationCode, reg.feeAmount, !!reg.linkedAbstract);
-  await sendMail({ to: reg.email, subject, html, attachments });
-  // await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName, reg.registrationCode], `registration-approved-${reg._id.toString()}`);
   if (justApproved) {
     await logAudit({
       actor: actor.uid ?? null,
@@ -121,7 +108,6 @@ export async function recordCapturedRazorpayPayment(
       `registration-approved-${reg._id.toString()}`,
     );
   }
-  await sendWhatsAppNotification(reg.phone, "registration_approved", [reg.fullName], `registration-approved-${reg._id.toString()}`);
   return reg;
 }
 
@@ -166,7 +152,6 @@ export async function recordCapturedGroupRazorpayPayment(
       status: "approved",
     }));
   if (!group) return null;
-  console.info("[group-registration] payment capture handled", { groupRegistrationId: group._id.toString(), groupCode: group.groupCode, newlyApproved: !!justApproved, participantCount: group.delegates.length + 1 });
 
   const paidCount = group.delegateCount - group.complimentaryCount;
   const perHeadShare =
@@ -209,7 +194,7 @@ export async function recordCapturedGroupRazorpayPayment(
     if (processedEmails.has(delegate.email)) continue;
     processedEmails.add(delegate.email);
     const already = byEmail.get(delegate.email);
-    if (already?.confirmationEmailSentAt) { console.info("[group-registration] participant skipped", { groupCode: group.groupCode, reason: "email_already_sent" }); continue; }
+    if (already?.confirmationEmailSentAt) continue;
     try {
       let reg = already;
       if (!reg) {
@@ -271,7 +256,6 @@ export async function recordCapturedGroupRazorpayPayment(
         { $set: { confirmationEmailSentAt: new Date() } },
       );
       delegatesProcessed++;
-      console.info("[group-registration] participant processed", { groupCode: group.groupCode, registrationId: reg._id.toString(), registrationCode: reg.registrationCode });
     } catch (error) {
       console.error(
         "[razorpay] failed to create/email a group delegate's registration:",

@@ -9,6 +9,7 @@ import SpeakerTeaser from "@/components/home/SpeakerTeaser";
 import ScheduleTeaser from "@/components/home/ScheduleTeaser";
 import VenuePreview from "@/components/home/VenuePreview";
 import SponsorMarquee from "@/components/home/SponsorMarquee";
+import AppDownloadSection from "@/components/home/AppDownloadSection";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 
 export const metadata: Metadata = {
@@ -96,9 +97,10 @@ export default function HomePage() {
       {/* 9. Venue + Raipur tourism */}
       <VenuePreview />
 
-      
+      {/* 10. Delegate app download */}
+      <AppDownloadSection />
 
-      {/* 10. Sponsors marquee */}
+      {/* 11. Sponsors marquee */}
       <SponsorMarquee />
     </>
   );

@@ -15,7 +15,7 @@ import { generateRegistrationQrPngBuffer } from "@/lib/qrcode";
 
 const KEY = process.env.RESEND_API_KEY ?? "";
 const FROM = process.env.RESEND_FROM ?? "APTICON 2026 <onboarding@resend.dev>";
-const BASE_URL =
+export const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ??
   process.env.DOMAIN ??
   "http://localhost:3000";
@@ -77,6 +77,7 @@ export type EmailBlock =
       variant?: "primary" | "secondary";
     }
   | { type: "divider" }
+  | { type: "html"; html: string } // trusted, pre-escaped HTML emitted verbatim (admin bulk emails)
   | { type: "signoff"; text?: string }; // "Warm regards, …" block
 
 function renderBlock(b: EmailBlock): string {
@@ -159,6 +160,9 @@ function renderBlock(b: EmailBlock): string {
     case "divider":
       return `<div style="height:1px;background:${BRAND.accent500};opacity:.25;margin:18px 0;"></div>`;
 
+    case "html":
+      return b.html;
+
     case "signoff":
       return `<p style="margin:24px 0 0 0;font-size:14px;color:${BRAND.dark};line-height:1.6;">${b.text ?? "Warm regards,"}<br/><b>APTICON 2026 Organising Committee</b></p>`;
   }
@@ -215,36 +219,136 @@ export function renderEmail({ title, preheader, blocks }: RenderOpts): string {
 // ─── Send helper ────────────────────────────────────────────
 export interface EmailAttachment {
   filename: string;
-  content: Buffer;
-  contentId: string;
+  /** Raw bytes. Provide either `content` or `path`. */
+  content?: Buffer;
+  /** Publicly reachable URL Resend downloads the file from (keeps the API request small). */
+  path?: string;
+  contentType?: string;
+  /** Only for inline images referenced as `cid:` in the HTML. */
+  contentId?: string;
 }
 interface SendOpts {
   to: string;
   subject: string;
   html: string;
   attachments?: EmailAttachment[];
+  replyTo?: string;
+  /** Resend de-duplicates requests sharing a key for 24h, making retries safe. */
+  idempotencyKey?: string;
 }
-export async function sendMail({ to, subject, html, attachments }: SendOpts) {
+
+/** A Resend API failure, keeping Resend's error code so callers can tell retryable ones apart. */
+export class MailError extends Error {
+  code: string;
+  statusCode: number | null;
+  constructor(message: string, code: string, statusCode: number | null) {
+    super(message);
+    this.code = code;
+    this.statusCode = statusCode;
+  }
+}
+
+/** True when RESEND_API_KEY is set — without it every send is silently skipped. */
+export function isEmailConfigured(): boolean {
+  return Boolean(KEY);
+}
+
+/** The From header in use. `resend.dev` is Resend's sandbox sender: it only delivers to the account owner. */
+export function getSenderInfo(): { from: string; sandbox: boolean } {
+  return { from: FROM, sandbox: /@resend\.dev>?$/i.test(FROM.trim()) };
+}
+
+export async function sendMail({
+  to,
+  subject,
+  html,
+  attachments,
+  replyTo,
+  idempotencyKey,
+}: SendOpts) {
   if (!KEY) {
-    console.warn("[email] skipped", { reason: "missing_api_key", subject });
+    console.warn("[email] RESEND_API_KEY missing — skipping send to", to);
     return { skipped: true as const };
   }
-  console.info("[email] sending", { subject, attachmentCount: attachments?.length ?? 0 });
   // Resend never throws for an API-level failure (invalid address, quota, rate limit) — it
   // resolves with { error } instead, so callers must check it or a failed send looks identical
   // to a successful one.
-  const { data, error } = await resend.emails.send({
-    from: FROM,
-    to,
-    subject,
-    html,
-    attachments,
-  });
+  const { data, error } = await resend.emails.send(
+    {
+      from: FROM,
+      to,
+      subject,
+      html,
+      attachments,
+      replyTo,
+    },
+    idempotencyKey ? { idempotencyKey } : undefined,
+  );
   if (error)
-    throw new Error(
+    throw new MailError(
       `Resend rejected email to ${to} (${error.name}): ${error.message}`,
+      error.name,
+      error.statusCode,
     );
   return { data };
+}
+
+export interface BatchMailItem {
+  to: string;
+  subject: string;
+  html: string;
+  replyTo?: string;
+}
+export type BatchMailResult =
+  | { ok: true; id: string }
+  | { ok: false; error: string; code: string };
+
+/**
+ * Send up to 100 distinct emails in one Resend call. Resend's batch endpoint does not accept
+ * attachments, so attachment campaigns go through `sendMail` instead.
+ *
+ * Uses permissive validation so one bad address fails only its own item. Results line up with
+ * `items` by index. A whole-request failure (rate limit, quota, bad key) is reported on every
+ * item with the same `code`, letting the caller decide whether to retry.
+ */
+export async function sendMailBatch(
+  items: BatchMailItem[],
+  idempotencyKey?: string,
+): Promise<BatchMailResult[]> {
+  if (!KEY) {
+    return items.map(() => ({
+      ok: false as const,
+      error: "RESEND_API_KEY is not configured",
+      code: "missing_api_key",
+    }));
+  }
+  const { data, error } = await resend.batch.send(
+    items.map((i) => ({
+      from: FROM,
+      to: i.to,
+      subject: i.subject,
+      html: i.html,
+      replyTo: i.replyTo,
+    })),
+    { batchValidation: "permissive", idempotencyKey },
+  );
+  if (error || !data) {
+    return items.map(() => ({
+      ok: false as const,
+      error: error?.message ?? "Resend returned no data",
+      code: error?.name ?? "application_error",
+    }));
+  }
+  // `data.data` holds ids for the accepted items only, in order; `errors` names the rejected indexes.
+  const rejected = new Map((data.errors ?? []).map((e) => [e.index, e.message]));
+  const ids = data.data.map((d) => d.id);
+  let next = 0;
+  return items.map((_, index) => {
+    const message = rejected.get(index);
+    if (message !== undefined)
+      return { ok: false as const, error: message, code: "validation_error" };
+    return { ok: true as const, id: ids[next++] ?? "" };
+  });
 }
 
 // ─── Templates ──────────────────────────────────────────────
@@ -822,7 +926,7 @@ export function nudgeRegisterEmail(name: string, abstractCode: string) {
         },
         {
           type: "text",
-          html: `Early-bird rates end <b>15 September 2026</b>.`,
+          html: `Spot registration is now open — on-spot rates apply.`,
         },
         { type: "signoff" },
       ],
