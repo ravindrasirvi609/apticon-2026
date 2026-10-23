@@ -21,7 +21,6 @@ export async function GET(request: NextRequest) {
     const field = VALID_FIELDS.includes(fieldParam as SearchField)
       ? (fieldParam as SearchField)
       : "all";
-    const status = url.searchParams.get("status") ?? undefined;
     const sort = url.searchParams.get("sort") ?? undefined;
     const page = Number(url.searchParams.get("page") ?? "1");
     const limit = Number(url.searchParams.get("limit") ?? "25");
@@ -29,7 +28,6 @@ export async function GET(request: NextRequest) {
     const result = await searchAttendees({
       q,
       field,
-      status,
       sort,
       page,
       limit,
