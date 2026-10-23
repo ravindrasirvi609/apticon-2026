@@ -139,7 +139,7 @@ export const SCHEDULE_DAY1 = [
     title: "Panel Discussion I — Pharma Teacher’s Sankalp: From Teaching to Transforming Competencies",
     type: "panel",
     hall: "Main Auditorium",
-    description: "Technical Session 1\nImplementation of New PCI Curriculum for Skill-Based, Innovation-Driven and Future-Ready Pharmacy Education\nModerator: Prof. Rakesh Somani, Principal, School of Pharmacy, DY Patil University, Navi Mumbai\nPanelists:\n• Dr. Ajay Sachan, Deputy Drugs Controller India, CDSCO, Ahmedabad Zone, Ministry of Health and Family Welfare, Govt. of India\n• Dr. Tilak Raj Bhardwaj, Baddi University of Engineering Science and Technology, Baddi, HP\n• Dr. Akash Ved, Professor and Head, Dr. A.P.J. Abdul Kalam Technical University, UP\n• Prof. Sohan Chitlange, Vice-President APTI West Zone; Vice Chancellor, ALARD University, Pune\n• Prof. M. Venkat Ramanna, Vice-President, APTI South Zone\n• Mr. Manoj Karwa, Head – Clinical Trials & Pharmacovigilance\n• Dr. Vikas Batra, Senior Group Leader (R&D), Sun Pharma, Gurugram",
+    description: "Technical Session 1\nImplementation of New PCI Curriculum for Skill-Based, Innovation-Driven and Future-Ready Pharmacy Education\nModerator: Prof. Rakesh Somani, Principal, School of Pharmacy, DY Patil University, Navi Mumbai\nPanelists:\n• Dr. Ajay Sachan, Deputy Drugs Controller India, CDSCO, Ahmedabad Zone, Ministry of Health and Family Welfare, Govt. of India\n• Dr. Tilak Raj Bhardwaj, Baddi University of Engineering Science and Technology, Baddi, HP\n• Dr. Akash Ved, Professor and Head, Dr. A.P.J. Abdul Kalam Technical University, UP\n• Prof. Sohan Chitlange, Vice-President APTI West Zone; Vice Chancellor, ALARD University, Pune\n• Prof. M. Venkat Ramanna, Vice-President, APTI South Zone\n• Mr. Manoj Karwa, Auriga Research Pvt Ltd, Head – Clinical Trials & Pharmacovigilance\n• Dr. Vikas Batra, Senior Group Leader (R&D), Sun Pharma, Gurugram",
   },
   {
     time: "14:00 – 14:30",
@@ -173,7 +173,7 @@ export const SCHEDULE_DAY1 = [
     title: "Shri A. Mishra Memorial Lecture in Pharmaceutical Technology",
     type: "keynote",
     hall: "Main Auditorium",
-    description: "Technical Session 2\nProf. Manish Chaurasiya, Scientist G, CSIR-Central Drug Research Institute, Lucknow\nChair: Dr. Akhlesh K. Singhai, Director, School of Pharmacy, LNCT University, Bhopal\nCo-chair: Dr. K. Ravi Shankar, Principal & Professor, Aditya College of Pharmacy, Kakinada, Andhra Pradesh",
+    description: "Technical Session 2\nProf. Manish Chaurasiya, Scientist G, CSIR-Central Drug Research Institute, Lucknow\nChair: Prof. Raman Dang, Principal, Krupanidhi College of Pharmacy, Bangalore\nCo-chair: Dr. Akhlesh K. Singhai, Director, School of Pharmacy, LNCT University, Bhopal\nCo-chair: Dr. K. Ravi Shankar, Principal & Professor, Aditya College of Pharmacy, Kakinada, Andhra Pradesh",
   },
   {
     time: "16:30 – 17:00",
@@ -184,7 +184,7 @@ export const SCHEDULE_DAY1 = [
   },
   {
     time: "17:00 – 17:15",
-    title: "Hye-Tea",
+    title: "High-Tea",
     type: "break",
     hall: "Cafeteria",
   },
@@ -227,21 +227,21 @@ export const SCHEDULE_DAY2 = [
     title: "Women Forum Event — Panel Discussion II",
     type: "panel",
     hall: "Main Auditorium",
-    description: "Women in Pharma: From Empowerment to Leadership for Viksit Bharat @2047\nModerator: Prof. Vandana Soni, Professor, Department of Pharmaceutical Sciences, Dr. Harisingh Gour Vishwavidyalaya\nPanelists:\n• Prof. Vandana Patravale, Professor, Pharmaceutics, Institute of Chemical Technology, Mumbai\n• Prof. Meena Chintamaneni, Pro Vice-Chancellor, NMIMS Deemed to be University, Mumbai\n• Prof. Milind J. Umekar, President, APTI; Director, Smt. Kishoritai Bhoyar College of Pharmacy, Kamptee, Nagpur\n• Prof. Deependra Singh, Chairman ERC, Pharmacy Council of India; Professor, University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur\n• Prof. Suneela Dhaneswar, Director, Amity University, Mumbai\n• Dr. Sanju Nanda, Professor, Department of Pharmaceutical Sciences, Maharshi Dayanand University, Rohtak, Haryana",
+    description: "Women in Pharma: From Empowerment to Leadership for Viksit Bharat @2047\nModerator: Prof. Vandana Soni, Professor, Department of Pharmaceutical Sciences, Dr. Harisingh Gour Vishwavidyalaya\nProf. Preeti K. Suresh, Professor, University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur\nPanelists:\n• Prof. Vandana Patravale, Professor, Pharmaceutics, Institute of Chemical Technology, Mumbai\n• Prof. Meena Chintamaneni, Pro Vice-Chancellor, NMIMS Deemed to be University, Mumbai\n• Prof. Milind J. Umekar, President, APTI; Director, Smt. Kishoritai Bhoyar College of Pharmacy, Kamptee, Nagpur\n• Prof. Deependra Singh, Chairman ERC, Pharmacy Council of India; Professor, University Institute of Pharmacy, Pt. Ravishankar Shukla University, Raipur\n• Prof. Suneela Dhaneswar, Director, Amity University, Mumbai\n• Dr. Sanju Nanda, Professor, Department of Pharmaceutical Sciences, Maharshi Dayanand University, Rohtak, Haryana",
   },
   {
     time: "11:10 – 11:50",
     title: "54th IPC Trust Sponsored Lecture",
     type: "keynote",
     hall: "Main Auditorium",
-    description: "Prof. Sanjay Jain, Professor, Department of Pharmaceutics, Dr. H. S. Gour University, Sagar, MP\nChair: Prof. N. V. V. Jagan Mohan Reddy, Professor, VJ's College of Pharmacy, Rajahmundry, Andhra Pradesh\nCo-chair: Dr. K. Venkat Ramanna, President, APTI AP State Branch",
+    description: "Prof. Sanjay Jain, Professor, Department of Pharmaceutics, Dr. H. S. Gour University, Sagar, MP\nChair: Prof. N. V. V. Jagan Mohan Reddy, Professor, VJ's College of Pharmacy, Rajahmundry, Andhra Pradesh\nCo-chair: Dr. K. Venkat Ramanna, President, APTI AP State Branch\nCo-chair: Prof. Ravindra D. Hiremath, Principal, Future Institute of Pharmacy, Future University, U.P.",
   },
   {
     time: "11:50 – 12:50",
     title: "Panel Discussion III",
     type: "panel",
     hall: "Main Auditorium",
-    description: "From Classroom to Pharmaceutical Innovation: Connecting Academia and Industry. Academia–Industry Convergence for Innovation, Quality, Research and an Atmanirbhar Pharmaceutical Ecosystem\nModerator: Prof. Rohit Dutt, Vice-President, APTI North Zone\nPanelists:\n• Dr. Arun S. Bhatnagar, Director General and Group Advisor, Sparsh and IIST Group of Institutions\n• Dr. Lovleen Kumar, Associate Director, Analytical Research & Development, Dr. Reddy's Laboratories, Hyderabad\n• Dr. Nagendra K Singh, Lead, Global MS&T Capacity Hub, Sandoz, Hyderabad\n• Dr. Sandeep Suryavanshi, Deputy General Manager, Alkem, Daman, Vapi\n• Mr. Kishor Jadwani, Chancellor, Columbia Professional University\n• Prof. Umesh Patil, Department of Pharmaceutical Sciences, Dr. Harisingh Gour Vishwavidyalaya",
+    description: "From Classroom to Pharmaceutical Innovation: Connecting Academia and Industry. Academia–Industry Convergence for Innovation, Quality, Research and an Atmanirbhar Pharmaceutical Ecosystem\nModerator: Prof. Rohit Dutt, Vice-President, APTI North Zone\nPanelists:\n• Dr. Arun S. Bhatnagar, Director General and Group Advisor, Sparsh and IIST Group of Institutions\n• Dr. Lovleen Kumar, Associate Director, Analytical Research & Development, Dr. Reddy's Laboratories, Hyderabad\n• Dr. Nagendra K Singh, Lead, Global MS&T Capacity Hub, Sandoz, Hyderabad\n• Dr. Sandeep Suryavanshi, Deputy General Manager, Alkem, Daman, Vapi\n• Mr. Kishor Jadwani, Chancellor, Columbia Professional University\n• Prof. Umesh Patil, Department of Pharmaceutical Sciences, Dr. Harisingh Gour Vishwavidyalaya\n• Mr. Rahul Tiwari, Vice President, Chhattisgarh State Pharmacy Council, Raipur\n• Dr. H. N. More, Principal, Bharati Vidyapeeth College of Pharmacy, Kolhapur",
   },
   {
     time: "13:00 – 14:00",

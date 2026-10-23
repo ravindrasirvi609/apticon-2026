@@ -42,7 +42,7 @@ export const SESSION_CATALOG: CatalogSession[] = [
   { id: "d1-19", day: 1, start: "15:10", end: "15:50", type: "keynote", title: "Dr. G. P. Srivastava Memorial Lecture" },
   { id: "d1-20", day: 1, start: "15:50", end: "16:30", type: "keynote", title: "Shri A. Mishra Memorial Lecture in Pharmaceutical Technology" },
   { id: "d1-21", day: 1, start: "16:30", end: "17:00", type: "workshop", title: "Workshop on AI Softwares" },
-  { id: "d1-22", day: 1, start: "17:00", end: "17:15", type: "break", title: "Hye-Tea" },
+  { id: "d1-22", day: 1, start: "17:00", end: "17:15", type: "break", title: "High-Tea" },
   { id: "d1-09", day: 1, start: "17:15", end: "20:00", type: "cultural", title: "Award Function and Cultural Night" },
   { id: "d1-14", day: 1, start: "20:00", end: "22:00", type: "break", title: "Dinner" },
   { id: "d2-09", day: 2, start: "08:00", end: "09:30", type: "break", title: "Breakfast" },
