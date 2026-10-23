@@ -712,11 +712,7 @@ export async function registrationApprovedEmail(
   name: string,
   code: string,
   feeAmount: number,
-  hasLinkedAbstract: boolean,
 ) {
-  const nextStepsInfo = hasLinkedAbstract
-    ? `We can see your abstract submission is linked to this registration — you're fully set up.`
-    : `If you plan to present a paper or poster, please submit your abstract before <b>6 October 2026</b>.`;
   const qrCid = `qr-${code}`;
   const qrPng = await generateRegistrationQrPngBuffer(code);
   return {
@@ -753,22 +749,6 @@ export async function registrationApprovedEmail(
             { label: "Dates", value: "24–25 October 2026" },
           ],
         },
-        { type: "text", html: nextStepsInfo },
-        ...(hasLinkedAbstract
-          ? [
-              {
-                type: "button" as const,
-                label: "View Abstract Status",
-                href: `${BASE_URL}/abstracts/status`,
-              },
-            ]
-          : [
-              {
-                type: "button" as const,
-                label: "Submit an Abstract",
-                href: `${BASE_URL}/abstracts`,
-              },
-            ]),
         {
           type: "callout",
           variant: "info",

@@ -93,7 +93,6 @@ export async function POST(
         reg.fullName,
         reg.registrationCode,
         reg.feeAmount,
-        !!reg.linkedAbstract,
       );
       await sendMail({
         to: reg.email,

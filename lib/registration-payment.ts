@@ -94,7 +94,6 @@ export async function recordCapturedRazorpayPayment(
       reg.fullName,
       reg.registrationCode,
       reg.feeAmount,
-      !!reg.linkedAbstract,
     );
     await sendMail({ to: reg.email, subject, html, attachments });
     await Registration.updateOne(
@@ -237,7 +236,6 @@ export async function recordCapturedGroupRazorpayPayment(
         reg.fullName,
         reg.registrationCode,
         reg.feeAmount,
-        false,
       );
       await sendMail({
         to: delegate.email,

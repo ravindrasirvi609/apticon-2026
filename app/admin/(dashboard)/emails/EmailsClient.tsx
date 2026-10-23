@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { AlertTriangle, History, Loader2, Mail, Send, SquarePen } from "lucide-react";
+import { AlertTriangle, History, Loader2, Mail, Send, SquarePen, BadgeCheck } from "lucide-react";
 import { toast } from "sonner";
 import PageHeader from "@/components/console/PageHeader";
 import AttachmentsField from "@/components/console/emails/AttachmentsField";
@@ -71,6 +71,8 @@ export default function EmailsClient({
   const [creating, setCreating] = useState(false);
   const [run, setRun] = useState<ActiveRun | null>(null);
   const [historyKey, setHistoryKey] = useState(0);
+  const [approvedEmailConfirmOpen, setApprovedEmailConfirmOpen] = useState(false);
+  const [sendingApprovedEmails, setSendingApprovedEmails] = useState(false);
 
   const recipients = useMemo(() => {
     const all = new Set(selected);
@@ -155,12 +157,45 @@ export default function EmailsClient({
     setTab("history");
   }
 
+  async function sendApprovedRegistrationEmails() {
+    setApprovedEmailConfirmOpen(false);
+    setSendingApprovedEmails(true);
+    try {
+      const res = await fetch("/api/admin/emails/approved-registrations", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? "Could not send confirmation emails");
+      toast.success(
+        data.sent === 0
+          ? "No unsent approved registration emails found."
+          : `Sent ${data.sent} confirmation email${data.sent === 1 ? "" : "s"}${data.failed ? `; ${data.failed} failed` : ""}.`,
+      );
+      if (data.failed) toast.error(data.failures?.map((f: { email: string }) => f.email).join(", "));
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not send confirmation emails");
+    } finally {
+      setSendingApprovedEmails(false);
+    }
+  }
+
   return (
     <div className="p-4 md:p-8">
       <PageHeader
         title="Bulk Email"
         description="Write a message, attach files, choose delegates, and send it through Resend."
       />
+
+      <Card className="mb-6 border-[var(--accent-500)]/25">
+        <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="flex items-center gap-2 font-semibold"><BadgeCheck className="h-4 w-4 text-[var(--accent-600)]" /> Approved registration confirmations</div>
+            <p className="mt-1 text-xs text-[var(--muted-text)]">Send the existing confirmation template and each person&apos;s unique QR code. Already sent confirmations are skipped.</p>
+          </div>
+          <Button variant="outline" onClick={() => setApprovedEmailConfirmOpen(true)} disabled={!configured || sendingApprovedEmails}>
+            {sendingApprovedEmails ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+            Send to all approved
+          </Button>
+        </CardContent>
+      </Card>
 
       {!configured && (
         <Banner tone="red" title="Email is not configured">
@@ -325,6 +360,21 @@ export default function EmailsClient({
           <AlertDialogFooter>
             <AlertDialogCancel>Go back</AlertDialogCancel>
             <AlertDialogAction onClick={startCampaign}>Send now</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={approvedEmailConfirmOpen} onOpenChange={setApprovedEmailConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Send approved registration confirmations?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Every approved registration without a recorded confirmation email will receive the standard success email with its own QR code. Already sent confirmations will be skipped.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={sendApprovedRegistrationEmails}>Send now</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
