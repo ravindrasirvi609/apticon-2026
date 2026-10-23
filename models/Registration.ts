@@ -63,6 +63,10 @@ export interface IRegistration {
   paidAt?: Date;
   /** Set only once the approval email actually sends — lets a retry tell "approved" apart from "delivered". */
   confirmationEmailSentAt?: Date;
+  /** Set once the admin "send to all approved" run has delivered this delegate's QR confirmation. */
+  bulkConfirmationSentAt?: Date;
+  /** Held while one bulk-send request owns this row, so two runs never email it twice. */
+  bulkConfirmationClaimedAt?: Date;
 
   // Workflow
   status: RegistrationStatus;
@@ -148,6 +152,8 @@ const RegistrationSchema = new Schema<IRegistration>(
     paymentError: { type: String },
     paidAt: { type: Date },
     confirmationEmailSentAt: { type: Date },
+    bulkConfirmationSentAt: { type: Date },
+    bulkConfirmationClaimedAt: { type: Date },
 
     // "payment_review", "rejected" and "resubmitted" are retained for legacy manual-payment
     // documents only — nothing sets them now that Razorpay drives approval.

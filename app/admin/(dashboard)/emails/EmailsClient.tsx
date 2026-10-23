@@ -1,8 +1,9 @@
 "use client";
 import { useMemo, useState } from "react";
-import { AlertTriangle, History, Loader2, Mail, Send, SquarePen, BadgeCheck } from "lucide-react";
+import { AlertTriangle, History, Loader2, Mail, Send, SquarePen } from "lucide-react";
 import { toast } from "sonner";
 import PageHeader from "@/components/console/PageHeader";
+import ApprovedConfirmationsCard from "@/components/console/emails/ApprovedConfirmationsCard";
 import AttachmentsField from "@/components/console/emails/AttachmentsField";
 import CampaignHistory from "@/components/console/emails/CampaignHistory";
 import EmailPreview from "@/components/console/emails/EmailPreview";
@@ -71,9 +72,6 @@ export default function EmailsClient({
   const [creating, setCreating] = useState(false);
   const [run, setRun] = useState<ActiveRun | null>(null);
   const [historyKey, setHistoryKey] = useState(0);
-  const [approvedEmailConfirmOpen, setApprovedEmailConfirmOpen] = useState(false);
-  const [sendingApprovedEmails, setSendingApprovedEmails] = useState(false);
-  const [approvedProgress, setApprovedProgress] = useState({ sent: 0, pending: 0, failed: 0 });
 
   const recipients = useMemo(() => {
     const all = new Set(selected);
@@ -158,39 +156,6 @@ export default function EmailsClient({
     setTab("history");
   }
 
-  async function sendApprovedRegistrationEmails() {
-    setApprovedEmailConfirmOpen(false);
-    setSendingApprovedEmails(true);
-    setApprovedProgress({ sent: 0, pending: 0, failed: 0 });
-    try {
-      let totalSent = 0;
-      let totalFailed = 0;
-      let failures: { email: string }[] = [];
-      let remaining = 1;
-      while (remaining > 0) {
-        const res = await fetch("/api/admin/emails/approved-registrations", { method: "POST" });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(data.error ?? "Could not send confirmation emails");
-        totalSent += data.sent ?? 0;
-        totalFailed += data.failed ?? 0;
-        failures = [...failures, ...(data.failures ?? [])];
-        remaining = data.remaining ?? 0;
-        setApprovedProgress({ sent: totalSent, pending: remaining, failed: totalFailed });
-        if ((data.sent ?? 0) === 0 && remaining > 0) break;
-      }
-      toast.success(
-        totalSent === 0
-          ? "No unsent approved registration emails found."
-          : `Sent ${totalSent} confirmation email${totalSent === 1 ? "" : "s"}${totalFailed ? `; ${totalFailed} failed` : ""}.`,
-      );
-      if (failures.length) toast.error(failures.map((f) => f.email).join(", "));
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Could not send confirmation emails");
-    } finally {
-      setSendingApprovedEmails(false);
-    }
-  }
-
   return (
     <div className="p-4 md:p-8">
       <PageHeader
@@ -198,28 +163,7 @@ export default function EmailsClient({
         description="Write a message, attach files, choose delegates, and send it through Resend."
       />
 
-      <Card className="mb-6 border-[var(--accent-500)]/25">
-        <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <div className="flex items-center gap-2 font-semibold"><BadgeCheck className="h-4 w-4 text-[var(--accent-600)]" /> Approved registration confirmations</div>
-            <p className="mt-1 text-xs text-[var(--muted-text)]">Send the existing confirmation template and each person&apos;s unique QR code to every approved registration. Already sent emails are skipped.</p>
-          </div>
-          <Button variant="outline" onClick={() => setApprovedEmailConfirmOpen(true)} disabled={!configured || sendingApprovedEmails}>
-            {sendingApprovedEmails ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-            Send to all approved
-          </Button>
-        </CardContent>
-        {(sendingApprovedEmails || approvedProgress.sent > 0 || approvedProgress.failed > 0) && (
-          <CardContent className="border-t px-4 py-3 text-xs text-[var(--muted-text)]">
-            <div className="flex flex-wrap gap-x-5 gap-y-1">
-              <span><strong className="text-[var(--foreground)]">{approvedProgress.sent}</strong> sent</span>
-              <span><strong className="text-[var(--foreground)]">{approvedProgress.pending}</strong> pending</span>
-              <span><strong className={approvedProgress.failed ? "text-red-600" : "text-[var(--foreground)]"}>{approvedProgress.failed}</strong> failed</span>
-            </div>
-            {sendingApprovedEmails && <div className="mt-1">Sending in batches…</div>}
-          </CardContent>
-        )}
-      </Card>
+      <ApprovedConfirmationsCard configured={configured} />
 
       {!configured && (
         <Banner tone="red" title="Email is not configured">
@@ -384,21 +328,6 @@ export default function EmailsClient({
           <AlertDialogFooter>
             <AlertDialogCancel>Go back</AlertDialogCancel>
             <AlertDialogAction onClick={startCampaign}>Send now</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog open={approvedEmailConfirmOpen} onOpenChange={setApprovedEmailConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Send approved registration confirmations?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Every approved registration that has not already received its confirmation email will receive the standard success email with its own QR code. Previously sent emails are skipped.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={sendApprovedRegistrationEmails}>Send now</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

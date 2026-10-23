@@ -426,7 +426,7 @@ const MAX_ATTEMPTS = 5;
 const STALE_CLAIM_MS = 5 * 60_000;
 
 /** The Resend account/key itself is unusable — stop the whole campaign instead of failing every row. */
-const FATAL_CODES = new Set([
+export const FATAL_CODES = new Set([
   "daily_quota_exceeded",
   "monthly_quota_exceeded",
   "missing_api_key",
@@ -434,7 +434,7 @@ const FATAL_CODES = new Set([
   "invalid_from_address",
 ]);
 /** Transient: put the recipient back in the queue. */
-const RETRYABLE_CODES = new Set([
+export const RETRYABLE_CODES = new Set([
   "rate_limit_exceeded",
   "internal_server_error",
   "application_error",
@@ -442,7 +442,7 @@ const RETRYABLE_CODES = new Set([
   "network_error",
 ]);
 
-const HALT_MESSAGE: Record<string, string> = {
+export const HALT_MESSAGE: Record<string, string> = {
   daily_quota_exceeded:
     "Resend's daily sending quota is used up. Resume tomorrow or upgrade the Resend plan.",
   monthly_quota_exceeded:
