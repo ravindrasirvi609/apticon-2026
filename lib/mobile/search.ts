@@ -4,7 +4,13 @@ import MobileActionLog from "@/models/MobileActionLog";
 import { getAttendeeStatus } from "@/lib/mobile/status";
 
 const ATTENDEE_LIST_FIELDS =
-  "registrationCode fullName email phone institution designation category feeTier status paymentStatus photoUrl createdAt";
+  "registrationCode fullName email phone institution designation category feeTier status paymentStatus photoUrl kitBagApplicable createdAt";
+
+// Legacy documents have no kitBagApplicable field, so lean reads return undefined. Normalise to a
+// real boolean so the app never has to guess.
+function withKitBagFlag<T extends { kitBagApplicable?: boolean }>(doc: T) {
+  return { ...doc, kitBagApplicable: doc.kitBagApplicable !== false };
+}
 
 export type SearchField =
   | "all"
@@ -82,11 +88,11 @@ export async function searchAttendees(params: SearchAttendeesParams) {
 
   const itemsWithStatus = items.map((item) => {
     const entry = statusByRegistration.get(item._id.toString());
-    return {
+    return withKitBagFlag({
       ...item,
       checkedInAt: entry?.checkedInAt ?? null,
       kitIssuedAt: entry?.kitIssuedAt ?? null,
-    };
+    });
   });
 
   return { total, page, limit, items: itemsWithStatus };
@@ -97,7 +103,7 @@ export async function getAttendeeById(id: string) {
   const registration = await Registration.findById(id).lean();
   if (!registration) return null;
   const status = await getAttendeeStatus(registration._id.toString());
-  return { registration, status };
+  return { registration: withKitBagFlag(registration), status };
 }
 
 export async function getAttendeeByCode(code: string) {
@@ -108,5 +114,5 @@ export async function getAttendeeByCode(code: string) {
   }).lean();
   if (!registration) return null;
   const status = await getAttendeeStatus(registration._id.toString());
-  return { registration, status };
+  return { registration: withKitBagFlag(registration), status };
 }

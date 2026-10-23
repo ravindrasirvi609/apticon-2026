@@ -57,12 +57,18 @@ export async function performAction(
     input;
 
   const registration = await Registration.findById(registrationId)
-    .select("_id status")
+    .select("_id status kitBagApplicable")
     .lean();
   if (!registration) throw new MobileActionError("Attendee not found", 404);
   if (registration.status !== "approved") {
     throw new MobileActionError(
       `This attendee's registration is not approved yet (status: ${registration.status}). Actions cannot be recorded until payment is confirmed.`,
+      409,
+    );
+  }
+  if (actionType === "kit" && registration.kitBagApplicable === false) {
+    throw new MobileActionError(
+      "Kit bag not applicable for this attendee (kit bag fee not paid). Do not hand out a kit bag.",
       409,
     );
   }

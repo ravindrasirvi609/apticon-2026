@@ -260,6 +260,7 @@ if you want a narrower search.
         "status": "approved",
         "paymentStatus": "captured",
         "photoUrl": "https://<r2-domain>/photos/....jpg",
+        "kitBagApplicable": true,
         "createdAt": "2026-06-01T10:00:00.000Z",
         "checkedInAt": "2026-10-24T09:12:00.000Z",
         "kitIssuedAt": null
@@ -303,6 +304,7 @@ i.e. what you get from a search result's `_id`.
       "category": "faculty",
       "feeTier": "early_bird",
       "feeAmount": 3500,
+      "kitBagApplicable": true,
       "paymentStatus": "captured",
       "status": "approved",
       "createdAt": "2026-06-01T10:00:00.000Z"
@@ -363,6 +365,13 @@ scanner), then call this with the decoded string as `{code}`.
 Response shape is identical to `GET /attendees/{id}` above (same
 `{ registration, status }` object).
 
+**Kit bag applicability.** `registration.kitBagApplicable` is a boolean. When it is
+`false`, the attendee did not pay the kit bag fee and **no kit bag is issued**. The scan
+result screen should show a clear "Kit bag not applicable" notice and hide or disable the
+Kit action. The server also rejects a `kit` action for these attendees (see §7.4), so this
+flag is a UX hint, not the only guard. Attendees with no stored value are reported as
+`true`.
+
 **Errors**
 
 - `400` — empty/missing code
@@ -413,7 +422,7 @@ shape as §6):
 
 ### 7.4 Conflict responses (409)
 
-This endpoint returns `409` for **two distinct reasons** — always check `message`, not just the
+This endpoint returns `409` for **three distinct reasons** — always check `message`, not just the
 status code:
 
 **1. Duplicate action.** Every action type can be recorded **at most once per attendee** — for
@@ -442,8 +451,20 @@ successful payment capture.
 }
 ```
 
-The mobile UI should treat **both** `409` cases as an expected, user-facing outcome (show it as a
-toast/banner, e.g. "Already checked in" / "Not approved yet"), not as a crash/retry case.
+**3. Kit bag not applicable.** Only for `actionType: "kit"`. The attendee's `kitBagApplicable` is
+`false` because the kit bag fee was not paid. No kit can be recorded.
+
+```json
+{
+  "success": false,
+  "message": "Kit bag not applicable for this attendee (kit bag fee not paid). Do not hand out a kit bag.",
+  "errors": []
+}
+```
+
+The mobile UI should treat **all** `409` cases as an expected, user-facing outcome (show it as a
+toast/banner, e.g. "Already checked in" / "Not approved yet" / "Kit bag not applicable"), not as a
+crash/retry case.
 
 **Other errors**
 
@@ -605,6 +626,8 @@ public-facing security boundary.
 - An attendee can be **checked in** at most once.
 - An attendee can receive **ID card**, **kit**, and **certificate** at most
   once each, ever.
+- An attendee with `kitBagApplicable: false` (kit bag fee not paid) can **never** receive a
+  **kit** — the server returns `409` (see §7.4).
 - An attendee can receive **breakfast**, **lunch**, **dinner** at most once
   **per conference day** (a `day` value is required on every request for
   these three).

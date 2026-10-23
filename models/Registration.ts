@@ -45,6 +45,8 @@ export interface IRegistration {
   includesAptiMembership: boolean;
   /** Verified against the APTI Life membership registry — set only for "APTI Life Member" / "APTI Annual Member" categories. */
   aptiMemberId?: string;
+  /** False when the kit bag fee was not collected, so no kit bag is issued. Legacy docs may lack the field — treat undefined as true. */
+  kitBagApplicable?: boolean;
 
   // Payment
   paymentMode: PaymentMode;
@@ -119,6 +121,7 @@ const RegistrationSchema = new Schema<IRegistration>(
     willSubmitAbstract: { type: Boolean, default: false },
     includesAptiMembership: { type: Boolean, default: false, index: true },
     aptiMemberId: { type: String, trim: true, uppercase: true },
+    kitBagApplicable: { type: Boolean, default: true },
 
     paymentMode: {
       type: String,
