@@ -20,7 +20,7 @@ const CO_ASSOCIATES = [
 ];
 
 const POWERED_BY = [
-  { name: "Operant Pharmacy Federation", logo: "/sponsors/opf.png" },
+  { name: "Operant Pharmacy Federation", logo: "/logo/OPF_Home.jpg" },
   { name: "GPAT Discussion Center", logo: "/sponsors/gpat.png" },
 ];
 
