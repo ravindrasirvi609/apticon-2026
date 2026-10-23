@@ -16,7 +16,6 @@ export type SearchField =
 export interface SearchAttendeesParams {
   q?: string;
   field?: SearchField;
-  status?: string;
   page?: number;
   limit?: number;
   sort?: string;
@@ -28,13 +27,13 @@ function escapeRegex(value: string): string {
 
 export async function searchAttendees(params: SearchAttendeesParams) {
   await connectDB();
-  const { q, field = "all", status } = params;
+  const { q, field = "all" } = params;
   const page = Math.max(1, params.page ?? 1);
   const limit = Math.min(100, Math.max(1, params.limit ?? 25));
   const sort = params.sort ?? "-createdAt";
 
-  const filter: Record<string, unknown> = {};
-  if (status) filter.status = status;
+  // Volunteer app only deals with confirmed attendees; never expose pending/rejected ones.
+  const filter: Record<string, unknown> = { status: "approved" };
   if (q) {
     const safe = escapeRegex(q);
     if (field === "all") {
@@ -105,6 +104,7 @@ export async function getAttendeeByCode(code: string) {
   await connectDB();
   const registration = await Registration.findOne({
     registrationCode: code,
+    status: "approved",
   }).lean();
   if (!registration) return null;
   const status = await getAttendeeStatus(registration._id.toString());
