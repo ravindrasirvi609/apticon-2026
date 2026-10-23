@@ -5,8 +5,9 @@ import { logAudit } from "@/lib/audit";
 import { isEmailConfigured, registrationApprovedEmail, sendMail } from "@/lib/email";
 import Registration from "@/models/Registration";
 
-/** Send the standard confirmation email, including that delegate's QR code, to every
- * approved registration whose confirmation has not already been sent. */
+const BATCH_SIZE = 25;
+
+/** Send one idempotent batch of standard confirmation emails, including each delegate's QR code. */
 export async function POST(request: NextRequest) {
   try {
     const admin = await requireRole("super_admin");
@@ -24,6 +25,7 @@ export async function POST(request: NextRequest) {
       email: { $exists: true, $ne: "" },
       confirmationEmailSentAt: { $exists: false },
     })
+      .limit(BATCH_SIZE)
       .select("fullName email registrationCode feeAmount linkedAbstract")
       .lean();
 
@@ -75,7 +77,13 @@ export async function POST(request: NextRequest) {
       request,
     });
 
-    return NextResponse.json({ ok: true, matched: registrations.length, sent, failed: failures.length, failures });
+    const remaining = await Registration.countDocuments({
+      status: "approved",
+      registrationCode: { $exists: true, $ne: "" },
+      email: { $exists: true, $ne: "" },
+      confirmationEmailSentAt: { $exists: false },
+    });
+    return NextResponse.json({ ok: true, matched: registrations.length, sent, failed: failures.length, remaining, failures });
   } catch (error) {
     console.error("[admin approved registration emails]", error);
     return NextResponse.json({ error: "Could not send approved registration emails" }, { status: 500 });
