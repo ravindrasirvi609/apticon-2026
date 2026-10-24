@@ -3,8 +3,8 @@
  * the admin report so the questions can never drift apart. Pure module — no server imports.
  */
 
-/** The form (and, through it, the certificate) goes live on the last day of the convention at 12 noon IST. */
-export const EVENT_FEEDBACK_OPENS_AT = new Date("2026-10-25T12:00:00+05:30");
+/** The form and certificate are open throughout the convention, starting 24 Oct 2026 at 00:00 IST. */
+export const EVENT_FEEDBACK_OPENS_AT = new Date("2026-10-24T00:00:00+05:30");
 
 export const RATING_QUESTIONS = [
   { key: "content", label: "Scientific content & sessions" },
