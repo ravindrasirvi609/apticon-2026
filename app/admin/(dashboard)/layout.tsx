@@ -27,6 +27,7 @@ const ADMIN_NAV: NavItem[] = [
   { href: "/admin/apti-members", label: "APTI Members", icon: "aptiMembers" },
   { href: "/admin/emails", label: "Bulk Email", icon: "mail" },
   { href: "/admin/event-feedback", label: "Event Feedback", icon: "feedback" },
+  { href: "/admin/session-feedback", label: "Session Q&A & Feedback", icon: "feedback" },
   { href: "/admin/users", label: "Users", icon: "users" },
   { href: "/admin/audit", label: "Audit Log", icon: "audit" },
   { href: "/admin/settings", label: "Settings", icon: "settings" },

@@ -16,6 +16,7 @@ const REVIEWER_NAV: NavItem[] = [
     label: "Assigned Abstracts",
     icon: "abstracts",
   },
+  { href: "/reviewer/session-feedback", label: "Session Q&A & Feedback", icon: "feedback" },
   { href: "/reviewer/settings", label: "Settings", icon: "settings" },
 ];
 

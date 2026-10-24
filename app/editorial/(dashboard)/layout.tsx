@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 const EDITORIAL_NAV: NavItem[] = [
   { href: "/editorial", label: "Dashboard", icon: "dashboard" },
   { href: "/editorial/abstracts", label: "Abstracts", icon: "abstracts" },
+  { href: "/editorial/session-feedback", label: "Session Q&A & Feedback", icon: "feedback" },
   {
     href: "/editorial/registrations",
     label: "Registrations",

@@ -57,6 +57,8 @@ const BRAND = {
   red50: "#FEE2E2",
 };
 
+const VENUE_MAP_URL = "https://maps.google.com/?q=21.248291,81.601456";
+
 // ─── Block builders (compose an email body) ────────────────
 export type EmailBlock =
   | { type: "text"; html: string } // pre-escaped HTML paragraph
@@ -748,6 +750,12 @@ export async function registrationApprovedEmail(
             },
             { label: "Dates", value: "24–25 October 2026" },
           ],
+        },
+        {
+          type: "button",
+          label: "Open Venue Location in Google Maps",
+          href: VENUE_MAP_URL,
+          variant: "secondary",
         },
         {
           type: "callout",
