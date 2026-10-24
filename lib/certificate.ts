@@ -19,7 +19,7 @@ const TEMPLATE_PATH = path.join(
   "certificate-delegates.jpeg",
 );
 const PDF_WIDTH = 595.28;
-const NAME_Y_FROM_TOP = 0.456;
+const NAME_Y_FROM_TOP = 0.453;
 const INSTITUTION_Y_FROM_TOP = 0.482;
 const REGISTRATION_Y_FROM_TOP = 0.814;
 const TEXT_COLOR = rgb(0.08, 0.07, 0.06);
