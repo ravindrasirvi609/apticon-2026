@@ -10,7 +10,7 @@ const filter = {
   status: "approved",
   registrationCode: { $type: "string", $ne: "" },
   email: { $type: "string", $ne: "" },
-};
+} as const;
 
 async function main() {
   await connectDB();
