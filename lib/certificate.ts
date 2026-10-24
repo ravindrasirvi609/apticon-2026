@@ -23,7 +23,6 @@ const NAME_Y_FROM_TOP = 0.456;
 const INSTITUTION_Y_FROM_TOP = 0.482;
 const REGISTRATION_Y_FROM_TOP = 0.814;
 const TEXT_COLOR = rgb(0.08, 0.07, 0.06);
-const PAPER_COLOR = rgb(0.995, 0.963, 0.83);
 
 /** Standard PDF fonts only cover Latin-1; drop unsupported glyphs rather than failing a download. */
 function printable(font: PDFFont, text: string): string {
@@ -43,7 +42,6 @@ function drawCentered(
   size: number,
   maxWidth: number,
   centerRatio: number,
-  clearLine?: { x: number; y: number; width: number; height: number },
 ) {
   let text = printable(font, value);
   if (!text) return;
@@ -58,7 +56,6 @@ function drawCentered(
   }
 
   const textWidth = font.widthOfTextAtSize(text, fittedSize);
-  if (clearLine) page.drawRectangle({ ...clearLine, color: PAPER_COLOR });
   page.drawText(text, {
     x: PDF_WIDTH * centerRatio - textWidth / 2,
     y,
@@ -90,12 +87,6 @@ export async function generateCertificatePdf(
     15,
     PDF_WIDTH * 0.66,
     0.554,
-    {
-      x: PDF_WIDTH * 0.235,
-      y: height * (1 - NAME_Y_FROM_TOP) - 7,
-      width: PDF_WIDTH * 0.665,
-      height: 23,
-    },
   );
   if (data.institution) {
     drawCentered(
@@ -106,12 +97,6 @@ export async function generateCertificatePdf(
       12.5,
       PDF_WIDTH * 0.78,
       0.521,
-      {
-        x: PDF_WIDTH * 0.15,
-        y: height * (1 - INSTITUTION_Y_FROM_TOP) - 6,
-        width: PDF_WIDTH * 0.76,
-        height: 19,
-      },
     );
   }
   drawCentered(
