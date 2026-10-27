@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import GoldenBadge from "@/components/ui/GoldenBadge";
 import CulturalDivider from "@/components/ui/CulturalDivider";
 import ScrollReveal from "@/components/ui/ScrollReveal";
@@ -327,14 +327,31 @@ export default function GalleryClient() {
             </motion.div>
           </AnimatePresence>
 
-          <ScrollReveal className="mt-12 rounded-2xl bg-[var(--primary-800)] p-8 text-center">
-            <p className="font-display font-bold text-2xl text-white mb-2">
-              APTICON 2026 Photos Coming Soon
-            </p>
-            <p className="text-white/70 text-sm max-w-md mx-auto">
-              Official photographs from APTICON 2026 will be published here
-              after the event. Stay tuned!
-            </p>
+          <ScrollReveal className="mt-12 overflow-hidden rounded-2xl border border-[var(--accent-500)]/20 bg-white shadow-lg">
+            <div className="bg-[var(--primary-800)] px-6 py-8 text-center sm:px-10">
+              <p className="font-display font-bold text-2xl text-white mb-2">
+                More Event Photos &amp; Videos
+              </p>
+              <p className="text-white/75 text-sm max-w-xl mx-auto">
+                Browse the shared collection of APTICON event memories. Open
+                the folder in Google Drive to view or download the original
+                photos and videos.
+              </p>
+              <a
+                href="https://drive.google.com/drive/folders/1gVltM1LhkX43bgFTE5z2cY1m5nxnhLun?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[var(--primary-800)] transition-colors hover:bg-[var(--surface-100)]"
+              >
+                Open in Google Drive <ExternalLink size={16} aria-hidden="true" />
+              </a>
+            </div>
+            <iframe
+              src="https://drive.google.com/embeddedfolderview?id=1gVltM1LhkX43bgFTE5z2cY1m5nxnhLun#grid"
+              title="APTICON event photos and videos"
+              loading="lazy"
+              className="h-[480px] w-full bg-white sm:h-[560px]"
+            />
           </ScrollReveal>
         </div>
       </section>
