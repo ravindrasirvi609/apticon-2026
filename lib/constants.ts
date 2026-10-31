@@ -46,7 +46,7 @@ export const NAV_LINKS = [
   { label: "Presentation Guidelines", href: "/guidelines" },
   { label: "Exhibition", href: "/exhibition" },
   { label: "Gallery", href: "/gallery" },
-  { label: "WPD Post", href: "/wpd" },
+  // { label: "WPD Post", href: "/wpd" },
   { label: "Contact", href: "/contact" },
 ];
 

@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/shadcn/tabs";
 import { Input } from "@/components/ui/shadcn/input";
 import { Button } from "@/components/ui/shadcn/button";
+import ExportButtons from "@/components/console/ExportButtons";
 
 interface DashboardStats {
   totalRegistered: number;
@@ -163,8 +164,13 @@ export default function CheckinClient() {
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle>Reports</CardTitle>
+          <ExportButtons
+            endpoint={`/api/admin/checkin/reports/${activeTab}/export`}
+            query={activeTabDef.dayScoped ? `day=${day}` : ""}
+            label={`checkin-${activeTab}${activeTabDef.dayScoped ? `-day-${day}` : ""}`}
+          />
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={selectTab}>

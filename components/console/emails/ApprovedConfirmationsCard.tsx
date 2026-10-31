@@ -282,60 +282,6 @@ export default function ApprovedConfirmationsCard({ configured }: { configured: 
   return (
     <>
       <Card className="mb-6 border-[var(--accent-500)]/25">
-        <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <div className="flex items-center gap-2 font-semibold">
-              <BadgeCheck className="h-4 w-4 text-[var(--accent-500)]" /> Approved registration
-              confirmations
-            </div>
-            <p className="mt-1 text-xs text-[var(--muted-text)]">
-              Send the standard confirmation email with each person&apos;s own QR code to every
-              approved registration, including those already emailed at approval. Each delegate
-              receives it once; pressing Send again only reaches those still pending.
-            </p>
-            {stats && (
-              <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-[var(--muted-text)]">
-                <span>
-                  <strong className="text-[var(--foreground)]">{stats.approved}</strong> approved
-                </span>
-                <span>
-                  <strong className="text-[var(--foreground)]">{stats.sent}</strong> received
-                </span>
-                <span>
-                  <strong className="text-[var(--foreground)]">{stats.pending}</strong> pending
-                </span>
-              </div>
-            )}
-          </div>
-          <div className="flex shrink-0 gap-2">
-            {running && (
-              <Button variant="outline" onClick={requestStop} disabled={stopping}>
-                <Square className="h-4 w-4" />
-                {stopping ? "Stopping…" : "Stop"}
-              </Button>
-            )}
-            <Button
-              variant="outline"
-              onClick={() => setConfirmOpen(true)}
-              disabled={!configured || running || nothingPending}
-            >
-              {running ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : nothingPending ? (
-                <CheckCircle2 className="h-4 w-4" />
-              ) : (
-                <Mail className="h-4 w-4" />
-              )}
-              {running
-                ? "Sending…"
-                : nothingPending
-                  ? "All sent"
-                  : stats
-                    ? `Send to ${stats.pending} pending`
-                    : "Send to all approved"}
-            </Button>
-          </div>
-        </CardContent>
 
         {stats && stats.missingDetails > 0 && (
           <CardContent className="flex gap-2 border-t px-4 py-3 text-xs text-amber-800">
