@@ -67,6 +67,8 @@ export interface IRegistration {
   bulkConfirmationSentAt?: Date;
   /** Held while one bulk-send request owns this row, so two runs never email it twice. */
   bulkConfirmationClaimedAt?: Date;
+  /** Set once the Razorpay payment receipt PDF has been emailed to this delegate. */
+  paymentReceiptSentAt?: Date;
 
   // Workflow
   status: RegistrationStatus;
@@ -154,6 +156,7 @@ const RegistrationSchema = new Schema<IRegistration>(
     confirmationEmailSentAt: { type: Date },
     bulkConfirmationSentAt: { type: Date },
     bulkConfirmationClaimedAt: { type: Date },
+    paymentReceiptSentAt: { type: Date },
 
     // "payment_review", "rejected" and "resubmitted" are retained for legacy manual-payment
     // documents only — nothing sets them now that Razorpay drives approval.

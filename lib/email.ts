@@ -772,6 +772,39 @@ export async function registrationApprovedEmail(
   };
 }
 
+export function paymentReceiptEmail(name: string, code: string, feeAmount: number) {
+  const receiptNo = `APTICON/2026/${code}`;
+  return {
+    subject: `Payment Receipt — ${receiptNo}`,
+    html: renderEmail({
+      title: "Payment Receipt",
+      preheader: `Your APTICON 2026 payment receipt ${receiptNo} is attached.`,
+      blocks: [
+        { type: "text", html: `Dear ${esc(name)},` },
+        {
+          type: "text",
+          html: `Thank you for your payment towards your <b>APTICON 2026</b> registration. Your official payment receipt is attached to this email as a PDF.`,
+        },
+        {
+          type: "kv",
+          rows: [
+            { label: "Receipt No", value: receiptNo },
+            { label: "Amount paid", value: `₹${feeAmount.toLocaleString("en-IN")}` },
+            { label: "Mode of payment", value: "Razorpay" },
+          ],
+        },
+        {
+          type: "callout",
+          variant: "info",
+          title: "Please keep this receipt",
+          body: `Keep the attached receipt for your records. Your registration confirmation and QR code were sent separately.`,
+        },
+        { type: "signoff" },
+      ],
+    }),
+  };
+}
+
 // -- Group registration lifecycle --
 
 export function groupRegistrationSubmittedEmail(
